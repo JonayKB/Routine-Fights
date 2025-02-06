@@ -1,0 +1,37 @@
+name: CI SonarQube Analysis
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Compilar y ejecutar tests con Maven
+        working-directory: RoutineFights
+        run: mvn clean verify
+
+      - name: Ejecutar análisis en SonarQube
+        working-directory: RoutineFights
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.projectKey=routineFights \
+            -Dsonar.host.url=http://zombiesurvive.ddns.net:4030 \
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.qualitygate.wait=true
