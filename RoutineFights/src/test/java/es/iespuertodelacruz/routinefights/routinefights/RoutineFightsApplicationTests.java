@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class RoutineFightsApplicationTests {
 
 	@Test
-	void contextLoads() {
-		
-	}
+    void testMain() {
+		RoutineFightsApplication.main(new String[] {});
+    }
 
 }
