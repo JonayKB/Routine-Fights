@@ -31,7 +31,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
         run: |
           mvn sonar:sonar \
-            -Dsonar.projectKey=routineFights \
-            -Dsonar.host.url=http://zombiesurvive.ddns.net:4030 \
+            -Dsonar.projectKey=RoutineFights \
+            -Dsonar.host.url=http://zombiesurvive.ddns.net:9000 \
             -Dsonar.login=$SONAR_TOKEN \
             -Dsonar.qualitygate.wait=true
