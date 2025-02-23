@@ -1,169 +1,144 @@
-Entidades (Nodos)
-1. User
-Propiedades:
-id: Integer (PK)
-username: String
-email: String
-password: String
-nacionality: String
-phoneNumber: String
-createdAt: Timestamp
-updatedAt: Timestamp
-deletedAt: Timestamp
+# Entities (Nodes)
 
-3. Post
-Propiedades:
-id: Integer (PK)
-image: String
-streak: Integer
-points: Integer
-createdAt: Timestamp
-updatedAt: Timestamp
-deletedAt: Timestamp
+## 1. User
+- **id:** Integer (PK)
+- **username:** String
+- **email:** String
+- **password:** String
+- **nationality:** String
+- **phoneNumber:** String
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-4. Comment
-Propiedades:
-id: Integer (PK)
-message: String
-createdAt: Timestamp
-updatedAt: Timestamp
-deletedAt: Timestamp
+## 3. Post
+- **id:** Integer (PK)
+- **image:** String
+- **streak:** Integer
+- **points:** Integer
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-6. Report
-Propiedades:
-id: Integer (PK)
-message: String
-createdAt: Timestamp
-updatedAt: Timestamp
-deletedAt: Timestamp
+## 4. Comment
+- **id:** Integer (PK)
+- **message:** String
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-8. Badge
-Propiedades:
-id: Integer (PK)
-icon: String
-level: Integer
-createdAt: Timestamp
-updatedAt: Timestamp
-deletedAt: Timestamp
+## 6. Report
+- **id:** Integer (PK)
+- **message:** String
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-10. CommunityEvent
-Propiedades:
-id: Integer (PK)
-name: String
-totalRequiered: Integer
-createdAt: Timestamp
-updatedAt: Timestamp
-deletedAt: Timestamp
+## 8. Badge
+- **id:** Integer (PK)
+- **icon:** String
+- **level:** Integer
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-12. Activity
-Propiedades:
-id: Integer (PK)
-icon: String
-name: String
-description: String
-timeRate: String
-createdAt: Timestamp
-updatedAt: Timestamp
-deletedAt: Timestamp
+## 10. CommunityEvent
+- **id:** Integer (PK)
+- **name:** String
+- **totalRequiered:** Integer
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-14. Category
-Propiedades:
-id: Integer (PK)
-name: String
-createdAt: Timestamp
-updatedAt: Timestamp
-deletedAt: Timestamp
+## 12. Activity
+- **id:** Integer (PK)
+- **icon:** String
+- **name:** String
+- **description:** String
+- **timeRate:** String
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-16. Team
-Propiedades:
-id: Integer (PK)
-name: String
-createdAt: Timestamp
-updatedAt: Timestamp
-deletedAt: Timestamp
+## 14. Category
+- **id:** Integer (PK)
+- **name:** String
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-18. Meeting
-Propiedades:
-id: Integer (PK)
-date: Timestamp
-latitude: Float (10,6)
-longitude: Float (10,6)
+## 16. Team
+- **id:** Integer (PK)
+- **name:** String
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-Relaciones
-FOLLOWS
+## 18. Meeting
+- **id:** Integer (PK)
+- **date:** Timestamp
+- **latitude:** Float (10,6)
+- **longitude:** Float (10,6)
 
-Entre: (User) → (User)
-Propiedades: createdAt, updatedAt, deletedAt
-Descripción: Representa que un usuario sigue a otro.
-POSTED
+# Relationships
 
-Entre: (User) → (Post)
-Propiedades: createdAt, updatedAt, deletedAt
-Descripción: Indica que un usuario creó un post.
-RELATED_TO
+- **FOLLOWS**  
+  - Between: (User) → (User)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (Post) → (Activity)
-Propiedades (Opcionales): createdAt, updatedAt, deletedAt
-Descripción: Asocia un post a una actividad determinada.
-COMMENTED
+- **POSTED**  
+  - Between: (User) → (Post)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (User) → (Comment)
-Propiedades: createdAt, updatedAt, deletedAt
-Descripción: Relaciona al usuario que realiza un comentario con el comentario creado.
-ON
+- **RELATED_TO**  
+  - Between: (Post) → (Activity)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (Comment) → (Post)
-Propiedades (Opcionales): createdAt, updatedAt, deletedAt
-Descripción: Indica que un comentario pertenece a un post.
-REPLIED_TO
+- **COMMENTED**  
+  - Between: (User) → (Comment)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (Comment) → (Comment)
-Propiedades (Opcionales): createdAt, updatedAt, deletedAt
-Descripción: Permite modelar respuestas, conectando un comentario con otro al que responde.
-REPORTED
+- **ON**  
+  - Between: (Comment) → (Post)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (User) → (Report)
-Propiedades: createdAt, updatedAt, deletedAt
-Descripción: Un usuario genera un reporte.
-Complementaria:
-(Report) → (Post) para indicar sobre qué post se ha realizado el reporte.
-HAS_BADGE
+- **REPLIED_TO**  
+  - Between: (Comment) → (Comment)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (User) → (Badge)
-Propiedades: createdAt, updatedAt, deletedAt
-Descripción: Indica que un usuario posee un determinado badge.
-ASSOCIATED_WITH
+- **REPORTED**  
+  - Between: (User) → (Report)  
+  - Properties: createdAt, updatedAt, deletedAt  
+  - Complementary: (Report) → (Post)
 
-Entre: (Badge) → (CommunityEvent)
-Propiedades (Opcionales): createdAt, updatedAt, deletedAt
-Descripción: Relaciona un badge con un evento comunitario.
-CREATED_ACTIVITY
+- **HAS_BADGE**  
+  - Between: (User) → (Badge)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (User) → (Activity)
-Propiedades: createdAt, updatedAt, deletedAt
-Descripción: Indica el usuario que crea la actividad.
-BELONGS_TO
+- **ASSOCIATED_WITH**  
+  - Between: (Badge) → (CommunityEvent)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (Activity) → (Category)
-Propiedades (Opcionales): createdAt, updatedAt, deletedAt
-Descripción: Establece a qué categoría pertenece una actividad.
-MEMBER_OF
+- **CREATED_ACTIVITY**  
+  - Between: (User) → (Activity)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (User) → (Team)
-Propiedades: createdAt, updatedAt, deletedAt
-Descripción: Representa la membresía de un usuario en un equipo.
-HAS_MEETING
+- **BELONGS_TO**  
+  - Between: (Activity) → (Category)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (Team) → (Meeting)
-Propiedades: createdAt, updatedAt, deletedAt
-Descripción: Un equipo tiene asignada una reunión.
-ATTENDED
+- **MEMBER_OF**  
+  - Between: (User) → (Team)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (User) → (Meeting)
-Propiedades: createdAt, updatedAt, deletedAt
-Descripción: Registra la asistencia de un usuario a una reunión.
-PART_OF
+- **HAS_MEETING**  
+  - Between: (Team) → (Meeting)  
+  - Properties: createdAt, updatedAt, deletedAt
 
-Entre: (Meeting) → (CommunityEvent)
-Propiedades (Opcionales): createdAt, updatedAt, deletedAt
-Descripción: Indica que una reunión forma parte de un evento comunitario.
+- **ATTENDED**  
+  - Between: (User) → (Meeting)  
+  - Properties: createdAt, updatedAt, deletedAt
+
+- **PART_OF**  
+  - Between: (Meeting) → (CommunityEvent)  
+  - Properties: createdAt, updatedAt, deletedAt
