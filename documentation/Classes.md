@@ -1,141 +1,169 @@
-# Classes
+Entidades (Nodos)
+1. User
+Propiedades:
+id: Integer (PK)
+username: String
+email: String
+password: String
+nacionality: String
+phoneNumber: String
+createdAt: Timestamp
+updatedAt: Timestamp
+deletedAt: Timestamp
 
-## Index
-- [Classes](#classes)
-  - [Index](#index)
-    - [User](#user)
-    - [Follows](#follows)
-    - [Post](#post)
-    - [Report](#report)
-    - [Comment](#comment)
-    - [Badge](#badge)
-    - [User\_Badge](#user_badge)
-    - [CommunityEvent](#communityevent)
-    - [Activity](#activity)
-    - [Category](#category)
-    - [Team](#team)
-    - [Team\_User](#team_user)
-    - [Meeting\_Team](#meeting_team)
-    - [Meeting](#meeting)
-    - [Meeting\_User](#meeting_user)
+3. Post
+Propiedades:
+id: Integer (PK)
+image: String
+streak: Integer
+points: Integer
+createdAt: Timestamp
+updatedAt: Timestamp
+deletedAt: Timestamp
 
-### User
-1. ID (int) :key:
-2. Username (string)
-3. Email (string)
-4. Password (string)
-5. Nacionality (string)
-6. PhoneNumber (string)
-7. CreatedAt (timestamp)
-8. UpdatedAt (timestamp)
-9. DeletedAt (timestamp)
+4. Comment
+Propiedades:
+id: Integer (PK)
+message: String
+createdAt: Timestamp
+updatedAt: Timestamp
+deletedAt: Timestamp
 
-### Follows
-1. followerID (int) :paperclip: :key: 
-2. followingID (int) :paperclip: :key: 
-3. CreatedAt (timestamp)
-4. UpdatedAt (timestamp)
-5. DeletedAt (timestamp)
+6. Report
+Propiedades:
+id: Integer (PK)
+message: String
+createdAt: Timestamp
+updatedAt: Timestamp
+deletedAt: Timestamp
 
-### Post
-1. ID (int) :key:
-2. Image (string)
-3. Likes (int)
-4. Streak (int)
-5. PointToAdd (int)
-6. UserID (int) :paperclip:
-7. ActivityID (int) :paperclip:
-8. CreatedAt (timestamp)
-9.  UpdatedAt (timestamp)
-10. DeletedAt (timestamp)
+8. Badge
+Propiedades:
+id: Integer (PK)
+icon: String
+level: Integer
+createdAt: Timestamp
+updatedAt: Timestamp
+deletedAt: Timestamp
 
-### Report
-1. ID :key:
-2. UserID (int) :paperclip:
-3. PostID (int) :paperclip:
-4. Message (string)
+10. CommunityEvent
+Propiedades:
+id: Integer (PK)
+name: String
+totalRequiered: Integer
+createdAt: Timestamp
+updatedAt: Timestamp
+deletedAt: Timestamp
 
-### Comment
-1. ID (int) :key:
-2. Message (string)
-3. Likes (int)
-4. ReplyID(int) :paperclip:
-5. Reports (int)
-6. UserID (int) :paperclip:
-7. PostID (int) :paperclip:
-8. CreatedAt (timestamp)
-9. UpdatedAt (timestamp)
-10. DeletedAt (timestamp)
+12. Activity
+Propiedades:
+id: Integer (PK)
+icon: String
+name: String
+description: String
+timeRate: String
+createdAt: Timestamp
+updatedAt: Timestamp
+deletedAt: Timestamp
 
-### Badge
-1. ID (int) :key:
-2. Icon (string)
-3. Level (int)
-4. ComunnityEventID (int) :paperclip:
-5. CreatedAt (timestamp)
-6. UpdatedAt (timestamp)
-7. DeletedAt (timestamp)
+14. Category
+Propiedades:
+id: Integer (PK)
+name: String
+createdAt: Timestamp
+updatedAt: Timestamp
+deletedAt: Timestamp
 
-### User_Badge
-1. UserID (int) :paperclip: :key:
-2. BadgeID (int) :paperclip: :key:
-3. CreatedAt (timestamp)
-4. UpdatedAt (timestamp)
-5. DeletedAt (timestamp)
+16. Team
+Propiedades:
+id: Integer (PK)
+name: String
+createdAt: Timestamp
+updatedAt: Timestamp
+deletedAt: Timestamp
 
-### CommunityEvent
-1. ID (int) :key:
-2. Name (string)
-3. TotalRequiered (int)
-4. CreatedAt (timestamp)
-5. UpdatedAt (timestamp)
-6. DeletedAt (timestamp)
+18. Meeting
+Propiedades:
+id: Integer (PK)
+date: Timestamp
+latitude: Float (10,6)
+longitude: Float (10,6)
 
-### Activity
-1. ID (int) :key:
-2. Icon (string)
-3. Name (string)
-4. Description (string)
-5. TimeRate (string)
-6. CreatedBy (int) :paperclip:
-7. Category ID (int) :paperclip:
-8. CreatedAt (timestamp)
-9. UpdatedAt (timestamp)
-10. DeletedAt (timestamp)
+Relaciones
+FOLLOWS
 
-### Category
-1. ID (int) :key:
-2. Name (string)
-3. CreatedAt (timestamp)
-4. UpdatedAt (timestamp)
-5. DeletedAt (timestamp)
+Entre: (User) → (User)
+Propiedades: createdAt, updatedAt, deletedAt
+Descripción: Representa que un usuario sigue a otro.
+POSTED
 
-### Team
-1. ID (int) :key:
-2. Name (string)
-3. CreatedAt (timestamp)
-4. UpdatedAt (timestamp)
-5. DeletedAt (timestamp)
+Entre: (User) → (Post)
+Propiedades: createdAt, updatedAt, deletedAt
+Descripción: Indica que un usuario creó un post.
+RELATED_TO
 
-### Team_User
-1. TeamID (int) :paperclip: :key:
-2. UserID (int) :paperclip: :key:
-3. CreatedAt (timestamp)
-4. UpdatedAt (timestamp)
-5. DeletedAt (timestamp)
+Entre: (Post) → (Activity)
+Propiedades (Opcionales): createdAt, updatedAt, deletedAt
+Descripción: Asocia un post a una actividad determinada.
+COMMENTED
 
-### Meeting_Team
-1. TeamID (int) :paperclip: :key:
-2. MeetingID (int) :paperclip: :key:
+Entre: (User) → (Comment)
+Propiedades: createdAt, updatedAt, deletedAt
+Descripción: Relaciona al usuario que realiza un comentario con el comentario creado.
+ON
 
-### Meeting
-1. ID (int) :key:
-2. TeamID (int) :paperclip:
-3. Date (timestamp)
-4. ComunnityEventID (int) :paperclip:
-5. Latitude (float(10,6))
-6. Longitude (float(10,6))
+Entre: (Comment) → (Post)
+Propiedades (Opcionales): createdAt, updatedAt, deletedAt
+Descripción: Indica que un comentario pertenece a un post.
+REPLIED_TO
 
-### Meeting_User
-1. UserID (int) :paperclip: :key:
-2. MeetingID (int) :paperclip: :key:
+Entre: (Comment) → (Comment)
+Propiedades (Opcionales): createdAt, updatedAt, deletedAt
+Descripción: Permite modelar respuestas, conectando un comentario con otro al que responde.
+REPORTED
+
+Entre: (User) → (Report)
+Propiedades: createdAt, updatedAt, deletedAt
+Descripción: Un usuario genera un reporte.
+Complementaria:
+(Report) → (Post) para indicar sobre qué post se ha realizado el reporte.
+HAS_BADGE
+
+Entre: (User) → (Badge)
+Propiedades: createdAt, updatedAt, deletedAt
+Descripción: Indica que un usuario posee un determinado badge.
+ASSOCIATED_WITH
+
+Entre: (Badge) → (CommunityEvent)
+Propiedades (Opcionales): createdAt, updatedAt, deletedAt
+Descripción: Relaciona un badge con un evento comunitario.
+CREATED_ACTIVITY
+
+Entre: (User) → (Activity)
+Propiedades: createdAt, updatedAt, deletedAt
+Descripción: Indica el usuario que crea la actividad.
+BELONGS_TO
+
+Entre: (Activity) → (Category)
+Propiedades (Opcionales): createdAt, updatedAt, deletedAt
+Descripción: Establece a qué categoría pertenece una actividad.
+MEMBER_OF
+
+Entre: (User) → (Team)
+Propiedades: createdAt, updatedAt, deletedAt
+Descripción: Representa la membresía de un usuario en un equipo.
+HAS_MEETING
+
+Entre: (Team) → (Meeting)
+Propiedades: createdAt, updatedAt, deletedAt
+Descripción: Un equipo tiene asignada una reunión.
+ATTENDED
+
+Entre: (User) → (Meeting)
+Propiedades: createdAt, updatedAt, deletedAt
+Descripción: Registra la asistencia de un usuario a una reunión.
+PART_OF
+
+Entre: (Meeting) → (CommunityEvent)
+Propiedades (Opcionales): createdAt, updatedAt, deletedAt
+Descripción: Indica que una reunión forma parte de un evento comunitario.
