@@ -22,11 +22,11 @@ jobs:
           cache: maven
 
       - name: Compilar y ejecutar tests con Maven
-        working-directory: RoutineFights
+        working-directory: API
         run: mvn clean test verify
 
       - name: Ejecutar análisis en SonarQube
-        working-directory: RoutineFights
+        working-directory: API
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
         run: |
