@@ -3,7 +3,6 @@ package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.
 /**
  * UserDTOV2
  */
-// TODO: Implement the class
-public record UserDTOV2() {
+public record UserDTOV2(int id, String username, String email, String nationality, String phoneNumber) {
 
 }

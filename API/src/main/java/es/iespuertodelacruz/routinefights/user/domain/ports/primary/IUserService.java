@@ -14,4 +14,12 @@ public interface IUserService {
      * @return List<User> list of users
      */
     public List<User> findAll();
+
+    /**
+     * Method to find a user by id
+     * 
+     * @param id
+     * @return User
+     */
+    public User findById(Long id);
 }

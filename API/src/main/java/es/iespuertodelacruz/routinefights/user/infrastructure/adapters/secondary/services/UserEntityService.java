@@ -16,6 +16,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
 @Service
 public class UserEntityService implements IUserRepository {
     private IUserEntityRepository userRepository;
+    private IUserEntityMapper userEntityMapper;
 
     /**
      * Getter for userRepository
@@ -36,6 +37,15 @@ public class UserEntityService implements IUserRepository {
         this.userRepository = userRepository;
     }
 
+    public IUserEntityMapper getUserEntityMapper() {
+        return this.userEntityMapper;
+    }
+
+    @Autowired
+    public void setUserEntityMapper(IUserEntityMapper userEntityMapper) {
+        this.userEntityMapper = userEntityMapper;
+    }
+
     /**
      * Method to find all users
      * 
@@ -43,6 +53,11 @@ public class UserEntityService implements IUserRepository {
      */
     @Override
     public List<User> findAll() {
-        return IUserEntityMapper.INSTANCE.userEntitiesToUsers(userRepository.findAll());
+        return userEntityMapper.toDomain(userRepository.findAll());
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
     }
 }

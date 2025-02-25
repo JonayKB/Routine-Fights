@@ -44,4 +44,15 @@ public class UserService implements IUserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
+    /**
+     * Method to find a user by id
+     * 
+     * @param id id of the user
+     * @return User
+     */
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id);
+    }
 }

@@ -1,8 +1,9 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -15,16 +16,17 @@ import java.util.Objects;
 @Node("User")
 public class UserEntity {
     @Id
-    private String id;
+    @GeneratedValue
+    private Long id;
     private String username;
     private String email;
     private String password;
     private String nationality;
     private String phoneNumber;
 
-    private Date createdAt;
-    private Date updatedAt;
-    private Date deletedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     @Relationship(type = "FOLLOWED_BY", direction = Relationship.Direction.INCOMING)
     private List<UserEntity> followers;
@@ -53,8 +55,9 @@ public class UserEntity {
      * @param followers   The list of followers of the user
      * @param following   The list of users that the user is following
      */
-    public UserEntity(String id, String username, String email, String password, String nationality, String phoneNumber,
-            Date createdAt, Date updatedAt, Date deletedAt, List<UserEntity> followers, List<UserEntity> following) {
+    public UserEntity(Long id, String username, String email, String password, String nationality, String phoneNumber,
+            LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, List<UserEntity> followers,
+            List<UserEntity> following) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -73,7 +76,7 @@ public class UserEntity {
      * 
      * @return The id of the user
      */
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -82,7 +85,7 @@ public class UserEntity {
      * 
      * @param id The id of the user
      */
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -181,7 +184,7 @@ public class UserEntity {
      * 
      * @return The date when the user was created
      */
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return this.createdAt;
     }
 
@@ -190,7 +193,7 @@ public class UserEntity {
      * 
      * @param createdAt The date when the user was created
      */
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -199,7 +202,7 @@ public class UserEntity {
      * 
      * @return The date when the user was updated
      */
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return this.updatedAt;
     }
 
@@ -208,7 +211,7 @@ public class UserEntity {
      * 
      * @param updatedAt The date when the user was updated
      */
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -217,7 +220,7 @@ public class UserEntity {
      * 
      * @return The date when the user was deleted
      */
-    public Date getDeletedAt() {
+    public LocalDateTime getDeletedAt() {
         return this.deletedAt;
     }
 
@@ -226,7 +229,7 @@ public class UserEntity {
      * 
      * @param deletedAt The date when the user was deleted
      */
-    public void setDeletedAt(Date deletedAt) {
+    public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 
