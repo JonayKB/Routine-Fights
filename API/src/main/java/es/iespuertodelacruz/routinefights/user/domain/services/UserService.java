@@ -55,4 +55,48 @@ public class UserService implements IUserService {
     public User findById(Long id) {
         return userRepository.findById(id);
     }
+
+    /**
+     * Method to save a user
+     * 
+     * @param username username
+     * @param email email
+     * @param password password
+     * @param nationality nationality
+     * @param phoneNumber phoneNumber
+     * @return User
+     */
+    @Override
+    public User post(String username, String email, String password, String nationality, String phoneNumber) {
+        User user = new User(username, email, password, nationality, phoneNumber);
+        return userRepository.post(user);
+    }
+
+    /**
+     * Method to update a user
+     * 
+     * @param id id
+     * @param username username
+     * @param email email
+     * @param password password
+     * @param nationality nationality
+     * @param phoneNumber phoneNumber
+     * @return User
+     */
+    @Override
+    public User put(Long id, String username, String email, String password, String nationality, String phoneNumber) {
+        User user = new User(id, username, email, password, nationality, phoneNumber);
+        return userRepository.put(user);
+    }
+
+    /**
+     * Method to delete a user
+     * 
+     * @param id id
+     * @return boolean
+     */
+    @Override
+    public boolean delete(Long id) {
+        return userRepository.delete(id);
+    }
 }
