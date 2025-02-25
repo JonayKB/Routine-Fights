@@ -1,4 +1,4 @@
-package es.iespuertodelacruz.routinefights.routinefights;
+package es.iespuertodelacruz.routinefights;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
