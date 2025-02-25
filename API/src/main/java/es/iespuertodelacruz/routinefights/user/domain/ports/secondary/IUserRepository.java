@@ -18,8 +18,32 @@ public interface IUserRepository {
     /**
      * Method to find a user by id
      * 
-     * @param id
+     * @param id id
      * @return User
      */
     public User findById(Long id);
+
+    /**
+     * Method to save a user
+     * 
+     * @param username username
+     * @return User
+     */
+    public User post(User user);
+
+    /**
+     * Method to update a user
+     * 
+     * @param user user
+     * @return User
+     */
+    public User put(User user);
+
+    /**
+     * Method to delete a user
+     * 
+     * @param id id
+     * @return boolean
+     */
+    public boolean delete(Long id);
 }

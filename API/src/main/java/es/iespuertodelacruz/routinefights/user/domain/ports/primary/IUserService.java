@@ -22,4 +22,37 @@ public interface IUserService {
      * @return User
      */
     public User findById(Long id);
+
+    /**
+     * Method to save a user
+     * 
+     * @param username username
+     * @param email email
+     * @param password password
+     * @param nationality nationality
+     * @param phoneNumber phoneNumber
+     * @return User
+     */
+    public User post(String username, String email, String password, String nationality, String phoneNumber);
+
+    /**
+     * Method to update a user
+     * 
+     * @param id id
+     * @param username username
+     * @param email email
+     * @param password password
+     * @param nationality nationality
+     * @param phoneNumber phoneNumber
+     * @return User
+     */
+    public User put(Long id, String username, String email, String password, String nationality, String phoneNumber);
+
+    /**
+     * Method to delete a user
+     * 
+     * @param id id
+     * @return boolean
+     */
+    public boolean delete(Long id);
 }

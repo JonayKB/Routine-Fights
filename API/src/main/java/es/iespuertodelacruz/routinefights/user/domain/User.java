@@ -6,7 +6,7 @@ import java.util.Objects;
  * User
  */
 public class User {
-    private int id;
+    private Long id;
     private String username;
     private String email;
     private String password;
@@ -20,6 +20,23 @@ public class User {
     }
 
     /**
+     * Constructor with username, email, password, nationality and phone number
+     * 
+     * @param username    The username of the user
+     * @param email       The email of the user
+     * @param password    The password of the user
+     * @param nationality The nationality of the user
+     * @param phoneNumber The phone number of the user
+     */
+    public User(String username, String email, String password, String nationality, String phoneNumber) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.nationality = nationality;
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
      * Constructor with all the attributes
      * 
      * @param id          The id of the user
@@ -29,7 +46,7 @@ public class User {
      * @param nationality The nationality of the user
      * @param phoneNumber The phone number of the user
      */
-    public User(int id, String username, String email, String password, String nationality, String phoneNumber) {
+    public User(Long id, String username, String email, String password, String nationality, String phoneNumber) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -43,7 +60,7 @@ public class User {
      * 
      * @return The id of the user
      */
-    public int getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -52,7 +69,7 @@ public class User {
      * 
      * @param id The id of the user
      */
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
