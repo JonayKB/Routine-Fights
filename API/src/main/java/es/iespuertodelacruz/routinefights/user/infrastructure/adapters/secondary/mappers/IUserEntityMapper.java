@@ -3,7 +3,6 @@ package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondar
 import java.util.List;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
@@ -11,9 +10,8 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
 /**
  * IUserEntityMapper interface for UserEntityMapper
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface IUserEntityMapper {
-    IUserEntityMapper INSTANCE = Mappers.getMapper(IUserEntityMapper.class);
 
     /**
      * Method to map User to UserEntity
@@ -21,7 +19,7 @@ public interface IUserEntityMapper {
      * @param user User
      * @return UserEntity
      */
-    public UserEntity userToUserEntity(User user);
+    public UserEntity toEntity(User user);
 
     /**
      * Method to map UserEntity to User
@@ -29,7 +27,7 @@ public interface IUserEntityMapper {
      * @param userEntity UserEntity
      * @return User
      */
-    public User userEntityToUser(UserEntity userEntity);
+    public User toDomain(UserEntity userEntity);
 
     /**
      * Method to map List<User> to List<UserEntity>
@@ -37,7 +35,7 @@ public interface IUserEntityMapper {
      * @param users List<User>
      * @return List<UserEntity>
      */
-    public List<UserEntity> usersToUserEntities(List<User> users);
+    public List<UserEntity> toEntity(List<User> users);
 
     /**
      * Method to map List<UserEntity> to List<User>
@@ -45,5 +43,5 @@ public interface IUserEntityMapper {
      * @param userEntities List<UserEntity>
      * @return List<User>
      */
-    public List<User> userEntitiesToUsers(List<UserEntity> userEntities);
+    public List<User> toDomain(List<UserEntity> userEntities);
 }

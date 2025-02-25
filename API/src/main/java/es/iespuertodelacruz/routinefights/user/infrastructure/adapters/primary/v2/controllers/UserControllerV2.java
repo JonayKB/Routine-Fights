@@ -5,9 +5,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.UserDTOV2;
 
@@ -18,6 +21,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
  *      Controllers</a>
  */
 @Controller
+@CrossOrigin
 public class UserControllerV2 {
     Logger logger = LoggerFactory.getLogger(UserControllerV2.class);
 
@@ -32,9 +36,35 @@ public class UserControllerV2 {
         this.userService = userService;
     }
 
-    // TODO: Implement the method
-    @QueryMapping
+    @QueryMapping("users")
     public List<UserDTOV2> findAll() {
-        return null;
+        logger.info("Find all users");
+        List<User> users;
+        try {
+            users = userService.findAll();
+        } catch (Exception e) {
+            logger.error("Error finding all users: {}", e.getMessage());
+            return null;
+        }
+        List<UserDTOV2> usersDTO = users.stream().map(user -> new UserDTOV2(user.getId(), user.getUsername(),
+                user.getEmail(), user.getNationality(), user.getPhoneNumber())).toList();
+        logger.info("Users: {}", usersDTO);
+        return usersDTO;
+    }
+
+    @QueryMapping("user")
+    public UserDTOV2 findById(@Argument Long id) {
+        logger.info("Find user by id");
+        User user;
+        try {
+            user = userService.findById(id);
+        } catch (Exception e) {
+            logger.error("Error finding all users: {}", e.getMessage());
+            return null;
+        }
+        UserDTOV2 usersDTO = new UserDTOV2(user.getId(), user.getUsername(),
+                user.getEmail(), user.getNationality(), user.getPhoneNumber());
+        logger.info("Users: {}", usersDTO);
+        return usersDTO;
     }
 }
