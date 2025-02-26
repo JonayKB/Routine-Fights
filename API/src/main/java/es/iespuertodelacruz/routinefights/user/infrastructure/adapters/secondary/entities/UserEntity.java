@@ -23,6 +23,7 @@ public class UserEntity {
     private String password;
     private String nationality;
     private String phoneNumber;
+    private String image;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -54,10 +55,11 @@ public class UserEntity {
      * @param deletedAt   The date when the user was deleted
      * @param followers   The list of followers of the user
      * @param following   The list of users that the user is following
+     * @param image       The image of the user
      */
     public UserEntity(String id, String username, String email, String password, String nationality, String phoneNumber,
             LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, List<UserEntity> followers,
-            List<UserEntity> following) {
+            List<UserEntity> following, String image) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -69,6 +71,7 @@ public class UserEntity {
         this.deletedAt = deletedAt;
         this.followers = followers;
         this.following = following;
+        this.image = image;
     }
 
     /**
@@ -177,6 +180,24 @@ public class UserEntity {
      */
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * Get the image of the user
+     * 
+     * @return The image of the user
+     */
+    public String getImage() {
+        return this.image;
+    }
+
+    /**
+     * Set the image of the user
+     * 
+     * @param image The image of the user
+     */
+    public void setImage(String image) {
+        this.image = image;
     }
 
     /**
