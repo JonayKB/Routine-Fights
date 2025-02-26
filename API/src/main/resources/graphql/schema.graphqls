@@ -13,7 +13,6 @@ type User {
     id: ID!
     username: String!
     email: String!
-    password: String!
     nationality: String!
     phoneNumber: String!
 }
