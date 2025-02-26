@@ -7,6 +7,7 @@
 - **password:** String
 - **nationality:** String
 - **phoneNumber:** String
+- **image:** String
 - **createdAt:** Timestamp
 - **updatedAt:** Timestamp
 - **deletedAt:** Timestamp
@@ -35,7 +36,7 @@
 
 ## 8. Badge
 - **id:** Integer (PK)
-- **icon:** String
+- **image:** String
 - **level:** Integer
 
 ## 10. CommunityEvent
@@ -46,10 +47,11 @@
 
 ## 12. Activity
 - **id:** Integer (PK)
-- **icon:** String
+- **image:** String
 - **name:** String
 - **description:** String
 - **timeRate:** String
+- **timesRequired:** String
 - **createdAt:** Timestamp
 - **updatedAt:** Timestamp
 - **deletedAt:** Timestamp
