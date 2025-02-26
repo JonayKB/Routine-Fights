@@ -3,6 +3,6 @@ package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.
 /**
  * UserDTOV3
  */
-public record UserDTOV3(String id, String username, String email, String nationality, String phoneNumber) {
+public record UserDTOV3(String id, String username, String email, String nationality, String phoneNumber, String image) {
 
 }

@@ -31,9 +31,10 @@ public interface IUserService {
      * @param password password
      * @param nationality nationality
      * @param phoneNumber phoneNumber
+     * @param image image
      * @return User
      */
-    public User post(String username, String email, String password, String nationality, String phoneNumber);
+    public User post(String username, String email, String password, String nationality, String phoneNumber, String image);
 
     /**
      * Method to update a user
@@ -44,9 +45,10 @@ public interface IUserService {
      * @param password password
      * @param nationality nationality
      * @param phoneNumber phoneNumber
+     * @param image image
      * @return User
      */
-    public User put(String id, String username, String email, String password, String nationality, String phoneNumber);
+    public User put(String id, String username, String email, String password, String nationality, String phoneNumber, String image);
 
     /**
      * Method to delete a user

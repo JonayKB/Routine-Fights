@@ -64,11 +64,12 @@ public class UserService implements IUserService {
      * @param password password
      * @param nationality nationality
      * @param phoneNumber phoneNumber
+     * @param image image
      * @return User
      */
     @Override
-    public User post(String username, String email, String password, String nationality, String phoneNumber) {
-        User user = new User(username, email, password, nationality, phoneNumber);
+    public User post(String username, String email, String password, String nationality, String phoneNumber, String image) {
+        User user = new User(username, email, password, nationality, phoneNumber, image);
         return userRepository.post(user);
     }
 
@@ -81,11 +82,12 @@ public class UserService implements IUserService {
      * @param password password
      * @param nationality nationality
      * @param phoneNumber phoneNumber
+     * @param image image
      * @return User
      */
     @Override
-    public User put(String id, String username, String email, String password, String nationality, String phoneNumber) {
-        User user = new User(id, username, email, password, nationality, phoneNumber);
+    public User put(String id, String username, String email, String password, String nationality, String phoneNumber, String image) {
+        User user = new User(id, username, email, password, nationality, phoneNumber, image);
         return userRepository.put(user);
     }
 

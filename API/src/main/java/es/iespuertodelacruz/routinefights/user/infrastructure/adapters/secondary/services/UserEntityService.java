@@ -126,6 +126,7 @@ public class UserEntityService implements IUserRepository {
         userEntity.setEmail(user.getEmail());
         userEntity.setNationality(user.getNationality());
         userEntity.setPhoneNumber(user.getPhoneNumber());
+        userEntity.setImage(user.getImage());
         userEntity.setUpdatedAt(LocalDateTime.now());
         return userEntityMapper.toDomain(userRepository.save(userEntity));
     }
