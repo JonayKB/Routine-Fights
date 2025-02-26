@@ -122,4 +122,6 @@
   - Between: (User) → (Meeting)  
 
 - **PART_OF**  
-  - Between: (Meeting) → (CommunityEvent)  
+  - Between: (Meeting) → (CommunityEvent)
+- **RELATED**
+-  Between: (CommunityEvent) → (Activity)
