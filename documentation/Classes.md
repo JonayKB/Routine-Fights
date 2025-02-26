@@ -1,7 +1,7 @@
 # Entities (Nodes)
 
 ## 1. User
-- **id:** Integer (PK)
+- **id:** String (PK)
 - **username:** String
 - **email:** String
 - **password:** String
@@ -13,7 +13,7 @@
 - **deletedAt:** Timestamp
 
 ## 3. Post
-- **id:** Integer (PK)
+- **id:** String (PK)
 - **image:** String
 - **streak:** Integer
 - **points:** Integer
@@ -23,30 +23,30 @@
 - **filedAt:** Timestamp
 
 ## 4. Comment
-- **id:** Integer (PK)
+- **id:** String (PK)
 - **message:** String
 - **createdAt:** Timestamp
 - **updatedAt:** Timestamp
 - **deletedAt:** Timestamp
 
 ## 6. Report
-- **id:** Integer (PK)
+- **id:** String (PK)
 - **message:** String
 - **createdAt:** Timestamp
 
 ## 8. Badge
-- **id:** Integer (PK)
+- **id:** String (PK)
 - **image:** String
 - **level:** Integer
 
 ## 10. CommunityEvent
-- **id:** Integer (PK)
+- **id:** String (PK)
 - **name:** String
 - **totalRequiered:** Integer
 - **createdAt:** Timestamp
 
 ## 12. Activity
-- **id:** Integer (PK)
+- **id:** String (PK)
 - **image:** String
 - **name:** String
 - **description:** String
@@ -57,17 +57,17 @@
 - **deletedAt:** Timestamp
 
 ## 14. Category
-- **id:** Integer (PK)
+- **id:** String (PK)
 - **name:** String
 
 ## 16. Team
-- **id:** Integer (PK)
+- **id:** String (PK)
 - **name:** String
 - **createdAt:** Timestamp
 - **deletedAt:** Timestamp
 
 ## 18. Meeting
-- **id:** Integer (PK)
+- **id:** String (PK)
 - **date:** Timestamp
 - **latitude:** Float (10,6)
 - **longitude:** Float (10,6)
@@ -76,7 +76,7 @@
 
 - **FOLLOWS**  
   - Between: (User) → (User)  
-  - Properties: createdAt, updatedAt, deletedAt
+  - Properties: createdAt, deletedAt
 
 - **POSTED**  
   - Between: (User) → (Post)  
@@ -92,7 +92,7 @@
 
 - **REPLIED_TO**  
   - Between: (Comment) → (Comment)  
-  - Properties: createdAt, updatedAt, deletedAt
+  - Properties: createdAt, deletedAt
 
 - **REPORTED**  
   - Between: (User) → (Report)
@@ -112,11 +112,11 @@
 
 - **MEMBER_OF**  
   - Between: (User) → (Team)  
-  - Properties: createdAt, updatedAt, deletedAt
+  - Properties: createdAt, deletedAt
 
 - **HAS_MEETING**  
   - Between: (Team) → (Meeting)  
-  - Properties: createdAt, updatedAt, deletedAt
+  - Properties: createdAt, deletedAt
 
 - **ATTENDED**  
   - Between: (User) → (Meeting)  
