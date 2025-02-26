@@ -12,6 +12,7 @@ public class User {
     private String password;
     private String nationality;
     private String phoneNumber;
+    private String image;
 
     /**
      * Default constructor
@@ -27,13 +28,15 @@ public class User {
      * @param password    The password of the user
      * @param nationality The nationality of the user
      * @param phoneNumber The phone number of the user
+     * @param image       The image of the user
      */
-    public User(String username, String email, String password, String nationality, String phoneNumber) {
+    public User(String username, String email, String password, String nationality, String phoneNumber, String image) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.nationality = nationality;
         this.phoneNumber = phoneNumber;
+        this.image = image;
     }
 
     /**
@@ -45,14 +48,16 @@ public class User {
      * @param password    The password of the user
      * @param nationality The nationality of the user
      * @param phoneNumber The phone number of the user
+     * @param image       The image of the user
      */
-    public User(String id, String username, String email, String password, String nationality, String phoneNumber) {
+    public User(String id, String username, String email, String password, String nationality, String phoneNumber, String image) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.nationality = nationality;
         this.phoneNumber = phoneNumber;
+        this.image = image;
     }
 
     /**
@@ -161,6 +166,24 @@ public class User {
      */
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * Get the image of the user
+     * 
+     * @return The image of the user
+     */
+    public String getImage() {
+        return this.image;
+    }
+
+    /**
+     * Set the image of the user
+     * 
+     * @param image The image of the user
+     */
+    public void setImage(String image) {
+        this.image = image;
     }
 
     /**

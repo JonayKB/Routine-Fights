@@ -48,7 +48,7 @@ public class UserControllerV3 {
             return null;
         }
         List<UserDTOV3> usersDTO = users.stream().map(user -> new UserDTOV3(user.getId(), user.getUsername(),
-                user.getEmail(), user.getNationality(), user.getPhoneNumber())).toList();
+                user.getEmail(), user.getNationality(), user.getPhoneNumber(), user.getImage())).toList();
         logger.info("Users: {}", usersDTO);
         return usersDTO;
     }
@@ -64,38 +64,40 @@ public class UserControllerV3 {
             return null;
         }
         UserDTOV3 usersDTO = new UserDTOV3(user.getId(), user.getUsername(),
-                user.getEmail(), user.getNationality(), user.getPhoneNumber());
+                user.getEmail(), user.getNationality(), user.getPhoneNumber(), user.getImage());
         logger.info("Users: {}", usersDTO);
         return usersDTO;
     }
 
     @MutationMapping("saveUser")
     public UserDTOV3 post(@Argument String username, @Argument String email,
-            @Argument String password, @Argument String nationality, @Argument String phoneNumber) {
+            @Argument String password, @Argument String nationality, @Argument String phoneNumber,
+            @Argument String image) {
         logger.info("trying to create the user");
         User user;
         try {
-            user = userService.post(username, email, password, nationality, phoneNumber);
+            user = userService.post(username, email, password, nationality, phoneNumber, image);
         } catch (Exception e) {
             logger.error("Unable to create the user: {}", e.getMessage());
             return null;
         }
         return new UserDTOV3(user.getId(), user.getUsername(), user.getEmail(), user.getNationality(),
-                user.getPhoneNumber());
+                user.getPhoneNumber(), user.getImage());
     }
 
     @MutationMapping("updateUser")
     public UserDTOV3 put(@Argument String id, @Argument String username, @Argument String email,
-            @Argument String password, @Argument String nationality, @Argument String phoneNumber) {
+            @Argument String password, @Argument String nationality, @Argument String phoneNumber,
+            @Argument String image) {
         User user;
         try {
-            user = userService.put(id, username, email, password, nationality, phoneNumber);
+            user = userService.put(id, username, email, password, nationality, phoneNumber, image);
         } catch (Exception e) {
             logger.error("Unable to update the user: {}", e.getMessage());
             return null;
         }
         return new UserDTOV3(user.getId(), user.getUsername(), user.getEmail(), user.getNationality(),
-                user.getPhoneNumber());
+                user.getPhoneNumber(), user.getImage());
     }
 
     @MutationMapping("deleteUser")
