@@ -1,6 +1,9 @@
 type Query {
     users: [User]
     user(id: ID!): User
+}
+
+type Mutation {
     saveUser(username: String!, email: String!, password: String!, nationality: String!, phoneNumber: String!): User
     updateUser(id: ID!, username: String!, email: String!, password: String!, nationality: String!, phoneNumber: String!): User
     deleteUser(id: ID!): Boolean

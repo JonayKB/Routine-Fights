@@ -21,7 +21,7 @@ public interface IUserRepository {
      * @param id id
      * @return User
      */
-    public User findById(Long id);
+    public User findById(String id);
 
     /**
      * Method to save a user
@@ -45,5 +45,5 @@ public interface IUserRepository {
      * @param id id
      * @return boolean
      */
-    public boolean delete(Long id);
+    public boolean delete(String id);
 }

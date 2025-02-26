@@ -52,7 +52,7 @@ public class UserService implements IUserService {
      * @return User
      */
     @Override
-    public User findById(Long id) {
+    public User findById(String id) {
         return userRepository.findById(id);
     }
 
@@ -84,7 +84,7 @@ public class UserService implements IUserService {
      * @return User
      */
     @Override
-    public User put(Long id, String username, String email, String password, String nationality, String phoneNumber) {
+    public User put(String id, String username, String email, String password, String nationality, String phoneNumber) {
         User user = new User(id, username, email, password, nationality, phoneNumber);
         return userRepository.put(user);
     }
@@ -96,7 +96,7 @@ public class UserService implements IUserService {
      * @return boolean
      */
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(String id) {
         return userRepository.delete(id);
     }
 }

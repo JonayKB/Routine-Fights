@@ -21,7 +21,7 @@ public interface IUserService {
      * @param id
      * @return User
      */
-    public User findById(Long id);
+    public User findById(String id);
 
     /**
      * Method to save a user
@@ -46,7 +46,7 @@ public interface IUserService {
      * @param phoneNumber phoneNumber
      * @return User
      */
-    public User put(Long id, String username, String email, String password, String nationality, String phoneNumber);
+    public User put(String id, String username, String email, String password, String nationality, String phoneNumber);
 
     /**
      * Method to delete a user
@@ -54,5 +54,5 @@ public interface IUserService {
      * @param id id
      * @return boolean
      */
-    public boolean delete(Long id);
+    public boolean delete(String id);
 }

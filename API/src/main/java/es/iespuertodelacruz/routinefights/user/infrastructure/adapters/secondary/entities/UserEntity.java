@@ -17,7 +17,7 @@ import java.util.Objects;
 public class UserEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
     private String username;
     private String email;
     private String password;
@@ -55,7 +55,7 @@ public class UserEntity {
      * @param followers   The list of followers of the user
      * @param following   The list of users that the user is following
      */
-    public UserEntity(Long id, String username, String email, String password, String nationality, String phoneNumber,
+    public UserEntity(String id, String username, String email, String password, String nationality, String phoneNumber,
             LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, List<UserEntity> followers,
             List<UserEntity> following) {
         this.id = id;
@@ -76,7 +76,7 @@ public class UserEntity {
      * 
      * @return The id of the user
      */
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
@@ -85,7 +85,7 @@ public class UserEntity {
      * 
      * @param id The id of the user
      */
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -6,7 +6,7 @@ import java.util.Objects;
  * User
  */
 public class User {
-    private Long id;
+    private String id;
     private String username;
     private String email;
     private String password;
@@ -46,7 +46,7 @@ public class User {
      * @param nationality The nationality of the user
      * @param phoneNumber The phone number of the user
      */
-    public User(Long id, String username, String email, String password, String nationality, String phoneNumber) {
+    public User(String id, String username, String email, String password, String nationality, String phoneNumber) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -60,7 +60,7 @@ public class User {
      * 
      * @return The id of the user
      */
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
@@ -69,7 +69,7 @@ public class User {
      * 
      * @param id The id of the user
      */
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -54,7 +54,7 @@ public class UserControllerV3 {
     }
 
     @QueryMapping("user")
-    public UserDTOV3 findById(@Argument Long id) {
+    public UserDTOV3 findById(@Argument String id) {
         logger.info("Find user by id");
         User user;
         try {
@@ -72,21 +72,39 @@ public class UserControllerV3 {
     @MutationMapping("saveUser")
     public UserDTOV3 post(@Argument String username, @Argument String email,
             @Argument String password, @Argument String nationality, @Argument String phoneNumber) {
-        User user = userService.post(username, email, password, nationality, phoneNumber);
+        logger.info("trying to create the user");
+        User user;
+        try {
+            user = userService.post(username, email, password, nationality, phoneNumber);
+        } catch (Exception e) {
+            logger.error("Unable to create the user: {}", e.getMessage());
+            return null;
+        }
         return new UserDTOV3(user.getId(), user.getUsername(), user.getEmail(), user.getNationality(),
                 user.getPhoneNumber());
     }
 
     @MutationMapping("updateUser")
-    public UserDTOV3 put(@Argument Long id, @Argument String username, @Argument String email,
+    public UserDTOV3 put(@Argument String id, @Argument String username, @Argument String email,
             @Argument String password, @Argument String nationality, @Argument String phoneNumber) {
-        User user = userService.put(id, username, email, password, nationality, phoneNumber);
+        User user;
+        try {
+            user = userService.put(id, username, email, password, nationality, phoneNumber);
+        } catch (Exception e) {
+            logger.error("Unable to update the user: {}", e.getMessage());
+            return null;
+        }
         return new UserDTOV3(user.getId(), user.getUsername(), user.getEmail(), user.getNationality(),
                 user.getPhoneNumber());
     }
 
     @MutationMapping("deleteUser")
-    public boolean delete(@Argument Long id) {
-        return userService.delete(id);
+    public boolean delete(@Argument String id) {
+        try {
+            return userService.delete(id);
+        } catch (Exception e) {
+            logger.error("Unable to delete the user: {}", e.getMessage());
+            return false;
+        }
     }
 }
