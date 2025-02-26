@@ -2,8 +2,10 @@ package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondar
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -19,6 +21,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
 public class UserEntityService implements IUserRepository {
     private IUserEntityRepository userRepository;
     private IUserEntityMapper userEntityMapper;
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Getter for userRepository
@@ -48,6 +51,15 @@ public class UserEntityService implements IUserRepository {
         this.userEntityMapper = userEntityMapper;
     }
 
+    public PasswordEncoder getPasswordEncoder() {
+        return this.passwordEncoder;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+    
     /**
      * Method to find all users
      * 
@@ -65,7 +77,7 @@ public class UserEntityService implements IUserRepository {
      * @return User
      */
     @Override
-    public User findById(Long id) {
+    public User findById(String id) {
         return userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
     }
 
@@ -77,10 +89,17 @@ public class UserEntityService implements IUserRepository {
      */
     @Override
     public User post(User user) {
-        if (user == null) {
+        if (user == null || user.getPassword() == null) {
             return null;
         }
+
+        user.setId(UUID.randomUUID().toString());
+        if (userRepository.existsById(user.getId())) {
+            return null;
+        }
+
         UserEntity userEntity = userEntityMapper.toEntity(user);
+        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setUpdatedAt(LocalDateTime.now());
         return userEntityMapper.toDomain(userRepository.save(userEntity));
@@ -94,18 +113,19 @@ public class UserEntityService implements IUserRepository {
      */
     @Override
     public User put(User user) {
-        if(user == null || user.getId() == null) {
+        if (user == null) {
             return null;
         }
 
         UserEntity userEntity = userRepository.findById(user.getId()).orElse(null);
-        if(userEntity == null) {
+        if (userEntity == null) {
             return null;
         }
 
         UserEntity updatedUserEntity = userEntityMapper.toEntity(user);
+        updatedUserEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         updatedUserEntity.setCreatedAt(userEntity.getCreatedAt());
-        userEntity.setUpdatedAt(LocalDateTime.now());
+        updatedUserEntity.setUpdatedAt(LocalDateTime.now());
         return userEntityMapper.toDomain(userRepository.save(updatedUserEntity));
     }
 
@@ -116,7 +136,7 @@ public class UserEntityService implements IUserRepository {
      * @return boolean
      */
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(String id) {
         userRepository.deleteById(id);
         return true;
     }
