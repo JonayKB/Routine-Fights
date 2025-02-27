@@ -81,6 +81,16 @@ public class UserEntityService implements IUserRepository {
         return userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
     }
 
+    @Override
+    public User findByEmail(String email) {
+        return userEntityMapper.toDomain(userRepository.findByEmail(email));
+    }
+
+    @Override
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     /**
      * Method to save a user
      * 
@@ -119,7 +129,7 @@ public class UserEntityService implements IUserRepository {
             throw new RuntimeException("User not found");
         }
 
-        if (user.getPassword() != null) {
+        if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         userEntity.setUsername(user.getUsername());
@@ -128,6 +138,9 @@ public class UserEntityService implements IUserRepository {
         userEntity.setPhoneNumber(user.getPhoneNumber());
         userEntity.setImage(user.getImage());
         userEntity.setUpdatedAt(LocalDateTime.now());
+        userEntity.setRole(user.getRole());
+        userEntity.setVerified(user.getVerified());
+        userEntity.setVerificationToken(user.getVerificationToken());
         return userEntityMapper.toDomain(userRepository.save(userEntity));
     }
 

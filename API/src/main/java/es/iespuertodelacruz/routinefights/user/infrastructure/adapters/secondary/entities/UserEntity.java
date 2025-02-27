@@ -24,6 +24,9 @@ public class UserEntity {
     private String nationality;
     private String phoneNumber;
     private String image;
+    private String role;
+    private boolean verified;
+    private String verificationToken;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -56,10 +59,12 @@ public class UserEntity {
      * @param followers   The list of followers of the user
      * @param following   The list of users that the user is following
      * @param image       The image of the user
+     * @param role        The role of the user
+     * @param verified    The verification status of the user
      */
     public UserEntity(String id, String username, String email, String password, String nationality, String phoneNumber,
             LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, List<UserEntity> followers,
-            List<UserEntity> following, String image) {
+            List<UserEntity> following, String image, String role, boolean verified, String verificationToken) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -72,6 +77,9 @@ public class UserEntity {
         this.followers = followers;
         this.following = following;
         this.image = image;
+        this.role = role;
+        this.verified = verified;
+        this.verificationToken = verificationToken;
     }
 
     /**
@@ -288,6 +296,60 @@ public class UserEntity {
      */
     public void setFollowing(List<UserEntity> following) {
         this.following = following;
+    }
+
+    /**
+     * Get the role of the user
+     * 
+     * @return The role of the user
+     */
+    public String getRole() {
+        return this.role;
+    }
+
+    /**
+     * Set the role of the user
+     * 
+     * @param role The role of the user
+     */
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    /**
+     * Get the verification status of the user
+     * 
+     * @return The verification status of the user
+     */
+    public boolean getVerified() {
+        return this.verified;
+    }
+
+    /**
+     * Set the verification status of the user
+     * 
+     * @param verified The verification status of the user
+     */
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    /**
+     * Get the verification token of the user
+     * 
+     * @return The verification token of the user
+     */
+    public String getVerificationToken() {
+        return this.verificationToken;
+    }
+
+    /**
+     * Set the verification token of the user
+     * 
+     * @param verificationToken The verification token of the user
+     */
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 
     /**
