@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -37,6 +39,7 @@ public class UserControllerV3 {
         this.userService = userService;
     }
 
+    @Secured("ROLE_ADMIN")
     @QueryMapping("users")
     public List<UserDTOV3> findAll() {
         logger.info("Find all users");
@@ -53,6 +56,7 @@ public class UserControllerV3 {
         return usersDTO;
     }
 
+    @Secured("ROLE_ADMIN")
     @QueryMapping("user")
     public UserDTOV3 findById(@Argument String id) {
         logger.info("Find user by id");
