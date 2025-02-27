@@ -1,141 +1,127 @@
-# Classes
+# Entities (Nodes)
 
-## Index
-- [Classes](#classes)
-  - [Index](#index)
-    - [User](#user)
-    - [Follows](#follows)
-    - [Post](#post)
-    - [Report](#report)
-    - [Comment](#comment)
-    - [Badge](#badge)
-    - [User\_Badge](#user_badge)
-    - [CommunityEvent](#communityevent)
-    - [Activity](#activity)
-    - [Category](#category)
-    - [Team](#team)
-    - [Team\_User](#team_user)
-    - [Meeting\_Team](#meeting_team)
-    - [Meeting](#meeting)
-    - [Meeting\_User](#meeting_user)
+## 1. User
+- **id:** String (PK)
+- **username:** String
+- **email:** String
+- **password:** String
+- **nationality:** String
+- **phoneNumber:** String
+- **image:** String
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-### User
-1. ID (int) :key:
-2. Username (string)
-3. Email (string)
-4. Password (string)
-5. Nacionality (string)
-6. PhoneNumber (string)
-7. CreatedAt (timestamp)
-8. UpdatedAt (timestamp)
-9. DeletedAt (timestamp)
+## 3. Post
+- **id:** String (PK)
+- **image:** String
+- **streak:** Integer
+- **points:** Integer
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
+- **filedAt:** Timestamp
 
-### Follows
-1. followerID (int) :paperclip: :key: 
-2. followingID (int) :paperclip: :key: 
-3. CreatedAt (timestamp)
-4. UpdatedAt (timestamp)
-5. DeletedAt (timestamp)
+## 4. Comment
+- **id:** String (PK)
+- **message:** String
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-### Post
-1. ID (int) :key:
-2. Image (string)
-3. Likes (int)
-4. Streak (int)
-5. PointToAdd (int)
-6. UserID (int) :paperclip:
-7. ActivityID (int) :paperclip:
-8. CreatedAt (timestamp)
-9.  UpdatedAt (timestamp)
-10. DeletedAt (timestamp)
+## 6. Report
+- **id:** String (PK)
+- **message:** String
+- **createdAt:** Timestamp
 
-### Report
-1. ID :key:
-2. UserID (int) :paperclip:
-3. PostID (int) :paperclip:
-4. Message (string)
+## 8. Badge
+- **id:** String (PK)
+- **image:** String
+- **level:** Integer
 
-### Comment
-1. ID (int) :key:
-2. Message (string)
-3. Likes (int)
-4. ReplyID(int) :paperclip:
-5. Reports (int)
-6. UserID (int) :paperclip:
-7. PostID (int) :paperclip:
-8. CreatedAt (timestamp)
-9. UpdatedAt (timestamp)
-10. DeletedAt (timestamp)
+## 10. CommunityEvent
+- **id:** String (PK)
+- **name:** String
+- **totalRequiered:** Integer
+- **createdAt:** Timestamp
 
-### Badge
-1. ID (int) :key:
-2. Icon (string)
-3. Level (int)
-4. ComunnityEventID (int) :paperclip:
-5. CreatedAt (timestamp)
-6. UpdatedAt (timestamp)
-7. DeletedAt (timestamp)
+## 12. Activity
+- **id:** String (PK)
+- **image:** String
+- **name:** String
+- **description:** String
+- **timeRate:** String
+- **timesRequired:** String
+- **createdAt:** Timestamp
+- **updatedAt:** Timestamp
+- **deletedAt:** Timestamp
 
-### User_Badge
-1. UserID (int) :paperclip: :key:
-2. BadgeID (int) :paperclip: :key:
-3. CreatedAt (timestamp)
-4. UpdatedAt (timestamp)
-5. DeletedAt (timestamp)
+## 14. Category
+- **id:** String (PK)
+- **name:** String
 
-### CommunityEvent
-1. ID (int) :key:
-2. Name (string)
-3. TotalRequiered (int)
-4. CreatedAt (timestamp)
-5. UpdatedAt (timestamp)
-6. DeletedAt (timestamp)
+## 16. Team
+- **id:** String (PK)
+- **name:** String
+- **createdAt:** Timestamp
+- **deletedAt:** Timestamp
 
-### Activity
-1. ID (int) :key:
-2. Icon (string)
-3. Name (string)
-4. Description (string)
-5. TimeRate (string)
-6. CreatedBy (int) :paperclip:
-7. Category ID (int) :paperclip:
-8. CreatedAt (timestamp)
-9. UpdatedAt (timestamp)
-10. DeletedAt (timestamp)
+## 18. Meeting
+- **id:** String (PK)
+- **date:** Timestamp
+- **latitude:** Float (10,6)
+- **longitude:** Float (10,6)
 
-### Category
-1. ID (int) :key:
-2. Name (string)
-3. CreatedAt (timestamp)
-4. UpdatedAt (timestamp)
-5. DeletedAt (timestamp)
+# Relationships
 
-### Team
-1. ID (int) :key:
-2. Name (string)
-3. CreatedAt (timestamp)
-4. UpdatedAt (timestamp)
-5. DeletedAt (timestamp)
+- **FOLLOWS**  
+  - Between: (User) → (User)  
+  - Properties: createdAt, deletedAt
 
-### Team_User
-1. TeamID (int) :paperclip: :key:
-2. UserID (int) :paperclip: :key:
-3. CreatedAt (timestamp)
-4. UpdatedAt (timestamp)
-5. DeletedAt (timestamp)
+- **POSTED**  
+  - Between: (User) → (Post)  
 
-### Meeting_Team
-1. TeamID (int) :paperclip: :key:
-2. MeetingID (int) :paperclip: :key:
+- **RELATED_TO**  
+  - Between: (Post) → (Activity)  
 
-### Meeting
-1. ID (int) :key:
-2. TeamID (int) :paperclip:
-3. Date (timestamp)
-4. ComunnityEventID (int) :paperclip:
-5. Latitude (float(10,6))
-6. Longitude (float(10,6))
+- **COMMENTED**  
+  - Between: (User) → (Comment)  
 
-### Meeting_User
-1. UserID (int) :paperclip: :key:
-2. MeetingID (int) :paperclip: :key:
+- **ON**  
+  - Between: (Comment) → (Post)  
+
+- **REPLIED_TO**  
+  - Between: (Comment) → (Comment)  
+  - Properties: createdAt, deletedAt
+
+- **REPORTED**  
+  - Between: (User) → (Report)
+  - Complementary: (Report) → (Post)
+
+- **HAS_BADGE**  
+  - Between: (User) → (Badge)  
+
+- **ASSOCIATED_WITH**  
+  - Between: (Badge) → (CommunityEvent)  
+
+- **CREATED_ACTIVITY**  
+  - Between: (User) → (Activity)  
+
+- **BELONGS_TO**  
+  - Between: (Activity) → (Category)  
+
+- **MEMBER_OF**  
+  - Between: (User) → (Team)  
+  - Properties: createdAt, deletedAt
+
+- **HAS_MEETING**  
+  - Between: (Team) → (Meeting)  
+  - Properties: createdAt, deletedAt
+
+- **ATTENDED**  
+  - Between: (User) → (Meeting)  
+
+- **PART_OF**  
+  - Between: (Meeting) → (CommunityEvent)
+- **RELATED**
+-  Between: (CommunityEvent) → (Activity)
