@@ -1,9 +1,7 @@
-name: CI SonarQube Analysis
+name: CI SonarQube Analysis DEV
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -34,4 +32,5 @@ jobs:
             -Dsonar.projectKey=RoutineFights \
             -Dsonar.host.url=http://zombiesurvive.ddns.net:9000 \
             -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.wait=true \
+            -Dsonar.branch.name=DEV
