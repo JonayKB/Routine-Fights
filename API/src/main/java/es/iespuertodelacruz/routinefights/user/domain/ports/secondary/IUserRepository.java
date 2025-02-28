@@ -24,6 +24,22 @@ public interface IUserRepository {
     public User findById(String id);
 
     /**
+     * Method to find a user by email
+     * 
+     * @param email email
+     * @return User
+     */
+    public User findByEmail(String email);
+
+    /**
+     * Method to check if a user exists by email
+     * 
+     * @param email email
+     * @return Boolean
+     */
+    public Boolean existsByEmail(String email);
+
+    /**
      * Method to save a user
      * 
      * @param username username

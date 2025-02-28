@@ -56,38 +56,54 @@ public class UserService implements IUserService {
         return userRepository.findById(id);
     }
 
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     /**
      * Method to save a user
      * 
-     * @param username username
-     * @param email email
-     * @param password password
+     * @param username    username
+     * @param email       email
+     * @param password    password
      * @param nationality nationality
      * @param phoneNumber phoneNumber
-     * @param image image
+     * @param image       image
+     * @param role        role
+     * @param verified    verified
      * @return User
      */
     @Override
-    public User post(String username, String email, String password, String nationality, String phoneNumber, String image) {
-        User user = new User(username, email, password, nationality, phoneNumber, image);
+    public User post(String username, String email, String password, String nationality, String phoneNumber,
+            String image, String role, boolean verified, String verificationToken) {
+        User user = new User(username, email, password, nationality, phoneNumber, image, role, verified, verificationToken);
         return userRepository.post(user);
     }
 
     /**
      * Method to update a user
      * 
-     * @param id id
-     * @param username username
-     * @param email email
-     * @param password password
+     * @param id          id
+     * @param username    username
+     * @param email       email
+     * @param password    password
      * @param nationality nationality
      * @param phoneNumber phoneNumber
-     * @param image image
+     * @param image       image
+     * @param role        role
+     * @param verified    verified
      * @return User
      */
     @Override
-    public User put(String id, String username, String email, String password, String nationality, String phoneNumber, String image) {
-        User user = new User(id, username, email, password, nationality, phoneNumber, image);
+    public User put(String id, String username, String email, String password, String nationality, String phoneNumber,
+            String image, String role, boolean verified, String verificationToken) {
+        User user = new User(id, username, email, password, nationality, phoneNumber, image, role, verified, verificationToken);
         return userRepository.put(user);
     }
 
