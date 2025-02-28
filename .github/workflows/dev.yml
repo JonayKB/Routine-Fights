@@ -32,5 +32,4 @@ jobs:
             -Dsonar.projectKey=RoutineFights \
             -Dsonar.host.url=http://zombiesurvive.ddns.net:9000 \
             -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.qualitygate.wait=true \
-            -Dsonar.branch.name=$BRANCH_NAME
+            -Dsonar.qualitygate.wait=true 
