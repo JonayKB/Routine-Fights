@@ -1,9 +1,9 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.controllers;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -24,11 +24,20 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
 @Controller
 @CrossOrigin
 public class UserControllerV3 {
-    Logger logger = LoggerFactory.getLogger(UserControllerV3.class);
+    Logger logger = Logger.getLogger(UserControllerV3.class.getName());
 
     private IUserService userService;
     private UserOutputV3Mapper userOutputMapper;
 
+    public UserOutputV3Mapper getUserOutputMapper() {
+        return this.userOutputMapper;
+    }
+
+    @Autowired
+    public void setUserOutputMapper(UserOutputV3Mapper userOutputMapper) {
+        this.userOutputMapper = userOutputMapper;
+    }
+    
     public IUserService getUserService() {
         return this.userService;
     }
@@ -45,11 +54,11 @@ public class UserControllerV3 {
         try {
             users = userService.findAll();
         } catch (Exception e) {
-            logger.error("Error finding users: ", e.getMessage());
+            logger.log(Level.WARNING, "Error finding users: {0}", e.getMessage());
             throw new RuntimeException("Error finding users");
         }
         List<UserOutputDTOV3> usersDTO = users.stream().map(user -> userOutputMapper.tOutputDTOV3(user)).toList();
-        logger.info("Users: ", usersDTO);
+        logger.log(Level.INFO, "Users: {0}", usersDTO);
         return usersDTO;
     }
 
@@ -60,11 +69,11 @@ public class UserControllerV3 {
         try {
             user = userService.findById(id);
         } catch (Exception e) {
-            logger.error("Error finding user: ", e.getMessage());
+            logger.log(Level.WARNING, "Error finding user: {0}", e.getMessage());
             throw new RuntimeException("Error finding user");
         }
         UserOutputDTOV3 userDTO = userOutputMapper.tOutputDTOV3(user);
-        logger.info(userDTO.toString());
+        logger.log(Level.INFO, "User found: {0}", userDTO);
         return userDTO;
     }
 
@@ -79,7 +88,7 @@ public class UserControllerV3 {
                     userInputDTO.verificationToken(), userInputDTO.createdAt(), userInputDTO.updatedAt(),
                     userInputDTO.deletedAt());
         } catch (Exception e) {
-            logger.error("Unable to create the user: ", e.getMessage());
+            logger.log(Level.WARNING, "Unable to create the user: {0}", e.getMessage());
             throw new RuntimeException("Unable to create the user");
         }
         return userOutputMapper.tOutputDTOV3(user);
@@ -96,7 +105,7 @@ public class UserControllerV3 {
                     userInputDTO.verificationToken(), userInputDTO.createdAt(), userInputDTO.updatedAt(),
                     userInputDTO.deletedAt());
         } catch (Exception e) {
-            logger.error("Unable to update the user: ", e.getMessage());
+            logger.log(Level.WARNING, "Unable to update the user: {0}", e.getMessage());
             throw new RuntimeException("Unable to update the user");
         }
         return userOutputMapper.tOutputDTOV3(user);
@@ -108,7 +117,7 @@ public class UserControllerV3 {
         try {
             return userService.delete(id);
         } catch (Exception e) {
-            logger.error("Unable to delete the user: ", e.getMessage());
+            logger.log(Level.WARNING, "Unable to delete the user: {0}", e.getMessage());
             throw new RuntimeException("Unable to delete the user");
         }
     }
