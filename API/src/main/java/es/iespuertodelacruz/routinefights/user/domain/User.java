@@ -13,6 +13,9 @@ public class User {
     private String nationality;
     private String phoneNumber;
     private String image;
+    private String role;
+    private boolean verified;
+    private String verificationToken;
 
     /**
      * Default constructor
@@ -29,14 +32,19 @@ public class User {
      * @param nationality The nationality of the user
      * @param phoneNumber The phone number of the user
      * @param image       The image of the user
+     * @param role        The role of the user
      */
-    public User(String username, String email, String password, String nationality, String phoneNumber, String image) {
+    public User(String username, String email, String password, String nationality, String phoneNumber, String image,
+            String role, boolean verified, String verificationToken) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.nationality = nationality;
         this.phoneNumber = phoneNumber;
         this.image = image;
+        this.role = role;
+        this.verified = verified;
+        this.verificationToken = verificationToken;
     }
 
     /**
@@ -49,8 +57,11 @@ public class User {
      * @param nationality The nationality of the user
      * @param phoneNumber The phone number of the user
      * @param image       The image of the user
+     * @param role        The role of the user
+     * @param verified    The verification status of the user
      */
-    public User(String id, String username, String email, String password, String nationality, String phoneNumber, String image) {
+    public User(String id, String username, String email, String password, String nationality, String phoneNumber,
+            String image, String role, boolean verified, String verificationToken) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -58,6 +69,9 @@ public class User {
         this.nationality = nationality;
         this.phoneNumber = phoneNumber;
         this.image = image;
+        this.role = role;
+        this.verified = verified;
+        this.verificationToken = verificationToken;
     }
 
     /**
@@ -184,6 +198,61 @@ public class User {
      */
     public void setImage(String image) {
         this.image = image;
+    }
+
+    /**
+     * Get the role of the user
+     * 
+     * @return The role of the user
+     */
+    public String getRole() {
+        return this.role;
+
+    }
+
+    /**
+     * Set the role of the user
+     * 
+     * @param role The role of the user
+     */
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    /**
+     * Get the verification status of the user
+     * 
+     * @return The verification status of the user
+     */
+    public boolean getVerified() {
+        return this.verified;
+    }
+
+    /**
+     * Set the verification status of the user
+     * 
+     * @param verified The verification status of the user
+     */
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    /**
+     * Get the verification token of the user
+     * 
+     * @return The verification token of the user
+     */
+    public String getVerificationToken() {
+        return this.verificationToken;
+    }
+
+    /**
+     * Set the verification token of the user
+     * 
+     * @param verificationToken The verification token of the user
+     */
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 
     /**

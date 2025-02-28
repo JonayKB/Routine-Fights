@@ -4,7 +4,7 @@ type Query {
 }
 
 type Mutation {
-    saveUser(username: String!, email: String!, password: String!, nationality: String!, phoneNumber: String!, image: String): User
+    saveUser(username: String!, email: String!, password: String!, nationality: String!, phoneNumber: String!, image: String!, role: String!, verified: Boolean!,verificationToken: String!): User
     updateUser(id: ID!, username: String!, email: String!, password: String!, nationality: String!, phoneNumber: String!, image: String): User
     deleteUser(id: ID!): Boolean
 }

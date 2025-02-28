@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.controllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -37,6 +40,7 @@ public class UserControllerV3 {
         this.userService = userService;
     }
 
+    @Secured("ROLE_ADMIN")
     @QueryMapping("users")
     public List<UserDTOV3> findAll() {
         logger.info("Find all users");
@@ -48,11 +52,13 @@ public class UserControllerV3 {
             return null;
         }
         List<UserDTOV3> usersDTO = users.stream().map(user -> new UserDTOV3(user.getId(), user.getUsername(),
-                user.getEmail(), user.getNationality(), user.getPhoneNumber(), user.getImage())).toList();
+                user.getEmail(), user.getNationality(), user.getPhoneNumber(), user.getImage(), user.getRole()))
+                .toList();
         logger.info("Users: {}", usersDTO);
         return usersDTO;
     }
 
+    @Secured("ROLE_ADMIN")
     @QueryMapping("user")
     public UserDTOV3 findById(@Argument String id) {
         logger.info("Find user by id");
@@ -64,42 +70,49 @@ public class UserControllerV3 {
             return null;
         }
         UserDTOV3 usersDTO = new UserDTOV3(user.getId(), user.getUsername(),
-                user.getEmail(), user.getNationality(), user.getPhoneNumber(), user.getImage());
+                user.getEmail(), user.getNationality(), user.getPhoneNumber(), user.getImage(), user.getRole());
         logger.info("Users: {}", usersDTO);
         return usersDTO;
     }
 
+    @Secured("ROLE_ADMIN")
     @MutationMapping("saveUser")
     public UserDTOV3 post(@Argument String username, @Argument String email,
             @Argument String password, @Argument String nationality, @Argument String phoneNumber,
-            @Argument String image) {
+            @Argument String image, @Argument String role, @Argument boolean verified,
+            @Argument String verificationToken) {
         logger.info("trying to create the user");
         User user;
         try {
-            user = userService.post(username, email, password, nationality, phoneNumber, image);
+            user = userService.post(username, email, password, nationality, phoneNumber, image, role, verified,
+                    verificationToken);
         } catch (Exception e) {
             logger.error("Unable to create the user: {}", e.getMessage());
             return null;
         }
         return new UserDTOV3(user.getId(), user.getUsername(), user.getEmail(), user.getNationality(),
-                user.getPhoneNumber(), user.getImage());
+                user.getPhoneNumber(), user.getImage(), user.getRole());
     }
 
+    @Secured("ROLE_ADMIN")
     @MutationMapping("updateUser")
     public UserDTOV3 put(@Argument String id, @Argument String username, @Argument String email,
             @Argument String password, @Argument String nationality, @Argument String phoneNumber,
-            @Argument String image) {
+            @Argument String image, @Argument String role, @Argument boolean verified,
+            @Argument String verificationToken) {
         User user;
         try {
-            user = userService.put(id, username, email, password, nationality, phoneNumber, image);
+            user = userService.put(id, username, email, password, nationality, phoneNumber, image, role, verified,
+                    verificationToken);
         } catch (Exception e) {
             logger.error("Unable to update the user: {}", e.getMessage());
             return null;
         }
         return new UserDTOV3(user.getId(), user.getUsername(), user.getEmail(), user.getNationality(),
-                user.getPhoneNumber(), user.getImage());
+                user.getPhoneNumber(), user.getImage(), user.getRole());
     }
 
+    @Secured("ROLE_ADMIN")
     @MutationMapping("deleteUser")
     public boolean delete(@Argument String id) {
         try {
