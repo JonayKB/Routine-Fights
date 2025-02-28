@@ -60,22 +60,11 @@ public class UserEntityService implements IUserRepository {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /**
-     * Method to find all users
-     * 
-     * @return List<User> list of users
-     */
     @Override
     public List<User> findAll() {
         return userEntityMapper.toDomain(userRepository.findAll());
     }
 
-    /**
-     * Method to find a user by id
-     * 
-     * @param id id of the user
-     * @return User
-     */
     @Override
     public User findById(String id) {
         return userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
@@ -91,37 +80,30 @@ public class UserEntityService implements IUserRepository {
         return userRepository.existsByEmail(email);
     }
 
-    /**
-     * Method to save a user
-     * 
-     * @param user user
-     * @return User
-     */
     @Override
     @Transactional
     public User post(User user) {
-        if (user == null || user.getPassword() == null) {
-            return null;
+        if (user == null || user.getPassword() == null || user.getEmail() == null) {
+            throw new RuntimeException("Data required");
+        }
+
+        if(userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email already exists");
         }
 
         UserEntity userEntity = userEntityMapper.toEntity(user);
+        //TODO: search followers and following
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setUpdatedAt(LocalDateTime.now());
         return userEntityMapper.toDomain(userRepository.save(userEntity));
     }
 
-    /**
-     * Method to update a user
-     * 
-     * @param user user
-     * @return User
-     */
     @Override
     @Transactional
     public User put(User user) {
-        if (user == null) {
-            return null;
+        if (user == null || user.getId() == null) {
+            throw new RuntimeException("Data required");
         }
 
         UserEntity userEntity = userRepository.findById(user.getId()).orElse(null);
@@ -132,6 +114,7 @@ public class UserEntityService implements IUserRepository {
         if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         }
+
         userEntity.setUsername(user.getUsername());
         userEntity.setEmail(user.getEmail());
         userEntity.setNationality(user.getNationality());
@@ -141,19 +124,15 @@ public class UserEntityService implements IUserRepository {
         userEntity.setRole(user.getRole());
         userEntity.setVerified(user.getVerified());
         userEntity.setVerificationToken(user.getVerificationToken());
+        //TODO: search followers and following
         return userEntityMapper.toDomain(userRepository.save(userEntity));
     }
 
-    /**
-     * Method to delete a user
-     * 
-     * @param id id
-     * @return boolean
-     */
     @Override
     @Transactional
     public boolean delete(String id) {
+        //TODO: delete followers and following relation first
         userRepository.deleteById(id);
-        return true;
+        return !userRepository.existsById(id);
     }
 }

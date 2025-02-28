@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.routinefights.user.domain.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,22 +36,11 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Method to find all users
-     * 
-     * @return List<User> list of users
-     */
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    /**
-     * Method to find a user by id
-     * 
-     * @param id id of the user
-     * @return User
-     */
     @Override
     public User findById(String id) {
         return userRepository.findById(id);
@@ -66,53 +56,24 @@ public class UserService implements IUserService {
         return userRepository.existsByEmail(email);
     }
 
-    /**
-     * Method to save a user
-     * 
-     * @param username    username
-     * @param email       email
-     * @param password    password
-     * @param nationality nationality
-     * @param phoneNumber phoneNumber
-     * @param image       image
-     * @param role        role
-     * @param verified    verified
-     * @return User
-     */
     @Override
     public User post(String username, String email, String password, String nationality, String phoneNumber,
-            String image, String role, boolean verified, String verificationToken) {
-        User user = new User(username, email, password, nationality, phoneNumber, image, role, verified, verificationToken);
+            String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
+            LocalDateTime updatedAt, LocalDateTime deletedAt) {
+        User user = new User(username, email, password, nationality, phoneNumber, image, role, verified,
+                verificationToken, createdAt, updatedAt, deletedAt);
         return userRepository.post(user);
     }
 
-    /**
-     * Method to update a user
-     * 
-     * @param id          id
-     * @param username    username
-     * @param email       email
-     * @param password    password
-     * @param nationality nationality
-     * @param phoneNumber phoneNumber
-     * @param image       image
-     * @param role        role
-     * @param verified    verified
-     * @return User
-     */
     @Override
     public User put(String id, String username, String email, String password, String nationality, String phoneNumber,
-            String image, String role, boolean verified, String verificationToken) {
-        User user = new User(id, username, email, password, nationality, phoneNumber, image, role, verified, verificationToken);
+            String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
+            LocalDateTime updatedAt, LocalDateTime deletedAt) {
+        User user = new User(id, username, email, password, nationality, phoneNumber, image, role, verified,
+                verificationToken, createdAt, updatedAt, deletedAt);
         return userRepository.put(user);
     }
 
-    /**
-     * Method to delete a user
-     * 
-     * @param id id
-     * @return boolean
-     */
     @Override
     public boolean delete(String id) {
         return userRepository.delete(id);

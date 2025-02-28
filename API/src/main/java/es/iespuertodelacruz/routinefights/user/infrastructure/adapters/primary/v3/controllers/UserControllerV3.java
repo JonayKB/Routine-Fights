@@ -1,7 +1,6 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.controllers;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,19 +9,17 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.dtos.UserDTOV3;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.dtos.UserInputDTOV3;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.dtos.UserOutputDTOV3;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.mappers.UserOutputV3Mapper;
 
 /**
  * UserControllerV3
- * 
- * @see <a href="https://www.baeldung.com/spring-graphql">Spring GraphQL
- *      Controllers</a>
  */
 @Controller
 @CrossOrigin
@@ -30,6 +27,7 @@ public class UserControllerV3 {
     Logger logger = LoggerFactory.getLogger(UserControllerV3.class);
 
     private IUserService userService;
+    private UserOutputV3Mapper userOutputMapper;
 
     public IUserService getUserService() {
         return this.userService;
@@ -41,75 +39,67 @@ public class UserControllerV3 {
     }
 
     @Secured("ROLE_ADMIN")
-    @QueryMapping("users")
-    public List<UserDTOV3> findAll() {
-        logger.info("Find all users");
+    @QueryMapping("usersV3")
+    public List<UserOutputDTOV3> findAll() {
         List<User> users;
         try {
             users = userService.findAll();
         } catch (Exception e) {
-            logger.error("Error finding all users: {}", e.getMessage());
-            return null;
+            logger.error("Error finding users: ", e.getMessage());
+            throw new RuntimeException("Error finding users");
         }
-        List<UserDTOV3> usersDTO = users.stream().map(user -> new UserDTOV3(user.getId(), user.getUsername(),
-                user.getEmail(), user.getNationality(), user.getPhoneNumber(), user.getImage(), user.getRole()))
-                .toList();
-        logger.info("Users: {}", usersDTO);
+        List<UserOutputDTOV3> usersDTO = users.stream().map(user -> userOutputMapper.tOutputDTOV3(user)).toList();
+        logger.info("Users: ", usersDTO);
         return usersDTO;
     }
 
     @Secured("ROLE_ADMIN")
-    @QueryMapping("user")
-    public UserDTOV3 findById(@Argument String id) {
-        logger.info("Find user by id");
+    @QueryMapping("userV3")
+    public UserOutputDTOV3 findById(@Argument String id) {
         User user;
         try {
             user = userService.findById(id);
         } catch (Exception e) {
-            logger.error("Error finding all users: {}", e.getMessage());
-            return null;
+            logger.error("Error finding user: ", e.getMessage());
+            throw new RuntimeException("Error finding user");
         }
-        UserDTOV3 usersDTO = new UserDTOV3(user.getId(), user.getUsername(),
-                user.getEmail(), user.getNationality(), user.getPhoneNumber(), user.getImage(), user.getRole());
-        logger.info("Users: {}", usersDTO);
-        return usersDTO;
+        UserOutputDTOV3 userDTO = userOutputMapper.tOutputDTOV3(user);
+        logger.info(userDTO.toString());
+        return userDTO;
     }
 
     @Secured("ROLE_ADMIN")
-    @MutationMapping("saveUser")
-    public UserDTOV3 post(@Argument String username, @Argument String email,
-            @Argument String password, @Argument String nationality, @Argument String phoneNumber,
-            @Argument String image, @Argument String role, @Argument boolean verified,
-            @Argument String verificationToken) {
-        logger.info("trying to create the user");
+    @MutationMapping("saveUserV3")
+    public UserOutputDTOV3 post(@Argument UserInputDTOV3 userInputDTO) {
         User user;
         try {
-            user = userService.post(username, email, password, nationality, phoneNumber, image, role, verified,
-                    verificationToken);
+            user = userService.post(userInputDTO.username(), userInputDTO.email(),
+                    userInputDTO.password(), userInputDTO.nationality(), userInputDTO.phoneNumber(),
+                    userInputDTO.image(), userInputDTO.role(), userInputDTO.verified(),
+                    userInputDTO.verificationToken(), userInputDTO.createdAt(), userInputDTO.updatedAt(),
+                    userInputDTO.deletedAt());
         } catch (Exception e) {
-            logger.error("Unable to create the user: {}", e.getMessage());
-            return null;
+            logger.error("Unable to create the user: ", e.getMessage());
+            throw new RuntimeException("Unable to create the user");
         }
-        return new UserDTOV3(user.getId(), user.getUsername(), user.getEmail(), user.getNationality(),
-                user.getPhoneNumber(), user.getImage(), user.getRole());
+        return userOutputMapper.tOutputDTOV3(user);
     }
 
     @Secured("ROLE_ADMIN")
-    @MutationMapping("updateUser")
-    public UserDTOV3 put(@Argument String id, @Argument String username, @Argument String email,
-            @Argument String password, @Argument String nationality, @Argument String phoneNumber,
-            @Argument String image, @Argument String role, @Argument boolean verified,
-            @Argument String verificationToken) {
+    @MutationMapping("updateUserV3")
+    public UserOutputDTOV3 put(@Argument UserInputDTOV3 userInputDTO) {
         User user;
         try {
-            user = userService.put(id, username, email, password, nationality, phoneNumber, image, role, verified,
-                    verificationToken);
+            user = userService.put(userInputDTO.id(), userInputDTO.username(), userInputDTO.email(),
+                    userInputDTO.password(), userInputDTO.nationality(), userInputDTO.phoneNumber(),
+                    userInputDTO.image(), userInputDTO.role(), userInputDTO.verified(),
+                    userInputDTO.verificationToken(), userInputDTO.createdAt(), userInputDTO.updatedAt(),
+                    userInputDTO.deletedAt());
         } catch (Exception e) {
-            logger.error("Unable to update the user: {}", e.getMessage());
-            return null;
+            logger.error("Unable to update the user: ", e.getMessage());
+            throw new RuntimeException("Unable to update the user");
         }
-        return new UserDTOV3(user.getId(), user.getUsername(), user.getEmail(), user.getNationality(),
-                user.getPhoneNumber(), user.getImage(), user.getRole());
+        return userOutputMapper.tOutputDTOV3(user);
     }
 
     @Secured("ROLE_ADMIN")
@@ -118,8 +108,8 @@ public class UserControllerV3 {
         try {
             return userService.delete(id);
         } catch (Exception e) {
-            logger.error("Unable to delete the user: {}", e.getMessage());
-            return false;
+            logger.error("Unable to delete the user: ", e.getMessage());
+            throw new RuntimeException("Unable to delete the user");
         }
     }
 }
