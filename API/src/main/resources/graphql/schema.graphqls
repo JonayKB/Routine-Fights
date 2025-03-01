@@ -9,21 +9,6 @@ type Mutation {
   deleteUserV3(id: ID!): Boolean
 }
 
-type UserOutputV3 {
-  id: ID
-  username: String!
-  email: String!
-  nationality: String!
-  phoneNumber: String!
-  image: String
-  role: String!
-  verified: Boolean!
-  verificationToken: String
-  createdAt: String
-  updatedAt: String!
-  deletedAt: String
-}
-
 input UserInputV3 {
   id: ID
   username: String!
@@ -38,4 +23,21 @@ input UserInputV3 {
   createdAt: String
   updatedAt: String!
   deletedAt: String
+}
+
+type UserOutputV3 {
+  id: ID!
+  username: String!
+  email: String!
+  nationality: String!
+  phoneNumber: String!
+  image: String
+  role: String!
+  verified: Boolean!
+  verificationToken: String
+  createdAt: String!
+  updatedAt: String!
+  deletedAt: String
+  followers: [UserOutputV3]!
+  following: [UserOutputV3]!
 }

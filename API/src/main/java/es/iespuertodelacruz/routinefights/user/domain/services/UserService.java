@@ -70,7 +70,7 @@ public class UserService implements IUserService {
             String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
             LocalDateTime updatedAt, LocalDateTime deletedAt) {
         User user = new User(id, username, email, password, nationality, phoneNumber, image, role, verified,
-                verificationToken, createdAt, updatedAt, deletedAt);
+                verificationToken, createdAt, updatedAt, deletedAt, null, null);
         return userRepository.put(user);
     }
 

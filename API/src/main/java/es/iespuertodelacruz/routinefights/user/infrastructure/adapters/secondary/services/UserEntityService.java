@@ -71,7 +71,20 @@ public class UserEntityService implements IUserRepository {
 
     @Override
     public User findById(String id) {
-        return userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
+        try {
+            UserEntity userEntity = userRepository.findById(id).orElse(null);
+            if (userEntity != null) {
+                if (userEntity.getFollowers() == null) {
+                    userEntity.setFollowers(userRepository.findFollowersByEmail(userEntity.getEmail()));
+                }
+                if (userEntity.getFollowing() == null) {
+                    userEntity.setFollowing(userRepository.findFollowedUsersByEmail(userEntity.getEmail()));
+                }
+            }
+            return userEntityMapper.toDomain(userEntity);
+        } catch (Exception e) {
+            throw new UserNotFoundException("User not found");
+        }
     }
 
     @Override
@@ -151,20 +164,20 @@ public class UserEntityService implements IUserRepository {
         }
     }
 
-    public List<User> findFollowedUsersByEmail(String email){
+    public List<User> findFollowedUsersByEmail(String email) {
         return userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email));
     }
 
-    public List<User> findFollowersByEmail(String email){
+    public List<User> findFollowersByEmail(String email) {
         return userEntityMapper.toDomain(userRepository.findFollowersByEmail(email));
     }
 
     @Transactional
-    public boolean followUser(String email1, String email2){
+    public boolean followUser(String email1, String email2) {
         return userRepository.followUser(email1, email2);
     }
 
-    public List<String> findAllImages(){
+    public List<String> findAllImages() {
         return userRepository.findAllImages();
     }
 }
