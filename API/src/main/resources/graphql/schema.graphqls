@@ -10,7 +10,7 @@ type Mutation {
 }
 
 type UserOutputV3 {
-  id: ID!
+  id: ID
   username: String!
   email: String!
   nationality: String!
@@ -19,22 +19,23 @@ type UserOutputV3 {
   role: String!
   verified: Boolean!
   verificationToken: String
-  createdAt: String!
+  createdAt: String
   updatedAt: String!
   deletedAt: String
 }
 
 input UserInputV3 {
+  id: ID
   username: String!
   email: String!
-  password: String!
+  password: String
   nationality: String!
   phoneNumber: String!
   image: String
   role: String!
   verified: Boolean!
   verificationToken: String
-  createdAt: String!
+  createdAt: String
   updatedAt: String!
   deletedAt: String
 }

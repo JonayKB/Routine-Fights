@@ -87,16 +87,20 @@ public class UserEntityService implements IUserRepository {
             throw new RuntimeException("Data required");
         }
 
-        if(userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
 
         UserEntity userEntity = userEntityMapper.toEntity(user);
-        //TODO: search followers and following
+        // TODO: search followers and following
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setUpdatedAt(LocalDateTime.now());
-        return userEntityMapper.toDomain(userRepository.save(userEntity));
+        try {
+            return userEntityMapper.toDomain(userRepository.save(userEntity));
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving user");
+        }
     }
 
     @Override
@@ -124,15 +128,23 @@ public class UserEntityService implements IUserRepository {
         userEntity.setRole(user.getRole());
         userEntity.setVerified(user.getVerified());
         userEntity.setVerificationToken(user.getVerificationToken());
-        //TODO: search followers and following
-        return userEntityMapper.toDomain(userRepository.save(userEntity));
+        // TODO: search followers and following
+        try {
+            return userEntityMapper.toDomain(userRepository.save(userEntity));
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating user");
+        }
     }
 
     @Override
     @Transactional
     public boolean delete(String id) {
-        //TODO: delete followers and following relation first
-        userRepository.deleteById(id);
-        return !userRepository.existsById(id);
+        // TODO: delete followers and following relation first
+        try {
+            userRepository.deleteById(id);
+            return !userRepository.existsById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting user");
+        }
     }
 }
