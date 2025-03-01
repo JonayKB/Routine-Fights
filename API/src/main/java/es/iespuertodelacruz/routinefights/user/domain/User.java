@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.routinefights.user.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import es.iespuertodelacruz.routinefights.user.common.UserCommon;
@@ -10,6 +11,8 @@ import es.iespuertodelacruz.routinefights.user.common.UserCommon;
  */
 public class User extends UserCommon {
     private String id;
+    private List<User> followers;
+    private List<User> following;
 
     /**
      * Default constructor
@@ -18,7 +21,7 @@ public class User extends UserCommon {
     }
 
     /**
-     * Constructor with username, email, password, nationality and phone number
+     * Constructor with values
      * 
      * @param username          The username of the user
      * @param email             The email of the user
@@ -53,13 +56,20 @@ public class User extends UserCommon {
      * @param role              The role of the user
      * @param verified          The verification status of the user
      * @param verificationToken The verification token of the user
+     * @param createdAt         The date when the user was created
+     * @param updatedAt         The date when the user was updated
+     * @param deletedAt         The date when the user was deleted
+     * @param followers         The number of followers of the user
+     * @param following         The number of following of the user
      */
     public User(String id, String username, String email, String password, String nationality, String phoneNumber,
             String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
-            LocalDateTime updatedAt, LocalDateTime deletedAt) {
+            LocalDateTime updatedAt, LocalDateTime deletedAt, List<User> followers, List<User> following) {
         super(username, email, password, nationality, phoneNumber, image, role, verified, verificationToken, createdAt,
                 updatedAt, deletedAt);
         this.id = id;
+        this.followers = followers;
+        this.following = following;
     }
 
     /**
@@ -78,6 +88,42 @@ public class User extends UserCommon {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * Get the number of followers of the user
+     * 
+     * @return The number of followers of the user
+     */
+    public List<User> getFollowers() {
+        return this.followers;
+    }
+
+    /**
+     * Set the number of followers of the user
+     * 
+     * @param followers The number of followers of the user
+     */
+    public void setFollowers(List<User> followers) {
+        this.followers = followers;
+    }
+
+    /**
+     * Get the number of following of the user
+     * 
+     * @return The number of following of the user
+     */
+    public List<User> getFollowing() {
+        return this.following;
+    }
+
+    /**
+     * Set the number of following of the user
+     * 
+     * @param following The number of following of the user
+     */
+    public void setFollowing(List<User> following) {
+        this.following = following;
     }
 
     /**
@@ -119,6 +165,8 @@ public class User extends UserCommon {
                 ", username='" + getUsername() + "'" +
                 ", email='" + getEmail() + "'" +
                 ", verified='" + getVerified() + "'" +
+                ", followers='" + getFollowers().size() + "'" +
+                ", following='" + getFollowing().size() + "'" +
                 "}";
     }
 }

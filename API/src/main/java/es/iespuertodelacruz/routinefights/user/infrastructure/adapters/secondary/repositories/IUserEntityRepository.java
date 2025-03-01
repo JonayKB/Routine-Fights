@@ -24,6 +24,6 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
     @Query("MATCH (fr: User {email: :email1}) MATCH (fd: User {email: :email2}) MERGE (fr)-[:FOLLOWS]->(fd) RETURN COUNT(*) > 0")
     public boolean followUser(@Param("email1") String email1, @Param("email2") String email2);
 
-    @Query("MATCH (u: User) RETURN u.image")
+    @Query("MATCH (u: User) WHERE u.image IS NOT NULL RETURN u.image")
     public List<String> findAllImages();
 }
