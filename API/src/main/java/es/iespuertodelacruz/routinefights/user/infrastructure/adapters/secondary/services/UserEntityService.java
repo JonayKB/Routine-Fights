@@ -10,6 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.secondary.IUserRepository;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserDeleteException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserNotFoundException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserSaveException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserUpdateException;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.mappers.IUserEntityMapper;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.repositories.IUserEntityRepository;
@@ -84,22 +88,22 @@ public class UserEntityService implements IUserRepository {
     @Transactional
     public User post(User user) {
         if (user == null || user.getPassword() == null || user.getEmail() == null) {
-            throw new RuntimeException("Data required");
+            throw new UserSaveException("Data required");
         }
 
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new UserSaveException("Email already exists");
         }
 
         UserEntity userEntity = userEntityMapper.toEntity(user);
-        // TODO: search followers and following
+        // TODO: search followers and following number
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setUpdatedAt(LocalDateTime.now());
         try {
             return userEntityMapper.toDomain(userRepository.save(userEntity));
         } catch (Exception e) {
-            throw new RuntimeException("Error saving user");
+            throw new UserSaveException("Error saving user");
         }
     }
 
@@ -107,12 +111,12 @@ public class UserEntityService implements IUserRepository {
     @Transactional
     public User put(User user) {
         if (user == null || user.getId() == null) {
-            throw new RuntimeException("Data required");
+            throw new UserUpdateException("Data required");
         }
 
         UserEntity userEntity = userRepository.findById(user.getId()).orElse(null);
         if (userEntity == null) {
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException("User not found");
         }
 
         if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
@@ -128,23 +132,39 @@ public class UserEntityService implements IUserRepository {
         userEntity.setRole(user.getRole());
         userEntity.setVerified(user.getVerified());
         userEntity.setVerificationToken(user.getVerificationToken());
-        // TODO: search followers and following
+        // TODO: search followers and following number
         try {
             return userEntityMapper.toDomain(userRepository.save(userEntity));
         } catch (Exception e) {
-            throw new RuntimeException("Error updating user");
+            throw new UserUpdateException("Error updating user");
         }
     }
 
     @Override
     @Transactional
     public boolean delete(String id) {
-        // TODO: delete followers and following relation first
         try {
             userRepository.deleteById(id);
             return !userRepository.existsById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Error deleting user");
+            throw new UserDeleteException("Error deleting user");
         }
+    }
+
+    public List<User> findFollowedUsersByEmail(String email){
+        return userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email));
+    }
+
+    public List<User> findFollowersByEmail(String email){
+        return userEntityMapper.toDomain(userRepository.findFollowersByEmail(email));
+    }
+
+    @Transactional
+    public boolean followUser(String email1, String email2){
+        return userRepository.followUser(email1, email2);
+    }
+
+    public List<String> findAllImages(){
+        return userRepository.findAllImages();
     }
 }
