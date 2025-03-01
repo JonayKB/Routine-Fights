@@ -1,10 +1,9 @@
-name: CI SonarQube Analysis
+name: CI SonarQube Analysis DEV
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+
 
 jobs:
   build:
@@ -29,9 +28,11 @@ jobs:
         working-directory: API
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+          BRANCH_NAME: ${{ github.ref_name }}
         run: |
           mvn sonar:sonar \
             -Dsonar.projectKey=RoutineFights \
             -Dsonar.host.url=http://zombiesurvive.ddns.net:9000 \
             -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.wait=true  \
+            -Dsonar.branch.name=$BRANCH_NAME
