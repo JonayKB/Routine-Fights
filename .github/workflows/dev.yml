@@ -2,7 +2,6 @@ name: CI SonarQube Analysis DEV
 
 on:
   push:
-  pull_request:
 
 
 jobs:
