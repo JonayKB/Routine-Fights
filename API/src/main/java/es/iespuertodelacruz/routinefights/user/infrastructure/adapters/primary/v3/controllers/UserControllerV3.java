@@ -79,40 +79,40 @@ public class UserControllerV3 {
 
     @Secured("ROLE_ADMIN")
     @MutationMapping("saveUserV3")
-    public UserOutputDTOV3 post(@Argument UserInputDTOV3 userInputDTO) {
-        User user;
+    public UserOutputDTOV3 post(@Argument UserInputDTOV3 user) {
+        User userDomain;
         try {
-            user = userService.post(userInputDTO.username(), userInputDTO.email(),
-                    userInputDTO.password(), userInputDTO.nationality(), userInputDTO.phoneNumber(),
-                    userInputDTO.image(), userInputDTO.role(), userInputDTO.verified(),
-                    userInputDTO.verificationToken(), userInputDTO.createdAt(), userInputDTO.updatedAt(),
-                    userInputDTO.deletedAt());
+            userDomain = userService.post(user.username(), user.email(),
+                    user.password(), user.nationality(), user.phoneNumber(),
+                    user.image(), user.role(), user.verified(),
+                    user.verificationToken(), user.createdAt(), user.updatedAt(),
+                    user.deletedAt());
         } catch (Exception e) {
             logger.log(Level.WARNING, "Unable to create the user: {0}", e.getMessage());
             throw new RuntimeException("Unable to create the user");
         }
-        return userOutputMapper.tOutputDTOV3(user);
+        return userOutputMapper.tOutputDTOV3(userDomain);
     }
 
     @Secured("ROLE_ADMIN")
     @MutationMapping("updateUserV3")
-    public UserOutputDTOV3 put(@Argument UserInputDTOV3 userInputDTO) {
-        User user;
+    public UserOutputDTOV3 put(@Argument UserInputDTOV3 user) {
+        User userDomain;
         try {
-            user = userService.put(userInputDTO.id(), userInputDTO.username(), userInputDTO.email(),
-                    userInputDTO.password(), userInputDTO.nationality(), userInputDTO.phoneNumber(),
-                    userInputDTO.image(), userInputDTO.role(), userInputDTO.verified(),
-                    userInputDTO.verificationToken(), userInputDTO.createdAt(), userInputDTO.updatedAt(),
-                    userInputDTO.deletedAt());
+            userDomain = userService.put(user.id(), user.username(), user.email(),
+                    user.password(), user.nationality(), user.phoneNumber(),
+                    user.image(), user.role(), user.verified(),
+                    user.verificationToken(), user.createdAt(), user.updatedAt(),
+                    user.deletedAt());
         } catch (Exception e) {
             logger.log(Level.WARNING, "Unable to update the user: {0}", e.getMessage());
             throw new RuntimeException("Unable to update the user");
         }
-        return userOutputMapper.tOutputDTOV3(user);
+        return userOutputMapper.tOutputDTOV3(userDomain);
     }
 
     @Secured("ROLE_ADMIN")
-    @MutationMapping("deleteUser")
+    @MutationMapping("deleteUserV3")
     public boolean delete(@Argument String id) {
         try {
             return userService.delete(id);
