@@ -158,7 +158,8 @@ public class UserEntityService implements IUserRepository {
         userEntity.setRole(user.getRole());
         userEntity.setVerified(user.getVerified());
         userEntity.setVerificationToken(user.getVerificationToken());
-        // TODO: search followers and following number
+        userEntity.setFollowers(userRepository.findFollowersByEmail(user.getEmail()));
+        userEntity.setFollowing(userRepository.findFollowedUsersByEmail(user.getEmail()));
         try {
             return userEntityMapper.toDomain(userRepository.save(userEntity));
         } catch (Exception e) {

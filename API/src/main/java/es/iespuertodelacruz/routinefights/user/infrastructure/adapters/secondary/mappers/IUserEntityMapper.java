@@ -20,8 +20,6 @@ public interface IUserEntityMapper {
      * @param user User
      * @return UserEntity
      */
-    @Mapping(target = "followers", ignore = true)
-    @Mapping(target = "following", ignore = true)
     UserEntity toEntity(User user);
 
     /**

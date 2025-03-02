@@ -3,19 +3,13 @@ package es.iespuertodelacruz.routinefights.shared.services;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import es.iespuertodelacruz.routinefights.shared.dto.UserDTOAuth;
-import es.iespuertodelacruz.routinefights.shared.mappers.UserDTOAuthMapper;
 import es.iespuertodelacruz.routinefights.shared.security.JwtService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
 import es.iespuertodelacruz.routinefights.user.domain.services.UserService;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.dtos.UserOutputDTOV3;
 
 @Service
 public class AuthService {
