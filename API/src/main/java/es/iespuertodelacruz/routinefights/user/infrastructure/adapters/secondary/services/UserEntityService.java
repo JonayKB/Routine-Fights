@@ -24,6 +24,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
  */
 @Service
 public class UserEntityService implements IUserRepository {
+    private static final String USER_NOT_FOUND = "User not found";
     private IUserEntityRepository userRepository;
     private IUserEntityMapper userEntityMapper;
     private PasswordEncoder passwordEncoder;
@@ -67,21 +68,40 @@ public class UserEntityService implements IUserRepository {
 
     @Override
     public List<User> findAll() {
-        return userEntityMapper.toDomain(userRepository.findAll());
+        try {
+            List<User> users = userEntityMapper.toDomain(userRepository.findAll());
+            for (User user : users) {
+                user.setFollowers(findFollowersByEmail(user.getEmail()));
+                user.setFollowing(findFollowedUsersByEmail(user.getEmail()));
+            }
+            return users;
+        } catch (Exception e) {
+            throw new UserNotFoundException("Users not found");
+        }
     }
 
     @Override
     public User findById(String id) {
         try {
-            return userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
+            User user = userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
+            user.setFollowers(findFollowersByEmail(user.getEmail()));
+            user.setFollowing(findFollowedUsersByEmail(user.getEmail()));
+            return user;
         } catch (Exception e) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException(USER_NOT_FOUND);
         }
     }
 
     @Override
     public User findByEmail(String email) {
-        return userEntityMapper.toDomain(userRepository.findByEmail(email));
+        try {
+            User user = userEntityMapper.toDomain(userRepository.findByEmail(email));
+            user.setFollowers(findFollowersByEmail(user.getEmail()));
+            user.setFollowing(findFollowedUsersByEmail(user.getEmail()));
+            return user;
+        } catch (Exception e) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
     }
 
     @Override
@@ -122,7 +142,7 @@ public class UserEntityService implements IUserRepository {
 
         UserEntity userEntity = userRepository.findById(user.getId()).orElse(null);
         if (userEntity == null) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException(USER_NOT_FOUND);
         }
 
         if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
@@ -160,8 +180,7 @@ public class UserEntityService implements IUserRepository {
     @Override
     public List<User> findFollowedUsersByEmail(String email) {
         try {
-            List<User> users = userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email));
-            return users;
+            return userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email));
         } catch (Exception e) {
             throw new UserNotFoundException("Followed users not found");
         }
