@@ -1,10 +1,9 @@
 package es.iespuertodelacruz.routinefights.user.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -81,37 +80,37 @@ class UserTest extends UserInitializer {
 
     @Test
     void constructorWithAllFieldsTest() {
-        User user = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
+        User userTest = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);
-        assertNotNull(user, ERROR_CREATING_USER);
-        assertEquals(USERNAME, user.getUsername(), ERROR_CREATING_USER);
-        assertEquals(EMAIL, user.getEmail(), ERROR_CREATING_USER);
-        assertEquals(PASSWORD, user.getPassword(), ERROR_CREATING_USER);
-        assertEquals(NATIONALITY, user.getNationality(), ERROR_CREATING_USER);
-        assertEquals(PHONE_NUMBER, user.getPhoneNumber(), ERROR_CREATING_USER);
-        assertEquals(IMAGE, user.getImage(), ERROR_CREATING_USER);
-        assertEquals(ROLE, user.getRole(), ERROR_CREATING_USER);
-        assertEquals(VERIFIED, user.getVerified(), ERROR_CREATING_USER);
-        assertEquals(VERIFICATION_TOKEN, user.getVerificationToken(), ERROR_CREATING_USER);
-        assertEquals(CREATED_AT, user.getCreatedAt(), ERROR_CREATING_USER);
-        assertEquals(UPDATED_AT, user.getUpdatedAt(), ERROR_CREATING_USER);
-        assertEquals(DELETED_AT, user.getDeletedAt(), ERROR_CREATING_USER);
-        assertEquals(followers, user.getFollowers(), ERROR_CREATING_USER);
-        assertEquals(following, user.getFollowing(), ERROR_CREATING_USER);
+        assertNotNull(userTest, ERROR_CREATING_USER);
+        assertEquals(USERNAME, userTest.getUsername(), ERROR_CREATING_USER);
+        assertEquals(EMAIL, userTest.getEmail(), ERROR_CREATING_USER);
+        assertEquals(PASSWORD, userTest.getPassword(), ERROR_CREATING_USER);
+        assertEquals(NATIONALITY, userTest.getNationality(), ERROR_CREATING_USER);
+        assertEquals(PHONE_NUMBER, userTest.getPhoneNumber(), ERROR_CREATING_USER);
+        assertEquals(IMAGE, userTest.getImage(), ERROR_CREATING_USER);
+        assertEquals(ROLE, userTest.getRole(), ERROR_CREATING_USER);
+        assertEquals(VERIFIED, userTest.getVerified(), ERROR_CREATING_USER);
+        assertEquals(VERIFICATION_TOKEN, userTest.getVerificationToken(), ERROR_CREATING_USER);
+        assertEquals(CREATED_AT, userTest.getCreatedAt(), ERROR_CREATING_USER);
+        assertEquals(UPDATED_AT, userTest.getUpdatedAt(), ERROR_CREATING_USER);
+        assertEquals(DELETED_AT, userTest.getDeletedAt(), ERROR_CREATING_USER);
+        assertEquals(followers, userTest.getFollowers(), ERROR_CREATING_USER);
+        assertEquals(following, userTest.getFollowing(), ERROR_CREATING_USER);
     }
 
     @Test
     void equalsTest() {
-        User userTest = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, EMAIL, IMAGE, ROLE, VERIFIED,
-                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);
-        assertTrue(user.equals(userTest), "Error in equals method");
+        User userTest = new User();
+        userTest.setId(ID);
+        assertEquals(user, userTest, "Error in equals method");
     }
 
     @Test
     void equalsFalseTest() {
-        User userTest = new User(USERNAME, EMAIL, PASSWORD, NATIONALITY, EMAIL, IMAGE, ROLE, VERIFIED,
-                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT);
-        assertFalse(user.equals(userTest), "Error in equals method");
+        User userTest = new User();
+        userTest.setId("False ID");
+        assertNotEquals(user, userTest, "Error in equals method");
     }
 
     @Test
