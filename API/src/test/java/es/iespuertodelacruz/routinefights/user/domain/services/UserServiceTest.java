@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,50 +45,43 @@ class UserServiceTest {
     @Test
     void existsByEmailTest() {
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
-        Boolean exists = userService.existsByEmail("email");
-        assertNotNull(exists);
+        assertNotNull(userService.existsByEmail("email"));
     }
 
     @Test
     void findAllTest() {
         when(userRepository.findAll()).thenReturn(new ArrayList<User>());
-        List<User> users = userService.findAll();
-        assertNotNull(users);
+        assertNotNull(userService.findAll());
     }
 
     @Test
     void findAllImagesTest() {
         when(userRepository.findAllImages()).thenReturn(new ArrayList<String>());
-        List<String> images = userService.findAllImages();
-        assertNotNull(images);
+        assertNotNull(userService.findAllImages());
     }
 
     @Test
     void findByEmailTest() {
         when(userRepository.findByEmail(anyString())).thenReturn(new User());
-        User user = userService.findByEmail("email");
-        assertNotNull(user);
+        assertNotNull(userService.findByEmail("email"));
     }
 
     @Test
     void findByIdTest() {
         when(userRepository.findById(anyString())).thenReturn(new User());
-        User user = userService.findById("1");
-        assertNotNull(user);
+        assertNotNull(userService.findById("1"));
     }
 
     @Test
     void findFollowedUsersByEmailTest() {
         when(userRepository.findFollowedUsersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        List<User> users = userService.findFollowedUsersByEmail("email");
-        assertNotNull(users);
+        assertNotNull(userService.findFollowedUsersByEmail("email"));
     }
 
     @Test
     void findFollowersByEmailTest() {
         when(userRepository.findFollowersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        List<User> users = userService.findFollowersByEmail("email");
-        assertNotNull(users);
+        assertNotNull(userService.findFollowersByEmail("email"));
     }
 
     @Test
@@ -101,7 +93,7 @@ class UserServiceTest {
 
     @Test
     void postTest() {
-        when(userRepository.post(any())).thenReturn(new User());
+        when(userRepository.post(any(User.class))).thenReturn(new User());
         User user = userService.post("username", "email", "password", "nationality", "phoneNumber", "image", "role",
                 true, "verificationToken", LocalDateTime.now(), LocalDateTime.now(), null);
         assertNotNull(user);
@@ -109,7 +101,7 @@ class UserServiceTest {
 
     @Test
     void putTest() {
-        when(userRepository.put(any())).thenReturn(new User());
+        when(userRepository.put(any(User.class))).thenReturn(new User());
         User user = userService.put("1", "username", "email", "password", "nationality", "phoneNumber", "image", "role",
                 true, "verificationToken", LocalDateTime.now(), LocalDateTime.now(), null);
         assertNotNull(user);
