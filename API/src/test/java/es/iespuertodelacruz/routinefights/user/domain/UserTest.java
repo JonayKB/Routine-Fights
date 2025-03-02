@@ -103,14 +103,24 @@ class UserTest extends UserInitializer {
     void equalsTest() {
         User userTest = new User();
         userTest.setId(ID);
-        assertEquals(user, userTest, "Error in equals method");
+        assertEquals(user, userTest, ERROR_IN_EQUALS_METHOD);
+    }
+
+    @Test
+    void equalsSameTest() {
+        assertEquals(user, user, ERROR_IN_EQUALS_METHOD);
+    }
+
+    @Test
+    void equalsDifferentInstanceTest() {
+        assertNotEquals(user, userEntity, ERROR_IN_EQUALS_METHOD);
     }
 
     @Test
     void equalsFalseTest() {
         User userTest = new User();
         userTest.setId("False ID");
-        assertNotEquals(user, userTest, "Error in equals method");
+        assertNotEquals(user, userTest, ERROR_IN_EQUALS_METHOD);
     }
 
     @Test
