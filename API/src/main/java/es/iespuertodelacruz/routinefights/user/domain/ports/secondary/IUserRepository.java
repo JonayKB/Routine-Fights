@@ -6,7 +6,7 @@ import es.iespuertodelacruz.routinefights.user.domain.User;
 /**
  * IUserRepository
  */
-public interface IUserRepository extends IUserGeneric {
+public interface IUserRepository extends IUserGeneric<User> {
     /**
      * Method to save a user
      * 

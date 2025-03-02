@@ -1,6 +1,5 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +41,7 @@ public class UserControllerV3 {
     public void setUserOutputMapper(UserOutputV3Mapper userOutputMapper) {
         this.userOutputMapper = userOutputMapper;
     }
-    
+
     public IUserService getUserService() {
         return this.userService;
     }
@@ -62,9 +61,7 @@ public class UserControllerV3 {
             logger.log(Level.WARNING, "Error finding users: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding users");
         }
-        List<UserOutputDTOV3> usersDTO = users.stream().map(user -> userOutputMapper.tOutputDTOV3(user)).toList();
-        logger.log(Level.INFO, "Users: {0}", usersDTO);
-        return usersDTO;
+        return userOutputMapper.tOutputDTOV3(users);
     }
 
     @Secured("ROLE_ADMIN")
@@ -77,9 +74,7 @@ public class UserControllerV3 {
             logger.log(Level.WARNING, "Error finding user: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding user");
         }
-        UserOutputDTOV3 userDTO = userOutputMapper.tOutputDTOV3(user);
-        logger.log(Level.INFO, "User found: {0}", userDTO);
-        return userDTO;
+        return userOutputMapper.tOutputDTOV3(user);
     }
 
     @Secured("ROLE_ADMIN")
@@ -125,5 +120,48 @@ public class UserControllerV3 {
             logger.log(Level.WARNING, "Unable to delete the user: {0}", e.getMessage());
             throw new UserDeleteException("Unable to delete the user");
         }
+    }
+
+    @Secured("ROLE_ADMIN")
+    @MutationMapping("followedByEmailV3")
+    public List<UserOutputDTOV3> findFollowedUsersByEmail(String email) {
+        List<User> following;
+        try {
+            following = userService.findFollowedUsersByEmail(email);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error finding followed users: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding followed users");
+        }
+        return userOutputMapper.tOutputDTOV3(following);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @MutationMapping("followersByEmailV3")
+    public List<UserOutputDTOV3> findFollowersByEmail(String email) {
+        List<User> followers;
+        try {
+            followers = userService.findFollowersByEmail(email);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error finding followers: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding followers");
+        }
+        return userOutputMapper.tOutputDTOV3(followers);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @MutationMapping("followUserV3")
+    public boolean followUser(String frEmail, String fdEmail) {
+        return userService.followUser(frEmail, fdEmail);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @MutationMapping("unfollowUserV3")
+    public boolean unfollowUser(String frEmail, String fdEmail) {
+        return userService.unfollowUser(fdEmail, fdEmail);
+    }
+
+    @MutationMapping("images")
+    public List<String> findAllImages() {
+        return userService.findAllImages();
     }
 }

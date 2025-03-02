@@ -7,6 +7,7 @@ import java.util.List;
  * UserOutputDTOV3
  */
 public record UserOutputDTOV3(String id, String username, String email, String nationality, String phoneNumber,
-        String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
-        LocalDateTime updatedAt, LocalDateTime deletedAt, List<UserOutputDTOV3> followers, List<UserOutputDTOV3> following) {
+                String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
+                LocalDateTime updatedAt, LocalDateTime deletedAt, List<UserOutputDTOV3> followers,
+                List<UserOutputDTOV3> following) {
 }

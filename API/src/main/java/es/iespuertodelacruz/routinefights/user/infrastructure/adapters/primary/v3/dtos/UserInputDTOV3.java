@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
  * UserInputDTOV3
  */
 public record UserInputDTOV3(String id, String username, String email, String password, String nationality,
-        String phoneNumber, String image, String role, boolean verified, String verificationToken,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt, LocalDateTime deletedAt) {
+                String phoneNumber, String image, String role, boolean verified, String verificationToken,
+                LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
 }

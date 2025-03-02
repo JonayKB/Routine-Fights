@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
@@ -14,7 +15,7 @@ import es.iespuertodelacruz.routinefights.user.domain.ports.secondary.IUserRepos
  * UserService
  */
 @Service
-public class UserService implements IUserService {
+public class UserService implements IUserService  {
     private IUserRepository userRepository;
 
     /**
@@ -77,5 +78,32 @@ public class UserService implements IUserService {
     @Override
     public boolean delete(String id) {
         return userRepository.delete(id);
+    }
+
+    @Override
+    public List<User> findFollowedUsersByEmail(String email) {
+        return userRepository.findFollowedUsersByEmail(email);
+    }
+
+    @Override
+    public List<User> findFollowersByEmail(String email) {
+        return userRepository.findFollowersByEmail(email);
+    }
+
+    @Override
+    @Transactional
+    public boolean followUser(String frEmail, String fdEmail) {
+        return userRepository.followUser(frEmail, fdEmail);
+    }
+
+    @Override
+    @Transactional
+    public boolean unfollowUser(String frEmail, String fdEmail) {
+        return userRepository.unfollowUser(frEmail, fdEmail);
+    }
+
+    @Override
+    public List<String> findAllImages() {
+        return userRepository.findAllImages();
     }
 }

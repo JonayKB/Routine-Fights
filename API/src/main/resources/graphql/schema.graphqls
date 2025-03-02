@@ -1,12 +1,17 @@
 type Query {
   usersV3: [UserOutputV3]
   userV3(id: ID!): UserOutputV3
+  followersByEmailV3(email: String!): [UserOutputV3]
+  followedByEmailV3(email: String!): [UserOutputV3]
+  images: [String]
 }
 
 type Mutation {
   saveUserV3(user: UserInputV3): UserOutputV3
   updateUserV3(user: UserInputV3): UserOutputV3
   deleteUserV3(id: ID!): Boolean
+  followUserV3(followerEmail: String!, followingEmail: String!): Boolean
+  unfollowUserV3(followerEmail: String!, followingEmail: String!): Boolean
 }
 
 input UserInputV3 {

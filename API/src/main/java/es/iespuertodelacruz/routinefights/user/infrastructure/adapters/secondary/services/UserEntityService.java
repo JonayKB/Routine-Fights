@@ -157,19 +157,29 @@ public class UserEntityService implements IUserRepository {
         }
     }
 
+    @Override
     public List<User> findFollowedUsersByEmail(String email) {
         return userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email));
     }
 
+    @Override
     public List<User> findFollowersByEmail(String email) {
         return userEntityMapper.toDomain(userRepository.findFollowersByEmail(email));
     }
 
+    @Override
     @Transactional
-    public boolean followUser(String email1, String email2) {
-        return userRepository.followUser(email1, email2);
+    public boolean followUser(String frEmail, String fdEmail) {
+        return userRepository.followUser(frEmail, fdEmail);
     }
 
+    @Override
+    @Transactional
+    public boolean unfollowUser(String frEmail, String fdEmail) {
+        return userRepository.unfollowUser(fdEmail, fdEmail);
+    }
+
+    @Override
     public List<String> findAllImages() {
         return userRepository.findAllImages();
     }

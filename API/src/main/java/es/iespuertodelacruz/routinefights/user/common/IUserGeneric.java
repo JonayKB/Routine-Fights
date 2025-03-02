@@ -2,34 +2,19 @@ package es.iespuertodelacruz.routinefights.user.common;
 
 import java.util.List;
 
-import es.iespuertodelacruz.routinefights.user.domain.User;
+import es.iespuertodelacruz.routinefights.shared.services.IGeneric;
 
 /**
  * IUserGeneric
  */
-public interface IUserGeneric {
-    /**
-     * Method to find all users
-     * 
-     * @return List<User> list of users
-     */
-    public List<User> findAll();
-
-    /**
-     * Method to find a user by id
-     * 
-     * @param id
-     * @return User
-     */
-    public User findById(String id);
-
+public interface IUserGeneric<T> extends IGeneric<T> {
     /**
      * Method to find a user by email
      * 
      * @param email email
      * @return User
      */
-    public User findByEmail(String email);
+    public T findByEmail(String email);
 
     /**
      * Method to check if a user exists by email
@@ -40,10 +25,41 @@ public interface IUserGeneric {
     public Boolean existsByEmail(String email);
 
     /**
-     * Method to delete a user
+     * Method to find the followed users by user's email
      * 
-     * @param id id
-     * @return boolean
+     * @return List<User>
      */
-    public boolean delete(String id);
+    public List<T> findFollowedUsersByEmail(String email);
+
+    /**
+     * Method to find the followers by user's email
+     * 
+     * @return List<User>
+     */
+    public List<T> findFollowersByEmail(String email);
+
+    /**
+     * Method to follow a user
+     * 
+     * @param frEmail follower's email
+     * @param fdEmail followed's email
+     * @return Boolean
+     */
+    public boolean followUser(String frEmail, String fdEmail);
+
+    /**
+     * Method to unfollow a user
+     * 
+     * @param frEmail follower's email
+     * @param fdEmail followed's email
+     * @return Boolean
+     */
+    public boolean unfollowUser(String frEmail, String fdEmail);
+
+    /**
+     * Method to find user's images
+     * 
+     * @return List<String>
+     */
+    public List<String> findAllImages();
 }
