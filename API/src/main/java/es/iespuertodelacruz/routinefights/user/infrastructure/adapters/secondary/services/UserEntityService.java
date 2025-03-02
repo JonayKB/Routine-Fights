@@ -159,28 +159,49 @@ public class UserEntityService implements IUserRepository {
 
     @Override
     public List<User> findFollowedUsersByEmail(String email) {
-        return userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email));
+        try {
+            List<User> users = userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email));
+            return users;
+        } catch (Exception e) {
+            throw new UserNotFoundException("Followed users not found");
+        }
     }
 
     @Override
     public List<User> findFollowersByEmail(String email) {
-        return userEntityMapper.toDomain(userRepository.findFollowersByEmail(email));
+        try {
+            return userEntityMapper.toDomain(userRepository.findFollowersByEmail(email));
+        } catch (Exception e) {
+            throw new UserNotFoundException("Followers not found");
+        }
     }
 
     @Override
     @Transactional
     public boolean followUser(String frEmail, String fdEmail) {
-        return userRepository.followUser(frEmail, fdEmail);
+        try {
+            return userRepository.followUser(frEmail, fdEmail);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error following user");
+        }
     }
 
     @Override
     @Transactional
     public boolean unfollowUser(String frEmail, String fdEmail) {
-        return userRepository.unfollowUser(fdEmail, fdEmail);
+        try {
+            return userRepository.unfollowUser(fdEmail, fdEmail);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error unfollowing user");
+        }
     }
 
     @Override
     public List<String> findAllImages() {
-        return userRepository.findAllImages();
+        try {
+            return userRepository.findAllImages();
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error finding images");
+        }
     }
 }
