@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,16 +73,7 @@ public class UserEntityService implements IUserRepository {
     @Override
     public User findById(String id) {
         try {
-            UserEntity userEntity = userRepository.findById(id).orElse(null);
-            if (userEntity != null) {
-                if (userEntity.getFollowers() == null) {
-                    userEntity.setFollowers(userRepository.findFollowersByEmail(userEntity.getEmail()));
-                }
-                if (userEntity.getFollowing() == null) {
-                    userEntity.setFollowing(userRepository.findFollowedUsersByEmail(userEntity.getEmail()));
-                }
-            }
-            return userEntityMapper.toDomain(userEntity);
+            return userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
         } catch (Exception e) {
             throw new UserNotFoundException("User not found");
         }
@@ -109,7 +101,8 @@ public class UserEntityService implements IUserRepository {
         }
 
         UserEntity userEntity = userEntityMapper.toEntity(user);
-        // TODO: search followers and following number
+        userEntity.setFollowers(new ArrayList<>());
+        userEntity.setFollowing(new ArrayList<>());
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setUpdatedAt(LocalDateTime.now());

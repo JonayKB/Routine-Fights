@@ -26,18 +26,18 @@ input UserInputV3 {
 }
 
 type UserOutputV3 {
-  id: ID!
-  username: String!
-  email: String!
-  nationality: String!
-  phoneNumber: String!
+  id: ID
+  username: String
+  email: String
+  nationality: String
+  phoneNumber: String
   image: String
-  role: String!
-  verified: Boolean!
+  role: String
+  verified: Boolean
   verificationToken: String
-  createdAt: String!
-  updatedAt: String!
+  createdAt: String
+  updatedAt: String
   deletedAt: String
-  followers: [UserOutputV3]!
-  following: [UserOutputV3]!
+  followers: [UserOutputV3]
+  following: [UserOutputV3]
 }
