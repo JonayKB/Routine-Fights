@@ -61,7 +61,8 @@ class UserEntityTest extends UserInitializer {
 
     @Test
     void constructorWithAllFieldsTest() {
-        UserEntity userEntityTest = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE,
+        UserEntity userEntityTest = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE,
+                ROLE,
                 VERIFIED, VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);
         assertNotNull(userEntityTest, ERROR_CREATING_USER);
         assertEquals(USERNAME, userEntityTest.getUsername(), ERROR_CREATING_USER);
@@ -84,26 +85,38 @@ class UserEntityTest extends UserInitializer {
     void equalsTest() {
         UserEntity userEntityTest = new UserEntity();
         userEntityTest.setId(ID);
-        assertEquals(userEntity, userEntityTest, "Error in equals method");
+        assertEquals(userEntity, userEntityTest, ERROR_IN_EQUALS_METHOD);
+    }
+
+    @Test
+    void equalsSameTest() {
+        assertEquals(userEntity, userEntity, ERROR_IN_EQUALS_METHOD);
+    }
+
+    @Test
+    void equalsDifferentInstanceTest() {
+        assertNotEquals(userEntity, user, ERROR_IN_EQUALS_METHOD);
     }
 
     @Test
     void equalsFalseTest() {
         UserEntity userEntityTest = new UserEntity();
         userEntityTest.setId("False ID");
-        assertNotEquals(userEntity, userEntityTest, "Error in equals method");
+        assertNotEquals(userEntity, userEntityTest, ERROR_IN_EQUALS_METHOD);
     }
 
     @Test
     void toStringTest() {
-        UserEntity userEntityTest = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, EMAIL, IMAGE, ROLE, VERIFIED,
+        UserEntity userEntityTest = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, EMAIL, IMAGE, ROLE,
+                VERIFIED,
                 VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);
         assertEquals(userEntity.toString(), userEntityTest.toString(), "Error in toString method");
     }
 
     @Test
     void hashCodeTest() {
-        UserEntity userEntityTest = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, EMAIL, IMAGE, ROLE, VERIFIED,
+        UserEntity userEntityTest = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, EMAIL, IMAGE, ROLE,
+                VERIFIED,
                 VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);
         assertEquals(userEntity.hashCode(), userEntityTest.hashCode(), "Error in hashCode method");
     }

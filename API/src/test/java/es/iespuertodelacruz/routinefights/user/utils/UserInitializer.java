@@ -11,6 +11,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
 
 public abstract class UserInitializer {
     protected static final String ERROR_MAPPING_PROPERTY = "Error mapping property: ";
+    protected static final String ERROR_IN_EQUALS_METHOD = "Error in equals method";
 
     protected static final String ID = "id";
     protected static final String USERNAME = "username";
