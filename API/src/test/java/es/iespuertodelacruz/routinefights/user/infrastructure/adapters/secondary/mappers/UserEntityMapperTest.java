@@ -15,9 +15,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
 import es.iespuertodelacruz.routinefights.user.utils.UserInitializer;
 
 @SpringBootTest
-class IUserEntityMapperTest extends UserInitializer {
-    private static final String ERROR_MAPPING_PROPERTY = "Error mapping property: ";
-
+class UserEntityMapperTest extends UserInitializer {
     @Autowired
     private IUserEntityMapper mapper;
 
