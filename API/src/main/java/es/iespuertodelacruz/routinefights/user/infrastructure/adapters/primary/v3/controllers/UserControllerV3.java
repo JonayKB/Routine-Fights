@@ -124,7 +124,7 @@ public class UserControllerV3 {
 
     @Secured("ROLE_ADMIN")
     @QueryMapping("followedByEmailV3")
-    public List<UserOutputDTOV3> findFollowedUsersByEmail(String email) {
+    public List<UserOutputDTOV3> findFollowedUsersByEmail(@Argument String email) {
         List<User> following;
         try {
             following = userService.findFollowedUsersByEmail(email);
@@ -137,7 +137,7 @@ public class UserControllerV3 {
 
     @Secured("ROLE_ADMIN")
     @QueryMapping("followersByEmailV3")
-    public List<UserOutputDTOV3> findFollowersByEmail(String email) {
+    public List<UserOutputDTOV3> findFollowersByEmail(@Argument String email) {
         List<User> followers;
         try {
             followers = userService.findFollowersByEmail(email);
@@ -150,7 +150,7 @@ public class UserControllerV3 {
 
     @Secured("ROLE_ADMIN")
     @MutationMapping("followUserV3")
-    public boolean followUser(String frEmail, String fdEmail) {
+    public boolean followUser(@Argument String frEmail, @Argument String fdEmail) {
         try {
             return userService.followUser(frEmail, fdEmail);
         } catch (Exception e) {
@@ -161,7 +161,7 @@ public class UserControllerV3 {
 
     @Secured("ROLE_ADMIN")
     @MutationMapping("unfollowUserV3")
-    public boolean unfollowUser(String frEmail, String fdEmail) {
+    public boolean unfollowUser(@Argument String frEmail, @Argument String fdEmail) {
         try {
             return userService.unfollowUser(fdEmail, fdEmail);
         } catch (Exception e) {
