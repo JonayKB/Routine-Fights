@@ -21,8 +21,11 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
     @Query("MATCH (fr:User)-[:FOLLOWS]->(fd: User {email: :email}) RETURN fr")
     public List<UserEntity> findFollowersByEmail(@Param("email") String email);
 
-    @Query("MATCH (fr: User {email: :email1}) MATCH (fd: User {email: :email2}) MERGE (fr)-[:FOLLOWS]->(fd) RETURN COUNT(*) > 0")
-    public boolean followUser(@Param("email1") String email1, @Param("email2") String email2);
+    @Query("MATCH (fr: User {email: :frEmail}) MATCH (fd: User {email: :fdEmail}) MERGE (fr)-[:FOLLOWS]->(fd) RETURN COUNT(*) > 0")
+    public boolean followUser(@Param("frEmail") String frEmail, @Param("fdEmail") String fdEmail);
+
+    @Query("MATCH (fr: User {email: :frEmail})-[r:FOLLOWS]->(fd: User {email: :fdEmail}) DELETE r RETURN COUNT(*) > 0")
+    public boolean unfollowUser(@Param("frEmail") String frEmail, @Param("fdEmail") String fdEmail);
 
     @Query("MATCH (u: User) WHERE u.image IS NOT NULL RETURN u.image")
     public List<String> findAllImages();

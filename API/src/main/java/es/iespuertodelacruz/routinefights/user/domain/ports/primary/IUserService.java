@@ -8,7 +8,7 @@ import es.iespuertodelacruz.routinefights.user.domain.User;
 /**
  * IUserService
  */
-public interface IUserService extends IUserGeneric {
+public interface IUserService extends IUserGeneric<User> {
     /**
      * Method to save a user
      * 
