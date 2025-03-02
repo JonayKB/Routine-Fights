@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondar
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
@@ -19,7 +20,9 @@ public interface IUserEntityMapper {
      * @param user User
      * @return UserEntity
      */
-    public UserEntity toEntity(User user);
+    @Mapping(target = "followers", ignore = true)
+    @Mapping(target = "following", ignore = true)
+    UserEntity toEntity(User user);
 
     /**
      * Method to map UserEntity to User
@@ -27,6 +30,8 @@ public interface IUserEntityMapper {
      * @param userEntity UserEntity
      * @return User
      */
+    @Mapping(target = "followers", ignore = true)
+    @Mapping(target = "following", ignore = true)
     public User toDomain(UserEntity userEntity);
 
     /**

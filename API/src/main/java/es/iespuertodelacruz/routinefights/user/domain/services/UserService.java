@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
@@ -91,13 +90,11 @@ public class UserService implements IUserService  {
     }
 
     @Override
-    @Transactional
     public boolean followUser(String frEmail, String fdEmail) {
         return userRepository.followUser(frEmail, fdEmail);
     }
 
     @Override
-    @Transactional
     public boolean unfollowUser(String frEmail, String fdEmail) {
         return userRepository.unfollowUser(frEmail, fdEmail);
     }

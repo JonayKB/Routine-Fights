@@ -123,7 +123,7 @@ public class UserControllerV3 {
     }
 
     @Secured("ROLE_ADMIN")
-    @MutationMapping("followedByEmailV3")
+    @QueryMapping("followedByEmailV3")
     public List<UserOutputDTOV3> findFollowedUsersByEmail(String email) {
         List<User> following;
         try {
@@ -136,7 +136,7 @@ public class UserControllerV3 {
     }
 
     @Secured("ROLE_ADMIN")
-    @MutationMapping("followersByEmailV3")
+    @QueryMapping("followersByEmailV3")
     public List<UserOutputDTOV3> findFollowersByEmail(String email) {
         List<User> followers;
         try {
@@ -151,17 +151,32 @@ public class UserControllerV3 {
     @Secured("ROLE_ADMIN")
     @MutationMapping("followUserV3")
     public boolean followUser(String frEmail, String fdEmail) {
-        return userService.followUser(frEmail, fdEmail);
+        try {
+            return userService.followUser(frEmail, fdEmail);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error following user: {0}", e.getMessage());
+            throw new UserNotFoundException("Error following user");
+        }
     }
 
     @Secured("ROLE_ADMIN")
     @MutationMapping("unfollowUserV3")
     public boolean unfollowUser(String frEmail, String fdEmail) {
-        return userService.unfollowUser(fdEmail, fdEmail);
+        try {
+            return userService.unfollowUser(fdEmail, fdEmail);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error unfollowing user: {0}", e.getMessage());
+            throw new UserNotFoundException("Error unfollowing user");
+        }
     }
 
-    @MutationMapping("images")
+    @QueryMapping("images")
     public List<String> findAllImages() {
-        return userService.findAllImages();
+        try {
+            return userService.findAllImages();
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error finding images: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding images");
+        }
     }
 }
