@@ -1,6 +1,6 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.services;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.secondary.IUserRepository;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserDeleteException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserNotFoundException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserSaveException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserUpdateException;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.mappers.IUserEntityMapper;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.repositories.IUserEntityRepository;
@@ -19,6 +23,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
  */
 @Service
 public class UserEntityService implements IUserRepository {
+    private static final String USER_NOT_FOUND = "User not found";
     private IUserEntityRepository userRepository;
     private IUserEntityMapper userEntityMapper;
     private PasswordEncoder passwordEncoder;
@@ -60,30 +65,42 @@ public class UserEntityService implements IUserRepository {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /**
-     * Method to find all users
-     * 
-     * @return List<User> list of users
-     */
     @Override
     public List<User> findAll() {
-        return userEntityMapper.toDomain(userRepository.findAll());
+        try {
+            List<User> users = userEntityMapper.toDomain(userRepository.findAll());
+            for (User user : users) {
+                user.setFollowers(findFollowersByEmail(user.getEmail()));
+                user.setFollowing(findFollowedUsersByEmail(user.getEmail()));
+            }
+            return users;
+        } catch (Exception e) {
+            throw new UserNotFoundException("Users not found");
+        }
     }
 
-    /**
-     * Method to find a user by id
-     * 
-     * @param id id of the user
-     * @return User
-     */
     @Override
     public User findById(String id) {
-        return userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
+        try {
+            User user = userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
+            user.setFollowers(findFollowersByEmail(user.getEmail()));
+            user.setFollowing(findFollowedUsersByEmail(user.getEmail()));
+            return user;
+        } catch (Exception e) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
     }
 
     @Override
     public User findByEmail(String email) {
-        return userEntityMapper.toDomain(userRepository.findByEmail(email));
+        try {
+            User user = userEntityMapper.toDomain(userRepository.findByEmail(email));
+            user.setFollowers(findFollowersByEmail(user.getEmail()));
+            user.setFollowing(findFollowedUsersByEmail(user.getEmail()));
+            return user;
+        } catch (Exception e) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
     }
 
     @Override
@@ -91,69 +108,127 @@ public class UserEntityService implements IUserRepository {
         return userRepository.existsByEmail(email);
     }
 
-    /**
-     * Method to save a user
-     * 
-     * @param user user
-     * @return User
-     */
     @Override
     @Transactional
     public User post(User user) {
-        if (user == null || user.getPassword() == null) {
-            return null;
+        if (user == null || user.getPassword() == null || user.getEmail() == null || user.getCreatedAt() == null) {
+            throw new UserSaveException("Data required");
+        }
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new UserSaveException("Email already exists");
         }
 
         UserEntity userEntity = userEntityMapper.toEntity(user);
+        userEntity.setFollowers(new ArrayList<>());
+        userEntity.setFollowing(new ArrayList<>());
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
-        userEntity.setCreatedAt(LocalDateTime.now());
-        userEntity.setUpdatedAt(LocalDateTime.now());
-        return userEntityMapper.toDomain(userRepository.save(userEntity));
+        try {
+            return userEntityMapper.toDomain(userRepository.save(userEntity));
+        } catch (Exception e) {
+            throw new UserSaveException("Error saving user");
+        }
     }
 
-    /**
-     * Method to update a user
-     * 
-     * @param user user
-     * @return User
-     */
     @Override
     @Transactional
     public User put(User user) {
-        if (user == null) {
-            return null;
+        if (user == null || user.getId() == null) {
+            throw new UserUpdateException("Data required");
         }
 
         UserEntity userEntity = userRepository.findById(user.getId()).orElse(null);
         if (userEntity == null) {
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException(USER_NOT_FOUND);
         }
 
         if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         }
+
         userEntity.setUsername(user.getUsername());
         userEntity.setEmail(user.getEmail());
         userEntity.setNationality(user.getNationality());
         userEntity.setPhoneNumber(user.getPhoneNumber());
         userEntity.setImage(user.getImage());
-        userEntity.setUpdatedAt(LocalDateTime.now());
+        userEntity.setCreatedAt(user.getCreatedAt());
+        userEntity.setUpdatedAt(user.getUpdatedAt());
+        userEntity.setDeletedAt(user.getDeletedAt());
         userEntity.setRole(user.getRole());
         userEntity.setVerified(user.getVerified());
         userEntity.setVerificationToken(user.getVerificationToken());
-        return userEntityMapper.toDomain(userRepository.save(userEntity));
+        userEntity.setFollowers(userRepository.findFollowersByEmail(user.getEmail()));
+        userEntity.setFollowing(userRepository.findFollowedUsersByEmail(user.getEmail()));
+        try {
+            return userEntityMapper.toDomain(userRepository.save(userEntity));
+        } catch (Exception e) {
+            throw new UserUpdateException("Error updating user");
+        }
     }
 
-    /**
-     * Method to delete a user
-     * 
-     * @param id id
-     * @return boolean
-     */
     @Override
     @Transactional
     public boolean delete(String id) {
-        userRepository.deleteById(id);
-        return true;
+        try {
+            userRepository.deleteById(id);
+            return !userRepository.existsById(id);
+        } catch (Exception e) {
+            throw new UserDeleteException("Error deleting user");
+        }
+    }
+
+    @Override
+    public List<User> findFollowedUsersByEmail(String email) {
+        try {
+            return userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email));
+        } catch (Exception e) {
+            throw new UserNotFoundException("Followed users not found");
+        }
+    }
+
+    @Override
+    public List<User> findFollowersByEmail(String email) {
+        try {
+            return userEntityMapper.toDomain(userRepository.findFollowersByEmail(email));
+        } catch (Exception e) {
+            throw new UserNotFoundException("Followers not found");
+        }
+    }
+
+    @Override
+    @Transactional
+    public boolean followUser(String frEmail, String fdEmail) {
+        if (!userRepository.existsByEmail(frEmail) || !userRepository.existsByEmail(fdEmail)) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+
+        try {
+            return userRepository.followUser(frEmail, fdEmail);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error following user");
+        }
+    }
+
+    @Override
+    @Transactional
+    public boolean unfollowUser(String frEmail, String fdEmail) {
+        if (!userRepository.existsByEmail(frEmail) || !userRepository.existsByEmail(fdEmail)) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+
+        try {
+            return userRepository.unfollowUser(frEmail, fdEmail);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error unfollowing user");
+        }
+    }
+
+    @Override
+    public List<String> findAllImages() {
+        try {
+            return userRepository.findAllImages();
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error finding images");
+        }
     }
 }

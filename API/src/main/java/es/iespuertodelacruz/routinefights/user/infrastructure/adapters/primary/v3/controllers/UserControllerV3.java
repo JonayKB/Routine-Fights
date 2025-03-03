@@ -1,35 +1,46 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.controllers;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.dtos.UserDTOV3;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserDeleteException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserNotFoundException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserSaveException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserUpdateException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.dtos.UserInputDTOV3;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.dtos.UserOutputDTOV3;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.mappers.UserOutputV3Mapper;
 
 /**
  * UserControllerV3
- * 
- * @see <a href="https://www.baeldung.com/spring-graphql">Spring GraphQL
- *      Controllers</a>
  */
 @Controller
 @CrossOrigin
 public class UserControllerV3 {
-    Logger logger = LoggerFactory.getLogger(UserControllerV3.class);
+    Logger logger = Logger.getLogger(UserControllerV3.class.getName());
 
     private IUserService userService;
+    private UserOutputV3Mapper userOutputMapper;
+
+    public UserOutputV3Mapper getUserOutputMapper() {
+        return this.userOutputMapper;
+    }
+
+    @Autowired
+    public void setUserOutputMapper(UserOutputV3Mapper userOutputMapper) {
+        this.userOutputMapper = userOutputMapper;
+    }
 
     public IUserService getUserService() {
         return this.userService;
@@ -41,85 +52,131 @@ public class UserControllerV3 {
     }
 
     @Secured("ROLE_ADMIN")
-    @QueryMapping("users")
-    public List<UserDTOV3> findAll() {
-        logger.info("Find all users");
+    @QueryMapping("usersV3")
+    public List<UserOutputDTOV3> findAll() {
         List<User> users;
         try {
             users = userService.findAll();
         } catch (Exception e) {
-            logger.error("Error finding all users: {}", e.getMessage());
-            return null;
+            logger.log(Level.WARNING, "Error finding users: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding users");
         }
-        List<UserDTOV3> usersDTO = users.stream().map(user -> new UserDTOV3(user.getId(), user.getUsername(),
-                user.getEmail(), user.getNationality(), user.getPhoneNumber(), user.getImage(), user.getRole()))
-                .toList();
-        logger.info("Users: {}", usersDTO);
-        return usersDTO;
+        return userOutputMapper.tOutputDTOV3(users);
     }
 
     @Secured("ROLE_ADMIN")
-    @QueryMapping("user")
-    public UserDTOV3 findById(@Argument String id) {
-        logger.info("Find user by id");
+    @QueryMapping("userV3")
+    public UserOutputDTOV3 findById(@Argument String id) {
         User user;
         try {
             user = userService.findById(id);
         } catch (Exception e) {
-            logger.error("Error finding all users: {}", e.getMessage());
-            return null;
+            logger.log(Level.WARNING, "Error finding user: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding user");
         }
-        UserDTOV3 usersDTO = new UserDTOV3(user.getId(), user.getUsername(),
-                user.getEmail(), user.getNationality(), user.getPhoneNumber(), user.getImage(), user.getRole());
-        logger.info("Users: {}", usersDTO);
-        return usersDTO;
+        return userOutputMapper.tOutputDTOV3(user);
     }
 
     @Secured("ROLE_ADMIN")
-    @MutationMapping("saveUser")
-    public UserDTOV3 post(@Argument String username, @Argument String email,
-            @Argument String password, @Argument String nationality, @Argument String phoneNumber,
-            @Argument String image, @Argument String role, @Argument boolean verified,
-            @Argument String verificationToken) {
-        logger.info("trying to create the user");
-        User user;
+    @MutationMapping("saveUserV3")
+    public UserOutputDTOV3 post(@Argument UserInputDTOV3 user) {
+        User userDomain;
         try {
-            user = userService.post(username, email, password, nationality, phoneNumber, image, role, verified,
-                    verificationToken);
+            userDomain = userService.post(user.username(), user.email(),
+                    user.password(), user.nationality(), user.phoneNumber(),
+                    user.image(), user.role(), user.verified(),
+                    user.verificationToken(), user.createdAt(), user.updatedAt(),
+                    user.deletedAt());
         } catch (Exception e) {
-            logger.error("Unable to create the user: {}", e.getMessage());
-            return null;
+            logger.log(Level.WARNING, "Unable to create the user: {0}", e.getMessage());
+            throw new UserSaveException("Unable to create the user");
         }
-        return new UserDTOV3(user.getId(), user.getUsername(), user.getEmail(), user.getNationality(),
-                user.getPhoneNumber(), user.getImage(), user.getRole());
+        return userOutputMapper.tOutputDTOV3(userDomain);
     }
 
     @Secured("ROLE_ADMIN")
-    @MutationMapping("updateUser")
-    public UserDTOV3 put(@Argument String id, @Argument String username, @Argument String email,
-            @Argument String password, @Argument String nationality, @Argument String phoneNumber,
-            @Argument String image, @Argument String role, @Argument boolean verified,
-            @Argument String verificationToken) {
-        User user;
+    @MutationMapping("updateUserV3")
+    public UserOutputDTOV3 put(@Argument UserInputDTOV3 user) {
+        User userDomain;
         try {
-            user = userService.put(id, username, email, password, nationality, phoneNumber, image, role, verified,
-                    verificationToken);
+            userDomain = userService.put(user.id(), user.username(), user.email(),
+                    user.password(), user.nationality(), user.phoneNumber(),
+                    user.image(), user.role(), user.verified(),
+                    user.verificationToken(), user.createdAt(), user.updatedAt(),
+                    user.deletedAt());
         } catch (Exception e) {
-            logger.error("Unable to update the user: {}", e.getMessage());
-            return null;
+            logger.log(Level.WARNING, "Unable to update the user: {0}", e.getMessage());
+            throw new UserUpdateException("Unable to update the user");
         }
-        return new UserDTOV3(user.getId(), user.getUsername(), user.getEmail(), user.getNationality(),
-                user.getPhoneNumber(), user.getImage(), user.getRole());
+        return userOutputMapper.tOutputDTOV3(userDomain);
     }
 
     @Secured("ROLE_ADMIN")
-    @MutationMapping("deleteUser")
+    @MutationMapping("deleteUserV3")
     public boolean delete(@Argument String id) {
         try {
             return userService.delete(id);
         } catch (Exception e) {
-            logger.error("Unable to delete the user: {}", e.getMessage());
-            return false;
+            logger.log(Level.WARNING, "Unable to delete the user: {0}", e.getMessage());
+            throw new UserDeleteException("Unable to delete the user");
+        }
+    }
+
+    @Secured("ROLE_ADMIN")
+    @QueryMapping("followedByEmailV3")
+    public List<UserOutputDTOV3> findFollowedUsersByEmail(@Argument String email) {
+        List<User> following;
+        try {
+            following = userService.findFollowedUsersByEmail(email);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error finding followed users: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding followed users");
+        }
+        return userOutputMapper.tOutputDTOV3(following);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @QueryMapping("followersByEmailV3")
+    public List<UserOutputDTOV3> findFollowersByEmail(@Argument String email) {
+        List<User> followers;
+        try {
+            followers = userService.findFollowersByEmail(email);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error finding followers: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding followers");
+        }
+        return userOutputMapper.tOutputDTOV3(followers);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @MutationMapping("followUserV3")
+    public boolean followUser(@Argument String followerEmail, @Argument String followingEmail) {
+        try {
+            return userService.followUser(followerEmail, followingEmail);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error following user: {0}", e.getMessage());
+            throw new UserNotFoundException("Error following user");
+        }
+    }
+
+    @Secured("ROLE_ADMIN")
+    @MutationMapping("unfollowUserV3")
+    public boolean unfollowUser(@Argument String followerEmail, @Argument String followingEmail) {
+        try {
+            return userService.unfollowUser(followerEmail, followingEmail);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error unfollowing user: {0}", e.getMessage());
+            throw new UserNotFoundException("Error unfollowing user");
+        }
+    }
+
+    @QueryMapping("images")
+    public List<String> findAllImages() {
+        try {
+            return userService.findAllImages();
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error finding images: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding images");
         }
     }
 }

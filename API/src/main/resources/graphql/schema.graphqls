@@ -1,19 +1,48 @@
 type Query {
-    users: [User]
-    user(id: ID!): User
+  usersV3: [UserOutputV3]
+  userV3(id: ID!): UserOutputV3
+  followersByEmailV3(email: String!): [UserOutputV3]
+  followedByEmailV3(email: String!): [UserOutputV3]
+  images: [String]
 }
 
 type Mutation {
-    saveUser(username: String!, email: String!, password: String!, nationality: String!, phoneNumber: String!, image: String!, role: String!, verified: Boolean!,verificationToken: String!): User
-    updateUser(id: ID!, username: String!, email: String!, password: String!, nationality: String!, phoneNumber: String!, image: String): User
-    deleteUser(id: ID!): Boolean
+  saveUserV3(user: UserInputV3): UserOutputV3
+  updateUserV3(user: UserInputV3): UserOutputV3
+  deleteUserV3(id: ID!): Boolean
+  followUserV3(followerEmail: String!, followingEmail: String!): Boolean
+  unfollowUserV3(followerEmail: String!, followingEmail: String!): Boolean
 }
 
-type User {
-    id: ID!
-    username: String!
-    email: String!
-    nationality: String!
-    phoneNumber: String!
-    image: String
+input UserInputV3 {
+  id: ID
+  username: String!
+  email: String!
+  password: String
+  nationality: String!
+  phoneNumber: String!
+  image: String
+  role: String!
+  verified: Boolean!
+  verificationToken: String
+  createdAt: String
+  updatedAt: String!
+  deletedAt: String
+}
+
+type UserOutputV3 {
+  id: ID
+  username: String
+  email: String
+  nationality: String
+  phoneNumber: String
+  image: String
+  role: String
+  verified: Boolean
+  verificationToken: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  followers: [UserOutputV3]
+  following: [UserOutputV3]
 }

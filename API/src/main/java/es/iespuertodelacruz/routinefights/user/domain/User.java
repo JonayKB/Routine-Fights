@@ -1,21 +1,18 @@
 package es.iespuertodelacruz.routinefights.user.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+
+import es.iespuertodelacruz.routinefights.user.common.UserCommon;
 
 /**
  * User
  */
-public class User {
+public class User extends UserCommon {
     private String id;
-    private String username;
-    private String email;
-    private String password;
-    private String nationality;
-    private String phoneNumber;
-    private String image;
-    private String role;
-    private boolean verified;
-    private String verificationToken;
+    private List<User> followers;
+    private List<User> following;
 
     /**
      * Default constructor
@@ -24,54 +21,55 @@ public class User {
     }
 
     /**
-     * Constructor with username, email, password, nationality and phone number
+     * Constructor with values
      * 
-     * @param username    The username of the user
-     * @param email       The email of the user
-     * @param password    The password of the user
-     * @param nationality The nationality of the user
-     * @param phoneNumber The phone number of the user
-     * @param image       The image of the user
-     * @param role        The role of the user
+     * @param username          The username of the user
+     * @param email             The email of the user
+     * @param password          The password of the user
+     * @param nationality       The nationality of the user
+     * @param phoneNumber       The phone number of the user
+     * @param image             The image of the user
+     * @param role              The role of the user
+     * @param verified          The verification status of the user
+     * @param verificationToken The verification token of the user
+     * @param createdAt         The date when the user was created
+     * @param updatedAt         The date when the user was updated
+     * @param deletedAt         The date when the user was deleted
      */
     public User(String username, String email, String password, String nationality, String phoneNumber, String image,
-            String role, boolean verified, String verificationToken) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.nationality = nationality;
-        this.phoneNumber = phoneNumber;
-        this.image = image;
-        this.role = role;
-        this.verified = verified;
-        this.verificationToken = verificationToken;
+            String role, boolean verified, String verificationToken, LocalDateTime createdAt, LocalDateTime updatedAt,
+            LocalDateTime deletedAt) {
+        super(username, email, password, nationality, phoneNumber, image, role, verified, verificationToken, createdAt,
+                updatedAt, deletedAt);
     }
 
     /**
      * Constructor with all the attributes
      * 
-     * @param id          The id of the user
-     * @param username    The username of the user
-     * @param email       The email of the user
-     * @param password    The password of the user
-     * @param nationality The nationality of the user
-     * @param phoneNumber The phone number of the user
-     * @param image       The image of the user
-     * @param role        The role of the user
-     * @param verified    The verification status of the user
+     * @param id                The id of the user
+     * @param username          The username of the user
+     * @param email             The email of the user
+     * @param password          The password of the user
+     * @param nationality       The nationality of the user
+     * @param phoneNumber       The phone number of the user
+     * @param image             The image of the user
+     * @param role              The role of the user
+     * @param verified          The verification status of the user
+     * @param verificationToken The verification token of the user
+     * @param createdAt         The date when the user was created
+     * @param updatedAt         The date when the user was updated
+     * @param deletedAt         The date when the user was deleted
+     * @param followers         The number of followers of the user
+     * @param following         The number of following of the user
      */
     public User(String id, String username, String email, String password, String nationality, String phoneNumber,
-            String image, String role, boolean verified, String verificationToken) {
+            String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
+            LocalDateTime updatedAt, LocalDateTime deletedAt, List<User> followers, List<User> following) {
+        super(username, email, password, nationality, phoneNumber, image, role, verified, verificationToken, createdAt,
+                updatedAt, deletedAt);
         this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.nationality = nationality;
-        this.phoneNumber = phoneNumber;
-        this.image = image;
-        this.role = role;
-        this.verified = verified;
-        this.verificationToken = verificationToken;
+        this.followers = followers;
+        this.following = following;
     }
 
     /**
@@ -93,166 +91,39 @@ public class User {
     }
 
     /**
-     * Get the username of the user
+     * Get the number of followers of the user
      * 
-     * @return The username of the user
+     * @return The number of followers of the user
      */
-    public String getUsername() {
-        return this.username;
+    public List<User> getFollowers() {
+        return this.followers;
     }
 
     /**
-     * Set the username of the user
+     * Set the number of followers of the user
      * 
-     * @param username The username of the user
+     * @param followers The number of followers of the user
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFollowers(List<User> followers) {
+        this.followers = followers;
     }
 
     /**
-     * Get the email of the user
+     * Get the number of following of the user
      * 
-     * @return The email of the user
+     * @return The number of following of the user
      */
-    public String getEmail() {
-        return this.email;
+    public List<User> getFollowing() {
+        return this.following;
     }
 
     /**
-     * Set the email of the user
+     * Set the number of following of the user
      * 
-     * @param email The email of the user
+     * @param following The number of following of the user
      */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    /**
-     * Get the password of the user
-     * 
-     * @return The password of the user
-     */
-    public String getPassword() {
-        return this.password;
-    }
-
-    /**
-     * Set the password of the user
-     * 
-     * @param password The password of the user
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    /**
-     * Get the nationality of the user
-     * 
-     * @return The nationality of the user
-     */
-    public String getNationality() {
-        return this.nationality;
-    }
-
-    /**
-     * Set the nationality of the user
-     * 
-     * @param nationality The nationality of the user
-     */
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
-    /**
-     * Get the phone number of the user
-     * 
-     * @return The phone number of the user
-     */
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
-
-    /**
-     * Set the phone number of the user
-     * 
-     * @param phoneNumber The phone number of the user
-     */
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    /**
-     * Get the image of the user
-     * 
-     * @return The image of the user
-     */
-    public String getImage() {
-        return this.image;
-    }
-
-    /**
-     * Set the image of the user
-     * 
-     * @param image The image of the user
-     */
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    /**
-     * Get the role of the user
-     * 
-     * @return The role of the user
-     */
-    public String getRole() {
-        return this.role;
-
-    }
-
-    /**
-     * Set the role of the user
-     * 
-     * @param role The role of the user
-     */
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    /**
-     * Get the verification status of the user
-     * 
-     * @return The verification status of the user
-     */
-    public boolean getVerified() {
-        return this.verified;
-    }
-
-    /**
-     * Set the verification status of the user
-     * 
-     * @param verified The verification status of the user
-     */
-    public void setVerified(boolean verified) {
-        this.verified = verified;
-    }
-
-    /**
-     * Get the verification token of the user
-     * 
-     * @return The verification token of the user
-     */
-    public String getVerificationToken() {
-        return this.verificationToken;
-    }
-
-    /**
-     * Set the verification token of the user
-     * 
-     * @param verificationToken The verification token of the user
-     */
-    public void setVerificationToken(String verificationToken) {
-        this.verificationToken = verificationToken;
+    public void setFollowing(List<User> following) {
+        this.following = following;
     }
 
     /**
@@ -293,6 +164,9 @@ public class User {
                 " id='" + getId() + "'" +
                 ", username='" + getUsername() + "'" +
                 ", email='" + getEmail() + "'" +
+                ", verified='" + getVerified() + "'" +
+                ", followers='" + getFollowers().size() + "'" +
+                ", following='" + getFollowing().size() + "'" +
                 "}";
     }
 }
