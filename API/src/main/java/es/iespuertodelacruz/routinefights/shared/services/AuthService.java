@@ -9,7 +9,6 @@ import es.iespuertodelacruz.routinefights.shared.exceptions.AuthException;
 import es.iespuertodelacruz.routinefights.shared.security.JwtService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
-import es.iespuertodelacruz.routinefights.user.domain.services.UserService;
 
 @Service
 public class AuthService {
@@ -17,7 +16,7 @@ public class AuthService {
     private final IUserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(JwtService jwtService, UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthService(JwtService jwtService, IUserService userService, PasswordEncoder passwordEncoder) {
         this.jwtService = jwtService;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
