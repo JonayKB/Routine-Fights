@@ -1,6 +1,5 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.services;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,7 +111,7 @@ public class UserEntityService implements IUserRepository {
     @Override
     @Transactional
     public User post(User user) {
-        if (user == null || user.getPassword() == null || user.getEmail() == null) {
+        if (user == null || user.getPassword() == null || user.getEmail() == null || user.getCreatedAt() == null) {
             throw new UserSaveException("Data required");
         }
 
@@ -124,8 +123,6 @@ public class UserEntityService implements IUserRepository {
         userEntity.setFollowers(new ArrayList<>());
         userEntity.setFollowing(new ArrayList<>());
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
-        userEntity.setCreatedAt(LocalDateTime.now());
-        userEntity.setUpdatedAt(LocalDateTime.now());
         try {
             return userEntityMapper.toDomain(userRepository.save(userEntity));
         } catch (Exception e) {
@@ -154,7 +151,9 @@ public class UserEntityService implements IUserRepository {
         userEntity.setNationality(user.getNationality());
         userEntity.setPhoneNumber(user.getPhoneNumber());
         userEntity.setImage(user.getImage());
-        userEntity.setUpdatedAt(LocalDateTime.now());
+        userEntity.setCreatedAt(user.getCreatedAt());
+        userEntity.setUpdatedAt(user.getUpdatedAt());
+        userEntity.setDeletedAt(user.getDeletedAt());
         userEntity.setRole(user.getRole());
         userEntity.setVerified(user.getVerified());
         userEntity.setVerificationToken(user.getVerificationToken());
