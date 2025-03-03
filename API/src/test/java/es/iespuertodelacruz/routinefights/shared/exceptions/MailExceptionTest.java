@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-class ImageSaveExceptionTest {
-
+class MailExceptionTest {
     private static final String MESSAGE = "message";
 
     @Test
-    void imageSaveExceptionTest() {
-        ImageSaveException imageSaveException = new ImageSaveException(MESSAGE);
+    void mailExceptionTest() {
+        MailException mailException = new MailException(MESSAGE);
 
-        assertEquals(MESSAGE, imageSaveException.getMessage());
+        assertEquals(MESSAGE, mailException.getMessage());
     }
+
 }

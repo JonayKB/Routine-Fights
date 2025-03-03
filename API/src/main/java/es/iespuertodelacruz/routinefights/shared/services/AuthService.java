@@ -2,19 +2,13 @@ package es.iespuertodelacruz.routinefights.shared.services;
 
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import es.iespuertodelacruz.routinefights.shared.dto.UserDTOAuth;
-import es.iespuertodelacruz.routinefights.shared.mappers.UserDTOAuthMapper;
+import es.iespuertodelacruz.routinefights.shared.exceptions.AuthException;
 import es.iespuertodelacruz.routinefights.shared.security.JwtService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
-import es.iespuertodelacruz.routinefights.user.domain.services.UserService;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.UserDTOV2;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v3.dtos.UserDTOV3;
 
 @Service
 public class AuthService {
@@ -22,7 +16,7 @@ public class AuthService {
     private final IUserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(JwtService jwtService, UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthService(JwtService jwtService, IUserService userService, PasswordEncoder passwordEncoder) {
         this.jwtService = jwtService;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
@@ -36,22 +30,19 @@ public class AuthService {
             if (user.getVerified()) {
                 return jwtService.generateToken(user.getEmail(), user.getRole());
             } else {
-                throw new RuntimeException("User not verified");
+                throw new AuthException("User not verified");
             }
         }
-        throw new RuntimeException("User not found or Invalid Credentials");
+        throw new AuthException("User not found or Invalid Credentials");
     }
 
     public User register(String username, String email, String password, String nationality, String phoneNumber,
             String image) {
         User user;
-        // if (userService.existsByEmail(email)) {
-        // throw new RuntimeException("Email already exists");
-        // }
         user = userService.post(username, email, password, nationality, phoneNumber, image, "ROLE_USER", false,
                 UUID.randomUUID().toString());
         if (user == null) {
-            throw new RuntimeException("Something happened");
+            throw new AuthException("Something happened");
         }
         user.setPassword("HIDDEN");
 
