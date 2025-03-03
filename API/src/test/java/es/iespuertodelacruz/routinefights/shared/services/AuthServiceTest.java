@@ -146,7 +146,7 @@ class AuthServiceTest {
         createdUser.setVerificationToken(UUID.randomUUID().toString());
 
         when(userService.post(eq(username), eq(email), eq(password), eq(nationality), eq(phoneNumber), eq(image),
-                eq(ROLE_USER), eq(false), anyString())).thenReturn(createdUser);
+                eq(ROLE_USER), eq(false), anyString(), any(), any(), any())).thenReturn(createdUser);
 
         User result = authService.register(username, email, password, nationality, phoneNumber, image);
 
@@ -165,7 +165,7 @@ class AuthServiceTest {
         String image = "image.png";
 
         when(userService.post(eq(username), eq(email), eq(password), eq(nationality), eq(phoneNumber), eq(image),
-                eq(ROLE_USER), eq(false), anyString())).thenReturn(null);
+                eq(ROLE_USER), eq(false), anyString(), any(),  any(),  any())).thenReturn(null);
 
         AuthException exception = assertThrows(AuthException.class, () -> {
             authService.register(username, email, password, nationality, phoneNumber, image);
@@ -195,8 +195,8 @@ class AuthServiceTest {
         boolean verified = authService.verify(email, token);
 
         assertTrue(verified);
-        verify(userService, times(1)).put(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(),
-                user.getNationality(), user.getPhoneNumber(), user.getImage(), user.getRole(), true, null);
+        verify(userService, times(1)).put( eq(user.getId()),  eq(user.getUsername()),  eq(user.getEmail()),  eq(user.getPassword()),
+        eq(user.getNationality()),  eq(user.getPhoneNumber()),  eq(user.getImage()), eq(user.getRole()), eq(true), any(),  any(),  any(),  any());
     }
 
     @Test
