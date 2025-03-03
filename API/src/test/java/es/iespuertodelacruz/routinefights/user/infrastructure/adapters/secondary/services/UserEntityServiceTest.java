@@ -126,7 +126,7 @@ class UserEntityServiceTest extends UserInitializer {
     @Test
     void findByEmailExceptionTest() {
         when(userEntityRepository.findByEmail(anyString())).thenThrow(UserNotFoundException.class);
-        
+
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userEntityService.findByEmail("email");
         });
@@ -186,13 +186,25 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void followUserTest() {
+        when(userEntityRepository.existsByEmail(anyString())).thenReturn(true);
         when(userEntityRepository.followUser(anyString(), anyString())).thenReturn(true);
         Boolean followed = userEntityService.followUser("frEmail", "fdEmail");
         assertTrue(followed);
     }
 
     @Test
+    void followUserNotFoundTest() {
+        when(userEntityRepository.existsByEmail(anyString())).thenReturn(false);
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.followUser("frEmail", "fdEmail");
+        });
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
     void followUserExceptionTest() {
+        when(userEntityRepository.existsByEmail(anyString())).thenReturn(true);
         when(userEntityRepository.followUser(anyString(), anyString()))
                 .thenThrow(new UserNotFoundException("Test Exception"));
 
@@ -287,13 +299,25 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void unfollowUserTest() {
+        when(userEntityRepository.existsByEmail(anyString())).thenReturn(true);
         when(userEntityRepository.unfollowUser(anyString(), anyString())).thenReturn(true);
         Boolean unfollowed = userEntityService.unfollowUser("frEmail", "fdEmail");
         assertTrue(unfollowed);
     }
 
     @Test
+    void unfollowUserNotFoundTest() {
+        when(userEntityRepository.existsByEmail(anyString())).thenReturn(false);
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.unfollowUser("frEmail", "fdEmail");
+        });
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
     void unfollowUserExceptionTest() {
+        when(userEntityRepository.existsByEmail(anyString())).thenReturn(true);
         when(userEntityRepository.unfollowUser(anyString(), anyString()))
                 .thenThrow(new UserNotFoundException("Test Exception"));
 

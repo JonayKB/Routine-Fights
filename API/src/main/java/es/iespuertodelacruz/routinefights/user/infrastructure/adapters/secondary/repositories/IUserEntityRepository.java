@@ -21,7 +21,7 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
     @Query("MATCH (fr:User)-[:FOLLOWS]->(fd: User {email: $email}) RETURN fr")
     public List<UserEntity> findFollowersByEmail(@Param("email") String email);
 
-    @Query("MATCH (fr: User {email: $frEmail}) MATCH (fd: User {email: $dEmail}) MERGE (fr)-[:FOLLOWS]->(fd) RETURN COUNT(*) > 0")
+    @Query("MATCH (fr: User {email: $frEmail}) MATCH (fd: User {email: $fdEmail}) MERGE (fr)-[:FOLLOWS]->(fd) RETURN COUNT(*) > 0")
     public boolean followUser(@Param("frEmail") String frEmail, @Param("fdEmail") String fdEmail);
 
     @Query("MATCH (fr: User {email: $frEmail})-[r:FOLLOWS]->(fd: User {email: $fdEmail}) DELETE r RETURN COUNT(*) > 0")

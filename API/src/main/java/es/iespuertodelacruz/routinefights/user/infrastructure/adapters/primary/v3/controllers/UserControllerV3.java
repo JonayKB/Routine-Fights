@@ -150,9 +150,9 @@ public class UserControllerV3 {
 
     @Secured("ROLE_ADMIN")
     @MutationMapping("followUserV3")
-    public boolean followUser(@Argument String frEmail, @Argument String fdEmail) {
+    public boolean followUser(@Argument String followerEmail, @Argument String followingEmail) {
         try {
-            return userService.followUser(frEmail, fdEmail);
+            return userService.followUser(followerEmail, followingEmail);
         } catch (Exception e) {
             logger.log(Level.WARNING, "Error following user: {0}", e.getMessage());
             throw new UserNotFoundException("Error following user");
@@ -161,9 +161,9 @@ public class UserControllerV3 {
 
     @Secured("ROLE_ADMIN")
     @MutationMapping("unfollowUserV3")
-    public boolean unfollowUser(@Argument String frEmail, @Argument String fdEmail) {
+    public boolean unfollowUser(@Argument String followerEmail, @Argument String followingEmail) {
         try {
-            return userService.unfollowUser(fdEmail, fdEmail);
+            return userService.unfollowUser(followerEmail, followingEmail);
         } catch (Exception e) {
             logger.log(Level.WARNING, "Error unfollowing user: {0}", e.getMessage());
             throw new UserNotFoundException("Error unfollowing user");

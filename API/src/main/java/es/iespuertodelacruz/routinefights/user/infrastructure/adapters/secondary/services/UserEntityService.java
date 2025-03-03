@@ -198,6 +198,10 @@ public class UserEntityService implements IUserRepository {
     @Override
     @Transactional
     public boolean followUser(String frEmail, String fdEmail) {
+        if (!userRepository.existsByEmail(frEmail) || !userRepository.existsByEmail(fdEmail)) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+
         try {
             return userRepository.followUser(frEmail, fdEmail);
         } catch (Exception e) {
@@ -208,8 +212,12 @@ public class UserEntityService implements IUserRepository {
     @Override
     @Transactional
     public boolean unfollowUser(String frEmail, String fdEmail) {
+        if (!userRepository.existsByEmail(frEmail) || !userRepository.existsByEmail(fdEmail)) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+
         try {
-            return userRepository.unfollowUser(fdEmail, fdEmail);
+            return userRepository.unfollowUser(frEmail, fdEmail);
         } catch (Exception e) {
             throw new UserNotFoundException("Error unfollowing user");
         }
