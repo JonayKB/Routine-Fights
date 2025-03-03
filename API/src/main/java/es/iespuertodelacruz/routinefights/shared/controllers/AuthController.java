@@ -52,7 +52,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
         try {
             String token = authService.login(email, password);
             return ResponseEntity.ok(token);
