@@ -1,6 +1,9 @@
 package es.iespuertodelacruz.routinefights.shared.utils;
 
 public class HTMLTemplates {
+    private HTMLTemplates() {
+    }
+
     public static final String VERIFICATION_EMAIL = """
             <html>
             <head>
