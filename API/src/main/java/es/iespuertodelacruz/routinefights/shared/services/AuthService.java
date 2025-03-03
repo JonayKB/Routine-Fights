@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.routinefights.shared.services;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,7 +10,6 @@ import es.iespuertodelacruz.routinefights.shared.exceptions.AuthException;
 import es.iespuertodelacruz.routinefights.shared.security.JwtService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
-
 @Service
 public class AuthService {
     private final JwtService jwtService;
@@ -40,7 +40,7 @@ public class AuthService {
             String image) {
         User user;
         user = userService.post(username, email, password, nationality, phoneNumber, image, "ROLE_USER", false,
-                UUID.randomUUID().toString());
+                UUID.randomUUID().toString(), LocalDateTime.now(), LocalDateTime.now(), null);
         if (user == null) {
             throw new AuthException("Something happened");
         }
@@ -53,7 +53,9 @@ public class AuthService {
         User user = userService.findByEmail(email);
         if (user != null && user.getVerificationToken().equals(token)) {
             userService.put(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(),
-                    user.getNationality(), user.getPhoneNumber(), user.getImage(), user.getRole(), true, null);
+                    user.getNationality(), user.getPhoneNumber(), user.getImage(), user.getRole(), true, null,
+                    user.getCreatedAt(),
+                    LocalDateTime.now(), null);
             return true;
         }
         return false;
