@@ -35,7 +35,7 @@ class AuthControllerTest {
 
     private static final User USER = new User(USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE,
             VERIFIED,
-            VERIFICATION_TOKEN);
+            VERIFICATION_TOKEN, null, null, null);
     @MockitoBean
     private MailService mailService;
     @MockitoBean
