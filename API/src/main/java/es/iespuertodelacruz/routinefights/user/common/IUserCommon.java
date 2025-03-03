@@ -2,12 +2,13 @@ package es.iespuertodelacruz.routinefights.user.common;
 
 import java.util.List;
 
-import es.iespuertodelacruz.routinefights.shared.services.IGeneric;
+import es.iespuertodelacruz.routinefights.shared.services.ICRUD;
+
 
 /**
- * IUserGeneric
+ * IUserCommon
  */
-public interface IUserGeneric<T> extends IGeneric<T> {
+public interface IUserCommon<T> extends ICRUD<T> {
     /**
      * Method to find a user by email
      * 

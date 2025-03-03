@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * IGeneric
  */
-public interface IGeneric<T> {
+public interface ICRUD<T> {
     /**
      * Method to find all T
      * 

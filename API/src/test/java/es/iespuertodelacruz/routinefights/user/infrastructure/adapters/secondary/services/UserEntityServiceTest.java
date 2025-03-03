@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserDeleteException;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserNotFoundException;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserSaveException;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserUpdateException;
@@ -68,6 +69,16 @@ class UserEntityServiceTest extends UserInitializer {
     }
 
     @Test
+    void deleteExceptionTest() {
+        when(userEntityRepository.existsById(anyString())).thenThrow(new UserDeleteException("Test Exception"));
+
+        UserDeleteException exception = assertThrows(UserDeleteException.class, () -> {
+            userEntityService.delete("id");
+        });
+        assertEquals("Error deleting user", exception.getMessage());
+    }
+
+    @Test
     void existsByEmailTest() {
         when(userEntityRepository.existsByEmail(anyString())).thenReturn(true);
         assertTrue(userEntityService.existsByEmail("email"));
@@ -110,6 +121,16 @@ class UserEntityServiceTest extends UserInitializer {
         when(userEntityRepository.findByEmail(anyString())).thenReturn(new UserEntity());
         when(userEntityMapper.toDomain(any(UserEntity.class))).thenReturn(user);
         assertNotNull(userEntityService.findByEmail("email"));
+    }
+
+    @Test
+    void findByEmailExceptionTest() {
+        when(userEntityRepository.findByEmail(anyString())).thenThrow(UserNotFoundException.class);
+        
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.findByEmail("email");
+        });
+        assertEquals("User not found", exception.getMessage());
     }
 
     @Test

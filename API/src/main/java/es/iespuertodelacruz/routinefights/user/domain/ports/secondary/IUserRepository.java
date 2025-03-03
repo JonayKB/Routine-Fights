@@ -1,12 +1,12 @@
 package es.iespuertodelacruz.routinefights.user.domain.ports.secondary;
 
-import es.iespuertodelacruz.routinefights.user.common.IUserGeneric;
+import es.iespuertodelacruz.routinefights.user.common.IUserCommon;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 
 /**
  * IUserRepository
  */
-public interface IUserRepository extends IUserGeneric<User> {
+public interface IUserRepository extends IUserCommon<User> {
     /**
      * Method to save a user
      * 
