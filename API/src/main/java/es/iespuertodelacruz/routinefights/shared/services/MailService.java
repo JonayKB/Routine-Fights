@@ -1,11 +1,11 @@
 package es.iespuertodelacruz.routinefights.shared.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import es.iespuertodelacruz.routinefights.shared.exceptions.MailException;
 import es.iespuertodelacruz.routinefights.shared.utils.HTMLTemplates;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -34,8 +34,7 @@ public class MailService {
 			sender.send(message);
 
 		} catch (MessagingException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Error al enviar el correo electrónico", e);
+			throw new MailException("Error al enviar el correo electrónico" + e);
 		}
 	}
 
