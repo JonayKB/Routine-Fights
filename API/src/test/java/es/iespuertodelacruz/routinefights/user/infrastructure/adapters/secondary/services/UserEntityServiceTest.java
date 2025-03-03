@@ -190,8 +190,26 @@ class UserEntityServiceTest extends UserInitializer {
     }
 
     @Test
+    void postNullUserTest() {
+        UserSaveException exception = assertThrows(UserSaveException.class, () -> {
+            userEntityService.post(null);
+        });
+        assertEquals("Data required", exception.getMessage());
+    }
+
+    @Test
+    void postExistingUserTest() {
+        when(userEntityRepository.existsByEmail(anyString())).thenReturn(true);
+        UserSaveException exception = assertThrows(UserSaveException.class, () -> {
+            userEntityService.post(user);
+        });
+        assertEquals("Email already exists", exception.getMessage());
+    }
+
+    @Test
     void postExceptionTest() {
         when(userEntityRepository.save(any(UserEntity.class))).thenThrow(new UserSaveException("Test Exception"));
+        when(userEntityMapper.toEntity(any(User.class))).thenReturn(userEntity);
 
         UserSaveException exception = assertThrows(UserSaveException.class, () -> {
             userEntityService.post(user);
@@ -208,13 +226,42 @@ class UserEntityServiceTest extends UserInitializer {
     }
 
     @Test
+    void putNullUserTest() {
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userEntityService.put(null);
+        });
+        assertEquals("Data required", exception.getMessage());
+    }
+
+    @Test
+    void putUserNotFoundTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.empty());
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.put(user);
+        });
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void putPasswordEncoderTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(userEntity));
+        when(passwordEncoder.encode(anyString())).thenReturn("password2");
+        when(userEntityRepository.save(any(UserEntity.class))).thenReturn(new UserEntity());
+        when(userEntityMapper.toDomain(any(UserEntity.class))).thenReturn(user);
+
+        user.setPassword("password2");
+        assertEquals(user, userEntityService.put(user));
+    }
+
+    @Test
     void putExceptionTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(userEntity));
         when(userEntityRepository.save(any(UserEntity.class))).thenThrow(new UserUpdateException("Test Exception"));
 
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
             userEntityService.put(user);
         });
-        assertEquals("Unable to update the user", exception.getMessage());
+        assertEquals("Error updating user", exception.getMessage());
     }
 
     @Test
@@ -226,7 +273,8 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void unfollowUserExceptionTest() {
-        when(userEntityRepository.unfollowUser(anyString(), anyString())).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userEntityRepository.unfollowUser(anyString(), anyString()))
+                .thenThrow(new UserNotFoundException("Test Exception"));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userEntityService.unfollowUser("frEmail", "fdEmail");
