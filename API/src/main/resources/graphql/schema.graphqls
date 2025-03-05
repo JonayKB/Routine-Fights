@@ -74,8 +74,8 @@ type UserOutputV2 {
   phoneNumber: String
   image: String
   createdAt: String
-  followers: int
-  following: int
+  followers: Int
+  following: Int
 }
 
 type Followers {
@@ -84,6 +84,6 @@ type Followers {
   nationality: String
   image: String
   createdAt: String
-  followers: int
-  following: int
+  followers: Int
+  following: Int
 }
