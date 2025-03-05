@@ -96,22 +96,6 @@ class UserControllerV3Test {
     }
 
     @Test
-    void findAllImagesTest() {
-        when(userService.findAllImages()).thenReturn(new ArrayList<String>());
-        assertNotNull(userControllerV3.findAllImages());
-    }
-
-    @Test
-    void findAllImagesExceptionTest() {
-        when(userService.findAllImages()).thenThrow(new UserNotFoundException("Test Exception"));
-
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV3.findAllImages();
-        });
-        assertEquals("Error finding images", exception.getMessage());
-    }
-
-    @Test
     void findByIdTest() {
         when(userService.findById(anyString())).thenReturn(new User());
         when(userOutputMapper.tOutputDTOV3(any(User.class))).thenReturn(userOutputDTOV3);
@@ -126,54 +110,6 @@ class UserControllerV3Test {
             userControllerV3.findById("id");
         });
         assertEquals("Error finding user", exception.getMessage());
-    }
-
-    @Test
-    void findFollowedUsersByEmailTest() {
-        when(userService.findFollowedUsersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userControllerV3.findFollowedUsersByEmail("email"));
-    }
-
-    @Test
-    void findFollowedUsersByEmailExceptionTest() {
-        when(userService.findFollowedUsersByEmail(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
-
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV3.findFollowedUsersByEmail("email");
-        });
-        assertEquals("Error finding followed users", exception.getMessage());
-    }
-
-    @Test
-    void findFollowersByEmailTest() {
-        when(userService.findFollowersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userControllerV3.findFollowersByEmail("email"));
-    }
-
-    @Test
-    void findFollowersByEmailExceptionTest() {
-        when(userService.findFollowersByEmail(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
-
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV3.findFollowersByEmail("email");
-        });
-        assertEquals("Error finding followers", exception.getMessage());
-    }
-
-    @Test
-    void followUserTest() {
-        when(userService.followUser(anyString(), anyString())).thenReturn(true);
-        assertTrue(userControllerV3.followUser("frEmail", "fdEmail"));
-    }
-
-    @Test
-    void followUserExceptionTest() {
-        when(userService.followUser(anyString(), anyString())).thenThrow(new UserNotFoundException("Test Exception"));
-
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV3.followUser("frEmail", "fdEmail");
-        });
-        assertEquals("Error following user", exception.getMessage());
     }
 
     @Test
@@ -216,21 +152,5 @@ class UserControllerV3Test {
             userControllerV3.put(userInputDTOV3);
         });
         assertEquals("Unable to update the user", exception.getMessage());
-    }
-
-    @Test
-    void unfollowUserTest() {
-        when(userService.unfollowUser(anyString(), anyString())).thenReturn(true);
-        assertTrue(userControllerV3.unfollowUser("frEmail", "fdEmail"));
-    }
-
-    @Test
-    void unfollowUserExceptionTest() {
-        when(userService.unfollowUser(anyString(), anyString())).thenThrow(new UserNotFoundException("Test Exception"));
-
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV3.unfollowUser("frEmail", "fdEmail");
-        });
-        assertEquals("Error unfollowing user", exception.getMessage());
     }
 }

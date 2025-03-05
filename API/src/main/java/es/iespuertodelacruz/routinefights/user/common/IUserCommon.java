@@ -4,7 +4,6 @@ import java.util.List;
 
 import es.iespuertodelacruz.routinefights.shared.services.ICRUD;
 
-
 /**
  * IUserCommon
  */
@@ -63,4 +62,12 @@ public interface IUserCommon<T> extends ICRUD<T> {
      * @return List<String>
      */
     public List<String> findAllImages();
+
+    /**
+     * Method to restore a user
+     * 
+     * @param id user's id
+     * @return Boolean
+     */
+    public boolean restore(String id);
 }

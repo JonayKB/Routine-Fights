@@ -23,7 +23,7 @@ public abstract class UserCommon {
     /**
      * Default constructor
      */
-    public UserCommon() {
+    protected UserCommon() {
     }
 
     /**
@@ -42,7 +42,7 @@ public abstract class UserCommon {
      * @param updatedAt         The date when the user was updated
      * @param deletedAt         The date when the user was deleted
      */
-    public UserCommon(String username, String email, String password, String nationality, String phoneNumber,
+    protected UserCommon(String username, String email, String password, String nationality, String phoneNumber,
             String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
             LocalDateTime updatedAt, LocalDateTime deletedAt) {
         this.username = username;
@@ -57,6 +57,27 @@ public abstract class UserCommon {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
+    }
+
+    /**
+     * Constructor with username, email, password, nationality, phoneNumber and
+     * image
+     * 
+     * @param username    The username of the user
+     * @param email       The email of the user
+     * @param password    The password of the user
+     * @param nationality The nationality of the user
+     * @param phoneNumber The phone number of the user
+     * @param image       The image of the user
+     */
+    protected UserCommon(String username, String email, String password, String nationality, String phoneNumber,
+            String image) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.nationality = nationality;
+        this.phoneNumber = phoneNumber;
+        this.image = image;
     }
 
     /**
