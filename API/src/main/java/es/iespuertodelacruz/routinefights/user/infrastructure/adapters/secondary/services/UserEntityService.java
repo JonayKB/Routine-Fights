@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,10 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
  */
 @Service
 public class UserEntityService implements IUserRepository {
+    private static final String DATA_REQUIRED = "Data required";
+    private static final String ERROR_UPDATING_USER = "Error updating user";
     private static final String USER_NOT_FOUND = "User not found";
+
     private IUserEntityRepository userRepository;
     private IUserEntityMapper userEntityMapper;
     private PasswordEncoder passwordEncoder;
@@ -112,7 +116,7 @@ public class UserEntityService implements IUserRepository {
     @Transactional
     public User post(User user) {
         if (user == null || user.getPassword() == null || user.getEmail() == null || user.getCreatedAt() == null) {
-            throw new UserSaveException("Data required");
+            throw new UserSaveException(DATA_REQUIRED);
         }
 
         if (userRepository.existsByEmail(user.getEmail())) {
@@ -134,7 +138,7 @@ public class UserEntityService implements IUserRepository {
     @Transactional
     public User put(User user) {
         if (user == null || user.getId() == null) {
-            throw new UserUpdateException("Data required");
+            throw new UserUpdateException(DATA_REQUIRED);
         }
 
         UserEntity userEntity = userRepository.findById(user.getId()).orElse(null);
@@ -162,7 +166,43 @@ public class UserEntityService implements IUserRepository {
         try {
             return userEntityMapper.toDomain(userRepository.save(userEntity));
         } catch (Exception e) {
-            throw new UserUpdateException("Error updating user");
+            throw new UserUpdateException(ERROR_UPDATING_USER);
+        }
+    }
+
+    @Override
+    @Transactional
+    public User update(User user) {
+        if (user == null || user.getId() == null) {
+            throw new UserUpdateException(DATA_REQUIRED);
+        }
+
+        UserEntity userEntity = userRepository.findById(user.getId()).orElse(null);
+        if (userEntity == null) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+
+        // TODO: If email changes, he has to verify agin
+        if(!user.getEmail().equals(userEntity.getEmail()) && userRepository.existsByEmail(user.getEmail())){
+            throw new UserUpdateException("Email already exists");
+        }
+        userEntity.setEmail(user.getEmail());
+
+        if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
+            userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        userEntity.setUsername(user.getUsername());
+        userEntity.setNationality(user.getNationality());
+        userEntity.setPhoneNumber(user.getPhoneNumber());
+        userEntity.setImage(user.getImage());
+        userEntity.setFollowers(userRepository.findFollowersByEmail(user.getEmail()));
+        userEntity.setFollowing(userRepository.findFollowedUsersByEmail(user.getEmail()));
+        userEntity.setUpdatedAt(LocalDateTime.now());
+        try {
+            return userEntityMapper.toDomain(userRepository.save(userEntity));
+        } catch (Exception e) {
+            throw new UserUpdateException(ERROR_UPDATING_USER);
         }
     }
 
@@ -174,6 +214,38 @@ public class UserEntityService implements IUserRepository {
             return !userRepository.existsById(id);
         } catch (Exception e) {
             throw new UserDeleteException("Error deleting user");
+        }
+    }
+
+    public boolean softDelete(String id) {
+        UserEntity userEntity = userRepository.findById(id).orElse(null);
+        if (userEntity == null) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+
+        userEntity.setUpdatedAt(LocalDateTime.now());
+        userEntity.setDeletedAt(LocalDateTime.now());
+        try {
+            return userRepository.save(userEntity).getDeletedAt() != null;
+        } catch (Exception e) {
+            throw new UserDeleteException("Error deleting user");
+        }
+    }
+
+    @Override
+    @Transactional
+    public boolean restore(String id) {
+        UserEntity userEntity = userRepository.findById(id).orElse(null);
+        if (userEntity == null) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+
+        userEntity.setUpdatedAt(LocalDateTime.now());
+        userEntity.setDeletedAt(null);
+        try {
+            return userRepository.save(userEntity).getDeletedAt() == null;
+        } catch (Exception e) {
+            throw new UserUpdateException(ERROR_UPDATING_USER);
         }
     }
 

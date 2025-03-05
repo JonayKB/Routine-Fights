@@ -72,6 +72,12 @@ public class User extends UserCommon {
         this.following = following;
     }
 
+    public User(String id, String username, String email, String password, String nationality,
+            String phoneNumber, String image) {
+        super(username, email, password, nationality, phoneNumber, image);
+        this.id = id;
+    }
+
     /**
      * Get the id of the user
      * 

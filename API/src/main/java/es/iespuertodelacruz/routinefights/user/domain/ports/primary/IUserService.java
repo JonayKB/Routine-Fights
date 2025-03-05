@@ -52,4 +52,19 @@ public interface IUserService extends IUserCommon<User> {
                         String phoneNumber, String image, String role, boolean verified, String verificationToken,
                         LocalDateTime createdAt,
                         LocalDateTime updatedAt, LocalDateTime deletedAt);
+
+        /**
+         * Method to update a user (for v2)
+         * 
+         * @param id          id
+         * @param username    username
+         * @param email       email
+         * @param password    password
+         * @param nationality nationality
+         * @param phoneNumber phoneNumber
+         * @param image       image
+         * @return User
+         */
+        public User update(String id, String username, String email, String password, String nationality,
+                        String phoneNumber, String image);
 }

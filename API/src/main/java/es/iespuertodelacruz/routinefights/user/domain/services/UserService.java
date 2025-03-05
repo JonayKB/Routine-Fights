@@ -14,7 +14,7 @@ import es.iespuertodelacruz.routinefights.user.domain.ports.secondary.IUserRepos
  * UserService
  */
 @Service
-public class UserService implements IUserService  {
+public class UserService implements IUserService {
     private IUserRepository userRepository;
 
     /**
@@ -102,5 +102,17 @@ public class UserService implements IUserService  {
     @Override
     public List<String> findAllImages() {
         return userRepository.findAllImages();
+    }
+
+    @Override
+    public boolean restore(String id) {
+        return userRepository.restore(id);
+    }
+
+    @Override
+    public User update(String id, String username, String email, String password, String nationality,
+            String phoneNumber, String image) {
+        User user = new User(id, username, email, password, nationality, phoneNumber, image);
+        return userRepository.update(user);
     }
 }
