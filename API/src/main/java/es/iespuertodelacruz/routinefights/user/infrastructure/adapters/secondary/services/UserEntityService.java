@@ -217,6 +217,8 @@ public class UserEntityService implements IUserRepository {
         }
     }
 
+    //@Override
+    @Transactional
     public boolean softDelete(String id) {
         UserEntity userEntity = userRepository.findById(id).orElse(null);
         if (userEntity == null) {
