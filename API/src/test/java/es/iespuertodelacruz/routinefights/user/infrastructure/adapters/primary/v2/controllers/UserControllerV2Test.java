@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -14,9 +15,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import es.iespuertodelacruz.routinefights.shared.services.MailService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.services.UserService;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserDeleteException;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserNotFoundException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserUpdateException;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.UserInputDTOV2;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.UserOutputDTOV2;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.mappers.FollowerMapper;
@@ -37,6 +41,9 @@ class UserControllerV2Test {
     @Mock
     private UserService userService;
 
+    @Mock
+    private MailService mailService;
+
     private UserInputDTOV2 userInputDTOV2;
     private UserOutputDTOV2 userOutputDTOV2;
 
@@ -46,10 +53,31 @@ class UserControllerV2Test {
         userControllerV2.setFollowerMapper(followerMapper);
         userControllerV2.setUserOutputMapper(userOutputMapper);
         userControllerV2.setUserService(userService);
+        userControllerV2.setMailService(mailService);
 
         userInputDTOV2 = new UserInputDTOV2("id", "username", "email", "password", "nationality", "phone_number",
                 "image");
         userOutputDTOV2 = new UserOutputDTOV2(null, null, null, null, null, null, null, 0, 0);
+    }
+
+    @Test
+    void getFollowerMapperTest() {
+        assertNotNull(userControllerV2.getFollowerMapper(), TEST_EXCEPTION);
+    }
+
+    @Test
+    void getUserOutputMapperTest() {
+        assertNotNull(userControllerV2.getUserOutputMapper(), TEST_EXCEPTION);
+    }
+
+    @Test
+    void getUserServiceTest() {
+        assertNotNull(userControllerV2.getUserService(), TEST_EXCEPTION);
+    }
+
+    @Test
+    void getMailServiceTest() {
+        assertNotNull(userControllerV2.getMailService(), TEST_EXCEPTION);
     }
 
     @Test
@@ -92,9 +120,9 @@ class UserControllerV2Test {
 
     @Test
     void followUserExceptionTest() {
-        when(userService.followUser(anyString(), anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        when(userService.followUser(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
             userControllerV2.followUser("frEmail", "fdEmail");
         });
         assertEquals("Error following user", exception.getMessage());
@@ -108,11 +136,77 @@ class UserControllerV2Test {
 
     @Test
     void unfollowUserExceptionTest() {
-        when(userService.unfollowUser(anyString(), anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        when(userService.unfollowUser(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
             userControllerV2.unfollowUser("frEmail", "fdEmail");
         });
         assertEquals("Error unfollowing user", exception.getMessage());
+    }
+
+    @Test
+    void deleteTest() {
+        when(userService.delete(anyString())).thenReturn(true);
+        assertTrue(userControllerV2.delete("id"));
+    }
+
+    @Test
+    void deleteExceptionTest() {
+        when(userService.delete(anyString())).thenThrow(new UserDeleteException(TEST_EXCEPTION));
+        UserDeleteException exception = assertThrows(UserDeleteException.class, () -> {
+            userControllerV2.delete("id");
+        });
+        assertEquals("Unable to delete the user", exception.getMessage());
+    }
+
+    @Test
+    void findByIdTest() {
+        when(userService.findById(anyString())).thenReturn(new User());
+        when(userOutputMapper.tOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
+        assertNotNull(userControllerV2.findById("id"));
+    }
+
+    @Test
+    void findByIdExceptionTest() {
+        when(userService.findById(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userControllerV2.findById("id");
+        });
+        assertEquals("Error finding user", exception.getMessage());
+    }
+
+    @Test
+    void findUsersByUsernameTest() {
+        when(userService.findByUsername(anyString())).thenReturn(new ArrayList<User>());
+        assertNotNull(userControllerV2.findUsersByUsername("username"));
+    }
+
+    @Test
+    void findUsersByUsernameExceptionTest() {
+        when(userService.findByUsername(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userControllerV2.findUsersByUsername("username");
+        });
+        assertEquals("Error finding users", exception.getMessage());
+    }
+
+    @Test
+    void updateTest() {
+        when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
+                anyString()))
+                .thenReturn(new User());
+        when(userOutputMapper.tOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
+        assertNotNull(userControllerV2.update(userInputDTOV2));
+    }
+
+    @Test
+    void updateExceptionTest() {
+        when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
+                anyString()))
+                .thenThrow(new UserUpdateException(TEST_EXCEPTION));
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV2.update(userInputDTOV2);
+        });
+        assertEquals("Unable to update the user", exception.getMessage());
     }
 }

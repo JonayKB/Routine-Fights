@@ -79,6 +79,19 @@ class UserTest extends UserInitializer {
     }
 
     @Test
+    void constructorForV2Test() {
+        User userTest = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE);
+        assertNotNull(userTest, ERROR_CREATING_USER);
+        assertEquals(ID, userTest.getId(), ERROR_CREATING_USER);
+        assertEquals(USERNAME, userTest.getUsername(), ERROR_CREATING_USER);
+        assertEquals(EMAIL, userTest.getEmail(), ERROR_CREATING_USER);
+        assertEquals(PASSWORD, userTest.getPassword(), ERROR_CREATING_USER);
+        assertEquals(NATIONALITY, userTest.getNationality(), ERROR_CREATING_USER);
+        assertEquals(PHONE_NUMBER, userTest.getPhoneNumber(), ERROR_CREATING_USER);
+        assertEquals(IMAGE, userTest.getImage(), ERROR_CREATING_USER);
+    }
+
+    @Test
     void constructorWithAllFieldsTest() {
         User userTest = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);

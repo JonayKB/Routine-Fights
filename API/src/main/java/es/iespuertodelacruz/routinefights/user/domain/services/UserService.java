@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
 import es.iespuertodelacruz.routinefights.user.domain.ports.secondary.IUserRepository;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 
 /**
  * UserService

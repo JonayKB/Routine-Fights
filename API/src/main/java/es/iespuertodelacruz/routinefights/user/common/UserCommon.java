@@ -60,8 +60,7 @@ public abstract class UserCommon {
     }
 
     /**
-     * Constructor with username, email, password, nationality, phoneNumber and
-     * image
+     * Constructor for V2
      * 
      * @param username    The username of the user
      * @param email       The email of the user
