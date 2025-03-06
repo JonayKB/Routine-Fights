@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
 import es.iespuertodelacruz.routinefights.user.domain.ports.secondary.IUserRepository;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 
 /**
  * UserService
@@ -114,5 +115,15 @@ public class UserService implements IUserService {
             String phoneNumber, String image) {
         User user = new User(id, username, email, password, nationality, phoneNumber, image);
         return userRepository.update(user);
+    }
+
+    @Override
+    public boolean softDelete(String id) {
+        return userRepository.softDelete(id);
+    }
+
+    @Override
+    public List<User> findByUsername(String regex) {
+        return userRepository.findByUsername(regex);
     }
 }

@@ -24,6 +24,8 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
 
 @SpringBootTest
 class UserControllerV2Test {
+    private static final String TEST_EXCEPTION = "Test Exception";
+
     private UserControllerV2 userControllerV2;
 
     @Mock
@@ -58,7 +60,7 @@ class UserControllerV2Test {
 
     @Test
     void findFollowedUsersByEmailExceptionTest() {
-        when(userService.findFollowedUsersByEmail(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userService.findFollowedUsersByEmail(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userControllerV2.findFollowedUsersByEmail("email");
@@ -74,7 +76,7 @@ class UserControllerV2Test {
 
     @Test
     void findFollowersByEmailExceptionTest() {
-        when(userService.findFollowersByEmail(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userService.findFollowersByEmail(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userControllerV2.findFollowersByEmail("email");
@@ -90,7 +92,7 @@ class UserControllerV2Test {
 
     @Test
     void followUserExceptionTest() {
-        when(userService.followUser(anyString(), anyString())).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userService.followUser(anyString(), anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userControllerV2.followUser("frEmail", "fdEmail");
@@ -106,27 +108,11 @@ class UserControllerV2Test {
 
     @Test
     void unfollowUserExceptionTest() {
-        when(userService.unfollowUser(anyString(), anyString())).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userService.unfollowUser(anyString(), anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userControllerV2.unfollowUser("frEmail", "fdEmail");
         });
         assertEquals("Error unfollowing user", exception.getMessage());
-    }
-
-    @Test
-    void findAllImagesTest() {
-        when(userService.findAllImages()).thenReturn(new ArrayList<String>());
-        assertNotNull(userControllerV2.findAllImages());
-    }
-
-    @Test
-    void findAllImagesExceptionTest() {
-        when(userService.findAllImages()).thenThrow(new UserNotFoundException("Test Exception"));
-
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV2.findAllImages();
-        });
-        assertEquals("Error finding images", exception.getMessage());
     }
 }

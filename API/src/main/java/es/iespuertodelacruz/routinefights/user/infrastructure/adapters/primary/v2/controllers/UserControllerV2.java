@@ -16,6 +16,8 @@ import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserNotFoundException;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.Follower;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.UserInputDTOV2;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.UserOutputDTOV2;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.mappers.FollowerMapper;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.mappers.UserOutputV2Mapper;
 
@@ -58,60 +60,100 @@ public class UserControllerV2 {
         this.userService = userService;
     }
 
+    @Secured("ROLE_USER")
+    @QueryMapping("usersV2")
+    public List<UserOutputDTOV2> findUsersByUsername(@Argument String regex) {
+        try {
+            return userOutputMapper.tOutputDTOV2(userService.findByUsername(regex));
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(findUsersByUsername) Error finding users: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding users");
+        }
+    }
+
+    @Secured("ROLE_USER")
+    @QueryMapping("userV2")
+    public UserOutputDTOV2 findById(@Argument String id) {
+        User user;
+        try {
+            user = userService.findById(id);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(findById) Error finding user: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding user");
+        }
+        return userOutputMapper.tOutputDTOV2(user);
+    }
+
+    @Secured("ROLE_USER")
     @QueryMapping("followedByEmail")
     public List<Follower> findFollowedUsersByEmail(@Argument String email) {
         List<User> following;
         try {
             following = userService.findFollowedUsersByEmail(email);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error finding followed users: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(findFollowedUsersByEmail) Error finding followed users: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding followed users");
         }
         return followerMapper.toFollower(following);
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_USER")
     @QueryMapping("followersByEmail")
     public List<Follower> findFollowersByEmail(@Argument String email) {
         List<User> followers;
         try {
             followers = userService.findFollowersByEmail(email);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error finding followers: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(findFollowersByEmail) Error finding followers: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding followers");
         }
         return followerMapper.toFollower(followers);
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_USER")
     @MutationMapping("followUser")
     public boolean followUser(@Argument String followerEmail, @Argument String followingEmail) {
         try {
             return userService.followUser(followerEmail, followingEmail);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error following user: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(followUser) Error following user: {0}", e.getMessage());
             throw new UserNotFoundException("Error following user");
         }
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_USER")
     @MutationMapping("unfollowUser")
     public boolean unfollowUser(@Argument String followerEmail, @Argument String followingEmail) {
         try {
             return userService.unfollowUser(followerEmail, followingEmail);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error unfollowing user: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(unfollowUser) Error unfollowing user: {0}", e.getMessage());
             throw new UserNotFoundException("Error unfollowing user");
         }
     }
 
-    @QueryMapping("images")
-    public List<String> findAllImages() {
+    @Secured("ROLE_USER")
+    @MutationMapping("updateUserV2")
+    public UserOutputDTOV2 update(@Argument UserInputDTOV2 user) {
+        User userDomain;
         try {
-            return userService.findAllImages();
+            userDomain = userService.update(user.id(), user.username(), user.email(), user.password(),
+                    user.nationality(), user.phoneNumber(), user.image());
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error finding images: {0}", e.getMessage());
-            throw new UserNotFoundException("Error finding images");
+            logger.log(Level.WARNING, "(update) Unable to update the user: {0}", e.getMessage());
+            throw new UserNotFoundException("Unable to update the user");
+        }
+        return userOutputMapper.tOutputDTOV2(userDomain);
+    }
+
+    @Secured("ROLE_USER")
+    @MutationMapping("deleteUserV2")
+    public boolean delete(@Argument String id) {
+        try {
+            return userService.delete(id);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(delete) Unable to delete the user: {0}", e.getMessage());
+            throw new UserNotFoundException("Unable to delete the user");
         }
     }
 }

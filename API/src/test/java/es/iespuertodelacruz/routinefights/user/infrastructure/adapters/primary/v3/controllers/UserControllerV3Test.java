@@ -29,6 +29,8 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
 
 @SpringBootTest
 class UserControllerV3Test {
+    private static final String TEST_EXCEPTION = "Test Exception";
+
     private UserControllerV3 userControllerV3;
 
     @Mock
@@ -71,7 +73,7 @@ class UserControllerV3Test {
 
     @Test
     void deleteExceptionTest() {
-        when(userService.delete(anyString())).thenThrow(new UserDeleteException("Test Exception"));
+        when(userService.delete(anyString())).thenThrow(new UserDeleteException(TEST_EXCEPTION));
 
         UserDeleteException exception = assertThrows(UserDeleteException.class, () -> {
             userControllerV3.delete("id");
@@ -87,7 +89,7 @@ class UserControllerV3Test {
 
     @Test
     void findAllExceptionTest() {
-        when(userService.findAll()).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userService.findAll()).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userControllerV3.findAll();
@@ -104,7 +106,7 @@ class UserControllerV3Test {
 
     @Test
     void findByIdExceptionTest() {
-        when(userService.findById(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userService.findById(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userControllerV3.findById("id");
@@ -125,7 +127,7 @@ class UserControllerV3Test {
     void postExceptionTest() {
         when(userService.post(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyBoolean(), anyString(), any(LocalDateTime.class), any(LocalDateTime.class),
-                any(LocalDateTime.class))).thenThrow(new UserSaveException("Test Exception"));
+                any(LocalDateTime.class))).thenThrow(new UserSaveException(TEST_EXCEPTION));
 
         UserSaveException exception = assertThrows(UserSaveException.class, () -> {
             userControllerV3.post(userInputDTOV3);
@@ -146,7 +148,7 @@ class UserControllerV3Test {
     void putExceptionTest() {
         when(userService.put(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString(), anyBoolean(), anyString(), any(LocalDateTime.class), any(LocalDateTime.class),
-                any(LocalDateTime.class))).thenThrow(new UserUpdateException("Test Exception"));
+                any(LocalDateTime.class))).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
             userControllerV3.put(userInputDTOV3);

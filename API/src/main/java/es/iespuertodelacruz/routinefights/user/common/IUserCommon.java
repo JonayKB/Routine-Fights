@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.user.common;
 import java.util.List;
 
 import es.iespuertodelacruz.routinefights.shared.services.ICRUD;
+import es.iespuertodelacruz.routinefights.user.domain.User;
 
 /**
  * IUserCommon
@@ -70,4 +71,20 @@ public interface IUserCommon<T> extends ICRUD<T> {
      * @return Boolean
      */
     public boolean restore(String id);
+
+    /**
+     * Method to soft delete a user
+     * 
+     * @param id user's id
+     * @return Boolean
+     */
+    public boolean softDelete(String id);
+
+    /**
+     * Method to find the users that match the username given
+     * 
+     * @param regex username
+     * @return List<User>
+     */
+    public List<User> findByUsername(String regex);
 }
