@@ -21,7 +21,7 @@ public abstract class UserInitializer {
     protected static final String PHONE_NUMBER = "phone_number";
     protected static final String IMAGE = "image";
     protected static final String ROLE = "role";
-    protected static final boolean VERIFIED = true;
+    protected static final boolean VERIFIED = false;
     protected static final String VERIFICATION_TOKEN = "verification_token";
     protected static final LocalDateTime CREATED_AT = LocalDateTime.now();
     protected static final LocalDateTime UPDATED_AT = LocalDateTime.now();
