@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondar
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -113,6 +114,11 @@ public class UserEntityService implements IUserRepository {
     }
 
     @Override
+    public List<User> findByUsername(String regex) {
+        return userEntityMapper.toDomain(userRepository.findByUsername(regex));
+    }
+
+    @Override
     @Transactional
     public User post(User user) {
         if (user == null || user.getPassword() == null || user.getEmail() == null || user.getCreatedAt() == null) {
@@ -182,11 +188,14 @@ public class UserEntityService implements IUserRepository {
             throw new UserNotFoundException(USER_NOT_FOUND);
         }
 
-        // TODO: If email changes, he has to verify agin
-        if(!user.getEmail().equals(userEntity.getEmail()) && userRepository.existsByEmail(user.getEmail())){
-            throw new UserUpdateException("Email already exists");
+        if (!user.getEmail().equals(userEntity.getEmail())) {
+            if (userRepository.existsByEmail(user.getEmail())) {
+                throw new UserUpdateException("Email already exists");
+            }
+            userEntity.setEmail(user.getEmail());
+            user.setVerified(false);
+            user.setVerificationToken(UUID.randomUUID().toString());
         }
-        userEntity.setEmail(user.getEmail());
 
         if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -217,7 +226,7 @@ public class UserEntityService implements IUserRepository {
         }
     }
 
-    //@Override
+    @Override
     @Transactional
     public boolean softDelete(String id) {
         UserEntity userEntity = userRepository.findById(id).orElse(null);

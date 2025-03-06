@@ -52,8 +52,8 @@ type UserOutputV3 {
   createdAt: String
   updatedAt: String
   deletedAt: String
-  followers: [Followers]
-  following: [Followers]
+  followers: [UserOutputV3]
+  following: [UserOutputV3]
 }
 
 input UserInputV2 {

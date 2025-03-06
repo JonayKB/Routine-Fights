@@ -58,7 +58,7 @@ public class UserControllerV3 {
         try {
             users = userService.findAll();
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error finding users: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(findAll) Error finding users: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding users");
         }
         return userOutputMapper.tOutputDTOV3(users);
@@ -71,7 +71,7 @@ public class UserControllerV3 {
         try {
             user = userService.findById(id);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error finding user: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(findById) Error finding user: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding user");
         }
         return userOutputMapper.tOutputDTOV3(user);
@@ -88,7 +88,7 @@ public class UserControllerV3 {
                     user.verificationToken(), user.createdAt(), user.updatedAt(),
                     user.deletedAt());
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Unable to create the user: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(post) Unable to create the user: {0}", e.getMessage());
             throw new UserSaveException("Unable to create the user");
         }
         return userOutputMapper.tOutputDTOV3(userDomain);
@@ -105,7 +105,7 @@ public class UserControllerV3 {
                     user.verificationToken(), user.createdAt(), user.updatedAt(),
                     user.deletedAt());
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Unable to update the user: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(put) Unable to update the user: {0}", e.getMessage());
             throw new UserUpdateException("Unable to update the user");
         }
         return userOutputMapper.tOutputDTOV3(userDomain);
@@ -117,7 +117,7 @@ public class UserControllerV3 {
         try {
             return userService.delete(id);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Unable to delete the user: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(delete) Unable to delete the user: {0}", e.getMessage());
             throw new UserDeleteException("Unable to delete the user");
         }
     }
