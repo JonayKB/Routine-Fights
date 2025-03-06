@@ -12,9 +12,12 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import es.iespuertodelacruz.routinefights.shared.services.MailService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserDeleteException;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserNotFoundException;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserUpdateException;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.Follower;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.UserInputDTOV2;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.UserOutputDTOV2;
@@ -32,6 +35,16 @@ public class UserControllerV2 {
     private IUserService userService;
     private UserOutputV2Mapper userOutputMapper;
     private FollowerMapper followerMapper;
+    private MailService mailService;
+
+    public MailService getMailService() {
+        return this.mailService;
+    }
+
+    @Autowired
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
+    }
 
     public FollowerMapper getFollowerMapper() {
         return this.followerMapper;
@@ -117,7 +130,7 @@ public class UserControllerV2 {
             return userService.followUser(followerEmail, followingEmail);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(followUser) Error following user: {0}", e.getMessage());
-            throw new UserNotFoundException("Error following user");
+            throw new UserUpdateException("Error following user");
         }
     }
 
@@ -128,7 +141,7 @@ public class UserControllerV2 {
             return userService.unfollowUser(followerEmail, followingEmail);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(unfollowUser) Error unfollowing user: {0}", e.getMessage());
-            throw new UserNotFoundException("Error unfollowing user");
+            throw new UserUpdateException("Error unfollowing user");
         }
     }
 
@@ -139,9 +152,14 @@ public class UserControllerV2 {
         try {
             userDomain = userService.update(user.id(), user.username(), user.email(), user.password(),
                     user.nationality(), user.phoneNumber(), user.image());
+                    
+            if (userDomain != null && (!userDomain.getVerified() && userDomain.getVerificationToken() != null)) {
+                mailService.sentVerifyToken(userDomain.getEmail(), "Verify your email: " + userDomain.getUsername(),
+                        userDomain.getVerificationToken());
+            }
         } catch (Exception e) {
             logger.log(Level.WARNING, "(update) Unable to update the user: {0}", e.getMessage());
-            throw new UserNotFoundException("Unable to update the user");
+            throw new UserUpdateException("Unable to update the user");
         }
         return userOutputMapper.tOutputDTOV2(userDomain);
     }
@@ -153,7 +171,7 @@ public class UserControllerV2 {
             return userService.delete(id);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(delete) Unable to delete the user: {0}", e.getMessage());
-            throw new UserNotFoundException("Unable to delete the user");
+            throw new UserDeleteException("Unable to delete the user");
         }
     }
 }
