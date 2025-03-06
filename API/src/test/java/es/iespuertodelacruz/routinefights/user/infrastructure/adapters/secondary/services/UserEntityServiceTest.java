@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -29,6 +30,8 @@ import es.iespuertodelacruz.routinefights.user.utils.UserInitializer;
 
 @SpringBootTest
 class UserEntityServiceTest extends UserInitializer {
+    private static final String TEST_EXCEPTION = "Test Exception";
+
     private UserEntityService userEntityService;
 
     @Mock
@@ -70,7 +73,7 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void deleteExceptionTest() {
-        when(userEntityRepository.existsById(anyString())).thenThrow(new UserDeleteException("Test Exception"));
+        when(userEntityRepository.existsById(anyString())).thenThrow(new UserDeleteException(TEST_EXCEPTION));
 
         UserDeleteException exception = assertThrows(UserDeleteException.class, () -> {
             userEntityService.delete("id");
@@ -87,12 +90,13 @@ class UserEntityServiceTest extends UserInitializer {
     @Test
     void findAllTest() {
         when(userEntityRepository.findAll()).thenReturn(new ArrayList<UserEntity>());
+        when(userEntityMapper.toDomain(anyList())).thenReturn(new ArrayList<User>());
         assertNotNull(userEntityService.findAll());
     }
 
     @Test
     void findAllExceptionTest() {
-        when(userEntityRepository.findAll()).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userEntityRepository.findAll()).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userEntityService.findAll();
@@ -108,7 +112,7 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void findAllImagesExceptionTest() {
-        when(userEntityRepository.findAllImages()).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userEntityRepository.findAllImages()).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userEntityService.findAllImages();
@@ -142,7 +146,7 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void findByIdExceptionTest() {
-        when(userEntityRepository.findById(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userEntityRepository.findById(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userEntityService.findById("id");
@@ -159,7 +163,7 @@ class UserEntityServiceTest extends UserInitializer {
     @Test
     void findFollowedUsersByEmailExceptionTest() {
         when(userEntityRepository.findFollowedUsersByEmail(anyString()))
-                .thenThrow(new UserNotFoundException("Test Exception"));
+                .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userEntityService.findFollowedUsersByEmail("email");
@@ -176,7 +180,7 @@ class UserEntityServiceTest extends UserInitializer {
     @Test
     void findFollowersByEmailExceptionTest() {
         when(userEntityRepository.findFollowersByEmail(anyString()))
-                .thenThrow(new UserNotFoundException("Test Exception"));
+                .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userEntityService.findFollowersByEmail("email");
@@ -206,7 +210,7 @@ class UserEntityServiceTest extends UserInitializer {
     void followUserExceptionTest() {
         when(userEntityRepository.existsByEmail(anyString())).thenReturn(true);
         when(userEntityRepository.followUser(anyString(), anyString()))
-                .thenThrow(new UserNotFoundException("Test Exception"));
+                .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userEntityService.followUser("frEmail", "fdEmail");
@@ -241,7 +245,7 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void postExceptionTest() {
-        when(userEntityRepository.save(any(UserEntity.class))).thenThrow(new UserSaveException("Test Exception"));
+        when(userEntityRepository.save(any(UserEntity.class))).thenThrow(new UserSaveException(TEST_EXCEPTION));
         when(userEntityMapper.toEntity(any(User.class))).thenReturn(userEntity);
 
         UserSaveException exception = assertThrows(UserSaveException.class, () -> {
@@ -289,7 +293,7 @@ class UserEntityServiceTest extends UserInitializer {
     @Test
     void putExceptionTest() {
         when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(userEntity));
-        when(userEntityRepository.save(any(UserEntity.class))).thenThrow(new UserUpdateException("Test Exception"));
+        when(userEntityRepository.save(any(UserEntity.class))).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
             userEntityService.put(user);
@@ -319,11 +323,82 @@ class UserEntityServiceTest extends UserInitializer {
     void unfollowUserExceptionTest() {
         when(userEntityRepository.existsByEmail(anyString())).thenReturn(true);
         when(userEntityRepository.unfollowUser(anyString(), anyString()))
-                .thenThrow(new UserNotFoundException("Test Exception"));
+                .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userEntityService.unfollowUser("frEmail", "fdEmail");
         });
         assertEquals("Error unfollowing user", exception.getMessage());
+    }
+
+    @Test
+    void findByUsernameTest() {
+        when(userEntityRepository.findByUsername(anyString())).thenReturn(new ArrayList<UserEntity>());
+        when(userEntityMapper.toDomain(anyList())).thenReturn(new ArrayList<User>());
+        assertNotNull(userEntityService.findByUsername("username"));
+    }
+
+    @Test
+    void restoreTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(new UserEntity()));
+        when(userEntityRepository.save(any(UserEntity.class))).thenReturn(new UserEntity());
+        assertTrue(userEntityService.restore("id"));
+    }
+
+    @Test
+    void restoreUserNotFoundExceptionTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.restore("id");
+        });
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void restoreUserUpdateExceptionTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(new UserEntity()));
+        when(userEntityRepository.save(any(UserEntity.class))).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userEntityService.restore("id");
+        });
+        assertEquals("Error updating user", exception.getMessage());
+    }
+
+    @Test
+    void softdeleteTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(new UserEntity()));
+        when(userEntityRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+        assertTrue(userEntityService.softDelete("id"));
+    }
+
+    @Test
+    void softDeleteUserNotFoundExceptionTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.softDelete("id");
+        });
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void softDeleteUserDeleteExceptionTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(new UserEntity()));
+        when(userEntityRepository.save(any(UserEntity.class))).thenThrow(new UserDeleteException(TEST_EXCEPTION));
+
+        UserDeleteException exception = assertThrows(UserDeleteException.class, () -> {
+            userEntityService.softDelete("id");
+        });
+        assertEquals("Error deleting user", exception.getMessage());
+    }
+
+    @Test
+    void updateTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(userEntity));
+        when(userEntityRepository.save(any(UserEntity.class))).thenReturn(new UserEntity());
+        when(userEntityMapper.toDomain(any(UserEntity.class))).thenReturn(user);
+        assertNotNull(userEntityService.update(user));
     }
 }

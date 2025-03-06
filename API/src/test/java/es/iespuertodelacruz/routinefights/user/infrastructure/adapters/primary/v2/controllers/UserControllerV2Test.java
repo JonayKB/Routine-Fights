@@ -25,9 +25,10 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.dtos.UserOutputDTOV2;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.mappers.FollowerMapper;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.mappers.UserOutputV2Mapper;
+import es.iespuertodelacruz.routinefights.user.utils.UserInitializer;
 
 @SpringBootTest
-class UserControllerV2Test {
+class UserControllerV2Test extends UserInitializer {
     private static final String TEST_EXCEPTION = "Test Exception";
 
     private UserControllerV2 userControllerV2;
@@ -48,7 +49,7 @@ class UserControllerV2Test {
     private UserOutputDTOV2 userOutputDTOV2;
 
     @BeforeEach
-    void setUp() {
+    void init() {
         userControllerV2 = new UserControllerV2();
         userControllerV2.setFollowerMapper(followerMapper);
         userControllerV2.setUserOutputMapper(userOutputMapper);
@@ -195,6 +196,15 @@ class UserControllerV2Test {
         when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString()))
                 .thenReturn(new User());
+        when(userOutputMapper.tOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
+        assertNotNull(userControllerV2.update(userInputDTOV2));
+    }
+
+    @Test
+    void updateWithMailTest() {
+        when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
+                anyString()))
+                .thenReturn(user);
         when(userOutputMapper.tOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
         assertNotNull(userControllerV2.update(userInputDTOV2));
     }
