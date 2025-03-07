@@ -121,4 +121,15 @@ public class UserControllerV3 {
             throw new UserDeleteException("Unable to delete the user");
         }
     }
+
+    @Secured("ROLE_ADMIN")
+    @MutationMapping("restoreUserV3")
+    public boolean restoreUser(@Argument String id) {
+        try {
+            return userService.restore(id);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(restoreUser) Unable to restore the user: {0}", e.getMessage());
+            throw new UserUpdateException("Unable to restore the user");
+        }
+    }
 }

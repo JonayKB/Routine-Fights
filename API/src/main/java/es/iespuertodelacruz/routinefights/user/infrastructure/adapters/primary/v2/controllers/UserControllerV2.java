@@ -166,9 +166,9 @@ public class UserControllerV2 {
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("deleteUserV2")
-    public boolean delete(@Argument String id) {
+    public boolean softDelete(@Argument String id) {
         try {
-            return userService.delete(id);
+            return userService.softDelete(id);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(delete) Unable to delete the user: {0}", e.getMessage());
             throw new UserDeleteException("Unable to delete the user");
