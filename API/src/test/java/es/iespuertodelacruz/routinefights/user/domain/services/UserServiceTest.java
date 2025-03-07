@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.user.domain.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -87,8 +88,7 @@ class UserServiceTest {
     @Test
     void followUserTest() {
         when(userRepository.followUser(anyString(), anyString())).thenReturn(true);
-        Boolean followed = userService.followUser("frEmail", "fdEmail");
-        assertNotNull(followed);
+        assertTrue(userService.followUser("frEmail", "fdEmail"));
     }
 
     @Test
@@ -110,7 +110,31 @@ class UserServiceTest {
     @Test
     void unfollowUserTest() {
         when(userRepository.unfollowUser(anyString(), anyString())).thenReturn(true);
-        Boolean unfollowed = userService.unfollowUser("frEmail", "fdEmail");
-        assertNotNull(unfollowed);
+        assertTrue(userService.unfollowUser("frEmail", "fdEmail"));
+    }
+
+    @Test
+    void restoreTest() {
+        when(userRepository.restore(anyString())).thenReturn(true);
+        assertTrue(userService.restore("1"));
+    }
+
+    @Test
+    void updateTest() {
+        when(userRepository.update(any(User.class))).thenReturn(new User());
+        User user = userService.update("1", "username", "email", "password", "nationality", "phoneNumber", "image");
+        assertNotNull(user);
+    }
+
+    @Test
+    void softDeleteTest() {
+        when(userRepository.softDelete(anyString())).thenReturn(true);
+        assertTrue(userService.softDelete("1"));
+    }
+
+    @Test
+    void findByUsernameTest() {
+        when(userRepository.findByUsername(anyString())).thenReturn(new ArrayList<User>());
+        assertNotNull(userService.findByUsername("username"));
     }
 }

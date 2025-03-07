@@ -1,8 +1,12 @@
 type Query {
   usersV3: [UserOutputV3]
   userV3(id: ID!): UserOutputV3
-  followersByEmailV3(email: String!): [UserOutputV3]
-  followedByEmailV3(email: String!): [UserOutputV3]
+
+  usersV2(regex: String!): [Followers]
+  userV2(id: ID!): UserOutputV2
+
+  followersByEmail(email: String!): [Followers]
+  followedByEmail(email: String!): [Followers]
   images: [String]
 }
 
@@ -10,8 +14,13 @@ type Mutation {
   saveUserV3(user: UserInputV3): UserOutputV3
   updateUserV3(user: UserInputV3): UserOutputV3
   deleteUserV3(id: ID!): Boolean
-  followUserV3(followerEmail: String!, followingEmail: String!): Boolean
-  unfollowUserV3(followerEmail: String!, followingEmail: String!): Boolean
+  restoreUserV3(id: ID!): Boolean
+
+  updateUserV2(user: UserInputV2): UserOutputV2
+  deleteUserV2(id: ID!): Boolean
+
+  followUser(followerEmail: String!, followingEmail: String!): Boolean
+  unfollowUser(followerEmail: String!, followingEmail: String!): Boolean
 }
 
 input UserInputV3 {
@@ -45,4 +54,36 @@ type UserOutputV3 {
   deletedAt: String
   followers: [UserOutputV3]
   following: [UserOutputV3]
+}
+
+input UserInputV2 {
+  id: ID!
+  username: String!
+  email: String!
+  password: String
+  nationality: String!
+  phoneNumber: String!
+  image: String
+}
+
+type UserOutputV2 {
+  id: ID
+  username: String
+  email: String
+  nationality: String
+  phoneNumber: String
+  image: String
+  createdAt: String
+  followers: Int
+  following: Int
+}
+
+type Followers {
+  id: ID
+  username: String
+  nationality: String
+  image: String
+  createdAt: String
+  followers: Int
+  following: Int
 }

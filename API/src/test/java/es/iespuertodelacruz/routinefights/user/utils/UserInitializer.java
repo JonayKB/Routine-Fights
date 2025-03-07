@@ -21,7 +21,7 @@ public abstract class UserInitializer {
     protected static final String PHONE_NUMBER = "phone_number";
     protected static final String IMAGE = "image";
     protected static final String ROLE = "role";
-    protected static final boolean VERIFIED = true;
+    protected static final boolean VERIFIED = false;
     protected static final String VERIFICATION_TOKEN = "verification_token";
     protected static final LocalDateTime CREATED_AT = LocalDateTime.now();
     protected static final LocalDateTime UPDATED_AT = LocalDateTime.now();
@@ -39,8 +39,10 @@ public abstract class UserInitializer {
         user = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN,
                 CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);
+        followers.add(new User());
 
         userEntity = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);
+        followersEntity.add(new UserEntity());
     }
 }

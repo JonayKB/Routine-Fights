@@ -73,6 +73,23 @@ public class User extends UserCommon {
     }
 
     /**
+     * Constructor for V2
+     * 
+     * @param id          The id of the user
+     * @param username    The username of the user
+     * @param email       The email of the user
+     * @param password    The password of the
+     * @param nationality The nationality of the user
+     * @param phoneNumber The phone number of the user
+     * @param image       The image of the user
+     */
+    public User(String id, String username, String email, String password, String nationality,
+            String phoneNumber, String image) {
+        super(username, email, password, nationality, phoneNumber, image);
+        this.id = id;
+    }
+
+    /**
      * Get the id of the user
      * 
      * @return The id of the user
