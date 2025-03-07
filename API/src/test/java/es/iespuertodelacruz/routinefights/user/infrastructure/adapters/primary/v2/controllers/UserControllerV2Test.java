@@ -146,16 +146,16 @@ class UserControllerV2Test extends UserInitializer {
     }
 
     @Test
-    void deleteTest() {
-        when(userService.delete(anyString())).thenReturn(true);
-        assertTrue(userControllerV2.delete("id"));
+    void softDeleteTest() {
+        when(userService.softDelete(anyString())).thenReturn(true);
+        assertTrue(userControllerV2.softDelete("id"));
     }
 
     @Test
-    void deleteExceptionTest() {
-        when(userService.delete(anyString())).thenThrow(new UserDeleteException(TEST_EXCEPTION));
+    void softDeleteExceptionTest() {
+        when(userService.softDelete(anyString())).thenThrow(new UserDeleteException(TEST_EXCEPTION));
         UserDeleteException exception = assertThrows(UserDeleteException.class, () -> {
-            userControllerV2.delete("id");
+            userControllerV2.softDelete("id");
         });
         assertEquals("Unable to delete the user", exception.getMessage());
     }

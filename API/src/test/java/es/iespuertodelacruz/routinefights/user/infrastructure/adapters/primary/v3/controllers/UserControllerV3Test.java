@@ -155,4 +155,20 @@ class UserControllerV3Test {
         });
         assertEquals("Unable to update the user", exception.getMessage());
     }
+
+    @Test
+    void restoreUserTest() {
+        when(userService.restore(anyString())).thenReturn(true);
+        assertTrue(userControllerV3.restoreUser("id"));
+    }
+
+    @Test
+    void restoreUserExceptionTest() {
+        when(userService.restore(anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV3.restoreUser("id");
+        });
+        assertEquals("Unable to restore the user", exception.getMessage());
+    }
 }
