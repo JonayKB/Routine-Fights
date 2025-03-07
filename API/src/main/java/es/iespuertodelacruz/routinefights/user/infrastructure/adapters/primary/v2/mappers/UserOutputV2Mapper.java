@@ -15,7 +15,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
 public interface UserOutputV2Mapper {
     @Mapping(target = "followers", expression = "java(user.getFollowers() == null ? 0 : user.getFollowers().size())")
     @Mapping(target = "following", expression = "java(user.getFollowing() == null ? 0 : user.getFollowing().size())")
-    public UserOutputDTOV2 tOutputDTOV2(User user);
+    public UserOutputDTOV2 toOutputDTOV2(User user);
 
-    public List<UserOutputDTOV2> tOutputDTOV2(List<User> users);
+    public List<UserOutputDTOV2> toOutputDTOV2(List<User> users);
 }

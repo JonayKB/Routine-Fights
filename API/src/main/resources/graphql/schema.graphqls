@@ -2,7 +2,7 @@ type Query {
   usersV3: [UserOutputV3]
   userV3(id: ID!): UserOutputV3
 
-  usersV2(name: String!): [Followers]
+  usersV2(regex: String!): [Followers]
   userV2(id: ID!): UserOutputV2
 
   followersByEmail(email: String!): [Followers]

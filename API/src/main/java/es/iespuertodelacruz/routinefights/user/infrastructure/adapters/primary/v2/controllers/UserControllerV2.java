@@ -73,18 +73,18 @@ public class UserControllerV2 {
         this.userService = userService;
     }
 
-    @Secured("ROLE_USER")
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("usersV2")
     public List<UserOutputDTOV2> findUsersByUsername(@Argument String regex) {
         try {
-            return userOutputMapper.tOutputDTOV2(userService.findByUsername(regex));
+            return userOutputMapper.toOutputDTOV2(userService.findByUsername(regex));
         } catch (Exception e) {
             logger.log(Level.WARNING, "(findUsersByUsername) Error finding users: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding users");
         }
     }
 
-    @Secured("ROLE_USER")
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("userV2")
     public UserOutputDTOV2 findById(@Argument String id) {
         User user;
@@ -94,10 +94,10 @@ public class UserControllerV2 {
             logger.log(Level.WARNING, "(findById) Error finding user: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding user");
         }
-        return userOutputMapper.tOutputDTOV2(user);
+        return userOutputMapper.toOutputDTOV2(user);
     }
 
-    @Secured("ROLE_USER")
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("followedByEmail")
     public List<Follower> findFollowedUsersByEmail(@Argument String email) {
         List<User> following;
@@ -110,7 +110,7 @@ public class UserControllerV2 {
         return followerMapper.toFollower(following);
     }
 
-    @Secured("ROLE_USER")
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("followersByEmail")
     public List<Follower> findFollowersByEmail(@Argument String email) {
         List<User> followers;
@@ -123,7 +123,7 @@ public class UserControllerV2 {
         return followerMapper.toFollower(followers);
     }
 
-    @Secured("ROLE_USER")
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("followUser")
     public boolean followUser(@Argument String followerEmail, @Argument String followingEmail) {
         try {
@@ -134,7 +134,7 @@ public class UserControllerV2 {
         }
     }
 
-    @Secured("ROLE_USER")
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("unfollowUser")
     public boolean unfollowUser(@Argument String followerEmail, @Argument String followingEmail) {
         try {
@@ -145,14 +145,14 @@ public class UserControllerV2 {
         }
     }
 
-    @Secured("ROLE_USER")
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("updateUserV2")
     public UserOutputDTOV2 update(@Argument UserInputDTOV2 user) {
         User userDomain;
         try {
             userDomain = userService.update(user.id(), user.username(), user.email(), user.password(),
                     user.nationality(), user.phoneNumber(), user.image());
-                    
+
             if (userDomain != null && (!userDomain.getVerified() && userDomain.getVerificationToken() != null)) {
                 mailService.sentVerifyToken(userDomain.getEmail(), "Verify your email: " + userDomain.getUsername(),
                         userDomain.getVerificationToken());
@@ -161,10 +161,10 @@ public class UserControllerV2 {
             logger.log(Level.WARNING, "(update) Unable to update the user: {0}", e.getMessage());
             throw new UserUpdateException("Unable to update the user");
         }
-        return userOutputMapper.tOutputDTOV2(userDomain);
+        return userOutputMapper.toOutputDTOV2(userDomain);
     }
 
-    @Secured("ROLE_USER")
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("deleteUserV2")
     public boolean delete(@Argument String id) {
         try {

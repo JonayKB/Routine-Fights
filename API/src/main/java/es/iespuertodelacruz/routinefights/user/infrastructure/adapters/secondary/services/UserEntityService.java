@@ -73,12 +73,7 @@ public class UserEntityService implements IUserRepository {
     @Override
     public List<User> findAll() {
         try {
-            List<User> users = userEntityMapper.toDomain(userRepository.findAll());
-            for (User user : users) {
-                user.setFollowers(findFollowersByEmail(user.getEmail()));
-                user.setFollowing(findFollowedUsersByEmail(user.getEmail()));
-            }
-            return users;
+            return userEntityMapper.toDomain(userRepository.findAll());
         } catch (Exception e) {
             throw new UserNotFoundException("Users not found");
         }
@@ -87,10 +82,7 @@ public class UserEntityService implements IUserRepository {
     @Override
     public User findById(String id) {
         try {
-            User user = userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
-            user.setFollowers(findFollowersByEmail(user.getEmail()));
-            user.setFollowing(findFollowedUsersByEmail(user.getEmail()));
-            return user;
+            return userEntityMapper.toDomain(userRepository.findById(id).orElse(null));
         } catch (Exception e) {
             throw new UserNotFoundException(USER_NOT_FOUND);
         }
@@ -99,10 +91,7 @@ public class UserEntityService implements IUserRepository {
     @Override
     public User findByEmail(String email) {
         try {
-            User user = userEntityMapper.toDomain(userRepository.findByEmail(email));
-            user.setFollowers(findFollowersByEmail(user.getEmail()));
-            user.setFollowing(findFollowedUsersByEmail(user.getEmail()));
-            return user;
+            return userEntityMapper.toDomain(userRepository.findByEmail(email));
         } catch (Exception e) {
             throw new UserNotFoundException(USER_NOT_FOUND);
         }
@@ -115,7 +104,11 @@ public class UserEntityService implements IUserRepository {
 
     @Override
     public List<User> findByUsername(String regex) {
-        return userEntityMapper.toDomain(userRepository.findByUsername(regex));
+        try {
+            return userEntityMapper.toDomain(userRepository.findByUsername(regex));
+        } catch (Exception e) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
     }
 
     @Override
@@ -167,8 +160,6 @@ public class UserEntityService implements IUserRepository {
         userEntity.setRole(user.getRole());
         userEntity.setVerified(user.getVerified());
         userEntity.setVerificationToken(user.getVerificationToken());
-        userEntity.setFollowers(userRepository.findFollowersByEmail(user.getEmail()));
-        userEntity.setFollowing(userRepository.findFollowedUsersByEmail(user.getEmail()));
         try {
             return userEntityMapper.toDomain(userRepository.save(userEntity));
         } catch (Exception e) {
@@ -193,8 +184,8 @@ public class UserEntityService implements IUserRepository {
                 throw new UserUpdateException("Email already exists");
             }
             userEntity.setEmail(user.getEmail());
-            user.setVerified(false);
-            user.setVerificationToken(UUID.randomUUID().toString());
+            userEntity.setVerified(false);
+            userEntity.setVerificationToken(UUID.randomUUID().toString());
         }
 
         if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
@@ -205,8 +196,6 @@ public class UserEntityService implements IUserRepository {
         userEntity.setNationality(user.getNationality());
         userEntity.setPhoneNumber(user.getPhoneNumber());
         userEntity.setImage(user.getImage());
-        userEntity.setFollowers(userRepository.findFollowersByEmail(user.getEmail()));
-        userEntity.setFollowing(userRepository.findFollowedUsersByEmail(user.getEmail()));
         userEntity.setUpdatedAt(LocalDateTime.now());
         try {
             return userEntityMapper.toDomain(userRepository.save(userEntity));
