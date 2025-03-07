@@ -163,7 +163,7 @@ class UserControllerV2Test extends UserInitializer {
     @Test
     void findByIdTest() {
         when(userService.findById(anyString())).thenReturn(new User());
-        when(userOutputMapper.tOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
+        when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
         assertNotNull(userControllerV2.findById("id"));
     }
 
@@ -196,7 +196,7 @@ class UserControllerV2Test extends UserInitializer {
         when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString()))
                 .thenReturn(new User());
-        when(userOutputMapper.tOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
+        when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
         assertNotNull(userControllerV2.update(userInputDTOV2));
     }
 
@@ -205,7 +205,7 @@ class UserControllerV2Test extends UserInitializer {
         when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString()))
                 .thenReturn(user);
-        when(userOutputMapper.tOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
+        when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
         assertNotNull(userControllerV2.update(userInputDTOV2));
     }
 
