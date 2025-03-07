@@ -396,9 +396,54 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void updateTest() {
+        userEntity.setPassword("Different Password");
+        userEntity.setEmail("Different Email");
+
         when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(userEntity));
         when(userEntityRepository.save(any(UserEntity.class))).thenReturn(new UserEntity());
         when(userEntityMapper.toDomain(any(UserEntity.class))).thenReturn(user);
         assertNotNull(userEntityService.update(user));
+    }
+
+    @Test
+    void updateNullUserExceptionTest() {
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userEntityService.update(null);
+        });
+        assertEquals("Data required", exception.getMessage());
+    }
+
+    @Test
+    void updateUserNotFoundExceptionTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.update(user);
+        });
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void updateEmailAlreadyExistsExceptionTest() {
+        userEntity.setEmail("Different Email");
+
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(new UserEntity()));
+        when(userEntityRepository.existsByEmail(anyString())).thenReturn(true);
+
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userEntityService.update(user);
+        });
+        assertEquals("Email already exists", exception.getMessage());
+    }
+
+    @Test
+    void updateUserUpdateExceptionTest() {
+        when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(new UserEntity()));
+        when(userEntityRepository.save(any(UserEntity.class))).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userEntityService.update(user);
+        });
+        assertEquals("Error updating user", exception.getMessage());
     }
 }
