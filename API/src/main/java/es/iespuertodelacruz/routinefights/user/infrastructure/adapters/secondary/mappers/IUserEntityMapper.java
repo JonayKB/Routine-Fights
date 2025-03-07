@@ -53,6 +53,11 @@ public interface IUserEntityMapper {
     @Named("setFollows")
     public static List<User> setFollows(List<UserEntity> users) {
         List<User> userList = new ArrayList<>();
+
+        if (users == null) {
+            return userList;
+        }
+        
         for (UserEntity userEntity : users) {
             User user = new User();
             user.setCreatedAt(userEntity.getCreatedAt());
