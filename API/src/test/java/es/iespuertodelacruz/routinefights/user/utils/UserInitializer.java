@@ -39,8 +39,10 @@ public abstract class UserInitializer {
         user = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN,
                 CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);
+        followers.add(new User());
 
         userEntity = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);
+        followersEntity.add(new UserEntity());
     }
 }
