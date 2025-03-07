@@ -339,6 +339,16 @@ class UserEntityServiceTest extends UserInitializer {
     }
 
     @Test
+    void findByUsernameExceptionTest() {
+        when(userEntityRepository.findByUsername(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.findByUsername("username");
+        });
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
     void restoreTest() {
         when(userEntityRepository.findById(anyString())).thenReturn(Optional.of(new UserEntity()));
         when(userEntityRepository.save(any(UserEntity.class))).thenReturn(new UserEntity());
