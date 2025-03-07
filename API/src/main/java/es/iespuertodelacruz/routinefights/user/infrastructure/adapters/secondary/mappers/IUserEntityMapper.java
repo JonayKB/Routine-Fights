@@ -1,9 +1,11 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.mappers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
@@ -28,8 +30,8 @@ public interface IUserEntityMapper {
      * @param userEntity UserEntity
      * @return User
      */
-    @Mapping(target = "followers", ignore = true)
-    @Mapping(target = "following", ignore = true)
+    @Mapping(target = "followers", source = "followers", qualifiedByName = "setFollows")
+    @Mapping(target = "following", source = "following", qualifiedByName = "setFollows")
     public User toDomain(UserEntity userEntity);
 
     /**
@@ -47,4 +49,32 @@ public interface IUserEntityMapper {
      * @return List<User>
      */
     public List<User> toDomain(List<UserEntity> userEntities);
+
+    @Named("setFollows")
+    public static List<User> setFollows(List<UserEntity> users) {
+        List<User> userList = new ArrayList<>();
+
+        if (users == null) {
+            return userList;
+        }
+        
+        for (UserEntity userEntity : users) {
+            User user = new User();
+            user.setCreatedAt(userEntity.getCreatedAt());
+            user.setDeletedAt(userEntity.getDeletedAt());
+            user.setEmail(userEntity.getEmail());
+            user.setImage(userEntity.getImage());
+            user.setNationality(userEntity.getNationality());
+            user.setPassword(userEntity.getPassword());
+            user.setPhoneNumber(userEntity.getPhoneNumber());
+            user.setRole(userEntity.getRole());
+            user.setUpdatedAt(userEntity.getUpdatedAt());
+            user.setUsername(userEntity.getUsername());
+            user.setVerificationToken(userEntity.getVerificationToken());
+            user.setVerified(userEntity.getVerified());
+            user.setId(userEntity.getId());
+            userList.add(user);
+        }
+        return userList;
+    }
 }

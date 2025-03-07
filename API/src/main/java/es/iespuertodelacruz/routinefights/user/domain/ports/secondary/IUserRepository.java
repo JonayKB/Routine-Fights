@@ -22,4 +22,12 @@ public interface IUserRepository extends IUserCommon<User> {
      * @return User
      */
     public User put(User user);
+
+    /**
+     * Method to update a user (for v2)
+     * 
+     * @param user user
+     * @return User
+     */
+    public User update(User user);
 }

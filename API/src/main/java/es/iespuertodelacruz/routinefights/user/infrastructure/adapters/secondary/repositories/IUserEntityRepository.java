@@ -29,4 +29,7 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
 
     @Query("MATCH (u: User) WHERE u.image IS NOT NULL RETURN u.image")
     public List<String> findAllImages();
+
+    @Query("MATCH (u: User) WHERE u.username CONTAINS $regex RETURN u")
+    public List<UserEntity> findByUsername(@Param("regex") String regex);
 }

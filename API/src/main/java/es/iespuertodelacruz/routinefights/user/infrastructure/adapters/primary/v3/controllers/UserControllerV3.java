@@ -58,7 +58,7 @@ public class UserControllerV3 {
         try {
             users = userService.findAll();
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error finding users: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(findAll) Error finding users: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding users");
         }
         return userOutputMapper.tOutputDTOV3(users);
@@ -71,7 +71,7 @@ public class UserControllerV3 {
         try {
             user = userService.findById(id);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error finding user: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(findById) Error finding user: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding user");
         }
         return userOutputMapper.tOutputDTOV3(user);
@@ -88,7 +88,7 @@ public class UserControllerV3 {
                     user.verificationToken(), user.createdAt(), user.updatedAt(),
                     user.deletedAt());
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Unable to create the user: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(post) Unable to create the user: {0}", e.getMessage());
             throw new UserSaveException("Unable to create the user");
         }
         return userOutputMapper.tOutputDTOV3(userDomain);
@@ -105,7 +105,7 @@ public class UserControllerV3 {
                     user.verificationToken(), user.createdAt(), user.updatedAt(),
                     user.deletedAt());
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Unable to update the user: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(put) Unable to update the user: {0}", e.getMessage());
             throw new UserUpdateException("Unable to update the user");
         }
         return userOutputMapper.tOutputDTOV3(userDomain);
@@ -117,66 +117,19 @@ public class UserControllerV3 {
         try {
             return userService.delete(id);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Unable to delete the user: {0}", e.getMessage());
+            logger.log(Level.WARNING, "(delete) Unable to delete the user: {0}", e.getMessage());
             throw new UserDeleteException("Unable to delete the user");
         }
     }
 
     @Secured("ROLE_ADMIN")
-    @QueryMapping("followedByEmailV3")
-    public List<UserOutputDTOV3> findFollowedUsersByEmail(@Argument String email) {
-        List<User> following;
+    @MutationMapping("restoreUserV3")
+    public boolean restoreUser(@Argument String id) {
         try {
-            following = userService.findFollowedUsersByEmail(email);
+            return userService.restore(id);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error finding followed users: {0}", e.getMessage());
-            throw new UserNotFoundException("Error finding followed users");
-        }
-        return userOutputMapper.tOutputDTOV3(following);
-    }
-
-    @Secured("ROLE_ADMIN")
-    @QueryMapping("followersByEmailV3")
-    public List<UserOutputDTOV3> findFollowersByEmail(@Argument String email) {
-        List<User> followers;
-        try {
-            followers = userService.findFollowersByEmail(email);
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "Error finding followers: {0}", e.getMessage());
-            throw new UserNotFoundException("Error finding followers");
-        }
-        return userOutputMapper.tOutputDTOV3(followers);
-    }
-
-    @Secured("ROLE_ADMIN")
-    @MutationMapping("followUserV3")
-    public boolean followUser(@Argument String followerEmail, @Argument String followingEmail) {
-        try {
-            return userService.followUser(followerEmail, followingEmail);
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "Error following user: {0}", e.getMessage());
-            throw new UserNotFoundException("Error following user");
-        }
-    }
-
-    @Secured("ROLE_ADMIN")
-    @MutationMapping("unfollowUserV3")
-    public boolean unfollowUser(@Argument String followerEmail, @Argument String followingEmail) {
-        try {
-            return userService.unfollowUser(followerEmail, followingEmail);
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "Error unfollowing user: {0}", e.getMessage());
-            throw new UserNotFoundException("Error unfollowing user");
-        }
-    }
-
-    @QueryMapping("images")
-    public List<String> findAllImages() {
-        try {
-            return userService.findAllImages();
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "Error finding images: {0}", e.getMessage());
-            throw new UserNotFoundException("Error finding images");
+            logger.log(Level.WARNING, "(restoreUser) Unable to restore the user: {0}", e.getMessage());
+            throw new UserUpdateException("Unable to restore the user");
         }
     }
 }

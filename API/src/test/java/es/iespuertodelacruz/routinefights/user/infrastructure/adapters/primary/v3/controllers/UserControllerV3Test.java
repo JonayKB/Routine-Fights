@@ -29,6 +29,8 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
 
 @SpringBootTest
 class UserControllerV3Test {
+    private static final String TEST_EXCEPTION = "Test Exception";
+
     private UserControllerV3 userControllerV3;
 
     @Mock
@@ -71,7 +73,7 @@ class UserControllerV3Test {
 
     @Test
     void deleteExceptionTest() {
-        when(userService.delete(anyString())).thenThrow(new UserDeleteException("Test Exception"));
+        when(userService.delete(anyString())).thenThrow(new UserDeleteException(TEST_EXCEPTION));
 
         UserDeleteException exception = assertThrows(UserDeleteException.class, () -> {
             userControllerV3.delete("id");
@@ -87,28 +89,12 @@ class UserControllerV3Test {
 
     @Test
     void findAllExceptionTest() {
-        when(userService.findAll()).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userService.findAll()).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userControllerV3.findAll();
         });
         assertEquals("Error finding users", exception.getMessage());
-    }
-
-    @Test
-    void findAllImagesTest() {
-        when(userService.findAllImages()).thenReturn(new ArrayList<String>());
-        assertNotNull(userControllerV3.findAllImages());
-    }
-
-    @Test
-    void findAllImagesExceptionTest() {
-        when(userService.findAllImages()).thenThrow(new UserNotFoundException("Test Exception"));
-
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV3.findAllImages();
-        });
-        assertEquals("Error finding images", exception.getMessage());
     }
 
     @Test
@@ -120,60 +106,12 @@ class UserControllerV3Test {
 
     @Test
     void findByIdExceptionTest() {
-        when(userService.findById(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userService.findById(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userControllerV3.findById("id");
         });
         assertEquals("Error finding user", exception.getMessage());
-    }
-
-    @Test
-    void findFollowedUsersByEmailTest() {
-        when(userService.findFollowedUsersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userControllerV3.findFollowedUsersByEmail("email"));
-    }
-
-    @Test
-    void findFollowedUsersByEmailExceptionTest() {
-        when(userService.findFollowedUsersByEmail(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
-
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV3.findFollowedUsersByEmail("email");
-        });
-        assertEquals("Error finding followed users", exception.getMessage());
-    }
-
-    @Test
-    void findFollowersByEmailTest() {
-        when(userService.findFollowersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userControllerV3.findFollowersByEmail("email"));
-    }
-
-    @Test
-    void findFollowersByEmailExceptionTest() {
-        when(userService.findFollowersByEmail(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
-
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV3.findFollowersByEmail("email");
-        });
-        assertEquals("Error finding followers", exception.getMessage());
-    }
-
-    @Test
-    void followUserTest() {
-        when(userService.followUser(anyString(), anyString())).thenReturn(true);
-        assertTrue(userControllerV3.followUser("frEmail", "fdEmail"));
-    }
-
-    @Test
-    void followUserExceptionTest() {
-        when(userService.followUser(anyString(), anyString())).thenThrow(new UserNotFoundException("Test Exception"));
-
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV3.followUser("frEmail", "fdEmail");
-        });
-        assertEquals("Error following user", exception.getMessage());
     }
 
     @Test
@@ -189,7 +127,7 @@ class UserControllerV3Test {
     void postExceptionTest() {
         when(userService.post(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyBoolean(), anyString(), any(LocalDateTime.class), any(LocalDateTime.class),
-                any(LocalDateTime.class))).thenThrow(new UserSaveException("Test Exception"));
+                any(LocalDateTime.class))).thenThrow(new UserSaveException(TEST_EXCEPTION));
 
         UserSaveException exception = assertThrows(UserSaveException.class, () -> {
             userControllerV3.post(userInputDTOV3);
@@ -210,7 +148,7 @@ class UserControllerV3Test {
     void putExceptionTest() {
         when(userService.put(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString(), anyBoolean(), anyString(), any(LocalDateTime.class), any(LocalDateTime.class),
-                any(LocalDateTime.class))).thenThrow(new UserUpdateException("Test Exception"));
+                any(LocalDateTime.class))).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
             userControllerV3.put(userInputDTOV3);
@@ -219,18 +157,18 @@ class UserControllerV3Test {
     }
 
     @Test
-    void unfollowUserTest() {
-        when(userService.unfollowUser(anyString(), anyString())).thenReturn(true);
-        assertTrue(userControllerV3.unfollowUser("frEmail", "fdEmail"));
+    void restoreUserTest() {
+        when(userService.restore(anyString())).thenReturn(true);
+        assertTrue(userControllerV3.restoreUser("id"));
     }
 
     @Test
-    void unfollowUserExceptionTest() {
-        when(userService.unfollowUser(anyString(), anyString())).thenThrow(new UserNotFoundException("Test Exception"));
+    void restoreUserExceptionTest() {
+        when(userService.restore(anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV3.unfollowUser("frEmail", "fdEmail");
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV3.restoreUser("id");
         });
-        assertEquals("Error unfollowing user", exception.getMessage());
+        assertEquals("Unable to restore the user", exception.getMessage());
     }
 }
