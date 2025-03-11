@@ -1,7 +1,6 @@
 package es.iespuertodelacruz.routinefights.shared.utils;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public abstract class EntitiesTimestamps {
     private LocalDateTime createdAt;
@@ -42,30 +41,5 @@ public abstract class EntitiesTimestamps {
         this.deletedAt = deletedAt;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof EntitiesTimestamps)) {
-            return false;
-        }
-        EntitiesTimestamps entitiesTimestamps = (EntitiesTimestamps) o;
-        return Objects.equals(createdAt, entitiesTimestamps.createdAt) && Objects.equals(updatedAt, entitiesTimestamps.updatedAt) && Objects.equals(deletedAt, entitiesTimestamps.deletedAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(createdAt, updatedAt, deletedAt);
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-            " createdAt='" + getCreatedAt() + "'" +
-            ", updatedAt='" + getUpdatedAt() + "'" +
-            ", deletedAt='" + getDeletedAt() + "'" +
-            "}";
-    }
     
 }
