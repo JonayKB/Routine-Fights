@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Node("Activity")
+/**
+ * ActivityEntity
+ */
 public class ActivityEntity {
     @Id
     @GeneratedValue()

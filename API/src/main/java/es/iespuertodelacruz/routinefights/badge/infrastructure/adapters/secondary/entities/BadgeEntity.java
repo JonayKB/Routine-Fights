@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Node("Badge")
+/**
+ * BadgeEntity
+ */
 public class BadgeEntity {
     @Id
     @GeneratedValue
@@ -27,7 +30,8 @@ public class BadgeEntity {
     public BadgeEntity() {
     }
 
-    public BadgeEntity(String id, String image, String level, List<UserEntity> users, CommunityEventEntity communityEvent) {
+    public BadgeEntity(String id, String image, String level, List<UserEntity> users,
+            CommunityEventEntity communityEvent) {
         this.id = id;
         this.image = image;
         this.level = level;
