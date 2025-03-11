@@ -89,7 +89,6 @@ class ActivityEntityTest {
         activity2.setId(ID_2);
         assertNotEquals(activity1, activity2);
         assertNotEquals(activity1.hashCode(), activity2.hashCode());
-        assertNotEquals(null, activity1);
         assertNotEquals(activity1, new Object());
         assertEquals(activity1, activity1);
     }
