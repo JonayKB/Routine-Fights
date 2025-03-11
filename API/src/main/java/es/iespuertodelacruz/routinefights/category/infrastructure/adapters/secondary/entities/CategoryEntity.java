@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Node("Category")
+/**
+ * CategoryEntity
+ */
 public class CategoryEntity {
     @Id
     @GeneratedValue
