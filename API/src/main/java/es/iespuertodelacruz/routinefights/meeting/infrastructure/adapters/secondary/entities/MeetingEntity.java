@@ -95,36 +95,6 @@ public class MeetingEntity {
         this.communityEvent = communityEvent;
     }
 
-    public MeetingEntity id(String id) {
-        setId(id);
-        return this;
-    }
-
-    public MeetingEntity date(LocalDateTime date) {
-        setDate(date);
-        return this;
-    }
-
-    public MeetingEntity location(String location) {
-        setLocation(location);
-        return this;
-    }
-
-    public MeetingEntity users(List<UserEntity> users) {
-        setUsers(users);
-        return this;
-    }
-
-    public MeetingEntity team(TeamEntity team) {
-        setTeam(team);
-        return this;
-    }
-
-    public MeetingEntity communityEvent(CommunityEventEntity communityEvent) {
-        setCommunityEvent(communityEvent);
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == this)

@@ -10,6 +10,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
 import es.iespuertodelacruz.routinefights.badge.infrastructure.adapters.secondary.entities.BadgeEntity;
 import es.iespuertodelacruz.routinefights.meeting.infrastructure.adapters.secondary.entities.MeetingEntity;
+import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,13 +19,12 @@ import java.util.Objects;
 /**
  * CommunityEventEntity
  */
-public class CommunityEventEntity {
+public class CommunityEventEntity extends EntitiesTimestamps {
     @Id
     @GeneratedValue
     private String id;
     private String name;
     private Integer totalRequired;
-    private LocalDateTime createdAt;
     private LocalDateTime finishDate;
     @Relationship(type = "Related", direction = Relationship.Direction.OUTGOING)
     private List<ActivityEntity> activities;
@@ -39,10 +39,10 @@ public class CommunityEventEntity {
     public CommunityEventEntity(String id, String name, Integer totalRequired, LocalDateTime createdAt,
             LocalDateTime finishDate, List<ActivityEntity> activities, List<BadgeEntity> badges,
             List<MeetingEntity> meetings) {
+        super(createdAt, null, null);
         this.id = id;
         this.name = name;
         this.totalRequired = totalRequired;
-        this.createdAt = createdAt;
         this.finishDate = finishDate;
         this.activities = activities;
         this.badges = badges;
@@ -73,14 +73,7 @@ public class CommunityEventEntity {
         this.totalRequired = totalRequired;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
+    
     public LocalDateTime getFinishDate() {
         return this.finishDate;
     }
@@ -111,46 +104,6 @@ public class CommunityEventEntity {
 
     public void setMeetings(List<MeetingEntity> meetings) {
         this.meetings = meetings;
-    }
-
-    public CommunityEventEntity id(String id) {
-        setId(id);
-        return this;
-    }
-
-    public CommunityEventEntity name(String name) {
-        setName(name);
-        return this;
-    }
-
-    public CommunityEventEntity totalRequired(Integer totalRequired) {
-        setTotalRequired(totalRequired);
-        return this;
-    }
-
-    public CommunityEventEntity createdAt(LocalDateTime createdAt) {
-        setCreatedAt(createdAt);
-        return this;
-    }
-
-    public CommunityEventEntity finishDate(LocalDateTime finishDate) {
-        setFinishDate(finishDate);
-        return this;
-    }
-
-    public CommunityEventEntity activities(List<ActivityEntity> activities) {
-        setActivities(activities);
-        return this;
-    }
-
-    public CommunityEventEntity badges(List<BadgeEntity> badges) {
-        setBadges(badges);
-        return this;
-    }
-
-    public CommunityEventEntity meetings(List<MeetingEntity> meetings) {
-        setMeetings(meetings);
-        return this;
     }
 
     @Override

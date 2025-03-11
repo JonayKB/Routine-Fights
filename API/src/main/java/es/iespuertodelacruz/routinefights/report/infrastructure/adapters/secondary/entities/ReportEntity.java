@@ -79,31 +79,6 @@ public class ReportEntity {
         this.post = post;
     }
 
-    public ReportEntity id(String id) {
-        setId(id);
-        return this;
-    }
-
-    public ReportEntity message(String message) {
-        setMessage(message);
-        return this;
-    }
-
-    public ReportEntity createdAt(LocalDateTime createdAt) {
-        setCreatedAt(createdAt);
-        return this;
-    }
-
-    public ReportEntity user(UserEntity user) {
-        setUser(user);
-        return this;
-    }
-
-    public ReportEntity post(PostEntity post) {
-        setPost(post);
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == this)

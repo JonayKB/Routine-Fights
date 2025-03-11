@@ -8,6 +8,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import es.iespuertodelacruz.routinefights.meeting.infrastructure.adapters.secondary.entities.MeetingEntity;
+import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,13 +17,11 @@ import java.util.Objects;
 /**
  * TeamEntity
  */
-public class TeamEntity {
+public class TeamEntity extends EntitiesTimestamps {
     @Id
     @GeneratedValue
     private String id;
     private String name;
-    private LocalDateTime createdAt;
-    private LocalDateTime deletedAt;
 
     @Relationship(type = "Has_Meeting", direction = Relationship.Direction.OUTGOING)
     private List<MeetingEntity> meetings;
@@ -30,15 +29,14 @@ public class TeamEntity {
     @Relationship(type = "Belongs_To", direction = Relationship.Direction.INCOMING)
     private List<MeetingEntity> creator;
 
-
     public TeamEntity() {
     }
 
-    public TeamEntity(String id, String name, LocalDateTime createdAt, LocalDateTime deletedAt, List<MeetingEntity> meetings, List<MeetingEntity> creator) {
+    public TeamEntity(String id, String name, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,
+            List<MeetingEntity> meetings, List<MeetingEntity> creator) {
+        super(createdAt, updatedAt, deletedAt);
         this.id = id;
         this.name = name;
-        this.createdAt = createdAt;
-        this.deletedAt = deletedAt;
         this.meetings = meetings;
         this.creator = creator;
     }
@@ -57,22 +55,6 @@ public class TeamEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getDeletedAt() {
-        return this.deletedAt;
-    }
-
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
     }
 
     public List<MeetingEntity> getMeetings() {
@@ -129,7 +111,7 @@ public class TeamEntity {
             return false;
         }
         TeamEntity teamEntity = (TeamEntity) o;
-        return Objects.equals(id, teamEntity.id) ;
+        return Objects.equals(id, teamEntity.id);
     }
 
     @Override
@@ -140,13 +122,13 @@ public class TeamEntity {
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
-            ", name='" + getName() + "'" +
-            ", createdAt='" + getCreatedAt() + "'" +
-            ", deletedAt='" + getDeletedAt() + "'" +
-            ", meetings='" + getMeetings() + "'" +
-            ", creator='" + getCreator() + "'" +
-            "}";
+                " id='" + getId() + "'" +
+                ", name='" + getName() + "'" +
+                ", createdAt='" + getCreatedAt() + "'" +
+                ", deletedAt='" + getDeletedAt() + "'" +
+                ", meetings='" + getMeetings() + "'" +
+                ", creator='" + getCreator() + "'" +
+                "}";
     }
 
 }
