@@ -8,10 +8,10 @@ public abstract class EntitiesTimestamps {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    public EntitiesTimestamps() {
+    protected EntitiesTimestamps() {
     }
 
-    public EntitiesTimestamps(LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+    protected EntitiesTimestamps(LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
