@@ -10,6 +10,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import es.iespuertodelacruz.routinefights.category.infrastructure.adapters.secondary.entities.CategoryEntity;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.entities.CommunityEventEntity;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
+import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.Objects;
 /**
  * ActivityEntity
  */
-public class ActivityEntity {
+public class ActivityEntity extends EntitiesTimestamps {
     @Id
     @GeneratedValue()
     private String id;
@@ -28,9 +29,6 @@ public class ActivityEntity {
     private String image;
     private String timeRate;
     private String timesRequiered;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 
     @Relationship(type = "Belongs_To", direction = Relationship.Direction.OUTGOING)
     private CategoryEntity category;
@@ -44,38 +42,16 @@ public class ActivityEntity {
     @Relationship(type = "Related_To", direction = Relationship.Direction.INCOMING)
     private List<PostEntity> post;
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof ActivityEntity)) {
-            return false;
-        }
-        ActivityEntity activityEntity = (ActivityEntity) o;
-        return Objects.equals(id, activityEntity.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    public ActivityEntity() {
-    }
-
     public ActivityEntity(String id, String name, String description, String image, String timeRate,
-            String timesRequiered, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,
-            CategoryEntity category, List<CommunityEventEntity> communityEvent, UserEntity user,
-            List<PostEntity> post) {
+            String timesRequiered, CategoryEntity category, List<CommunityEventEntity> communityEvent, UserEntity user,
+            List<PostEntity> post, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+        super(createdAt, updatedAt, deletedAt);
         this.id = id;
         this.name = name;
         this.description = description;
         this.image = image;
         this.timeRate = timeRate;
         this.timesRequiered = timesRequiered;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
         this.category = category;
         this.communityEvent = communityEvent;
         this.user = user;
@@ -130,30 +106,6 @@ public class ActivityEntity {
         this.timesRequiered = timesRequiered;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return this.updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public LocalDateTime getDeletedAt() {
-        return this.deletedAt;
-    }
-
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
     public CategoryEntity getCategory() {
         return this.category;
     }
@@ -186,71 +138,6 @@ public class ActivityEntity {
         this.post = post;
     }
 
-    public ActivityEntity id(String id) {
-        setId(id);
-        return this;
-    }
-
-    public ActivityEntity name(String name) {
-        setName(name);
-        return this;
-    }
-
-    public ActivityEntity description(String description) {
-        setDescription(description);
-        return this;
-    }
-
-    public ActivityEntity image(String image) {
-        setImage(image);
-        return this;
-    }
-
-    public ActivityEntity timeRate(String timeRate) {
-        setTimeRate(timeRate);
-        return this;
-    }
-
-    public ActivityEntity timesRequiered(String timesRequiered) {
-        setTimesRequiered(timesRequiered);
-        return this;
-    }
-
-    public ActivityEntity createdAt(LocalDateTime createdAt) {
-        setCreatedAt(createdAt);
-        return this;
-    }
-
-    public ActivityEntity updatedAt(LocalDateTime updatedAt) {
-        setUpdatedAt(updatedAt);
-        return this;
-    }
-
-    public ActivityEntity deletedAt(LocalDateTime deletedAt) {
-        setDeletedAt(deletedAt);
-        return this;
-    }
-
-    public ActivityEntity category(CategoryEntity category) {
-        setCategory(category);
-        return this;
-    }
-
-    public ActivityEntity communityEvent(List<CommunityEventEntity> communityEvent) {
-        setCommunityEvent(communityEvent);
-        return this;
-    }
-
-    public ActivityEntity user(UserEntity user) {
-        setUser(user);
-        return this;
-    }
-
-    public ActivityEntity post(List<PostEntity> post) {
-        setPost(post);
-        return this;
-    }
-
     @Override
     public String toString() {
         return "{" +
@@ -260,14 +147,30 @@ public class ActivityEntity {
                 ", image='" + getImage() + "'" +
                 ", timeRate='" + getTimeRate() + "'" +
                 ", timesRequiered='" + getTimesRequiered() + "'" +
-                ", createdAt='" + getCreatedAt() + "'" +
-                ", updatedAt='" + getUpdatedAt() + "'" +
-                ", deletedAt='" + getDeletedAt() + "'" +
                 ", category='" + getCategory() + "'" +
                 ", communityEvent='" + getCommunityEvent() + "'" +
                 ", user='" + getUser() + "'" +
                 ", post='" + getPost() + "'" +
                 "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof ActivityEntity)) {
+            return false;
+        }
+        ActivityEntity activityEntity = (ActivityEntity) o;
+        return Objects.equals(id, activityEntity.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public ActivityEntity() {
     }
 
 }

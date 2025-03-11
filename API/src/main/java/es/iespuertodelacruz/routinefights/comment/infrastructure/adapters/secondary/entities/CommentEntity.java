@@ -8,6 +8,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
+import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 import java.util.Objects;
 
@@ -15,14 +16,11 @@ import java.util.Objects;
 /**
  * CommentEntity
  */
-public class CommentEntity {
+public class CommentEntity extends EntitiesTimestamps {
     @Id
     @GeneratedValue
     private String id;
     private String message;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 
     @Relationship(type = "On", direction = Relationship.Direction.OUTGOING)
     private PostEntity post;
@@ -38,11 +36,9 @@ public class CommentEntity {
 
     public CommentEntity(String id, String message, LocalDateTime createdAt, LocalDateTime updatedAt,
             LocalDateTime deletedAt, PostEntity post, UserEntity user, CommentEntity comment) {
+        super(createdAt, updatedAt, deletedAt);
         this.id = id;
         this.message = message;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
         this.post = post;
         this.user = user;
         this.comment = comment;
@@ -62,30 +58,6 @@ public class CommentEntity {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return this.updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public LocalDateTime getDeletedAt() {
-        return this.deletedAt;
-    }
-
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
     }
 
     public PostEntity getPost() {
@@ -110,46 +82,6 @@ public class CommentEntity {
 
     public void setComment(CommentEntity comment) {
         this.comment = comment;
-    }
-
-    public CommentEntity id(String id) {
-        setId(id);
-        return this;
-    }
-
-    public CommentEntity message(String message) {
-        setMessage(message);
-        return this;
-    }
-
-    public CommentEntity createdAt(LocalDateTime createdAt) {
-        setCreatedAt(createdAt);
-        return this;
-    }
-
-    public CommentEntity updatedAt(LocalDateTime updatedAt) {
-        setUpdatedAt(updatedAt);
-        return this;
-    }
-
-    public CommentEntity deletedAt(LocalDateTime deletedAt) {
-        setDeletedAt(deletedAt);
-        return this;
-    }
-
-    public CommentEntity post(PostEntity post) {
-        setPost(post);
-        return this;
-    }
-
-    public CommentEntity user(UserEntity user) {
-        setUser(user);
-        return this;
-    }
-
-    public CommentEntity comment(CommentEntity comment) {
-        setComment(comment);
-        return this;
     }
 
     @Override
