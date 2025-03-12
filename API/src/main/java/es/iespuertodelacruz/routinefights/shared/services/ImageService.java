@@ -65,20 +65,19 @@ public class ImageService {
     public void delete(String imageName) {
         Path pathForFilename = uploads.resolve(imageName);
         try {
-            Files.deleteIfExists(pathForFilename);
+            Files.delete(pathForFilename);
         } catch (IOException e) {
             throw new ImageNotFoundException("Error: " + e.getMessage());
         }
     }
 
     public List<String> getAll() {
-        try {
-            try (var stream = Files.list(uploads)) {
-                return stream.map(path -> path.getFileName().toString()).toList();
-            }
+        try (var stream = Files.list(uploads)) {
+            return stream.map(path -> path.getFileName().toString()).toList();
         } catch (IOException e) {
             throw new ImageNotFoundException("Error: " + e.getMessage());
         }
+
     }
 
 }

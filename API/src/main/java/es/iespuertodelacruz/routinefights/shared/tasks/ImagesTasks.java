@@ -24,12 +24,18 @@ public class ImagesTasks {
     }
 
     @Scheduled(cron = "0 0 3 * * MON")
-    void deleteNotUsedImages() {
+    /**
+     * Delete not used images
+     * 
+     * @return List of images deleted
+     */
+    List<String> deleteNotUsedImages() {
         List<String> images = new ArrayList<>(imageService.getAll());
         userService.findAllImages().forEach(images::remove);
         logger.log(Level.INFO, "Deleted not used images: {0} images going to be deleted", images.size());
         images.forEach(image -> imageService.delete(image));
         logger.log(Level.INFO, "Deleted images executed successfully at {0}", LocalDateTime.now());
+        return images;
     }
 
 }
