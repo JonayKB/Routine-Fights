@@ -1,4 +1,4 @@
-package com.routinefigthsapp
+package com.routinefights
 
 import android.app.Application
 import com.facebook.react.PackageList
