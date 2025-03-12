@@ -63,7 +63,7 @@ jobs:
         push: true
         tags: ${{ vars.DOCKERHUB_USERNAME }}/apiroutinefights:latest
   deploy:
-    needs: checks
+    needs: build
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'main' }}
     steps:
@@ -74,7 +74,7 @@ jobs:
         host: ${{ vars.HOSTING_PC }}
         key: ${{ secrets.HOSTING_KEY }}
         script: |
-            docker-compose down;
-            docker-compose pull
+            docker compose down;
+            docker compose pull
             docker image prune -f
-            docker-compose up -d
+            docker compose up -d
