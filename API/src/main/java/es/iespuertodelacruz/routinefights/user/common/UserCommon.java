@@ -3,10 +3,12 @@ package es.iespuertodelacruz.routinefights.user.common;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
+
 /**
  * UserCommon
  */
-public abstract class UserCommon {
+public abstract class UserCommon extends EntitiesTimestamps {
     private String username;
     private String email;
     private String password;
@@ -16,9 +18,6 @@ public abstract class UserCommon {
     private String role;
     private boolean verified;
     private String verificationToken;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 
     /**
      * Default constructor
@@ -45,6 +44,7 @@ public abstract class UserCommon {
     protected UserCommon(String username, String email, String password, String nationality, String phoneNumber,
             String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
             LocalDateTime updatedAt, LocalDateTime deletedAt) {
+        super(createdAt, updatedAt, deletedAt);
         this.username = username;
         this.email = email;
         this.password = password;
@@ -54,9 +54,6 @@ public abstract class UserCommon {
         this.role = role;
         this.verified = verified;
         this.verificationToken = verificationToken;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
     }
 
     /**
@@ -240,60 +237,6 @@ public abstract class UserCommon {
      */
     public void setVerificationToken(String verificationToken) {
         this.verificationToken = verificationToken;
-    }
-
-    /**
-     * Get the date when the user was created
-     * 
-     * @return The date when the user was created
-     */
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
-    }
-
-    /**
-     * Set the date when the user was created
-     * 
-     * @param createdAt The date when the user was created
-     */
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    /**
-     * Get the date when the user was updated
-     * 
-     * @return The date when the user was updated
-     */
-    public LocalDateTime getUpdatedAt() {
-        return this.updatedAt;
-    }
-
-    /**
-     * Set the date when the user was updated
-     * 
-     * @param updatedAt The date when the user was updated
-     */
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    /**
-     * Get the date when the user was deleted
-     * 
-     * @return The date when the user was deleted
-     */
-    public LocalDateTime getDeletedAt() {
-        return this.deletedAt;
-    }
-
-    /**
-     * Set the date when the user was deleted
-     * 
-     * @param deletedAt The date when the user was deleted
-     */
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
     }
 
     /**
