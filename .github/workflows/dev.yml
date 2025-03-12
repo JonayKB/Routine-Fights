@@ -63,7 +63,7 @@ jobs:
         push: true
         tags: ${{ vars.DOCKERHUB_USERNAME }}/apiroutinefights:latest
   deploy:
-    needs: checks
+    needs: build
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'main' }}
     steps:
