@@ -1,4 +1,7 @@
 {
-  "name": "RoutineFigthsApp",
-  "displayName": "RoutineFigthsApp"
+  "name": "RoutineFights",
+  "displayName": "RoutineFights",
+  "expo": {
+    "userInterfaceStyle": "automatic"
+  }
 }
