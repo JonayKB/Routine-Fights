@@ -8,6 +8,13 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
+import es.iespuertodelacruz.routinefights.badge.infrastructure.adapters.secondary.entities.BadgeEntity;
+import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.secondary.entities.CommentEntity;
+import es.iespuertodelacruz.routinefights.meeting.infrastructure.adapters.secondary.entities.MeetingEntity;
+import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
+import es.iespuertodelacruz.routinefights.report.infrastructure.adapters.secondary.entities.ReportEntity;
+import es.iespuertodelacruz.routinefights.team.infrastructure.adapters.secondary.entities.TeamEntity;
 import es.iespuertodelacruz.routinefights.user.common.UserCommon;
 
 import java.util.Objects;
@@ -26,6 +33,30 @@ public class UserEntity extends UserCommon {
 
     @Relationship(type = "FOLLOWS", direction = Relationship.Direction.OUTGOING)
     private List<UserEntity> following;
+
+    @Relationship(type = "Reported", direction = Relationship.Direction.OUTGOING)
+    private List<ReportEntity> reports;
+
+    @Relationship(type = "Posted", direction = Relationship.Direction.OUTGOING)
+    private List<ReportEntity> posts;
+
+    @Relationship(type = "Commented", direction = Relationship.Direction.OUTGOING)
+    private List<CommentEntity> comments;
+
+    @Relationship(type = "Liked", direction = Relationship.Direction.OUTGOING)
+    private List<PostEntity> likedPosts;
+
+    @Relationship(type = "Attended", direction = Relationship.Direction.OUTGOING)
+    private List<MeetingEntity> meetings;
+
+    @Relationship(type = "Created", direction = Relationship.Direction.OUTGOING)
+    private List<ActivityEntity> createdActivities;
+
+    @Relationship(type = "Belongs_To", direction = Relationship.Direction.OUTGOING)
+    private TeamEntity team;
+
+    @Relationship(type = "Has_Badge", direction = Relationship.Direction.OUTGOING)
+    private List<BadgeEntity> badges;
 
     /**
      * Default constructor
@@ -61,6 +92,142 @@ public class UserEntity extends UserCommon {
         this.id = id;
         this.followers = followers;
         this.following = following;
+    }
+
+    public UserEntity(String id, List<UserEntity> followers, List<UserEntity> following, List<ReportEntity> reports,
+            List<ReportEntity> posts, List<CommentEntity> comments, List<PostEntity> likedPosts,
+            List<MeetingEntity> meetings, List<ActivityEntity> createdActivities, TeamEntity team,
+            List<BadgeEntity> badges) {
+        this.id = id;
+        this.followers = followers;
+        this.following = following;
+        this.reports = reports;
+        this.posts = posts;
+        this.comments = comments;
+        this.likedPosts = likedPosts;
+        this.meetings = meetings;
+        this.createdActivities = createdActivities;
+        this.team = team;
+        this.badges = badges;
+    }
+
+    public List<ReportEntity> getReports() {
+        return this.reports;
+    }
+
+    public void setReports(List<ReportEntity> reports) {
+        this.reports = reports;
+    }
+
+    public List<ReportEntity> getPosts() {
+        return this.posts;
+    }
+
+    public void setPosts(List<ReportEntity> posts) {
+        this.posts = posts;
+    }
+
+    public List<CommentEntity> getComments() {
+        return this.comments;
+    }
+
+    public void setComments(List<CommentEntity> comments) {
+        this.comments = comments;
+    }
+
+    public List<PostEntity> getLikedPosts() {
+        return this.likedPosts;
+    }
+
+    public void setLikedPosts(List<PostEntity> likedPosts) {
+        this.likedPosts = likedPosts;
+    }
+
+    public List<MeetingEntity> getMeetings() {
+        return this.meetings;
+    }
+
+    public void setMeetings(List<MeetingEntity> meetings) {
+        this.meetings = meetings;
+    }
+
+    public List<ActivityEntity> getCreatedActivities() {
+        return this.createdActivities;
+    }
+
+    public void setCreatedActivities(List<ActivityEntity> createdActivities) {
+        this.createdActivities = createdActivities;
+    }
+
+    public TeamEntity getTeam() {
+        return this.team;
+    }
+
+    public void setTeam(TeamEntity team) {
+        this.team = team;
+    }
+
+    public List<BadgeEntity> getBadges() {
+        return this.badges;
+    }
+
+    public void setBadges(List<BadgeEntity> badges) {
+        this.badges = badges;
+    }
+
+    public UserEntity id(String id) {
+        setId(id);
+        return this;
+    }
+
+    public UserEntity followers(List<UserEntity> followers) {
+        setFollowers(followers);
+        return this;
+    }
+
+    public UserEntity following(List<UserEntity> following) {
+        setFollowing(following);
+        return this;
+    }
+
+    public UserEntity reports(List<ReportEntity> reports) {
+        setReports(reports);
+        return this;
+    }
+
+    public UserEntity posts(List<ReportEntity> posts) {
+        setPosts(posts);
+        return this;
+    }
+
+    public UserEntity comments(List<CommentEntity> comments) {
+        setComments(comments);
+        return this;
+    }
+
+    public UserEntity likedPosts(List<PostEntity> likedPosts) {
+        setLikedPosts(likedPosts);
+        return this;
+    }
+
+    public UserEntity meetings(List<MeetingEntity> meetings) {
+        setMeetings(meetings);
+        return this;
+    }
+
+    public UserEntity createdActivities(List<ActivityEntity> createdActivities) {
+        setCreatedActivities(createdActivities);
+        return this;
+    }
+
+    public UserEntity team(TeamEntity team) {
+        setTeam(team);
+        return this;
+    }
+
+    public UserEntity badges(List<BadgeEntity> badges) {
+        setBadges(badges);
+        return this;
     }
 
     /**
