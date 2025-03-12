@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,25 @@ public class ImageService {
             return filePath.getFileName().toString();
         } catch (IOException e) {
             throw new ImageSaveException("Could not store the file. Error: " + e.getMessage());
+        }
+    }
+
+    public void delete(String imageName) {
+        Path pathForFilename = uploads.resolve(imageName);
+        try {
+            Files.deleteIfExists(pathForFilename);
+        } catch (IOException e) {
+            throw new ImageNotFoundException("Error: " + e.getMessage());
+        }
+    }
+
+    public List<String> getAll() {
+        try {
+            try (var stream = Files.list(uploads)) {
+                return stream.map(path -> path.getFileName().toString()).toList();
+            }
+        } catch (IOException e) {
+            throw new ImageNotFoundException("Error: " + e.getMessage());
         }
     }
 
