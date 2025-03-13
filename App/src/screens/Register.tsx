@@ -1,7 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import React, { useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { LoginStackProps } from "../navigation/LoginNavigation";
+import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import PhoneInput from "react-native-phone-number-input";
 import { UserIn } from "../utils/User";
 import axios from "axios";
