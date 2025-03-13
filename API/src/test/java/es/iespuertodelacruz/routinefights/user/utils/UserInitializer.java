@@ -15,10 +15,10 @@ public abstract class UserInitializer {
 
     protected static final String ID = "id";
     protected static final String USERNAME = "username";
-    protected static final String EMAIL = "email";
+    protected static final String EMAIL = "email@email.com";
     protected static final String PASSWORD = "password";
     protected static final String NATIONALITY = "nationality";
-    protected static final String PHONE_NUMBER = "phone_number";
+    protected static final String PHONE_NUMBER = "+34648742361";
     protected static final String IMAGE = "image";
     protected static final String ROLE = "role";
     protected static final boolean VERIFIED = false;
