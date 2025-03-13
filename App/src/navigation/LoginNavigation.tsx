@@ -1,43 +1,26 @@
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Login from "../screens/Login";
+import Register from "../screens/Register";
+import Home from "../screens/Home";
 
 type Props = {};
 
+export type LoginStackProps = {
+  Login: undefined;
+  Register: undefined;
+  Home: undefined;
+};
+
 const LoginNavigation = (props: Props) => {
+  const Stack = createNativeStackNavigator<LoginStackProps>();
+
   return (
-    <View className="flex-1 bg-[#E4DCE9] justify-center items-center">
-      <View className="justify-evenly bg-white rounded-2xl w-96" style={{ height: 413 }}>
-        <View className="m-10">
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor="#4B0082"
-            inputMode="email"
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl mb-5"
-          />
-          <TextInput
-            placeholder="Password"
-            placeholderTextColor="#4B0082"
-            secureTextEntry={true}
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl"
-          />
-        </View>
-        <View className="m-10">
-          <TouchableOpacity className="bg-[#E4007C] rounded-lg py-3 mb-5">
-            <Text
-              className="text-white font-bold text-3xl text-center"
-              style={{ fontFamily: "InriaSans-Regular" }}
-            >
-              Login
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="border-[#E4007C] border-2 rounded-lg py-1">
-            <Text className="text-[#4B0082] font-bold text-2xl text-center">
-              Register
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+    <Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="Home" component={Home} />
+    </Stack.Navigator>
   );
 };
 
