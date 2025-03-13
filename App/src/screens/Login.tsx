@@ -2,16 +2,30 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginNavigation";
-import { UserIn } from "../utils/User";
+import axios from "axios";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
 const Login = ({ navigation }: Props) => {
-  const [userIn, setUserIn] = useState<UserIn>({} as UserIn);
   const [passwordShown, setPasswordShown] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const login = () => {
-    Alert.alert("Login", JSON.stringify(userIn));
+  const login = async () => {
+    try {
+      const { status } = await axios.post(
+        "http://64.226.71.234:8080/auth/login?email=" +
+          email +
+          "&password=" +
+          password
+      );
+
+      if (status === 200) {
+        navigate("Home");
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
   };
 
   const navigate = (path: "Register" | "Home") => {
@@ -34,14 +48,14 @@ const Login = ({ navigation }: Props) => {
             placeholderTextColor="#4B0082"
             inputMode="email"
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl mb-5 pl-3 text-black"
-            onChangeText={(text) => setUserIn({ ...userIn, email: text })}
+            onChangeText={(text) => setEmail(text)}
           />
           <TextInput
             placeholder="Password"
             placeholderTextColor="#4B0082"
             secureTextEntry={!passwordShown}
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl pl-3 text-black"
-            onChangeText={(text) => setUserIn({ ...userIn, password: text })}
+            onChangeText={(text) => setPassword(text)}
           />
           <TouchableOpacity onPress={() => setPasswordShown(!passwordShown)}>
             <Text

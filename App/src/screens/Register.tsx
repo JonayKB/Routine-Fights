@@ -4,10 +4,12 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginNavigation";
 import PhoneInput from "react-native-phone-number-input";
 import { UserIn } from "../utils/User";
+import axios from "axios";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Register">;
 
 const Register = ({ navigation, route }: Props) => {
+  const uri = "http://64.226.71.234:8080/auth/register";
   const [userIn, setuserIn] = useState<UserIn>({} as UserIn);
   const phoneInput = useRef<PhoneInput>(null);
   const [password, setPassword] = useState<string>(null);
@@ -20,23 +22,35 @@ const Register = ({ navigation, route }: Props) => {
     });
   };
 
-  function validateForm() {
+  async function validateForm() {
     if (
       !userIn.username ||
       !userIn.email ||
       !userIn.password ||
       !userIn.phoneNumber
     ) {
-      Alert.alert("Missing data");
+      return Alert.alert("Missing data");
     }
 
     if (password !== userIn.password) {
-      Alert.alert("Passwords do not match");
+      return Alert.alert("Passwords do not match");
     }
 
     // If any unique field is found on another user in the database, return an error
-    Alert.alert("Register", JSON.stringify(userIn));
+    await register();
   }
+
+  const register = async () => {
+    try {
+      const { status } = await axios.post(uri, userIn);
+
+      if (status === 200) {
+        navigate("Home");
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
 
   return (
     <View className="flex-1 bg-[#E4DCE9] justify-center items-center">
@@ -55,21 +69,21 @@ const Register = ({ navigation, route }: Props) => {
             placeholder="Email"
             placeholderTextColor="#4B0082"
             inputMode="email"
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3"
+            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
             onChangeText={(text) => setuserIn({ ...userIn, email: text })}
           />
           <TextInput
             placeholder="Password"
             placeholderTextColor="#4B0082"
             secureTextEntry={true}
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3"
+            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
             onChangeText={(text) => setuserIn({ ...userIn, password: text })}
           />
           <TextInput
             placeholder="Confirm password"
             placeholderTextColor="#4B0082"
             secureTextEntry={true}
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3"
+            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
             onChangeText={(text) => setPassword(text)}
           />
           <View className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3">
