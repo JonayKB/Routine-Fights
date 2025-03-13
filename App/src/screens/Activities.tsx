@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
-import { Activity } from "../utils/Category";
+import { Activity } from "../utils/Activity";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
@@ -67,7 +67,7 @@ const Activities = ({ navigation, route }: Props) => {
           placeholder="Name"
           placeholderTextColor="#4B0082"
           inputMode="email"
-          className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl w-11/12 my-5 pl-3 text-black"
+          className="border-[#4B0082] border-2 rounded-xl bg-[#F8F7FE] text-2xl w-11/12 my-5 pl-3 text-black"
           onChangeText={(text) => setSearch(text)}
         />
       </View>
@@ -79,21 +79,22 @@ const Activities = ({ navigation, route }: Props) => {
               onPress={() =>
                 navigation.navigate("ActivityDetails", { activity: item })
               }
-              className="w-40 h-48 m-5"
+              className="w-40 h-52 m-5"
             >
               <Image
                 source={{
                   uri: item.image,
                 }}
-                className="w-full h-36 rounded-t-2xl border-[#4B0082] border-2"
+                className="w-full h-40 rounded-t-2xl border-[#4B0082] border-2"
               />
-              <Text className="flex-1 rounded-b-2xl border-[#4B0082] border-2 align-middle text-black text-center text-xl bg-[#F0F8FF]">
+              <Text className="flex-1 rounded-b-2xl border-[#4B0082] border-2 align-middle text-[#4B0082] text-center text-xl bg-[#F0F8FF]">
                 {item.name}
               </Text>
             </TouchableOpacity>
           );
         }}
         keyExtractor={(item) => item.id}
+        numColumns={2}
       />
       <TouchableOpacity
         onPress={submit}
