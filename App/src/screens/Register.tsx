@@ -1,14 +1,17 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React from "react";
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import React, { useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginNavigation";
-import SelectDropdown from "react-native-select-dropdown";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import PhoneInput from "react-native-phone-number-input";
+import { UserIn } from "../utils/User";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Register">;
-const emojisWithIcons = [{ title: "happy", icon: "emoticon-happy-outline" }];
 
 const Register = ({ navigation, route }: Props) => {
+  const [userIn, setuserIn] = useState<UserIn>({} as UserIn);
+  const phoneInput = useRef<PhoneInput>(null);
+  const [password, setPassword] = useState<string>(null);
+
   const navigate = (path: "Login" | "Home") => {
     navigation.navigate(path);
     navigation.reset({
@@ -17,88 +20,86 @@ const Register = ({ navigation, route }: Props) => {
     });
   };
 
+  function validateForm() {
+    if (
+      !userIn.username ||
+      !userIn.email ||
+      !userIn.password ||
+      !userIn.phoneNumber
+    ) {
+      Alert.alert("Missing data");
+    }
+
+    if (password !== userIn.password) {
+      Alert.alert("Passwords do not match");
+    }
+
+    // If any unique field is found on another user in the database, return an error
+    Alert.alert("Register", JSON.stringify(userIn));
+  }
+
   return (
     <View className="flex-1 bg-[#E4DCE9] justify-center items-center">
       <View
         className="justify-evenly bg-white rounded-2xl w-96"
-        style={{ height: 413 }}
+        style={{ height: 600 }}
       >
         <View className="m-10">
           <TextInput
             placeholder="Username"
             placeholderTextColor="#4B0082"
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl mb-5 pl-3"
+            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
+            onChangeText={(text) => setuserIn({ ...userIn, username: text })}
           />
           <TextInput
             placeholder="Email"
             placeholderTextColor="#4B0082"
             inputMode="email"
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl mb-5 pl-3"
+            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3"
+            onChangeText={(text) => setuserIn({ ...userIn, email: text })}
           />
           <TextInput
             placeholder="Password"
             placeholderTextColor="#4B0082"
             secureTextEntry={true}
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl pl-3"
+            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3"
+            onChangeText={(text) => setuserIn({ ...userIn, password: text })}
           />
           <TextInput
             placeholder="Confirm password"
             placeholderTextColor="#4B0082"
             secureTextEntry={true}
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl pl-3"
+            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3"
+            onChangeText={(text) => setPassword(text)}
           />
-          <SelectDropdown
-            data={emojisWithIcons}
-            onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
-            }}
-            renderButton={(selectedItem, isOpened) => {
-              return (
-                <View
-                  className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl pl-3"
-                  style={{ height: 50 }}
-                >
-                  {selectedItem && (
-                    <View>
-                      <Icon
-                        name={selectedItem.icon}
-                        size={30}
-                        color="#4B0082"
-                      />
-                      <Text>{selectedItem.title}</Text>
-                    </View>
-                  )}
-                  <Icon
-                    name={isOpened ? "chevron-up" : "chevron-down"}
-                    size={30}
-                    color="#4B0082"
-                  />
-                </View>
-              );
-            }}
-            renderItem={(item, isSelected) => {
-              return (
-                <View
-                  style={{
-                    backgroundColor: isSelected && "#D2D9DF",
-                  }}
-                >
-                  <Icon name={item.icon} size={30} color="#4B0082" />
-                  <Text>{item.title}</Text>
-                </View>
-              );
-            }}
-          />
-          <TextInput
-            placeholder="Phone number"
-            placeholderTextColor="#4B0082"
-            secureTextEntry={true}
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl pl-3"
-          />
+          <View className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3">
+            <PhoneInput
+              ref={phoneInput}
+              defaultCode="ES"
+              layout="first"
+              containerStyle={{
+                width: "100%",
+                height: 60,
+                marginLeft: -8,
+                backgroundColor: "#F8F7FE",
+              }}
+              textInputStyle={{
+                height: 60,
+                fontSize: 16,
+                backgroundColor: "#F8F7FE",
+              }}
+              onChangeFormattedText={(text) => {
+                setuserIn({ ...userIn, phoneNumber: text });
+              }}
+            />
+          </View>
         </View>
         <View className="m-10">
-          <TouchableOpacity className="bg-[#E4007C] rounded-lg py-3 mb-5">
-            <Text className="text-white font-bold text-3xl text-center">
+          <TouchableOpacity
+            onPress={validateForm}
+            className="bg-[#E4007C] rounded-lg py-3 mb-5"
+          >
+            <Text className="text-white font-bold text-xl text-center">
               Register
             </Text>
           </TouchableOpacity>
@@ -106,7 +107,7 @@ const Register = ({ navigation, route }: Props) => {
             onPress={() => navigate("Login")}
             className="border-[#E4007C] border-2 rounded-lg py-1"
           >
-            <Text className="text-[#4B0082] font-bold text-2xl text-center">
+            <Text className="text-[#4B0082] font-bold text-lg text-center">
               Login
             </Text>
           </TouchableOpacity>
