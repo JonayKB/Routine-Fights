@@ -6,7 +6,7 @@ type Props = {};
 const LoginNavigation = (props: Props) => {
   return (
     <View className="flex-1 bg-[#E4DCE9] justify-center items-center">
-      <View className="bg-white rounded-2xl w-96" style={{ height: 513 }}>
+      <View className="justify-evenly bg-white rounded-2xl w-96" style={{ height: 413 }}>
         <View className="m-10">
           <TextInput
             placeholder="Email"
