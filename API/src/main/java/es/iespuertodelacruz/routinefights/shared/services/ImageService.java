@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import es.iespuertodelacruz.routinefights.shared.exceptions.ImageSaveException;
 
 @Service
 public class ImageService {
+    private static final String ERROR = "Error: ";
     private final Path uploads = Paths.get("uploads");
 
     private Path getFreePath(String filename, Path filePath) {
@@ -34,10 +36,10 @@ public class ImageService {
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new ImageNotFoundException("Error: " + imageName + " not found");
+                throw new ImageNotFoundException(ERROR + imageName + " not found");
             }
         } catch (MalformedURLException e) {
-            throw new ImageNotFoundException("Error: " + e.getMessage());
+            throw new ImageNotFoundException(ERROR + e.getMessage());
         }
     }
 
@@ -59,6 +61,24 @@ public class ImageService {
         } catch (IOException e) {
             throw new ImageSaveException("Could not store the file. Error: " + e.getMessage());
         }
+    }
+
+    public void delete(String imageName) {
+        Path pathForFilename = uploads.resolve(imageName);
+        try {
+            Files.delete(pathForFilename);
+        } catch (IOException e) {
+            throw new ImageNotFoundException(ERROR + e.getMessage());
+        }
+    }
+
+    public List<String> getAll() {
+        try (var stream = Files.list(uploads)) {
+            return stream.map(path -> path.getFileName().toString()).toList();
+        } catch (IOException e) {
+            throw new ImageNotFoundException(ERROR + e.getMessage());
+        }
+
     }
 
 }
