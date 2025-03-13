@@ -1,7 +1,7 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { LoginStackProps } from "../navigation/LoginNavigation";
+import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import axios from "axios";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
@@ -12,6 +12,9 @@ const Login = ({ navigation }: Props) => {
   const [password, setPassword] = useState<string>("");
 
   const login = async () => {
+    // TODO: Remove later
+    navigate("ActivitiesStackNavigation");
+
     try {
       const { status } = await axios.post(
         "http://64.226.71.234:8080/auth/login?email=" +
@@ -21,14 +24,14 @@ const Login = ({ navigation }: Props) => {
       );
 
       if (status === 200) {
-        navigate("Home");
+        navigate("ActivitiesStackNavigation");
       }
     } catch (error) {
       console.log("Error", error);
     }
   };
 
-  const navigate = (path: "Register" | "Home") => {
+  const navigate = (path: "Register" | "Home" | "ActivitiesStackNavigation") => {
     navigation.navigate(path);
     navigation.reset({
       index: 0,
