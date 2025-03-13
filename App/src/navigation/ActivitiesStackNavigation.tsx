@@ -2,7 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Activities from "../screens/Activities";
 import ActivityDetails from "../screens/ActivityDetails";
-import { Activity } from "../utils/Category";
+import { Activity } from "../utils/Activity";
 
 type Props = {};
 
