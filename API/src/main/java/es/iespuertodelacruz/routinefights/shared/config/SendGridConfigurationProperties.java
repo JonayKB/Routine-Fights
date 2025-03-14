@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import java.util.Objects;
 
 @ConfigurationProperties(prefix = "sendgrid")
 class SendGridConfigurationProperties {
@@ -19,15 +18,6 @@ class SendGridConfigurationProperties {
 
     @NotBlank
     private String fromName;
-
-    public SendGridConfigurationProperties() {
-    }
-
-    public SendGridConfigurationProperties(String apiKey, String fromEmail, String fromName) {
-        this.apiKey = apiKey;
-        this.fromEmail = fromEmail;
-        this.fromName = fromName;
-    }
 
     public String getApiKey() {
         return this.apiKey;
@@ -53,44 +43,6 @@ class SendGridConfigurationProperties {
         this.fromName = fromName;
     }
 
-    public SendGridConfigurationProperties apiKey(String apiKey) {
-        setApiKey(apiKey);
-        return this;
-    }
-
-    public SendGridConfigurationProperties fromEmail(String fromEmail) {
-        setFromEmail(fromEmail);
-        return this;
-    }
-
-    public SendGridConfigurationProperties fromName(String fromName) {
-        setFromName(fromName);
-        return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof SendGridConfigurationProperties)) {
-            return false;
-        }
-        SendGridConfigurationProperties sendGridConfigurationProperties = (SendGridConfigurationProperties) o;
-        return Objects.equals(apiKey, sendGridConfigurationProperties.apiKey) && Objects.equals(fromEmail, sendGridConfigurationProperties.fromEmail) && Objects.equals(fromName, sendGridConfigurationProperties.fromName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(apiKey, fromEmail, fromName);
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-            " apiKey='" + getApiKey() + "'" +
-            ", fromEmail='" + getFromEmail() + "'" +
-            ", fromName='" + getFromName() + "'" +
-            "}";
-    }
+    
 
 }
