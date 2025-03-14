@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import es.iespuertodelacruz.routinefights.activity.commons.TimeRateEnum;
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.domain.ports.secondary.IActivityRepository;
 import es.iespuertodelacruz.routinefights.post.domain.Post;

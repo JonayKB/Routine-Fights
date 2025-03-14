@@ -1,6 +1,5 @@
 package es.iespuertodelacruz.routinefights.shared.services;
 
-import java.io.IOException;
 
 import org.springframework.stereotype.Service;
 
