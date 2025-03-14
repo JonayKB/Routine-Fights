@@ -14,11 +14,11 @@ const Register = ({ navigation, route }: Props) => {
   const phoneInput = useRef<PhoneInput>(null);
   const [password, setPassword] = useState<string>(null);
 
-  const navigate = (path: "Login" | "Home") => {
-    navigation.navigate(path);
+  const navigate = () => {
+    navigation.navigate("Login");
     navigation.reset({
       index: 0,
-      routes: [{ name: path }],
+      routes: [{ name: "Login" }],
     });
   };
 
@@ -45,7 +45,7 @@ const Register = ({ navigation, route }: Props) => {
       const { status } = await axios.post(uri, userIn);
 
       if (status === 200) {
-        navigate("Home");
+        navigate();
       }
     } catch (error) {
       console.log("Error", error);
@@ -118,7 +118,7 @@ const Register = ({ navigation, route }: Props) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigate("Login")}
+            onPress={navigate}
             className="border-[#E4007C] border-2 rounded-lg py-1"
           >
             <Text className="text-[#4B0082] font-bold text-lg text-center">

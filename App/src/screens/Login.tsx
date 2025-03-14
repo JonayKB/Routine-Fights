@@ -13,7 +13,7 @@ const Login = ({ navigation }: Props) => {
 
   const login = async () => {
     // TODO: Remove later
-    navigate("ActivitiesStackNavigation");
+    navigate("MainTabNavigation");
 
     try {
       const { status } = await axios.post(
@@ -24,14 +24,14 @@ const Login = ({ navigation }: Props) => {
       );
 
       if (status === 200) {
-        navigate("ActivitiesStackNavigation");
+        navigate("MainTabNavigation");
       }
     } catch (error) {
       console.log("Error", error);
     }
   };
 
-  const navigate = (path: "Register" | "Home" | "ActivitiesStackNavigation") => {
+  const navigate = (path: "Register" | "MainTabNavigation") => {
     navigation.navigate(path);
     navigation.reset({
       index: 0,
