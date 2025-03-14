@@ -30,4 +30,17 @@ public class PostEntityService implements IPostRepository {
         return postEntityMapper.toDomain(postEntityRepository.save(postEntityMapper.toEntity(post)));
     }
 
+    @Override
+    public List<Post> getRangeByActivity(String activityID, String userID, LocalDateTime startDate,
+            LocalDateTime endDate) {
+        return postEntityMapper
+                .toDomain(postEntityRepository.getRangeByActivity(activityID, userID, startDate, endDate));
+    }
+
+    @Override
+    public Integer getRangeCountByActivity(String activityID, String userID, LocalDateTime startDate,
+            LocalDateTime endDate) {
+        return postEntityRepository.getRangeCountByActivity(activityID, userID, startDate, endDate);
+    }
+
 }

@@ -32,21 +32,25 @@ public class ActivityEntity extends ActivityCommons {
     private List<CommunityEventEntity> communityEvent;
 
     @Relationship(type = "Created", direction = Relationship.Direction.INCOMING)
-    private UserEntity user;
+    private UserEntity creator;
+
+    @Relationship(type = "Participated", direction = Relationship.Direction.INCOMING)
+    private List<UserEntity> participants;
 
     @Relationship(type = "Related_To", direction = Relationship.Direction.INCOMING)
     private List<PostEntity> post;
 
     public ActivityEntity(String id, String name, String description, String image, String timeRate,
             Integer timesRequiered, CategoryEntity category, List<CommunityEventEntity> communityEvent, UserEntity user,
-            List<PostEntity> post, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+            List<PostEntity> post, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, List<UserEntity> participants) {
         super(name, description, image, timeRate, timesRequiered, createdAt, updatedAt, deletedAt);
         this.id = id;
 
         this.category = category;
         this.communityEvent = communityEvent;
-        this.user = user;
+        this.creator = user;
         this.post = post;
+        this.participants = participants;
     }
 
     public String getId() {
@@ -73,12 +77,59 @@ public class ActivityEntity extends ActivityCommons {
         this.communityEvent = communityEvent;
     }
 
-    public UserEntity getUser() {
-        return this.user;
+    public ActivityEntity(String id, CategoryEntity category, List<CommunityEventEntity> communityEvent, UserEntity creator, List<UserEntity> participants, List<PostEntity> post) {
+        this.id = id;
+        this.category = category;
+        this.communityEvent = communityEvent;
+        this.creator = creator;
+        this.participants = participants;
+        this.post = post;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public List<UserEntity> getParticipants() {
+        return this.participants;
+    }
+
+    public void setParticipants(List<UserEntity> participants) {
+        this.participants = participants;
+    }
+
+    public ActivityEntity id(String id) {
+        setId(id);
+        return this;
+    }
+
+    public ActivityEntity category(CategoryEntity category) {
+        setCategory(category);
+        return this;
+    }
+
+    public ActivityEntity communityEvent(List<CommunityEventEntity> communityEvent) {
+        setCommunityEvent(communityEvent);
+        return this;
+    }
+
+    public ActivityEntity creator(UserEntity creator) {
+        setCreator(creator);
+        return this;
+    }
+
+    public ActivityEntity participants(List<UserEntity> participants) {
+        setParticipants(participants);
+        return this;
+    }
+
+    public ActivityEntity post(List<PostEntity> post) {
+        setPost(post);
+        return this;
+    }
+
+    public UserEntity getCreator() {
+        return this.creator;
+    }
+
+    public void setCreator(UserEntity user) {
+        this.creator = user;
     }
 
     public List<PostEntity> getPost() {
@@ -100,7 +151,7 @@ public class ActivityEntity extends ActivityCommons {
                 ", timesRequiered='" + getTimesRequiered() + "'" +
                 ", category='" + getCategory() + "'" +
                 ", communityEvent='" + getCommunityEvent() + "'" +
-                ", user='" + getUser() + "'" +
+                ", user='" + getCreator() + "'" +
                 ", post='" + getPost() + "'" +
                 "}";
     }

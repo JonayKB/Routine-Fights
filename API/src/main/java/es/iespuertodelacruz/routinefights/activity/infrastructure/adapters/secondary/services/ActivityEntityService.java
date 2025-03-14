@@ -1,7 +1,10 @@
 package es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.services;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
@@ -40,6 +43,13 @@ public class ActivityEntityService implements IActivityRepository {
     public Activity save(Activity activity) {
         ActivityEntity activityEntity = activityEntityMapper.toEntity(activity);
         return activityEntityMapper.toDomain(activityEntityRepository.save(activityEntity));
+    }
+
+    @Override
+    public List<Activity> getPagination(int page, int perPage) {
+        int offset = (page-1) * perPage;
+
+        return activityEntityMapper.toDomain(activityEntityRepository.getPagination(offset, perPage));
     }
 
 }

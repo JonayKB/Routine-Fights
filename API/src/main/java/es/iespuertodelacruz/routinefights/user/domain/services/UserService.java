@@ -125,4 +125,14 @@ public class UserService implements IUserService {
     public List<User> findByUsername(String regex) {
         return userRepository.findByUsername(regex);
     }
+
+    @Override
+    public boolean subscribeActivity(String userEmail, String activityID) {
+        return userRepository.subscribeActivity(userEmail, activityID);
+    }
+
+    @Override
+    public boolean unSubscribeActivity(String userEmail, String activityID) {
+        return userRepository.unSubscribeActivity(userEmail, activityID);
+    }
 }

@@ -1,10 +1,12 @@
 package es.iespuertodelacruz.routinefights.activity.domain.services;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import es.iespuertodelacruz.routinefights.activity.commons.TimeRateEnum;
+import es.iespuertodelacruz.routinefights.activity.commons.TimeRates;
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.domain.ports.primary.IActivityService;
 import es.iespuertodelacruz.routinefights.activity.domain.ports.secondary.IActivityRepository;
@@ -30,9 +32,8 @@ public class ActivityService implements IActivityService {
         activity.setName(name);
         activity.setDescription(description);
         activity.setImage(image);
-        if (timeRate.equals(TimeRateEnum.DAILY.getValue()) || timeRate.equals(TimeRateEnum.WEEKLY.getValue())
-                || timeRate.equals(TimeRateEnum.MONTHLY.getValue())
-                || timeRate.equals(TimeRateEnum.YEARLY.getValue())) {
+        if (timeRate.equals(TimeRates.DAILY) || timeRate.equals(TimeRates.WEEKLY) || timeRate.equals(TimeRates.MONTHLY)
+                || timeRate.equals(TimeRates.YEARLY)) {
             activity.setTimeRate(timeRate);
         } else {
             throw new IllegalArgumentException("Time rate not valid, valid options: daily, weekly, monthly, yearly");
@@ -41,10 +42,15 @@ public class ActivityService implements IActivityService {
         // TODO add category
         // activity.setCategory(categoryRepository.findById(categoryID));
         User user = userRepository.findById(userID);
-        activity.setUser(user);
+        activity.setCreator(user);
         activity.setCreatedAt(LocalDateTime.now());
 
         return activityRepository.save(activity);
+    }
+
+    @Override
+    public List<Activity> getPagination(int page, int perPage) {
+        return activityRepository.getPagination(page, perPage);
     }
 
 }

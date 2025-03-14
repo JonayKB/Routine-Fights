@@ -9,6 +9,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -172,6 +173,32 @@ public class UserControllerV2 {
         } catch (Exception e) {
             logger.log(Level.WARNING, "(delete) Unable to delete the user: {0}", e.getMessage());
             throw new UserDeleteException("Unable to delete the user");
+        }
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @MutationMapping("subscribeActivity")
+    public boolean subscribeActivity(@Argument String activityID) {
+        try {
+            return userService.subscribeActivity(SecurityContextHolder.getContext().getAuthentication().getName(),
+                    activityID);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(subscribeActivity) Unable to subscribe the user to the activity: {0}",
+                    e.getMessage());
+            throw new UserUpdateException("Unable to subscribe the user to the activity");
+        }
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @MutationMapping("unSubscribeActivity")
+    public boolean unSubscribeActivity(@Argument String activityID) {
+        try {
+            return userService.unSubscribeActivity(SecurityContextHolder.getContext().getAuthentication().getName(),
+                    activityID);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(unSubscribeActivity) Unable to unsubscribe the user to the activity: {0}",
+                    e.getMessage());
+            throw new UserUpdateException("Unable to unsubscribe the user to the activity");
         }
     }
 }

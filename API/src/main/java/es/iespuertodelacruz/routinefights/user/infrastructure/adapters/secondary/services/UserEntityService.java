@@ -303,4 +303,22 @@ public class UserEntityService implements IUserRepository {
             throw new UserNotFoundException("Error finding images");
         }
     }
+
+    @Override
+    public boolean subscribeActivity(String userEmail,String activityID){
+        try {
+            return userRepository.susbcribeActivity(userEmail,activityID);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error subscribing activity: "+e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean unSubscribeActivity(String userEmail,String activityID){
+        try {
+            return userRepository.unSusbcribeActivity(userEmail,activityID);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error unsuscribing activity: "+e.getMessage());
+        }
+    }
 }

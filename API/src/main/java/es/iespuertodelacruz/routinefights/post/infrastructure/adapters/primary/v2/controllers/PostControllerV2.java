@@ -18,7 +18,6 @@ import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.primary.v
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.primary.v2.mappers.PostOutputV2Mapper;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserNotFoundException;
 
 /**
  * PostControllerV2

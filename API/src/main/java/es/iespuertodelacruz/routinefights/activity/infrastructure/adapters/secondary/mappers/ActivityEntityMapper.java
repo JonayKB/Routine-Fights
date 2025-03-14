@@ -3,11 +3,13 @@ package es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.seco
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.mappers.IUserEntityMapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { IUserEntityMapper.class })
 public interface ActivityEntityMapper {
 
     Activity toDomain(ActivityEntity activityEntity);

@@ -5,17 +5,21 @@ import java.time.LocalDateTime;
 import es.iespuertodelacruz.routinefights.activity.commons.ActivityCommons;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Activity extends ActivityCommons {
     private String id;
-    private User user;
+    private User creator;
+    private List<User> participants;
+
 
     public Activity(String id, String name, String description, String image, String timeRate, Integer timesRequiered,
-            LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, User user) {
+            LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, User user, List<User> participants) {
         super(name, description, image, timeRate, timesRequiered, createdAt, updatedAt, deletedAt);
-        this.user = user;
+        this.creator = user;
         this.id = id;
+        this.participants = participants;
     }
 
     public Activity() {
@@ -23,6 +27,30 @@ public class Activity extends ActivityCommons {
 
     public Activity(String id) {
         this.id = id;
+    }
+
+    public Activity(String id, User creator, List<User> participants) {
+        this.id = id;
+        this.creator = creator;
+        this.participants = participants;
+    }
+
+    public List<User> getParticipants() {
+        return this.participants;
+    }
+
+    public void setParticipants(List<User> participants) {
+        this.participants = participants;
+    }
+
+    public Activity creator(User creator) {
+        setCreator(creator);
+        return this;
+    }
+
+    public Activity participants(List<User> participants) {
+        setParticipants(participants);
+        return this;
     }
 
     public String getId() {
@@ -38,12 +66,12 @@ public class Activity extends ActivityCommons {
         return this;
     }
 
-    public User getUser() {
-        return this.user;
+    public User getCreator() {
+        return this.creator;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCreator(User user) {
+        this.creator = user;
     }
 
     @Override
