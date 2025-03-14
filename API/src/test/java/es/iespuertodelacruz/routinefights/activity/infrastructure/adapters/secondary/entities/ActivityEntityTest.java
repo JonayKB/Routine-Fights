@@ -20,7 +20,7 @@ class ActivityEntityTest {
     private static final String DESCRIPTION = "Activity Description";
     private static final String IMAGE = "http://example.com/activity.png";
     private static final String TIME_RATE = "Hourly";
-    private static final String TIMES_REQUIRED = "5";
+    private static final Integer TIMES_REQUIRED = 5;
     private static final LocalDateTime CREATED_AT = LocalDateTime.of(2023, 1, 2, 12, 0);
     private static final LocalDateTime UPDATED_AT = LocalDateTime.of(2023, 1, 3, 12, 0);
     private static final LocalDateTime DELETED_AT = LocalDateTime.of(2023, 1, 4, 12, 0);
@@ -108,6 +108,6 @@ class ActivityEntityTest {
         assertTrue(str.contains(DESCRIPTION));
         assertTrue(str.contains(IMAGE));
         assertTrue(str.contains(TIME_RATE));
-        assertTrue(str.contains(TIMES_REQUIRED));
+        assertTrue(str.contains(TIMES_REQUIRED.toString()));
     }
 }

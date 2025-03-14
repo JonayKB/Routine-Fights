@@ -8,6 +8,8 @@ type Query {
   followersByEmail(email: String!): [Followers]
   followedByEmail(email: String!): [Followers]
   images: [String]
+
+  postsV2(lastDate: String!, limit: Int): [PostOutputV2]
 }
 
 type Mutation {
@@ -21,6 +23,35 @@ type Mutation {
 
   followUser(followerEmail: String!, followingEmail: String!): Boolean
   unfollowUser(followerEmail: String!, followingEmail: String!): Boolean
+
+  uploadPost(image: String!, activityID: String!): PostOutputV2
+
+  createActivity(activityInput: ActivityInputV2!): ActivityOutputV2
+}
+type ActivityOutputV2 {
+  id: ID
+  name: String
+  description: String
+  image: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  user: UserOutputV2
+}
+input ActivityInputV2 {
+  name: String!
+  description: String!
+  image: String!
+  timeRate: String!
+  timesRequiered: String!
+}
+type PostOutputV2 {
+  id: ID
+  image: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  user: UserOutputV2
 }
 
 input UserInputV3 {
