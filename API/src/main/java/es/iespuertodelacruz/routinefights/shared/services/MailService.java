@@ -28,7 +28,7 @@ public class MailService {
 
 	public void dispatchEmail(String emailId, String subject, String body) {
 		Email toEmail = new Email(emailId);
-		Content content = new Content("text/plain", body);
+		Content content = new Content("text/html", body);
 		Mail mail = new Mail(fromEmail, subject, toEmail, content);
 		
 
