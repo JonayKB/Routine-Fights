@@ -1,11 +1,20 @@
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  RefreshControl,
+} from "react-native";
+import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
+import { Activity } from "../utils/Activity";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
 const Streaks = ({ navigation, route }: Props) => {
+  const [load, setLoad] = useState<boolean>(false);
+
   const activities: Activity[] = [
     {
       id: "1",
@@ -38,25 +47,38 @@ const Streaks = ({ navigation, route }: Props) => {
 
   return (
     <View className="flex-1 items-center">
-      <FlatList
-        style={{ width: "100%" }}
-        data={activities}
-        renderItem={({ item }) => {
-          return (
-            <View className="flex-row items-center bg-[#7C5AF11A] w-11/12 h-36 rounded-3xl mt-5">
-              <View className="w-20 h-20 bg-blue-400 rounded-full m-5"></View>
-              <View>
-                <Text className="text-black text-3xl">{item.name}</Text>
-                <Text className="text-black text-xl">{item.description}</Text>
+      <View className="items-center w-full">
+        <FlatList
+          refreshControl={
+            <RefreshControl
+              refreshing={load}
+              onRefresh={() => {
+                setLoad(true);
+                setTimeout(() => {
+                  setLoad(false);
+                }, 1000);
+              }}
+            />
+          }
+          style={{ width: "100%" }}
+          data={activities}
+          renderItem={({ item }) => {
+            return (
+              <View className="flex-row items-center bg-[#7C5AF11A] w-11/12 h-36 rounded-3xl mt-5 mx-auto">
+                <View className="w-20 h-20 bg-blue-400 rounded-full m-5"></View>
+                <View>
+                  <Text className="text-black text-3xl">{item.name}</Text>
+                  <Text className="text-black text-xl">{item.description}</Text>
+                </View>
               </View>
-            </View>
-          );
-        }}
-        keyExtractor={(item) => item.id}
-      />
+            );
+          }}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
       <TouchableOpacity
         onPress={() => navigation.navigate("Activities")}
-        className="bg-[#4B0082] w-11/12 mt-10 rounded-3xl h-20"
+        className="bg-[#4B0082] w-11/12 mt-5 rounded-3xl h-20"
       >
         <Text className="text-8xl font-bold text-center text-white">+</Text>
       </TouchableOpacity>

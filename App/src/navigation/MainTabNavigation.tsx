@@ -1,20 +1,20 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
-import Post from "../screens/Post";
 import Events from "../screens/Events";
-import Profile from "../screens/Profile";
 import ActivitiesStackNavigation from "./ActivitiesStackNavigation";
 import Icon from "react-native-vector-icons/Ionicons";
+import Upload from "../screens/Upload";
+import ProfileStackNavigation from "./ProfileStackNavigation";
 
 type Props = {};
 
 type MainTabProps = {
   Home: undefined;
   ActivitiesStackNavigation: undefined;
-  Post: undefined;
+  Upload: undefined;
   Events: undefined;
-  Profile: undefined;
+  ProfileStackNavigation: undefined;
 };
 
 const MainTabNavigation = (props: Props) => {
@@ -58,8 +58,8 @@ const MainTabNavigation = (props: Props) => {
         }}
       />
       <Tab.Screen
-        name="Post"
-        component={Post}
+        name="Upload"
+        component={Upload}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
@@ -84,8 +84,8 @@ const MainTabNavigation = (props: Props) => {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="ProfileStackNavigation"
+        component={ProfileStackNavigation}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon

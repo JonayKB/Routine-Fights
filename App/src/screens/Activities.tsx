@@ -5,6 +5,7 @@ import {
   TextInput,
   Text,
   Image,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -16,6 +17,7 @@ type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 const Activities = ({ navigation, route }: Props) => {
   const [filteredActivities, setFilteredActivities] = useState<Activity[]>([]);
   const [search, setSearch] = useState<string>("");
+  const [load, setLoad] = useState<boolean>(false);
 
   const activities: Activity[] = [
     {
@@ -72,6 +74,17 @@ const Activities = ({ navigation, route }: Props) => {
         />
       </View>
       <FlatList
+        refreshControl={
+          <RefreshControl
+            refreshing={load}
+            onRefresh={() => {
+              setLoad(true);
+              setTimeout(() => {
+                setLoad(false);
+              }, 1000);
+            }}
+          />
+        }
         data={filteredActivities}
         renderItem={({ item }) => {
           return (
