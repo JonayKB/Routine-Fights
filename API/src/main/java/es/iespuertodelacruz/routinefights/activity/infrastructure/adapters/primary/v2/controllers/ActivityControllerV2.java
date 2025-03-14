@@ -1,7 +1,11 @@
 package es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.controllers;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -40,6 +44,13 @@ public class ActivityControllerV2 {
                 activityInput.timeRate(), activityInput.timesRequiered(), user.getId(), activityInput.categoryID());
 
         return activityOutputV2Mapper.toDTO(activity);
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("paginationActivitiesV2")
+    public List<ActivityOutputV2> paginationActivities(@Argument int page, @Argument int perPage) {
+        List<Activity> activities = activityService.getPagination(page, perPage);
+        return activityOutputV2Mapper.toDTO(activities);
     }
 
 }

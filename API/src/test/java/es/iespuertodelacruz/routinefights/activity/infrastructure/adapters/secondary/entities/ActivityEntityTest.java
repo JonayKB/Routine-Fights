@@ -39,7 +39,7 @@ class ActivityEntityTest {
         List<CommunityEventEntity> communityEvents = new ArrayList<>();
         activity.setCommunityEvent(communityEvents);
         UserEntity user = new UserEntity();
-        activity.setUser(user);
+        activity.setCreator(user);
         List<PostEntity> posts = new ArrayList<>();
         activity.setPost(posts);
         assertEquals(ID_1, activity.getId());
@@ -50,7 +50,7 @@ class ActivityEntityTest {
         assertEquals(TIMES_REQUIRED, activity.getTimesRequiered());
         assertEquals(category, activity.getCategory());
         assertEquals(communityEvents, activity.getCommunityEvent());
-        assertEquals(user, activity.getUser());
+        assertEquals(user, activity.getCreator());
         assertEquals(posts, activity.getPost());
     }
 
@@ -61,7 +61,7 @@ class ActivityEntityTest {
         UserEntity user = new UserEntity();
         List<PostEntity> posts = new ArrayList<>();
         ActivityEntity activity = new ActivityEntity(ID_1, NAME, DESCRIPTION, IMAGE, TIME_RATE, TIMES_REQUIRED,
-                category, communityEvents, user, posts, CREATED_AT, UPDATED_AT, DELETED_AT);
+                category, communityEvents, user, posts, CREATED_AT, UPDATED_AT, DELETED_AT, null);
         assertEquals(ID_1, activity.getId());
         assertEquals(NAME, activity.getName());
         assertEquals(DESCRIPTION, activity.getDescription());
@@ -70,7 +70,7 @@ class ActivityEntityTest {
         assertEquals(TIMES_REQUIRED, activity.getTimesRequiered());
         assertEquals(category, activity.getCategory());
         assertEquals(communityEvents, activity.getCommunityEvent());
-        assertEquals(user, activity.getUser());
+        assertEquals(user, activity.getCreator());
         assertEquals(posts, activity.getPost());
         assertEquals(CREATED_AT, activity.getCreatedAt());
         assertEquals(UPDATED_AT, activity.getUpdatedAt());
