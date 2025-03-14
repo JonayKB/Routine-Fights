@@ -7,10 +7,10 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import es.iespuertodelacruz.routinefights.activity.commons.ActivityCommons;
 import es.iespuertodelacruz.routinefights.category.infrastructure.adapters.secondary.entities.CategoryEntity;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.entities.CommunityEventEntity;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
-import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 
 import java.util.List;
@@ -20,15 +20,10 @@ import java.util.Objects;
 /**
  * ActivityEntity
  */
-public class ActivityEntity extends EntitiesTimestamps {
+public class ActivityEntity extends ActivityCommons {
     @Id
     @GeneratedValue()
     private String id;
-    private String name;
-    private String description;
-    private String image;
-    private String timeRate;
-    private String timesRequiered;
 
     @Relationship(type = "Belongs_To", direction = Relationship.Direction.OUTGOING)
     private CategoryEntity category;
@@ -43,15 +38,11 @@ public class ActivityEntity extends EntitiesTimestamps {
     private List<PostEntity> post;
 
     public ActivityEntity(String id, String name, String description, String image, String timeRate,
-            String timesRequiered, CategoryEntity category, List<CommunityEventEntity> communityEvent, UserEntity user,
+            Integer timesRequiered, CategoryEntity category, List<CommunityEventEntity> communityEvent, UserEntity user,
             List<PostEntity> post, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        super(createdAt, updatedAt, deletedAt);
+        super(name, description, image, timeRate, timesRequiered, createdAt, updatedAt, deletedAt);
         this.id = id;
-        this.name = name;
-        this.description = description;
-        this.image = image;
-        this.timeRate = timeRate;
-        this.timesRequiered = timesRequiered;
+
         this.category = category;
         this.communityEvent = communityEvent;
         this.user = user;
@@ -64,46 +55,6 @@ public class ActivityEntity extends EntitiesTimestamps {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage() {
-        return this.image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getTimeRate() {
-        return this.timeRate;
-    }
-
-    public void setTimeRate(String timeRate) {
-        this.timeRate = timeRate;
-    }
-
-    public String getTimesRequiered() {
-        return this.timesRequiered;
-    }
-
-    public void setTimesRequiered(String timesRequiered) {
-        this.timesRequiered = timesRequiered;
     }
 
     public CategoryEntity getCategory() {
