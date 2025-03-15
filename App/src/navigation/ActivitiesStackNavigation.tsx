@@ -4,6 +4,7 @@ import Activities from "../screens/Activities";
 import ActivityDetails from "../screens/ActivityDetails";
 import { Activity } from "../utils/Activity";
 import Streaks from "../screens/Streaks";
+import ActivityForm from "../screens/ActivityForm";
 
 type Props = {};
 
@@ -11,6 +12,7 @@ export type ActivitiesStackProps = {
   Streaks: undefined;
   Activities: undefined;
   ActivityDetails: { activity: Activity };
+  ActivityForm: undefined;
 };
 
 const ActivitiesStackNavigation = (props: Props) => {
@@ -21,6 +23,7 @@ const ActivitiesStackNavigation = (props: Props) => {
       <Stack.Screen name="Streaks" component={Streaks} />
       <Stack.Screen name="Activities" component={Activities} />
       <Stack.Screen name="ActivityDetails" component={ActivityDetails} />
+      <Stack.Screen name="ActivityForm" component={ActivityForm}/>
     </Stack.Navigator>
   );
 };

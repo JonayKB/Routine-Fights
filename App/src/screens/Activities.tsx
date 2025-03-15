@@ -60,8 +60,6 @@ const Activities = ({ navigation, route }: Props) => {
     );
   }, [search]);
 
-  const submit = async () => {};
-
   return (
     <View className="flex-1 bg-[#E4DCE9]">
       <View className="justify-center items-center">
@@ -110,14 +108,14 @@ const Activities = ({ navigation, route }: Props) => {
         numColumns={2}
       />
       <TouchableOpacity
-        onPress={submit}
+        onPress={() => navigation.navigate("ActivityForm")}
         className="bg-[#E4007C] rounded-lg py-3 m-5"
       >
         <Text
-          className="text-white font-bold text-2xl text-center"
+          className="text-white text-8xl font-bold text-center"
           style={{ fontFamily: "InriaSans-Regular" }}
         >
-          Submit
+          +
         </Text>
       </TouchableOpacity>
     </View>
