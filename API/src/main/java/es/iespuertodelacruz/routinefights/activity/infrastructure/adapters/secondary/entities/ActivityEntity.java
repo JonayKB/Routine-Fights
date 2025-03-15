@@ -94,35 +94,7 @@ public class ActivityEntity extends ActivityCommons {
         this.participants = participants;
     }
 
-    public ActivityEntity id(String id) {
-        setId(id);
-        return this;
-    }
 
-    public ActivityEntity category(CategoryEntity category) {
-        setCategory(category);
-        return this;
-    }
-
-    public ActivityEntity communityEvent(List<CommunityEventEntity> communityEvent) {
-        setCommunityEvent(communityEvent);
-        return this;
-    }
-
-    public ActivityEntity creator(UserEntity creator) {
-        setCreator(creator);
-        return this;
-    }
-
-    public ActivityEntity participants(List<UserEntity> participants) {
-        setParticipants(participants);
-        return this;
-    }
-
-    public ActivityEntity post(List<PostEntity> post) {
-        setPost(post);
-        return this;
-    }
 
     public UserEntity getCreator() {
         return this.creator;
