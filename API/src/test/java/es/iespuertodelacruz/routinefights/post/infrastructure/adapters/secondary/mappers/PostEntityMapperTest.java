@@ -153,7 +153,7 @@ class PostEntityMapperTest {
         userEntity.setFollowing(new ArrayList<>());
 
         ActivityEntity activityEntity = new ActivityEntity();
-        activityEntity.id(ACTIVITY_ID);
+        activityEntity.setId(ACTIVITY_ID);
         activityEntity.setName(ACTIVITY_NAME);
         activityEntity.setDescription(ACTIVITY_DESCRIPTION);
         activityEntity.setImage(ACTIVITY_IMAGE);
@@ -162,7 +162,7 @@ class PostEntityMapperTest {
         activityEntity.setCreatedAt(now);
         activityEntity.setUpdatedAt(now);
         activityEntity.setDeletedAt(null);
-        activityEntity.participants(new ArrayList<>());
+        activityEntity.setParticipants(new ArrayList<>());
         activityEntity.setCreator(userEntity);
 
         PostEntity postEntity = new PostEntity();

@@ -155,7 +155,7 @@ class ActivityEntityMapperTest {
 
     private ActivityEntity createActivityEntity() {
         ActivityEntity entity = new ActivityEntity();
-        entity.id(ACTIVITY_ID);
+        entity.setId(ACTIVITY_ID);
         entity.setName(ACTIVITY_NAME);
         entity.setDescription(ACTIVITY_DESCRIPTION);
         entity.setImage(ACTIVITY_IMAGE);
@@ -164,7 +164,7 @@ class ActivityEntityMapperTest {
         entity.setCreatedAt(now);
         entity.setUpdatedAt(now);
         entity.setDeletedAt(null);
-        entity.participants(new ArrayList<>());
+        entity.setParticipants(new ArrayList<>());
         entity.setCreator(createUserEntity());
         return entity;
     }
