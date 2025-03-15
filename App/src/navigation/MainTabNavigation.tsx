@@ -4,15 +4,15 @@ import Home from "../screens/Home";
 import Events from "../screens/Events";
 import ActivitiesStackNavigation from "./ActivitiesStackNavigation";
 import Icon from "react-native-vector-icons/Ionicons";
-import Upload from "../screens/Upload";
 import ProfileStackNavigation from "./ProfileStackNavigation";
+import UploadStackNavigation from "./UploadStackNavigation";
 
 type Props = {};
 
 type MainTabProps = {
   Home: undefined;
   ActivitiesStackNavigation: undefined;
-  Upload: undefined;
+  UploadStackNavigation: undefined;
   Events: undefined;
   ProfileStackNavigation: undefined;
 };
@@ -58,8 +58,8 @@ const MainTabNavigation = (props: Props) => {
         }}
       />
       <Tab.Screen
-        name="Upload"
-        component={Upload}
+        name="UploadStackNavigation"
+        component={UploadStackNavigation}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
