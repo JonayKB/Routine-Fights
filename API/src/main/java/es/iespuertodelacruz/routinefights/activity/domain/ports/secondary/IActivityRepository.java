@@ -2,7 +2,6 @@ package es.iespuertodelacruz.routinefights.activity.domain.ports.secondary;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 

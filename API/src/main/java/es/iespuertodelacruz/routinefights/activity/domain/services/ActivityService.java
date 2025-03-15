@@ -3,7 +3,6 @@ package es.iespuertodelacruz.routinefights.activity.domain.services;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import es.iespuertodelacruz.routinefights.activity.commons.TimeRates;
@@ -18,7 +17,6 @@ public class ActivityService implements IActivityService {
 
     private IActivityRepository activityRepository;
     private IUserRepository userRepository;
-    // private ICategoryRepository categoryRepository;
 
     public ActivityService(IActivityRepository activityRepository, IUserRepository userRepository) {
         this.userRepository = userRepository;
@@ -39,8 +37,7 @@ public class ActivityService implements IActivityService {
             throw new IllegalArgumentException("Time rate not valid, valid options: daily, weekly, monthly, yearly");
         }
         activity.setTimesRequiered(timesRequiered);
-        // TODO add category
-        // activity.setCategory(categoryRepository.findById(categoryID));
+
         User user = userRepository.findById(userID);
         activity.setCreator(user);
         activity.setCreatedAt(LocalDateTime.now());
