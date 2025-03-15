@@ -15,7 +15,7 @@ const Upload = ({ navigation, route }: Props) => {
         onPress={() => {
           launchCamera({ mediaType: "photo" }, ({ assets }) => {
             if (assets) {
-              navigation.navigate("UploadForm", { image: assets[0]?.uri });
+              navigation.navigate("ImageCrop", { uri: assets[0]?.uri });
             }
           });
         }}
@@ -28,7 +28,7 @@ const Upload = ({ navigation, route }: Props) => {
         onPress={() => {
           launchImageLibrary({ mediaType: "photo" }, ({ assets }) => {
             if (assets) {
-              navigation.navigate("UploadForm", { image: assets[0]?.uri });
+              navigation.navigate("ImageCrop", { uri: assets[0]?.uri });
             }
           });
         }}
