@@ -331,6 +331,23 @@ public class UserEntityService implements IUserRepository {
         }
     }
 
+    @Override
+    public boolean subscribeActivity(String userEmail,String activityID){
+        try {
+            return userRepository.susbcribeActivity(userEmail,activityID);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error subscribing activity: "+e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean unSubscribeActivity(String userEmail,String activityID){
+        try {
+            return userRepository.unSusbcribeActivity(userEmail,activityID);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error unsuscribing activity: "+e.getMessage());
+        }
+    }
     boolean checkIfPhoneNumberIsValid(String phoneNumber) {
         return phoneNumber.matches("^\\+\\d{1,3}\\d{9}$");
     }
