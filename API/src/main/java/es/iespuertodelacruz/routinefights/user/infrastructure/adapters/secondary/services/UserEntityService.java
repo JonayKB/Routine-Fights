@@ -347,7 +347,7 @@ public class UserEntityService implements IUserRepository {
         } catch (Exception e) {
             throw new UserNotFoundException("Error unsuscribing activity: "+e.getMessage());
         }
-
+    }
     boolean checkIfPhoneNumberIsValid(String phoneNumber) {
         return phoneNumber.matches("^\\+\\d{1,3}\\d{9}$");
     }
