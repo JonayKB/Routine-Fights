@@ -103,13 +103,13 @@ class PostEntityMapperTest {
     }
 
     @Test
-    void testToEntity_NullInputs() {
+    void testToEntityNullInputs() {
         assertNull(mapper.toEntity((Post) null));
         assertNull(mapper.toEntity((List<Post>) null));
     }
 
     @Test
-    void testToDomain_NullInputs() {
+    void testToDomainNullInputs() {
         assertNull(mapper.toDomain((PostEntity) null));
         assertNull(mapper.toDomain((List<PostEntity>) null));
     }
