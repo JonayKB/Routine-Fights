@@ -58,6 +58,9 @@ public class UserEntity extends UserCommon {
     @Relationship(type = "Has_Badge", direction = Relationship.Direction.OUTGOING)
     private List<BadgeEntity> badges;
 
+    @Relationship(type = "Participated", direction = Relationship.Direction.OUTGOING)
+    private List<ActivityEntity> activities;
+
     /**
      * Default constructor
      */
@@ -97,7 +100,7 @@ public class UserEntity extends UserCommon {
     public UserEntity(String id, List<UserEntity> followers, List<UserEntity> following, List<ReportEntity> reports,
             List<ReportEntity> posts, List<CommentEntity> comments, List<PostEntity> likedPosts,
             List<MeetingEntity> meetings, List<ActivityEntity> createdActivities, TeamEntity team,
-            List<BadgeEntity> badges) {
+            List<BadgeEntity> badges, List<ActivityEntity> activities) {
         this.id = id;
         this.followers = followers;
         this.following = following;
@@ -109,6 +112,7 @@ public class UserEntity extends UserCommon {
         this.createdActivities = createdActivities;
         this.team = team;
         this.badges = badges;
+        this.activities = activities;
     }
 
     public List<ReportEntity> getReports() {
@@ -177,6 +181,19 @@ public class UserEntity extends UserCommon {
 
     public UserEntity id(String id) {
         setId(id);
+        return this;
+    }
+
+    public List<ActivityEntity> getActivities() {
+        return this.activities;
+    }
+
+    public void setActivities(List<ActivityEntity> activities) {
+        this.activities = activities;
+    }
+
+    public UserEntity activities(List<ActivityEntity> activities) {
+        setActivities(activities);
         return this;
     }
 

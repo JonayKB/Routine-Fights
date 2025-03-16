@@ -32,4 +32,10 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
 
     @Query("MATCH (u: User) WHERE u.username CONTAINS $regex RETURN u")
     public List<UserEntity> findByUsername(@Param("regex") String regex);
+
+    @Query("MATCH (u: User {email:$userMail}) MATCH (a: Activity ) Where elementId(a)=$activityID MERGE (u)-[:Participated]->(a) RETURN exists((u)-[:Participated]->(a)) AS relationshipExists")
+    public boolean susbcribeActivity(@Param("userMail") String userEmail, @Param("activityID") String activityID);
+
+    @Query("MATCH (u: User {email:$userMail}) MATCH (a: Activity) WHERE elementId(a) = $activityID MATCH (u)-[r:Participated]->(a) DELETE r RETURN COUNT(*) > 0")
+    public boolean unSusbcribeActivity(@Param("userMail") String userEmail, @Param("activityID") String activityID);
 }

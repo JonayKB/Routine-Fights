@@ -87,4 +87,8 @@ public interface IUserCommon<T> extends ICRUD<T> {
      * @return List<User>
      */
     public List<User> findByUsername(String regex);
+
+    public boolean subscribeActivity(String email, String activityID);
+
+    public boolean unSubscribeActivity(String email, String activityID);
 }

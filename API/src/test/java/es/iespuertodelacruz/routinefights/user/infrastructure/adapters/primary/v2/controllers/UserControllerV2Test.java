@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -14,6 +15,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import es.iespuertodelacruz.routinefights.shared.services.MailService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -218,5 +222,47 @@ class UserControllerV2Test extends UserInitializer {
             userControllerV2.update(userInputDTOV2);
         });
         assertEquals("Unable to update the user", exception.getMessage());
+    }
+
+    @Test
+    void subscribeActivityTest() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        
+        when(userService.subscribeActivity(anyString(), anyString())).thenReturn(true);
+        assertTrue(userControllerV2.subscribeActivity("activityId"));
+    }
+
+    @Test
+    void subscribeActivityExceptionTest() {
+        when(userService.subscribeActivity(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV2.subscribeActivity("activityId");
+        });
+        assertEquals("Unable to subscribe the user to the activity", exception.getMessage());
+    }
+
+    @Test
+    void unsubscribeActivityTest() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        
+        when(userService.unSubscribeActivity(anyString(), anyString())).thenReturn(true);
+        assertTrue(userControllerV2.unSubscribeActivity("activityId"));
+    }
+
+    @Test
+    void unsubscribeActivityExceptionTest() {
+        when(userService.unSubscribeActivity(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV2.unSubscribeActivity("activityId");
+        });
+        assertEquals("Unable to unsubscribe the user to the activity", exception.getMessage());
     }
 }

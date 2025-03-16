@@ -1,40 +1,48 @@
 package es.iespuertodelacruz.routinefights.shared.services;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+
 import org.springframework.stereotype.Service;
 
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
 import es.iespuertodelacruz.routinefights.shared.exceptions.MailException;
 import es.iespuertodelacruz.routinefights.shared.utils.HTMLTemplates;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class MailService {
-	private final JavaMailSender sender;
+	private static final String EMAIL_ENDPOINT = "mail/send";
 
-	public MailService(JavaMailSender sender) {
-		this.sender = sender;
+	private final SendGrid sendGrid;
+	private final Email fromEmail;
+
+	public MailService(SendGrid sendGrid, Email fromEmail) {
+		this.sendGrid = sendGrid;
+		this.fromEmail = fromEmail;
 	}
 
-	@Value("${mail.from}")
-	private String mailfrom;
+	public void dispatchEmail(String emailId, String subject, String body) {
+		Email toEmail = new Email(emailId);
+		Content content = new Content("text/html", body);
+		Mail mail = new Mail(fromEmail, subject, toEmail, content);
+		
 
-	public void send(String[] destinatarios, String asunto, String contenidoHtml) {
+		Request request = new Request();
+		request.setMethod(Method.POST);
+		request.setEndpoint(EMAIL_ENDPOINT);
 		try {
-			MimeMessage message = sender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+			request.setBody(mail.build());
 
-			helper.setFrom(mailfrom);
-			helper.setTo(destinatarios);
-			helper.setSubject(asunto);
-			helper.setText(contenidoHtml, true);
-
-			sender.send(message);
-
-		} catch (MessagingException e) {
-			throw new MailException("Error al enviar el correo electrónico" + e);
+			Response response = sendGrid.api(request);
+			if (response.getStatusCode() != 202) {
+				throw new MailException("Error sending email: " + response.getBody());
+			}
+		} catch (Exception e) {
+			throw new MailException("Error sending email: " + e);
 		}
 	}
 
@@ -42,7 +50,7 @@ public class MailService {
 
 		String html = String.format(HTMLTemplates.VERIFICATION_EMAIL, destinatario, token);
 
-		send(new String[] { destinatario }, asunto, html);
+		dispatchEmail(destinatario, asunto, html);
 	}
 
 }
