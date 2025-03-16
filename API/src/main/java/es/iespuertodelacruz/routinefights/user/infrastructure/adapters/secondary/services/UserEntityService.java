@@ -25,6 +25,8 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
  */
 @Service
 public class UserEntityService implements IUserRepository {
+    private static final String INVALID_PHONENUMBER = "Invalid phone number, should be: +[country code][phone number], example: +34612345678";
+    private static final String INVALID_EMAIL = "Invalid email, should be: [email]@[domain].[tld], example: jonaykb@gmail.com";
     private static final String DATA_REQUIRED = "Data required";
     private static final String ERROR_UPDATING_USER = "Error updating user";
     private static final String USER_NOT_FOUND = "User not found";
@@ -121,6 +123,14 @@ public class UserEntityService implements IUserRepository {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserSaveException("Email already exists");
         }
+        if (!checkIfEmailIsValid(user.getEmail())) {
+            throw new UserUpdateException(
+                    INVALID_EMAIL);
+        }
+        if (!checkIfPhoneNumberIsValid(user.getPhoneNumber())) {
+            throw new UserUpdateException(
+                    INVALID_PHONENUMBER);
+        }
 
         UserEntity userEntity = userEntityMapper.toEntity(user);
         userEntity.setFollowers(new ArrayList<>());
@@ -147,6 +157,14 @@ public class UserEntityService implements IUserRepository {
 
         if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        if (!checkIfEmailIsValid(user.getEmail())) {
+            throw new UserUpdateException(
+                    INVALID_EMAIL);
+        }
+        if (!checkIfPhoneNumberIsValid(user.getPhoneNumber())) {
+            throw new UserUpdateException(
+                    INVALID_PHONENUMBER);
         }
 
         userEntity.setUsername(user.getUsername());
@@ -183,6 +201,10 @@ public class UserEntityService implements IUserRepository {
             if (userRepository.existsByEmail(user.getEmail())) {
                 throw new UserUpdateException("Email already exists");
             }
+            if (!checkIfEmailIsValid(user.getEmail())) {
+                throw new UserUpdateException(
+                        INVALID_EMAIL);
+            }
             userEntity.setEmail(user.getEmail());
             userEntity.setVerified(false);
             userEntity.setVerificationToken(UUID.randomUUID().toString());
@@ -190,6 +212,11 @@ public class UserEntityService implements IUserRepository {
 
         if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        if (!checkIfPhoneNumberIsValid(user.getPhoneNumber())) {
+            throw new UserUpdateException(
+                    INVALID_PHONENUMBER);
         }
 
         userEntity.setUsername(user.getUsername());
@@ -320,5 +347,12 @@ public class UserEntityService implements IUserRepository {
         } catch (Exception e) {
             throw new UserNotFoundException("Error unsuscribing activity: "+e.getMessage());
         }
+
+    boolean checkIfPhoneNumberIsValid(String phoneNumber) {
+        return phoneNumber.matches("^\\+\\d{1,3}\\d{9}$");
+    }
+
+    boolean checkIfEmailIsValid(String email) {
+        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
 }
