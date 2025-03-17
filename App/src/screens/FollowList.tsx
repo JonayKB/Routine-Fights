@@ -89,30 +89,37 @@ const FollowList = ({ navigation, route }: Props) => {
           data={users}
           renderItem={({ item }) => {
             return (
-              <View className="items-center bg-[#F1FEFC] flex-row mt-5 w-11/12 mx-auto rounded-xl">
-                <Image
-                  className="rounded-full m-5"
-                  source={{
-                    uri: item.image,
-                  }}
-                  width={80}
-                  height={80}
-                />
-                <View>
-                  <Text className="text-black font-bold text-2xl">
-                    {item.username}
-                  </Text>
-                  <Text className="text-black">
-                    Followers: {convertQuantityToString(item.followers)}
-                  </Text>
-                  <Text className="text-black">
-                    Following: {convertQuantityToString(item.following)}
-                  </Text>
-                </View>
-                <TouchableOpacity className="border-[#E4007C] border-2 rounded-lg ml-5">
-                  <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
-                    Follow
-                  </Text>
+              <View>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Profile", { id: item.id })
+                  }
+                  className="items-center bg-[#F1FEFC] flex-row mt-5 w-11/12 mx-auto rounded-xl"
+                >
+                  <Image
+                    className="rounded-full m-5"
+                    source={{
+                      uri: item.image,
+                    }}
+                    width={80}
+                    height={80}
+                  />
+                  <View>
+                    <Text className="text-black font-bold text-2xl">
+                      {item.username}
+                    </Text>
+                    <Text className="text-black">
+                      Followers: {convertQuantityToString(item.followers)}
+                    </Text>
+                    <Text className="text-black">
+                      Following: {convertQuantityToString(item.following)}
+                    </Text>
+                  </View>
+                  <TouchableOpacity className="border-[#E4007C] border-2 rounded-lg ml-5">
+                    <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
+                      Follow
+                    </Text>
+                  </TouchableOpacity>
                 </TouchableOpacity>
               </View>
             );
