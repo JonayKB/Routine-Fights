@@ -265,4 +265,32 @@ class UserControllerV2Test extends UserInitializer {
         });
         assertEquals("Unable to unsubscribe the user to the activity", exception.getMessage());
     }
+
+    @Test
+    void getOwnUserTest(){
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userService.findByEmail(anyString())).thenReturn(user);
+        when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
+        assertNotNull(userControllerV2.getOwnUser());
+    }
+
+    @Test
+    void getOwnUserExceptionTest(){
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userService.findByEmail(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userControllerV2.getOwnUser();
+        });
+        assertEquals("Error finding user", exception.getMessage());
+    }
 }

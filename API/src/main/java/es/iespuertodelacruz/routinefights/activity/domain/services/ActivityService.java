@@ -50,4 +50,9 @@ public class ActivityService implements IActivityService {
         return activityRepository.getPagination(page, perPage);
     }
 
+    @Override
+    public List<Activity> getSubscribedActivities(String userID) {
+        return activityRepository.getSubscribedActivities(userID);
+    }
+
 }
