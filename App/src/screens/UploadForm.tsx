@@ -9,6 +9,7 @@ const UploadForm = ({ navigation, route }: Props) => {
   return (
     <View>
       <Image
+        className="justify-center"
         source={{ uri: `file://${route.params.uri}` }}
         style={{ width: 281, height: 500 }}
       />
