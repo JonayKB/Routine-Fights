@@ -10,4 +10,6 @@ public interface IActivityService {
             String categoryID);
 
     List<Activity> getPagination(int page, int perPage);
+
+    List<Activity> getSubscribedActivities(String userID);
 }

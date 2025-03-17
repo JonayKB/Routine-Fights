@@ -52,4 +52,12 @@ public class ActivityControllerV2 {
         return activityOutputV2Mapper.toDTO(activities);
     }
 
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("getSubscribedActivities")
+    public List<ActivityOutputV2> getSubscribedActivities() {
+        User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<Activity> activities = activityService.getSubscribedActivities(user.getId());
+        return activityOutputV2Mapper.toDTO(activities);
+    }
+
 }
