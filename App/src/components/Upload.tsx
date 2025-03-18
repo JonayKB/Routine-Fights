@@ -1,17 +1,17 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import Icon from "react-native-vector-icons/Ionicons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { UploadStackProps } from "../navigation/UploadStackNavigation";
+import { ImageStackProps } from "../navigation/ImageStackNavigation";
 
-type Props = NativeStackScreenProps<UploadStackProps, "Upload">;
+type Props = NativeStackScreenProps<ImageStackProps, "Upload">;
 
-const Upload = ({ navigation, route }: Props) => {
+const Upload = ({ navigation }: Props) => {
   return (
-    <View className="justify-center items-center">
+    <View className="flex-1 bg-[#E4D8E9] justify-center items-center rounded-lg">
       <TouchableOpacity
-        className="flex-row justify-center items-center bg-[#F1FEFC] p-5 rounded-lg m-5"
+        className="flex-row justify-center items-center bg-white p-5 rounded-lg m-5"
         onPress={() => {
           launchCamera({ mediaType: "photo" }, ({ assets }) => {
             if (assets) {
@@ -20,11 +20,14 @@ const Upload = ({ navigation, route }: Props) => {
           });
         }}
       >
-        <Icon name="camera" size={30} color="#4B0082" />
-        <Text className="text-black text-2xl">Take a photo</Text>
+        <Icon name="camera" size={50} color="#4B0082" />
+        <Text className="text-black font-bold text-xl ml-3">
+          Take from camera
+        </Text>
       </TouchableOpacity>
+
       <TouchableOpacity
-        className="flex-row justify-center items-center bg-[#F1FEFC] p-5 rounded-lg m-5"
+        className="flex-row justify-center items-center bg-white p-5 rounded-lg m-5 w-8/12"
         onPress={() => {
           launchImageLibrary({ mediaType: "photo" }, ({ assets }) => {
             if (assets) {
@@ -33,8 +36,10 @@ const Upload = ({ navigation, route }: Props) => {
           });
         }}
       >
-        <Icon name="image" size={30} color="#4B0082" />
-        <Text className="text-black text-2xl">Select from library</Text>
+        <Icon name="image" size={50} color="#4B0082" />
+        <Text className="text-black font-bold text-xl ml-3">
+          Select from library
+        </Text>
       </TouchableOpacity>
     </View>
   );

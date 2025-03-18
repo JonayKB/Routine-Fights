@@ -1,7 +1,7 @@
 import { View, FlatList, TouchableOpacity, RefreshControl } from "react-native";
 import React, { useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
-import Post from "./Post";
+import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
 
 type Props = {};

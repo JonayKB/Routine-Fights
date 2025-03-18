@@ -5,14 +5,14 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
-  Touchable,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { UserOut } from "../utils/User";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { Post as PostDomain } from "../utils/Post";
-import Post from "./Post";
+import Post from "../components/Post";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -101,17 +101,16 @@ const Profile = ({ navigation, route }: Props) => {
     <View className="flex-1">
       {selectedPost && (
         <View className="absolute w-full h-full z-10">
-          <TouchableOpacity
-            onPress={() => setSelectedPost(null)}
-            className="bg-black opacity-80 w-full h-full absolute"
-          />
+          <TouchableWithoutFeedback onPress={() => setSelectedPost(null)}>
+            <View className="flex-1 bg-black opacity-80 w-full h-full absolute"></View>
+          </TouchableWithoutFeedback>
           <View className="absolute justify-center h-full">
             <Post post={selectedPost} />
           </View>
         </View>
       )}
 
-      <View className="bg-[#F1FEFC] flex-row border-b-2 border-[#4B0082]">
+      <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
         <View className="m-5 items-center">
           <Image
             source={{ uri: user.image }}
