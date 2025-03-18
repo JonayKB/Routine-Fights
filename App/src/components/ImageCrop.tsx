@@ -13,7 +13,7 @@ const ImageCrop = ({ navigation, route }: Props) => {
   const cropViewRef = useRef<CropView>(null);
 
   return (
-    <View className="flex-1 bg-black rounded-lg">
+    <View className="flex-1 bg-black rounded-t-lg">
       <CropView
         sourceUrl={route.params.uri}
         ref={cropViewRef}

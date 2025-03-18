@@ -9,7 +9,7 @@ type Props = NativeStackScreenProps<ImageStackProps, "Upload">;
 
 const Upload = ({ navigation }: Props) => {
   return (
-    <View className="flex-1 bg-[#E4D8E9] justify-center items-center rounded-lg">
+    <View className="flex-1 bg-[#E4D8E9] justify-center items-center rounded-t-lg">
       <TouchableOpacity
         className="flex-row justify-center items-center bg-white p-5 rounded-lg m-5"
         onPress={() => {
