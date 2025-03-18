@@ -51,4 +51,9 @@ public class ActivityEntityService implements IActivityRepository {
         return activityEntityMapper.toDomain(activityEntityRepository.getPagination(offset, perPage));
     }
 
+    @Override
+    public List<Activity> getSubscribedActivities(String userID) {
+        return activityEntityMapper.toDomain(activityEntityRepository.getSubscribedActivities(userID));
+    }
+
 }

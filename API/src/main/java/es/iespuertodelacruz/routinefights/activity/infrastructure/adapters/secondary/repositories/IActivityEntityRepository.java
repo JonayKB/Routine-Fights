@@ -13,21 +13,28 @@ import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secon
 
 @Service
 public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntity, String> {
-    @Query("""
-            MATCH (a:Activity)<-[r:Participated]-(u:User)
-            WHERE elementId(a) = $activityID AND elementId(u) = $userID
-            RETURN COUNT(*) > 0
-            """)
-    boolean userIsOnActivity(@Param("userID") String userID, @Param("activityID") String activityID);
+        @Query("""
+                        MATCH (a:Activity)<-[r:Participated]-(u:User)
+                        WHERE elementId(a) = $activityID AND elementId(u) = $userID
+                        RETURN COUNT(*) > 0
+                        """)
+        boolean userIsOnActivity(@Param("userID") String userID, @Param("activityID") String activityID);
 
-    @NonNull
-    Optional<ActivityEntity> findById(@NonNull String id);
+        @NonNull
+        Optional<ActivityEntity> findById(@NonNull String id);
 
-    @Query("""
-            MATCH (a:Activity)<-[c:Created]-(u:User)
-            RETURN a,c,u
-            SKIP $offset LIMIT $limit
-            """)
-    List<ActivityEntity> getPagination(int offset, int limit);
+        @Query("""
+                        MATCH (a:Activity)<-[c:Created]-(u:User)
+                        RETURN a,c,u
+                        SKIP $offset LIMIT $limit
+                        """)
+        List<ActivityEntity> getPagination(int offset, int limit);
+
+        @Query("""
+                        MATCH (cc:User)-[c:Created]->(a:Activity)<-[r:Participated]-(u:User)
+                        WHERE elementId(u) = $userID
+                        RETURN a,r,u,cc,c
+                        """)
+        List<ActivityEntity> getSubscribedActivities(@Param("userID") String userID);
 
 }

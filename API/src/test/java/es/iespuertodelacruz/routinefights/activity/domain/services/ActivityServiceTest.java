@@ -112,4 +112,20 @@ class ActivityServiceTest {
         assertEquals(2, result.size());
         verify(activityRepository, times(1)).getPagination(page, perPage);
     }
+
+    @Test
+    void testGetSubscribedActivities(){
+        String userId = "user123";
+        List<Activity> activities = new ArrayList<>();
+        activities.add(new Activity());
+        activities.add(new Activity());
+
+        when(activityRepository.getSubscribedActivities(userId)).thenReturn(activities);
+
+        List<Activity> result = activityService.getSubscribedActivities(userId);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(activityRepository, times(1)).getSubscribedActivities(userId);
+    }
 }

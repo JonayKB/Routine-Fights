@@ -201,4 +201,18 @@ public class UserControllerV2 {
             throw new UserUpdateException("Unable to unsubscribe the user to the activity");
         }
     }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("getOwnUser")
+    public UserOutputDTOV2 getOwnUser() {
+        User user;
+        try {
+            user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(getOwnUser) Error finding user: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding user");
+        }
+        return userOutputMapper.toOutputDTOV2(user);
+    }
+
 }
