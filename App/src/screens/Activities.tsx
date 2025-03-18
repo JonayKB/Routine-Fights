@@ -110,9 +110,10 @@ const Activities = ({ navigation, route }: Props) => {
       />
       <TouchableOpacity
         onPress={() => navigation.navigate("ActivityForm")}
+        className="bg-[#E4007C] rounded-lg m-5"
       >
         <Text
-          className="bg-[#E4007C] rounded-lg m-5 text-white text-8xl font-bold text-center"
+          className="text-white text-8xl font-bold text-center"
           style={{ fontFamily: "InriaSans-Regular" }}
         >
           +

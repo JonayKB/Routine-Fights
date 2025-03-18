@@ -43,6 +43,42 @@ const Streaks = ({ navigation, route }: Props) => {
       timesRequired: "3",
       category: "3",
     },
+    {
+      id: "7",
+      name: "Activity 3",
+      description: "Description 3",
+      image: "https://picsum.photos/200/300",
+      timeRate: "3",
+      timesRequired: "3",
+      category: "3",
+    },
+    {
+      id: "4",
+      name: "Activity 3",
+      description: "Description 3",
+      image: "https://picsum.photos/200/300",
+      timeRate: "3",
+      timesRequired: "3",
+      category: "3",
+    },
+    {
+      id: "5",
+      name: "Activity 3",
+      description: "Description 3",
+      image: "https://picsum.photos/200/300",
+      timeRate: "3",
+      timesRequired: "3",
+      category: "3",
+    },
+    {
+      id: "true",
+      name: null,
+      description: null,
+      image: null,
+      timeRate: "3",
+      timesRequired: null,
+      category: null,
+    },
   ];
 
   return (
@@ -64,24 +100,33 @@ const Streaks = ({ navigation, route }: Props) => {
           data={activities}
           renderItem={({ item }) => {
             return (
-              <View className="flex-row items-center bg-[#E4D8E9] w-11/12 h-36 rounded-3xl mt-5 mx-auto">
-                <View className="w-20 h-20 bg-blue-400 rounded-full m-5"></View>
-                <View>
-                  <Text className="text-black text-3xl">{item.name}</Text>
-                  <Text className="text-black text-xl">{item.description}</Text>
-                </View>
+              <View>
+                {item.id === "true" ? (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Activities")}
+                    className="items-center w-11/12 rounded-3xl mx-auto bg-[#4B0082] mt-5"
+                  >
+                    <Text className="text-8xl font-bold text-center text-white">
+                      +
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View className="flex-row items-center bg-[#E4D8E9] w-11/12 h-36 rounded-3xl mt-5 mx-auto">
+                    <View className="w-20 h-20 bg-blue-400 rounded-full m-5"></View>
+                    <View>
+                      <Text className="text-black text-3xl">{item.name}</Text>
+                      <Text className="text-black text-xl">
+                        {item.description}
+                      </Text>
+                    </View>
+                  </View>
+                )}
               </View>
             );
           }}
           keyExtractor={(item) => item.id}
         />
       </View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Activities")}
-        className="bg-[#4B0082] w-11/12 mt-5 rounded-3xl h-20"
-      >
-        <Text className="text-8xl font-bold text-center text-white">+</Text>
-      </TouchableOpacity>
     </View>
   );
 };
