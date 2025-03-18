@@ -13,4 +13,6 @@ public interface IActivityRepository {
     Activity save(Activity activity);
 
     List<Activity> getPagination(int page, int perPage);
+
+    List<Activity> getSubscribedActivities(String userID);
 }
