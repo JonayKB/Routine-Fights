@@ -64,7 +64,7 @@ const Streaks = ({ navigation, route }: Props) => {
           data={activities}
           renderItem={({ item }) => {
             return (
-              <View className="flex-row items-center bg-[#7C5AF11A] w-11/12 h-36 rounded-3xl mt-5 mx-auto">
+              <View className="flex-row items-center bg-[#E4D8E9] w-11/12 h-36 rounded-3xl mt-5 mx-auto">
                 <View className="w-20 h-20 bg-blue-400 rounded-full m-5"></View>
                 <View>
                   <Text className="text-black text-3xl">{item.name}</Text>

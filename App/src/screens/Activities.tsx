@@ -61,13 +61,13 @@ const Activities = ({ navigation, route }: Props) => {
   }, [search]);
 
   return (
-    <View className="flex-1 bg-[#E4DCE9]">
+    <View className="flex-1 bg-[#E4D8E9]">
       <View className="justify-center items-center">
         <TextInput
           placeholder="Name"
           placeholderTextColor="#4B0082"
           inputMode="email"
-          className="border-[#4B0082] border-2 rounded-xl bg-[#F8F7FE] text-2xl w-11/12 my-5 pl-3 text-black"
+          className="border-[#4B0082] border-2 rounded-xl bg-white text-2xl w-11/12 my-5 pl-3 text-black"
           onChangeText={(text) => setSearch(text)}
         />
       </View>
@@ -83,6 +83,7 @@ const Activities = ({ navigation, route }: Props) => {
             }}
           />
         }
+        style={{ width: "100%" }}
         data={filteredActivities}
         renderItem={({ item }) => {
           return (
@@ -90,7 +91,7 @@ const Activities = ({ navigation, route }: Props) => {
               onPress={() =>
                 navigation.navigate("ActivityDetails", { activity: item })
               }
-              className="w-40 h-52 m-5"
+              className="w-44 h-56 m-6"
             >
               <Image
                 source={{
@@ -98,7 +99,7 @@ const Activities = ({ navigation, route }: Props) => {
                 }}
                 className="w-full h-40 rounded-t-2xl border-[#4B0082] border-2"
               />
-              <Text className="flex-1 rounded-b-2xl border-[#4B0082] border-2 align-middle text-[#4B0082] text-center text-xl bg-[#F0F8FF]">
+              <Text className="flex-1 rounded-b-2xl border-[#4B0082] border-2 align-middle text-[#4B0082] text-center text-xl bg-white">
                 {item.name}
               </Text>
             </TouchableOpacity>
@@ -109,10 +110,9 @@ const Activities = ({ navigation, route }: Props) => {
       />
       <TouchableOpacity
         onPress={() => navigation.navigate("ActivityForm")}
-        className="bg-[#E4007C] rounded-lg py-3 m-5"
       >
         <Text
-          className="text-white text-8xl font-bold text-center"
+          className="bg-[#E4007C] rounded-lg m-5 text-white text-8xl font-bold text-center"
           style={{ fontFamily: "InriaSans-Regular" }}
         >
           +

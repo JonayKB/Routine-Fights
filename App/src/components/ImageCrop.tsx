@@ -1,29 +1,27 @@
 import { View, TouchableOpacity } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { UploadStackProps } from "../navigation/UploadStackNavigation";
 import { CropView } from "react-native-image-crop-tools";
 import Icon from "react-native-vector-icons/Ionicons";
+import { ImageStackProps } from "../navigation/ImageStackNavigation";
+import { useImageContext } from "../contexts/ImageContextProvider";
 
-type Props = NativeStackScreenProps<UploadStackProps, "ImageCrop">;
+type Props = NativeStackScreenProps<ImageStackProps, "ImageCrop">;
 
 const ImageCrop = ({ navigation, route }: Props) => {
-  const [imageUri, setImageUri] = useState<string | null>(null);
+  const { setUri } = useImageContext();
   const cropViewRef = useRef<CropView>(null);
 
-  useEffect(() => {
-    if (imageUri) {
-      navigation.navigate("UploadForm", { uri: imageUri });
-    }
-  }, [imageUri]);
-
   return (
-    <View className="flex-1 bg-black">
+    <View className="flex-1 bg-black rounded-lg">
       <CropView
         sourceUrl={route.params.uri}
         ref={cropViewRef}
         style={{ flex: 4, margin: 20 }}
-        onImageCrop={(res) => setImageUri(res.uri)}
+        onImageCrop={(res) => {
+          setUri(res.uri);
+          navigation.goBack();
+        }}
         keepAspectRatio
         aspectRatio={{ width: 9, height: 16 }}
       />
