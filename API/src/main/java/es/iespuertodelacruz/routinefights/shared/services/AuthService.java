@@ -2,7 +2,6 @@ package es.iespuertodelacruz.routinefights.shared.services;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v2.controllers.UserControllerV2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
