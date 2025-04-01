@@ -4,12 +4,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import PhoneInput from "react-native-phone-number-input";
 import { UserIn } from "../utils/User";
-import axios from "axios";
+import { register } from "../services/RegisterService";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Register">;
 
 const Register = ({ navigation, route }: Props) => {
   const uri = "http://64.226.71.234:8080/auth/register";
+  const [passwordShown, setPasswordShown] = useState<boolean>(false);
   const [userIn, setuserIn] = useState<UserIn>({} as UserIn);
   const phoneInput = useRef<PhoneInput>(null);
   const [password, setPassword] = useState<string>(null);
@@ -36,21 +37,13 @@ const Register = ({ navigation, route }: Props) => {
       return Alert.alert("Passwords do not match");
     }
 
-    // If any unique field is found on another user in the database, return an error
-    await register();
-  }
-
-  const register = async () => {
+    // TODO: If any unique field is found on another user in the database, return an error
     try {
-      const { status } = await axios.post(uri, userIn);
-
-      if (status === 200) {
-        navigate();
-      }
+      await register(uri, userIn);
     } catch (error) {
-      console.log("Error", error);
+      return Alert.alert("Error", error.response.data);
     }
-  };
+  }
 
   return (
     <View className="flex-1 bg-[#E4DCE9] justify-center items-center">
@@ -75,17 +68,25 @@ const Register = ({ navigation, route }: Props) => {
           <TextInput
             placeholder="Password"
             placeholderTextColor="#4B0082"
-            secureTextEntry={true}
+            secureTextEntry={!passwordShown}
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
             onChangeText={(text) => setuserIn({ ...userIn, password: text })}
           />
           <TextInput
             placeholder="Confirm password"
             placeholderTextColor="#4B0082"
-            secureTextEntry={true}
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
+            secureTextEntry={!passwordShown}
+            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-2 pl-3 text-black"
             onChangeText={(text) => setPassword(text)}
           />
+          <TouchableOpacity onPress={() => setPasswordShown(!passwordShown)}>
+            <Text
+              className="text-[#4B0082] font-bold text-lg mb-5"
+              style={{ fontFamily: "InriaSans-Regular" }}
+            >
+              {passwordShown ? "Hide" : "Show"}
+            </Text>
+          </TouchableOpacity>
           <View className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3">
             <PhoneInput
               ref={phoneInput}

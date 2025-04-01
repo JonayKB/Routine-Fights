@@ -13,6 +13,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
+import Icon from "react-native-vector-icons/Ionicons";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -129,6 +130,9 @@ const Profile = ({ navigation, route }: Props) => {
           <Text className="text-black text-4xl font-bold mb-5">
             {user.username}
           </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+            <Icon name="settings" size={30}/>
+          </TouchableOpacity>
           <View className="flex-1 flex-col">
             <TouchableOpacity
               onPress={() =>

@@ -1,8 +1,8 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
-import axios from "axios";
+import { login, getToken } from "../services/LoginService";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
@@ -11,23 +11,20 @@ const Login = ({ navigation }: Props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const login = async () => {
-    // TODO: Remove later
-    navigate("MainTabNavigation");
-
-    try {
-      const { status } = await axios.post(
-        "http://64.226.71.234:8080/auth/login?email=" +
-          email +
-          "&password=" +
-          password
-      );
-
-      if (status === 200) {
+  useEffect(() => {
+    getToken().then((token) => {
+      if (token) {
         navigate("MainTabNavigation");
       }
+    });
+  }, []);
+
+  const log = async () => {
+    try {
+      await login(email, password);
+      navigate("MainTabNavigation");
     } catch (error) {
-      console.log("Error", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -71,7 +68,7 @@ const Login = ({ navigation }: Props) => {
         </View>
         <View className="m-10 mt-5">
           <TouchableOpacity
-            onPress={login}
+            onPress={log}
             className="bg-[#E4007C] rounded-lg py-3 mb-5"
           >
             <Text
