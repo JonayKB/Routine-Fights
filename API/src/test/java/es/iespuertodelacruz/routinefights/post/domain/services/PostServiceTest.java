@@ -260,4 +260,49 @@ class PostServiceTest {
                 assertEquals("Invalid time rate", ex.getMessage());
         }
 
+        @Test
+        void testGetPaginationByUser(){
+                LocalDateTime lastDate = LocalDateTime.of(2025, 3, 15, 0, 0);
+                int limit = 10;
+                String userID = "1L";
+                List<Post> expectedPosts = Arrays.asList(new Post(), new Post());
+                Mockito.when(postRepository.getPaginationByUser(lastDate, limit, userID)).thenReturn(expectedPosts);
+                List<Post> result = postService.getPaginationByUser(lastDate, limit, userID);
+                assertEquals(expectedPosts, result);
+        }
+
+        @Test
+        void testGetPaginationByActivity(){
+                LocalDateTime lastDate = LocalDateTime.of(2025, 3, 15, 0, 0);
+                int limit = 10;
+                String activityID = "1L";
+                List<Post> expectedPosts = Arrays.asList(new Post(), new Post());
+                Mockito.when(postRepository.getPaginationByActivity(lastDate, limit, activityID)).thenReturn(expectedPosts);
+                List<Post> result = postService.getPaginationByActivity(lastDate, limit, activityID);
+                assertEquals(expectedPosts, result);
+        }
+
+        @Test
+        void testGetPaginationFollowing()
+        {
+                LocalDateTime lastDate = LocalDateTime.of(2025, 3, 15, 0, 0);
+                int limit = 10;
+                String userID = "1L";
+                List<Post> expectedPosts = Arrays.asList(new Post(), new Post());
+                Mockito.when(postRepository.getPaginationFollowing(lastDate, limit, userID)).thenReturn(expectedPosts);
+                List<Post> result = postService.getPaginationFollowing(lastDate, limit, userID);
+                assertEquals(expectedPosts, result);
+        }
+
+        @Test
+        void testGetPaginationSubscribedAcitivites(){
+                LocalDateTime lastDate = LocalDateTime.of(2025, 3, 15, 0, 0);
+                int limit = 10;
+                String userID = "1L";
+                List<Post> expectedPosts = Arrays.asList(new Post(), new Post());
+                Mockito.when(postRepository.getPaginationSubscribedActivities(lastDate, limit, userID)).thenReturn(expectedPosts);
+                List<Post> result = postService.getPaginationSubscribedActivities(lastDate, limit, userID);
+                assertEquals(expectedPosts, result);
+        }
+
 }
