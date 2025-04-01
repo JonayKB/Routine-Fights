@@ -225,4 +225,19 @@ class AuthServiceTest {
         boolean verified = authService.verify(email, token);
         assertFalse(verified);
     }
+
+    @Test
+    void testVerifySucces_AlreadyVerified(){
+        String email = EMAIL;
+
+        User user = new User();
+        user.setId("1");
+        user.setEmail(email);
+        user.setVerified(true);
+
+        when(userService.findByEmail(email)).thenReturn(user);
+
+        boolean verified = authService.verify(email, "");
+        assertTrue(verified);
+    }
 }

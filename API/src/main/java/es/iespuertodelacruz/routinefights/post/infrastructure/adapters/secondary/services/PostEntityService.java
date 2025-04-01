@@ -43,4 +43,25 @@ public class PostEntityService implements IPostRepository {
         return postEntityRepository.getRangeCountByActivity(activityID, userID, startDate, endDate);
     }
 
+    @Override
+    public List<Post> getPaginationByUser(LocalDateTime lastDate, int limit, String userID) {
+        return postEntityMapper.toDomain(postEntityRepository.getPaginationByUser(lastDate, limit, userID));
+    }
+
+    @Override
+    public List<Post> getPaginationByActivity(LocalDateTime lastDate, int limit, String activityID) {
+        return postEntityMapper.toDomain(postEntityRepository.getPaginationByActivity(lastDate, limit, activityID));
+    }
+
+    @Override
+    public List<Post> getPaginationFollowing(LocalDateTime lastDate, int limit, String userID) {
+        return postEntityMapper.toDomain(postEntityRepository.getPaginationFollowing(lastDate, limit, userID));
+    }
+
+    @Override
+    public List<Post> getPaginationSubscribedActivities(LocalDateTime lastDate, int limit, String userID) {
+        return postEntityMapper
+                .toDomain(postEntityRepository.getPaginationSubscribedActivities(lastDate, limit, userID));
+    }
+
 }

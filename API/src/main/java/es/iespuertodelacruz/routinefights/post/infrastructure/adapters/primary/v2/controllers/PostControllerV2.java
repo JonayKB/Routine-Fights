@@ -51,9 +51,44 @@ public class PostControllerV2 {
 
         User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        
         Post post = postService.uploadPost(image, user, activityID);
         return postOutputV2Mapper.toDto(post);
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("postsByUserV2")
+    public List<PostOutputDTOV2> getPaginationByUser(@Argument String lastDate, @Argument int limit,
+            @Argument String userID) {
+        LocalDateTime date = LocalDateTime.parse(lastDate);
+        List<Post> posts = postService.getPaginationByUser(date, limit, userID);
+        return postOutputV2Mapper.toDto(posts);
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("postsByActivityV2")
+    public List<PostOutputDTOV2> getPaginationByActivity(@Argument String lastDate, @Argument int limit,
+            @Argument String activityID) {
+        LocalDateTime date = LocalDateTime.parse(lastDate);
+        List<Post> posts = postService.getPaginationByActivity(date, limit, activityID);
+        return postOutputV2Mapper.toDto(posts);
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("postsFollowingV2")
+    public List<PostOutputDTOV2> getPaginationFollowing(@Argument String lastDate, @Argument int limit) {
+        User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        LocalDateTime date = LocalDateTime.parse(lastDate);
+        List<Post> posts = postService.getPaginationFollowing(date, limit, user.getId());
+        return postOutputV2Mapper.toDto(posts);
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("postsSubscribedActivitiesV2")
+    public List<PostOutputDTOV2> getPaginationSubscribedActivities(@Argument String lastDate, @Argument int limit) {
+        User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        LocalDateTime date = LocalDateTime.parse(lastDate);
+        List<Post> posts = postService.getPaginationSubscribedActivities(date, limit, user.getId());
+        return postOutputV2Mapper.toDto(posts);
     }
 
 }
