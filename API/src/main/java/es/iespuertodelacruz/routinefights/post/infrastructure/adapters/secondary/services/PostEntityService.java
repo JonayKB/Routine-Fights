@@ -64,4 +64,9 @@ public class PostEntityService implements IPostRepository {
                 .toDomain(postEntityRepository.getPaginationSubscribedActivities(lastDate, limit, userID));
     }
 
+    @Override
+    public List<String> findAllImages() {
+        return postEntityRepository.findAllImages();
+    }
+
 }

@@ -82,4 +82,10 @@ public interface IPostEntityRepository extends Neo4jRepository<PostEntity, Strin
       @Param("startDate") LocalDateTime startDate,
       @Param("endDate") LocalDateTime endDate);
 
+    @Query("""
+        MATCH (p:Post)
+        RETURN p.image
+        """)
+    List<String> findAllImages();
+
 }
