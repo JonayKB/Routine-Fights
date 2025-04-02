@@ -41,23 +41,31 @@ export const getOwnUser = async (): Promise<UserOut> => {
 
 export const getUser = async (id: string): Promise<UserOut> => {
   try {
-    const response = await axios.post(neo4jUri, {
+    const response = await axios.post(
+      neo4jUri,
+      {
         query: `
-                query {
-                    userV2(id: "${id}") {
-                        id
-                        username
-                        email
-                        nationality
-                        phoneNumber
-                        image
-                        createdAt
-                        followers
-                        following
-                    }
-                }
+              query {
+                  userV2(id: "${id}") {
+                      id
+                      username
+                      email
+                      nationality
+                      phoneNumber
+                      image
+                      createdAt
+                      followers
+                      following
+                  }
+              }
             `,
-      })
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${await RNSecureKeyStore.get("token")}`,
+        },
+      }
+    );
     return response.data.data.userV2;
   } catch (error) {
     // TODO: try with typeORM

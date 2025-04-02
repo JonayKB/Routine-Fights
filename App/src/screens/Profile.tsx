@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { UserOut } from '../utils/User';
+import { UserOut } from "../utils/User";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { Post as PostDomain } from "../utils/Post";
@@ -17,7 +17,7 @@ import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
 import { getUser, getOwnUser } from "../services/ProfileService";
 import { convertQuantityToString, uri } from "../utils/Utils";
-import { getImage } from "../services/ImageService";
+import { useAppContext } from "../contexts/TokenContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -27,7 +27,7 @@ const Profile = ({ navigation, route }: Props) => {
   const [following, setFollowing] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
-  const [image, setImage] = useState<string>(null);
+  const { token } = useAppContext();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -38,7 +38,7 @@ const Profile = ({ navigation, route }: Props) => {
         } else {
           user = await getOwnUser();
         }
-
+        
         setUser(user);
         setFollowers(convertQuantityToString(user.followers));
         setFollowing(convertQuantityToString(user.following));
@@ -109,7 +109,12 @@ const Profile = ({ navigation, route }: Props) => {
       <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
         <View className="m-5 items-center">
           <Image
-            source={{ uri: image }}
+            source={{
+              uri: uri + "/images/" + user?.image,
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }}
             width={103}
             height={103}
             className="rounded-full border-2 border-[#4B0082] filter invert"
@@ -125,7 +130,7 @@ const Profile = ({ navigation, route }: Props) => {
         </View>
         <View className="mt-5">
           <Text className="text-black text-4xl font-bold mb-5">
-            {user.username}
+            {user?.username}
           </Text>
           <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
             <Icon name="settings" size={30} />
@@ -133,14 +138,20 @@ const Profile = ({ navigation, route }: Props) => {
           <View className="flex-1 flex-col">
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("FollowList", { email: user.email, type: "followers" })
+                navigation.navigate("FollowList", {
+                  email: user?.email,
+                  type: "followers",
+                })
               }
             >
               <Text className="text-black text-lg">Followers: {followers}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("FollowList", { email: user.email, type: "following" })
+                navigation.navigate("FollowList", {
+                  email: user?.email,
+                  type: "following",
+                })
               }
             >
               <Text className="text-black text-lg">Following: {following}</Text>
