@@ -26,8 +26,7 @@ public class ImagesTasks {
         this.postService = postService;
     }
 
-    //@Scheduled(cron = "0 0 3 * * MON")
-    @Scheduled(cron="0 * * * * *")
+    @Scheduled(cron = "0 0 3 * * MON")
     /**
      * Delete not used images
      * 
