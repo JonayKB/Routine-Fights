@@ -11,21 +11,22 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useEffect, useState } from "react";
-import { convertQuantityToString } from "../utils/Utils";
+import { convertQuantityToString, uri } from "../utils/Utils";
 import { getFollows } from "../services/ProfileService";
+import { useAppContext } from "../contexts/TokenContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 
 const FollowList = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [users, setUsers] = useState<Followers[]>([]);
+  const { token } = useAppContext();
 
   useEffect(() => {
     const fetchFollows = async () => {
       if (route.params.type === "followers") {
         const { followersByEmail } = await getFollows(route.params.email);
         setUsers(followersByEmail);
-        
       } else if (route.params.type === "following") {
         const { followedByEmail } = await getFollows(route.params.email);
         setUsers(followedByEmail);
@@ -71,7 +72,10 @@ const FollowList = ({ navigation, route }: Props) => {
                   <Image
                     className="rounded-full m-5"
                     source={{
-                      uri: item.image,
+                      uri: uri + "/images/" + item.image,
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
                     }}
                     width={80}
                     height={80}
