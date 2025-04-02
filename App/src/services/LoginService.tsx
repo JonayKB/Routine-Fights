@@ -1,13 +1,11 @@
 import axios from "axios";
 import RNSecureKeyStore, { ACCESSIBLE } from "react-native-secure-key-store";
+import { uri } from "../utils/Utils";
 
 export const login = async (email: string, password: string) => {
   try {
     const { status, data } = await axios.post(
-      "http://64.226.71.234:8080/auth/login?email=" +
-        email +
-        "&password=" +
-        password
+      uri + "/auth/login?email=" + email + "&password=" + password
     );
 
     if (status === 200) {
@@ -20,6 +18,6 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const getToken = async () => {
+export const getToken = async (): Promise<string> => {
   return await RNSecureKeyStore.get("token");
 };

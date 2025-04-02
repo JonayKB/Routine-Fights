@@ -8,7 +8,7 @@ type Props = {};
 
 export type ProfileStackProps = {
   Profile: { id?: string };
-  FollowList: { type: "followers" | "following" };
+  FollowList: { email: string, type: "followers" | "following" };
   Settings: undefined;
 };
 

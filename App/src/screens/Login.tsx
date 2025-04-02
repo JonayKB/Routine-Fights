@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import { login, getToken } from "../services/LoginService";
+import { resetNavigation } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
@@ -14,7 +15,7 @@ const Login = ({ navigation }: Props) => {
   useEffect(() => {
     getToken().then((token) => {
       if (token) {
-        navigate("MainTabNavigation");
+        resetNavigation(navigation, "MainTabNavigation");
       }
     });
   }, []);
@@ -22,18 +23,10 @@ const Login = ({ navigation }: Props) => {
   const log = async () => {
     try {
       await login(email, password);
-      navigate("MainTabNavigation");
+      resetNavigation(navigation, "MainTabNavigation");
     } catch (error) {
       Alert.alert("Error", error.response.data);
     }
-  };
-
-  const navigate = (path: "Register" | "MainTabNavigation") => {
-    navigation.navigate(path);
-    navigation.reset({
-      index: 0,
-      routes: [{ name: path }],
-    });
   };
 
   return (
@@ -79,7 +72,7 @@ const Login = ({ navigation }: Props) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigate("Register")}
+            onPress={() => resetNavigation(navigation, "Register")}
             className="border-[#E4007C] border-2 rounded-lg py-1"
           >
             <Text className="text-[#4B0082] font-bold text-2xl text-center">

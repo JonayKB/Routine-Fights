@@ -10,57 +10,29 @@ import { Followers } from "../utils/User";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { convertQuantityToString } from "../utils/Utils";
+import { getFollows } from "../services/ProfileService";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 
 const FollowList = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
+  const [users, setUsers] = useState<Followers[]>([]);
 
-  const convertQuantityToString = (quantity: number) => {
-    if (quantity.toString().length > 5) {
-      if (quantity > 999999) {
-        return numberToString(quantity).slice(0, 5) + "M";
+  useEffect(() => {
+    const fetchFollows = async () => {
+      if (route.params.type === "followers") {
+        const { followersByEmail } = await getFollows(route.params.email);
+        setUsers(followersByEmail);
+        
+      } else if (route.params.type === "following") {
+        const { followedByEmail } = await getFollows(route.params.email);
+        setUsers(followedByEmail);
       }
-      return numberToString(quantity).slice(0, 5) + "K";
-    } else {
-      return numberToString(quantity);
-    }
-  };
-
-  const numberToString = (number: number) => {
-    return new Intl.NumberFormat("en-EN").format(number);
-  };
-
-  const users: Followers[] = [
-    {
-      id: "1",
-      username: "user",
-      nationality: "Spain",
-      image: "https://picsum.photos/200/300",
-      createdAt: "2021-09-01",
-      followers: 3855555,
-      following: 900000,
-    },
-    {
-      id: "2",
-      username: "user2",
-      nationality: "Russia",
-      image: "https://picsum.photos/200/300",
-      createdAt: "2021-09-01",
-      followers: 72431,
-      following: 145219042,
-    },
-    {
-      id: "3",
-      username: "user3",
-      nationality: "USA",
-      image: "https://picsum.photos/200/300",
-      createdAt: "2021-09-01",
-      followers: 38,
-      following: 4762,
-    },
-  ];
+    };
+    fetchFollows();
+  }, [route.params.email, route.params.type]);
 
   return (
     <View>
