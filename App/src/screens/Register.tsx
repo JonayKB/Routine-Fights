@@ -5,25 +5,17 @@ import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import PhoneInput from "react-native-phone-number-input";
 import { UserIn } from "../utils/User";
 import { register } from "../services/RegisterService";
+import { resetNavigation } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Register">;
 
 const Register = ({ navigation, route }: Props) => {
-  const uri = "http://64.226.71.234:8080/auth/register";
   const [passwordShown, setPasswordShown] = useState<boolean>(false);
   const [userIn, setuserIn] = useState<UserIn>({} as UserIn);
   const phoneInput = useRef<PhoneInput>(null);
-  const [password, setPassword] = useState<string>(null);
+  const [confirmPassword, setConfirmPassword] = useState<string>(null);
 
-  const navigate = () => {
-    navigation.navigate("Login");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Login" }],
-    });
-  };
-
-  async function validateForm() {
+  const validateForm = async () => {
     if (
       !userIn.username ||
       !userIn.email ||
@@ -33,13 +25,13 @@ const Register = ({ navigation, route }: Props) => {
       return Alert.alert("Missing data");
     }
 
-    if (password !== userIn.password) {
+    if (confirmPassword !== userIn.password) {
       return Alert.alert("Passwords do not match");
     }
 
     // TODO: If any unique field is found on another user in the database, return an error
     try {
-      await register(uri, userIn);
+      await register(userIn);
     } catch (error) {
       return Alert.alert("Error", error.response.data);
     }
@@ -77,7 +69,7 @@ const Register = ({ navigation, route }: Props) => {
             placeholderTextColor="#4B0082"
             secureTextEntry={!passwordShown}
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-2 pl-3 text-black"
-            onChangeText={(text) => setPassword(text)}
+            onChangeText={(text) => setConfirmPassword(text)}
           />
           <TouchableOpacity onPress={() => setPasswordShown(!passwordShown)}>
             <Text
@@ -119,7 +111,7 @@ const Register = ({ navigation, route }: Props) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={navigate}
+            onPress={() => resetNavigation(navigation, "Login")}
             className="border-[#E4007C] border-2 rounded-lg py-1"
           >
             <Text className="text-[#4B0082] font-bold text-lg text-center">

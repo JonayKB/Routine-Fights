@@ -6,34 +6,49 @@ import {
   FlatList,
   RefreshControl,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { UserOut } from "../utils/User";
+import { UserOut } from '../utils/User';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
+import { getUser, getOwnUser } from "../services/ProfileService";
+import { convertQuantityToString, uri } from "../utils/Utils";
+import { getImage } from "../services/ImageService";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
 const Profile = ({ navigation, route }: Props) => {
+  const [user, setUser] = useState<UserOut>({} as UserOut);
   const [followers, setFollowers] = useState<string>("");
   const [following, setFollowing] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
+  const [image, setImage] = useState<string>(null);
 
-  const user: UserOut = {
-    id: "1",
-    username: "user",
-    email: "email@gmail.com",
-    nationality: "Spain",
-    phoneNumber: "123456789",
-    image: "https://picsum.photos/200/300",
-    createdAt: "2021-09-01",
-    followers: 3855555,
-    following: 900000,
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      let user: UserOut = null;
+      try {
+        if (route.params?.id) {
+          user = await getUser(route.params?.id);
+        } else {
+          user = await getOwnUser();
+        }
+
+        setUser(user);
+        setFollowers(convertQuantityToString(user.followers));
+        setFollowing(convertQuantityToString(user.following));
+      } catch (error) {
+        Alert.alert("Error", error.response.data);
+      }
+    };
+
+    fetchUser();
+  }, [route.params?.id]);
 
   const posts: PostDomain[] = [
     {
@@ -78,26 +93,6 @@ const Profile = ({ navigation, route }: Props) => {
     },
   ];
 
-  useEffect(() => {
-    setFollowers(convertQuantityToString(user.followers));
-    setFollowing(convertQuantityToString(user.following));
-  }, []);
-
-  const convertQuantityToString = (quantity: number) => {
-    if (quantity.toString().length > 5) {
-      if (quantity > 999999) {
-        return numberToString(quantity).slice(0, 5) + "M";
-      }
-      return numberToString(quantity).slice(0, 5) + "K";
-    } else {
-      return numberToString(quantity);
-    }
-  };
-
-  const numberToString = (number: number) => {
-    return new Intl.NumberFormat("en-EN").format(number);
-  };
-
   return (
     <View className="flex-1">
       {selectedPost && (
@@ -114,7 +109,7 @@ const Profile = ({ navigation, route }: Props) => {
       <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
         <View className="m-5 items-center">
           <Image
-            source={{ uri: user.image }}
+            source={{ uri: image }}
             width={103}
             height={103}
             className="rounded-full border-2 border-[#4B0082] filter invert"
@@ -123,7 +118,9 @@ const Profile = ({ navigation, route }: Props) => {
             style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
             className="-mt-4 w-10 rounded-xl justify-center items-center border-2 border-white"
           >
-            <Text className="text-center text-white">239</Text>
+            <Text className="text-center text-white">
+              {Math.floor(Math.random() * 300)}
+            </Text>
           </View>
         </View>
         <View className="mt-5">
@@ -131,19 +128,19 @@ const Profile = ({ navigation, route }: Props) => {
             {user.username}
           </Text>
           <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-            <Icon name="settings" size={30}/>
+            <Icon name="settings" size={30} />
           </TouchableOpacity>
           <View className="flex-1 flex-col">
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("FollowList", { type: "followers" })
+                navigation.navigate("FollowList", { email: user.email, type: "followers" })
               }
             >
               <Text className="text-black text-lg">Followers: {followers}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("FollowList", { type: "following" })
+                navigation.navigate("FollowList", { email: user.email, type: "following" })
               }
             >
               <Text className="text-black text-lg">Following: {following}</Text>
