@@ -122,4 +122,5 @@ class PostEntityTest {
         PostEntity post = new PostEntity();
         assertNotEquals(post, new Object());
     }
+    
 }
