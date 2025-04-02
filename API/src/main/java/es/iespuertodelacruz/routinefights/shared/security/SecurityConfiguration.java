@@ -40,6 +40,7 @@ public class SecurityConfiguration {
 						.requestMatchers("/graphiql/**","/graphql/schema", "/graphql").permitAll()
 						.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 						.requestMatchers("/auth/**").permitAll()
+						.requestMatchers("/images/**").permitAll()
 						.anyRequest().authenticated())
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 				.headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));
