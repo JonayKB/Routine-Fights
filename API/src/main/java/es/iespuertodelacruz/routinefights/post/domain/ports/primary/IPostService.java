@@ -20,5 +20,6 @@ public interface IPostService {
 
     List<Post> getPaginationSubscribedActivities(LocalDateTime lastDate, int limit, String userID);
 
+    List<String> findAllImages();
 
 }

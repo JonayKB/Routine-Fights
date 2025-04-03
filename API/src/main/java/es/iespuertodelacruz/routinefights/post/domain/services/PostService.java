@@ -177,6 +177,11 @@ public class PostService implements IPostService {
         return postRepository.getPaginationSubscribedActivities(lastDate, limit, userID);
     }
 
+    @Override
+    public List<String> findAllImages() {
+        return postRepository.findAllImages();
+    }
+
 
 
 }
