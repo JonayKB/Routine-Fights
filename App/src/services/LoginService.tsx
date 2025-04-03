@@ -9,7 +9,7 @@ export const login = async (email: string, password: string) => {
     );
 
     if (status === 200) {
-      RNSecureKeyStore.set("token", data, {
+      await RNSecureKeyStore.set("token", data, {
         accessible: ACCESSIBLE.ALWAYS_THIS_DEVICE_ONLY,
       });
     }
@@ -18,6 +18,13 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const getToken = async (): Promise<string> => {
-  return await RNSecureKeyStore.get("token");
+export const getToken = async (): Promise<string | null> => {
+  if (!RNSecureKeyStore) {
+    return null;
+  }
+  try {
+    return await RNSecureKeyStore.get("token");
+  } catch (error) {
+    return null;
+  }
 };

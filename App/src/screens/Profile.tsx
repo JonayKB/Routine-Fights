@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { getUser, getOwnUser } from "../services/ProfileService";
 import { convertQuantityToString, uri } from "../utils/Utils";
 import { useAppContext } from "../contexts/TokenContextProvider";
+import { translations } from "../../translations/translation";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -144,7 +145,7 @@ const Profile = ({ navigation, route }: Props) => {
                 })
               }
             >
-              <Text className="text-black text-lg">Followers: {followers}</Text>
+              <Text className="text-black text-lg">{translations['es-ES'].screens.Profile.followers}: {followers}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
@@ -154,7 +155,7 @@ const Profile = ({ navigation, route }: Props) => {
                 })
               }
             >
-              <Text className="text-black text-lg">Following: {following}</Text>
+              <Text className="text-black text-lg">{translations['es-ES'].screens.Profile.following}: {following}</Text>
             </TouchableOpacity>
           </View>
         </View>
