@@ -1,0 +1,10 @@
+{
+    "screens": {
+        "Profile": {
+            "followers": "followers",
+            "following": "following",
+            "follow": "follow",
+            "unfollow": "unfollow"
+        }
+    }
+}
