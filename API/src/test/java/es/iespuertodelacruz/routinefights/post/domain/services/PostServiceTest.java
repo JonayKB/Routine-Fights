@@ -305,4 +305,12 @@ class PostServiceTest {
                 assertEquals(expectedPosts, result);
         }
 
+        @Test
+        void testFindAllImages(){
+                List<String> expectedImages = Arrays.asList("image1", "image2");
+                Mockito.when(postRepository.findAllImages()).thenReturn(expectedImages);
+                List<String> result = postService.findAllImages();
+                assertEquals(expectedImages, result);
+        }
+
 }
