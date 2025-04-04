@@ -4,6 +4,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import { login, getToken } from "../services/LoginService";
 import { resetNavigation } from "../utils/Utils";
+import SplashScreen from "react-native-splash-screen";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
@@ -16,6 +17,7 @@ const Login = ({ navigation }: Props) => {
     getToken().then((token) => {
       if (token) {
         resetNavigation(navigation, "MainTabNavigation");
+        SplashScreen.hide();
       }
     });
   }, []);
