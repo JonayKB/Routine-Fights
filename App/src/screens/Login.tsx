@@ -2,8 +2,10 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
-import { login, getToken } from "../services/LoginService";
+import { login } from "../services/LoginService";
 import { resetNavigation } from "../utils/Utils";
+import { useAppContext } from "../contexts/TokenContextProvider";
+import RNSecureKeyStore from "react-native-secure-key-store";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
@@ -11,18 +13,23 @@ const Login = ({ navigation }: Props) => {
   const [passwordShown, setPasswordShown] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const { setToken } = useAppContext();
 
   useEffect(() => {
-    getToken().then((token) => {
+    const fetchToken = async () => {
+      const token = await RNSecureKeyStore.get("token");
       if (token) {
+        setToken(token);
         resetNavigation(navigation, "MainTabNavigation");
       }
-    });
+    };
+    fetchToken();
   }, []);
 
   const log = async () => {
     try {
-      await login(email, password);
+      const token = await login(email, password);
+      setToken(token);
       resetNavigation(navigation, "MainTabNavigation");
     } catch (error) {
       Alert.alert("Error", error.response.data);
