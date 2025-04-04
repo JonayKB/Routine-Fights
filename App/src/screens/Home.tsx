@@ -1,23 +1,13 @@
 import { View, FlatList, TouchableOpacity, RefreshControl } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useAppContext } from "../contexts/TokenContextProvider";
-import RNSecureKeyStore from "react-native-secure-key-store";
 
 type Props = {};
 
 const Home = (props: Props) => {
   const [load, setLoad] = useState<boolean>(false);
-  const { setToken } = useAppContext();
-
-  useEffect(() => {
-    const fetchToken = async () => {
-      setToken(await RNSecureKeyStore.get("token"));
-    };
-    fetchToken();
-  }, []);
 
   const posts: PostDomain[] = [
     {

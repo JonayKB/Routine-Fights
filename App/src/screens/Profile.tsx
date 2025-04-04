@@ -41,6 +41,7 @@ const Profile = ({ navigation, route }: Props) => {
         }
         
         setUser(user);
+        console.log(token);
         setFollowers(convertQuantityToString(user.followers));
         setFollowing(convertQuantityToString(user.following));
       } catch (error) {
@@ -120,14 +121,14 @@ const Profile = ({ navigation, route }: Props) => {
             height={103}
             className="rounded-full border-2 border-[#4B0082] filter invert"
           />
-          <View
+          {/* <View
             style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
             className="-mt-4 w-10 rounded-xl justify-center items-center border-2 border-white"
           >
             <Text className="text-center text-white">
               {Math.floor(Math.random() * 300)}
             </Text>
-          </View>
+          </View> */}
         </View>
         <View className="mt-5">
           <Text className="text-black text-4xl font-bold mb-5">
