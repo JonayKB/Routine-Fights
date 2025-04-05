@@ -7,18 +7,18 @@ import React, {
 } from "react";
 
 export interface AppContextType {
-  token: string;
-  setToken: Dispatch<SetStateAction<string>>;
+  language: string;
+  setLanguage: Dispatch<SetStateAction<string>>;
 }
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 
-const TokenContextProvider = (props: any) => {
-  const [token, setToken] = useState<string>("");
+const LanguageContextProvider = (props: any) => {
+  const [language, setLanguage] = useState<string>("");
 
   const contextValues: AppContextType = {
-    token,
-    setToken,
+    language: language,
+    setLanguage: setLanguage,
   };
 
   return (
@@ -28,8 +28,8 @@ const TokenContextProvider = (props: any) => {
   );
 };
 
-export const useTokenContext = () => {
+export const useLanguageContext = () => {
   return useContext(AppContext);
 };
 
-export default TokenContextProvider;
+export default LanguageContextProvider;

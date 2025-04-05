@@ -9,7 +9,7 @@ import UploadForm from "../screens/UploadForm";
 import ImageContextProvider from "../contexts/ImageContextProvider";
 import { Image } from "react-native";
 import { uri } from "../utils/Utils";
-import { useAppContext } from "../contexts/TokenContextProvider";
+import { useTokenContext } from "../contexts/TokenContextProvider";
 import { getOwnUser } from "../services/ProfileService";
 import { UserOut } from "../utils/User";
 
@@ -24,7 +24,7 @@ type MainTabProps = {
 };
 
 const MainTabNavigation = (props: Props) => {
-  const { token } = useAppContext();
+  const { token } = useTokenContext();
   const Tab = createBottomTabNavigator<MainTabProps>();
   const [image, setImage] = useState<string>(null);
 

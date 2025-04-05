@@ -1,10 +1,30 @@
 {
     "screens": {
+        "Login": {
+            "email": "Email",
+            "password": "Password",
+            "login": "Login",
+            "register": "Register"
+        },
+        "Register": {
+            "username": "Username",
+            "confirmPassword": "Confirm password"
+        },
         "Profile": {
             "followers": "followers",
             "following": "following",
             "follow": "follow",
             "unfollow": "unfollow"
+        },
+        "Settings": {
+            "language": "Language",
+            "darkMode": "darkMode",
+            "logout": "Logout",
+            "settings": "Settings"
+        },
+        "UploadForm": {
+            "selectCategory": "Select a category",
+            "post": "Post"
         }
     }
 }

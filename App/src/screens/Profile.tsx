@@ -1,5 +1,4 @@
 import {
-  Image,
   Text,
   View,
   TouchableOpacity,
@@ -16,9 +15,11 @@ import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
 import { getUser, getOwnUser } from "../services/ProfileService";
-import { convertQuantityToString, uri } from "../utils/Utils";
-import { useAppContext } from "../contexts/TokenContextProvider";
-import { translations } from "../../translations/translation";
+import { convertQuantityToString } from "../utils/Utils";
+import ProfilePost from "../components/ProfilePost";
+import FollowCount from "../components/FollowCount";
+import ProfilePicture from "../components/ProfilePicture";
+import ProfileNavigation from "../components/ProfileNavigation";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -28,7 +29,6 @@ const Profile = ({ navigation, route }: Props) => {
   const [following, setFollowing] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
-  const { token } = useAppContext();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -39,9 +39,8 @@ const Profile = ({ navigation, route }: Props) => {
         } else {
           user = await getOwnUser();
         }
-        
+
         setUser(user);
-        console.log(token);
         setFollowers(convertQuantityToString(user.followers));
         setFollowing(convertQuantityToString(user.following));
       } catch (error) {
@@ -108,19 +107,16 @@ const Profile = ({ navigation, route }: Props) => {
         </View>
       )}
 
+      {!!route.params?.id && (
+        <ProfileNavigation
+          navigation={navigation}
+          message={`${user.username}`}
+        />
+      )}
+
       <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
         <View className="m-5 items-center">
-          <Image
-            source={{
-              uri: uri + "/images/" + user?.image,
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }}
-            width={103}
-            height={103}
-            className="rounded-full border-2 border-[#4B0082] filter invert"
-          />
+          <ProfilePicture image={user.image} size={103} />
           {/* <View
             style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
             className="-mt-4 w-10 rounded-xl justify-center items-center border-2 border-white"
@@ -137,28 +133,12 @@ const Profile = ({ navigation, route }: Props) => {
           <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
             <Icon name="settings" size={30} />
           </TouchableOpacity>
-          <View className="flex-1 flex-col">
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("FollowList", {
-                  email: user?.email,
-                  type: "followers",
-                })
-              }
-            >
-              <Text className="text-black text-lg">{translations['es-ES'].screens.Profile.followers}: {followers}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("FollowList", {
-                  email: user?.email,
-                  type: "following",
-                })
-              }
-            >
-              <Text className="text-black text-lg">{translations['es-ES'].screens.Profile.following}: {following}</Text>
-            </TouchableOpacity>
-          </View>
+          <FollowCount
+            followers={followers}
+            following={following}
+            email={user.email}
+            navigation={navigation}
+          />
         </View>
       </View>
 
@@ -178,22 +158,12 @@ const Profile = ({ navigation, route }: Props) => {
         data={posts}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity
-              onPress={() => setSelectedPost(item)}
-              className="m-2 rounded-xl shadow-md shadow-black"
-            >
-              <Image
-                className="rounded-xl"
-                source={{ uri: item.image }}
-                width={117}
-                height={210}
-              />
-              <View className="z-index-10 -mt-8 bg-[#00000070] rounded-xl">
-                <Text className="text-white text-xl font-bold text-center">
-                  Walking
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <ProfilePost
+              item={item}
+              method={(item: PostDomain) => {
+                setSelectedPost(item);
+              }}
+            />
           );
         }}
         keyExtractor={(item) => item.id}

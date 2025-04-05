@@ -1,14 +1,36 @@
 import { Image, View, TouchableOpacity, Text } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
 import DropDown from "../components/DropDown";
+import { translations } from "../../translations/translation";
+import { useLanguageContext } from "../contexts/LanguageContextProvider";
 
 type Props = {};
 
 const UploadForm = (props: Props) => {
   const { uri, setUri } = useImageContext();
-  
+  const [categories, setCategories] = useState<any[]>([]);
+  const [category, setCategory] = useState<string>(null);
+  const { language } = useLanguageContext();
+
+  useEffect(() => {
+    setCategories([
+      {
+        label: "Category 1",
+        value: "1",
+      },
+      {
+        label: "Category 2",
+        value: "2",
+      },
+      {
+        label: "Category 3",
+        value: "3",
+      },
+    ])
+  }, [])
+
   return (
     <View className="flex-1 justify-center items-center">
       <View className="bg-[#E4D8E9] rounded-lg w-10/12">
@@ -36,12 +58,10 @@ const UploadForm = (props: Props) => {
           </View>
         )}
         <View className="m-10">
-          <DropDown />
+          <DropDown data={categories} value={category} setValue={setCategory} message={translations[language || 'en-EN'].screens.UploadForm.selectCategory}/>
         </View>
         <TouchableOpacity className="bg-[#E4007C] rounded-lg py-3 m-5 w-10/12">
-          <Text className="text-white font-bold text-xl text-center">
-            Post
-          </Text>
+          <Text className="text-white font-bold text-xl text-center">Post</Text>
         </TouchableOpacity>
       </View>
     </View>
