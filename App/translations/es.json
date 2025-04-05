@@ -1,10 +1,34 @@
 {
     "screens": {
+        "Login": {
+            "email": "Email",
+            "password": "Contraseña",
+            "login": "Iniciar sesion",
+            "register": "Registrarse"
+        },
+        "Register": {
+            "email": "Email",
+            "password": "Password",
+            "confirmPassword": "Confirm password",
+            "register": "Register",
+            "login": "Login",
+            "welcome": "Welcome to our app!"
+        },
         "Profile": {
             "followers": "seguidores",
             "following": "siguiendo",
             "follow": "seguir",
             "unfollow": "dejar de seguir"
+        },
+        "Settings": {
+            "language": "Idioma",
+            "darkMode": "Modo oscuro",
+            "logout": "Cerrar sesion",
+            "settings": "Ajustes"
+        },
+        "UploadForm": {
+            "select a category": "Elige una categoria",
+            "post": "Subir"
         }
     }
 }

@@ -4,8 +4,11 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import { login } from "../services/LoginService";
 import { resetNavigation } from "../utils/Utils";
-import { useAppContext } from "../contexts/TokenContextProvider";
+import { useTokenContext } from "../contexts/TokenContextProvider";
 import RNSecureKeyStore from "react-native-secure-key-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useLanguageContext } from "../contexts/LanguageContextProvider";
+import { translations } from "../../translations/translation";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
@@ -13,18 +16,30 @@ const Login = ({ navigation }: Props) => {
   const [passwordShown, setPasswordShown] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { setToken } = useAppContext();
+  const { setToken } = useTokenContext();
+  const { language, setLanguage } = useLanguageContext();
 
   useEffect(() => {
-    const fetchToken = async () => {
-      const token = await RNSecureKeyStore.get("token");
-      if (token) {
-        setToken(token);
-        resetNavigation(navigation, "MainTabNavigation");
-      }
-    };
+    fetchLanguage();
     fetchToken();
   }, []);
+
+  const fetchToken = async () => {
+    const token = await RNSecureKeyStore.get("token");
+    if (token) {
+      setToken(token);
+      resetNavigation(navigation, "MainTabNavigation");
+    }
+  };
+
+  const fetchLanguage = async () => {
+    try {
+      const language = await AsyncStorage.getItem("language");
+      setLanguage(language);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const log = async () => {
     try {
@@ -44,14 +59,14 @@ const Login = ({ navigation }: Props) => {
       >
         <View className="m-10 mb-5">
           <TextInput
-            placeholder="Email"
+            placeholder={translations[language || 'en-EN'].screens.Login.email}
             placeholderTextColor="#4B0082"
             inputMode="email"
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl mb-5 pl-3 text-black"
             onChangeText={(text) => setEmail(text)}
           />
           <TextInput
-            placeholder="Password"
+            placeholder={translations[language || 'en-EN'].screens.Login.password}
             placeholderTextColor="#4B0082"
             secureTextEntry={!passwordShown}
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl pl-3 text-black"
@@ -75,7 +90,7 @@ const Login = ({ navigation }: Props) => {
               className="text-white font-bold text-3xl text-center"
               style={{ fontFamily: "InriaSans-Regular" }}
             >
-              Login
+              {translations[language || 'en-EN'].screens.Login.login}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -83,7 +98,7 @@ const Login = ({ navigation }: Props) => {
             className="border-[#E4007C] border-2 rounded-lg py-1"
           >
             <Text className="text-[#4B0082] font-bold text-2xl text-center">
-              Register
+              {translations[language || 'en-EN'].screens.Login.register}
             </Text>
           </TouchableOpacity>
         </View>

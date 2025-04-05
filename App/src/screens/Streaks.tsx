@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
+import Streak from "../components/Streak";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
@@ -111,15 +112,7 @@ const Streaks = ({ navigation, route }: Props) => {
                     </Text>
                   </TouchableOpacity>
                 ) : (
-                  <View className="flex-row items-center bg-[#E4D8E9] w-11/12 h-36 rounded-3xl mt-5 mx-auto">
-                    <View className="w-20 h-20 bg-blue-400 rounded-full m-5"></View>
-                    <View>
-                      <Text className="text-black text-3xl">{item.name}</Text>
-                      <Text className="text-black text-xl">
-                        {item.description}
-                      </Text>
-                    </View>
-                  </View>
+                  <Streak name={item.name} description={item.description} />
                 )}
               </View>
             );

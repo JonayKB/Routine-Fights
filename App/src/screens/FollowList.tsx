@@ -2,25 +2,26 @@ import {
   View,
   Text,
   FlatList,
-  Image,
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
 import { Followers } from "../utils/User";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
-import Icon from "react-native-vector-icons/Ionicons";
 import { useEffect, useState } from "react";
-import { convertQuantityToString, uri } from "../utils/Utils";
+import { convertQuantityToString } from "../utils/Utils";
 import { getFollows } from "../services/ProfileService";
-import { useAppContext } from "../contexts/TokenContextProvider";
+import { translations } from "../../translations/translation";
+import { useLanguageContext } from "../contexts/LanguageContextProvider";
+import ProfilePicture from "../components/ProfilePicture";
+import ProfileNavigation from "../components/ProfileNavigation";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 
 const FollowList = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [users, setUsers] = useState<Followers[]>([]);
-  const { token } = useAppContext();
+  const { language } = useLanguageContext();
 
   useEffect(() => {
     const fetchFollows = async () => {
@@ -37,14 +38,10 @@ const FollowList = ({ navigation, route }: Props) => {
 
   return (
     <View>
-      <View className="flex-row bg-[#F1FEFC] border-b-2 border-[#4B0082] p-5">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} color="#4B0082" />
-        </TouchableOpacity>
-        <Text className="text-[#4B0082] font-bold text-2xl ml-5">
-          {route.params.type}: {users.length}
-        </Text>
-      </View>
+      <ProfileNavigation
+        navigation={navigation}
+        message={`${translations[language || 'en-EN'].screens.Profile[route.params.type]}: ${users.length}`}
+      />
       <View className="items-center">
         <FlatList
           refreshControl={
@@ -67,28 +64,20 @@ const FollowList = ({ navigation, route }: Props) => {
                   onPress={() =>
                     navigation.navigate("Profile", { id: item.id })
                   }
-                  className="items-center bg-[#F1FEFC] flex-row mt-5 w-11/12 mx-auto rounded-xl"
+                  className="items-center bg-[#F1FEFC] flex-row mt-5 w-11/12 mx-auto rounded-xl p-2"
                 >
-                  <Image
-                    className="rounded-full m-5"
-                    source={{
-                      uri: uri + "/images/" + item.image,
-                      headers: {
-                        Authorization: `Bearer ${token}`,
-                      },
-                    }}
-                    width={80}
-                    height={80}
-                  />
-                  <View>
+                  <ProfilePicture image={item.image} size={80} />
+                  <View className="ml-5">
                     <Text className="text-black font-bold text-2xl">
                       {item.username}
                     </Text>
                     <Text className="text-black">
-                      Followers: {convertQuantityToString(item.followers)}
+                      {translations[language || 'en-EN'].screens.Profile.followers}:{" "}
+                      {convertQuantityToString(item.followers)}
                     </Text>
                     <Text className="text-black">
-                      Following: {convertQuantityToString(item.following)}
+                      {translations[language || 'en-EN'].screens.Profile.following}:{" "}
+                      {convertQuantityToString(item.following)}
                     </Text>
                   </View>
                   <TouchableOpacity className="border-[#E4007C] border-2 rounded-lg ml-5">

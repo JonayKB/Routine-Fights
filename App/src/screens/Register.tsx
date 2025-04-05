@@ -6,6 +6,8 @@ import PhoneInput from "react-native-phone-number-input";
 import { UserIn } from "../utils/User";
 import { register } from "../services/RegisterService";
 import { resetNavigation } from "../utils/Utils";
+import { translations } from "../../translations/translation";
+import { useLanguageContext } from "../contexts/LanguageContextProvider";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Register">;
 
@@ -14,6 +16,7 @@ const Register = ({ navigation, route }: Props) => {
   const [userIn, setuserIn] = useState<UserIn>({} as UserIn);
   const phoneInput = useRef<PhoneInput>(null);
   const [confirmPassword, setConfirmPassword] = useState<string>(null);
+  const { language } = useLanguageContext();
 
   const validateForm = async () => {
     if (
@@ -35,7 +38,7 @@ const Register = ({ navigation, route }: Props) => {
     } catch (error) {
       return Alert.alert("Error", error.response.data);
     }
-  }
+  };
 
   return (
     <View className="flex-1 bg-[#E4DCE9] justify-center items-center">
@@ -45,27 +48,33 @@ const Register = ({ navigation, route }: Props) => {
       >
         <View className="m-10">
           <TextInput
-            placeholder="Username"
+            placeholder={
+              translations[language || "en-EN"].screens.Register.username
+            }
             placeholderTextColor="#4B0082"
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
             onChangeText={(text) => setuserIn({ ...userIn, username: text })}
           />
           <TextInput
-            placeholder="Email"
+            placeholder={translations[language || "en-EN"].screens.Login.email}
             placeholderTextColor="#4B0082"
             inputMode="email"
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
             onChangeText={(text) => setuserIn({ ...userIn, email: text })}
           />
           <TextInput
-            placeholder="Password"
+            placeholder={
+              translations[language || "en-EN"].screens.Login.password
+            }
             placeholderTextColor="#4B0082"
             secureTextEntry={!passwordShown}
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
             onChangeText={(text) => setuserIn({ ...userIn, password: text })}
           />
           <TextInput
-            placeholder="Confirm password"
+            placeholder={
+              translations[language || "en-EN"].screens.Register.confirmPassword
+            }
             placeholderTextColor="#4B0082"
             secureTextEntry={!passwordShown}
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-2 pl-3 text-black"
@@ -107,7 +116,7 @@ const Register = ({ navigation, route }: Props) => {
             className="bg-[#E4007C] rounded-lg py-3 mb-5"
           >
             <Text className="text-white font-bold text-xl text-center">
-              Register
+              {translations[language || "en-EN"].screens.Login.register}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -115,7 +124,7 @@ const Register = ({ navigation, route }: Props) => {
             className="border-[#E4007C] border-2 rounded-lg py-1"
           >
             <Text className="text-[#4B0082] font-bold text-lg text-center">
-              Login
+              {translations[language || "en-EN"].screens.Login.login}
             </Text>
           </TouchableOpacity>
         </View>
