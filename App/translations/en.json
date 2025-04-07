@@ -25,6 +25,9 @@
         "UploadForm": {
             "selectCategory": "Select a category",
             "post": "Post"
+        },
+        "Home": {
+            "search": "Search"
         }
     }
 }

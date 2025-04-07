@@ -2,13 +2,14 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
-import { login } from "../services/LoginService";
+import { login } from "../repositories/LoginRepository";
 import { resetNavigation } from "../utils/Utils";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLanguageContext } from "../contexts/LanguageContextProvider";
 import { translations } from "../../translations/translation";
+import style from "../styles/Styles.json";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
@@ -59,14 +60,16 @@ const Login = ({ navigation }: Props) => {
       >
         <View className="m-10 mb-5">
           <TextInput
-            placeholder={translations[language || 'en-EN'].screens.Login.email}
+            placeholder={translations[language || "en-EN"].screens.Login.email}
             placeholderTextColor="#4B0082"
             inputMode="email"
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl mb-5 pl-3 text-black"
             onChangeText={(text) => setEmail(text)}
           />
           <TextInput
-            placeholder={translations[language || 'en-EN'].screens.Login.password}
+            placeholder={
+              translations[language || "en-EN"].screens.Login.password
+            }
             placeholderTextColor="#4B0082"
             secureTextEntry={!passwordShown}
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl pl-3 text-black"
@@ -87,10 +90,10 @@ const Login = ({ navigation }: Props) => {
             className="bg-[#E4007C] rounded-lg py-3 mb-5"
           >
             <Text
-              className="text-white font-bold text-3xl text-center"
+              className={style.button}
               style={{ fontFamily: "InriaSans-Regular" }}
             >
-              {translations[language || 'en-EN'].screens.Login.login}
+              {translations[language || "en-EN"].screens.Login.login}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -98,7 +101,7 @@ const Login = ({ navigation }: Props) => {
             className="border-[#E4007C] border-2 rounded-lg py-1"
           >
             <Text className="text-[#4B0082] font-bold text-2xl text-center">
-              {translations[language || 'en-EN'].screens.Login.register}
+              {translations[language || "en-EN"].screens.Login.register}
             </Text>
           </TouchableOpacity>
         </View>

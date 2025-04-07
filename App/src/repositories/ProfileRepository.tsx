@@ -34,7 +34,33 @@ export const getOwnUser = async (): Promise<UserOut> => {
     );
     return response.data.data.getOwnUser;
   } catch (error) {
-    // TODO: try with typeORM
+    throw new error("Error", error.response.data);
+  }
+};
+
+export const getOwnUserImage = async (): Promise<UserOut> => {
+  try {
+    const token = await RNSecureKeyStore.get("token");
+
+    const response = await axios.post(
+      neo4jUri,
+      {
+        query: `
+                query {
+                    getOwnUser {
+                        image
+                    }
+                }
+            `,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data.data.getOwnUser;
+  } catch (error) {
     throw new error("Error", error.response.data);
   }
 };

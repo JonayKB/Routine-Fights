@@ -1,6 +1,6 @@
 import { View, Button, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import { logout } from "../services/SettingsService";
+import { logout } from "../repositories/SettingsRepository";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { resetNavigation } from "../utils/Utils";

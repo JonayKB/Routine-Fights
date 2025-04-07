@@ -14,7 +14,7 @@ import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
-import { getUser, getOwnUser } from "../services/ProfileService";
+import { getUser, getOwnUser } from "../repositories/ProfileRepository";
 import { convertQuantityToString } from "../utils/Utils";
 import ProfilePost from "../components/ProfilePost";
 import FollowCount from "../components/FollowCount";
