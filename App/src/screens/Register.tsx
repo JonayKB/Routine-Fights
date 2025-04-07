@@ -4,10 +4,10 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import PhoneInput from "react-native-phone-number-input";
 import { UserIn } from "../utils/User";
-import { register } from "../services/RegisterService";
 import { resetNavigation } from "../utils/Utils";
 import { translations } from "../../translations/translation";
 import { useLanguageContext } from "../contexts/LanguageContextProvider";
+import { register } from "../repositories/RegisterRepository";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Register">;
 

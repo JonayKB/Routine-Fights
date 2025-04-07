@@ -7,12 +7,8 @@
             "register": "Registrarse"
         },
         "Register": {
-            "email": "Email",
-            "password": "Password",
-            "confirmPassword": "Confirm password",
-            "register": "Register",
-            "login": "Login",
-            "welcome": "Welcome to our app!"
+            "username": "Nombre de usuario",
+            "confirmPassword": "Confirmar contraseña"
         },
         "Profile": {
             "followers": "seguidores",
@@ -29,6 +25,9 @@
         "UploadForm": {
             "select a category": "Elige una categoria",
             "post": "Subir"
+        },
+        "Home": {
+            "search": "Buscar"
         }
     }
 }

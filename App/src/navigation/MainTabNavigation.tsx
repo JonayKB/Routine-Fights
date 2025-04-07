@@ -10,8 +10,9 @@ import ImageContextProvider from "../contexts/ImageContextProvider";
 import { Image } from "react-native";
 import { uri } from "../utils/Utils";
 import { useTokenContext } from "../contexts/TokenContextProvider";
-import { getOwnUser } from "../services/ProfileService";
 import { UserOut } from "../utils/User";
+import { getOwnUserImage } from "../repositories/ProfileRepository";
+import HomeStackNavigation from "./HomeStackNavigation";
 
 type Props = {};
 
@@ -29,9 +30,8 @@ const MainTabNavigation = (props: Props) => {
   const [image, setImage] = useState<string>(null);
 
   useEffect(() => {
-    // TODO: method for just the image
     const fetchImage = async () => {
-      const user: UserOut = await getOwnUser();
+      const user: UserOut = await getOwnUserImage();
       setImage(user.image);
     };
     fetchImage();
@@ -52,7 +52,7 @@ const MainTabNavigation = (props: Props) => {
       >
         <Tab.Screen
           name="Home"
-          component={Home}
+          component={HomeStackNavigation}
           options={{
             tabBarIcon: ({ focused }) => (
               <Icon

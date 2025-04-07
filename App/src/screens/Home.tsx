@@ -1,12 +1,14 @@
-import { View, FlatList, TouchableOpacity, RefreshControl } from "react-native";
+import { View, FlatList, RefreshControl, TouchableWithoutFeedback } from "react-native";
 import React, { useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { HomeStackProps } from "../navigation/HomeStackNavigation";
 
-type Props = {};
+type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
-const Home = (props: Props) => {
+const Home = ({navigation}: Props) => {
   const [load, setLoad] = useState<boolean>(false);
 
   const posts: PostDomain[] = [
@@ -38,9 +40,9 @@ const Home = (props: Props) => {
 
   return (
     <View className="bg-white">
-      <TouchableOpacity className="absolute z-10 right-5 top-5">
+      <TouchableWithoutFeedback className="absolute z-10 right-5 top-5" onPress={() => navigation.navigate("Search")}>
         <Icon name="search" size={35} color="#7C5AF1" />
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
       <View className="items-center">
         <FlatList
           refreshControl={
