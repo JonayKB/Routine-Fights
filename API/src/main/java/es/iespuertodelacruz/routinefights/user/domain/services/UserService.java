@@ -135,4 +135,6 @@ public class UserService implements IUserService {
     public boolean unSubscribeActivity(String userEmail, String activityID) {
         return userRepository.unSubscribeActivity(userEmail, activityID);
     }
+
+    
 }

@@ -91,4 +91,5 @@ public interface IUserCommon<T> extends ICRUD<T> {
     public boolean subscribeActivity(String email, String activityID);
 
     public boolean unSubscribeActivity(String email, String activityID);
+
 }
