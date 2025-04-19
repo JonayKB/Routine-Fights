@@ -38,4 +38,6 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
 
     @Query("MATCH (u: User {email:$userMail}) MATCH (a: Activity) WHERE elementId(a) = $activityID MATCH (u)-[r:Participated]->(a) DELETE r RETURN COUNT(*) > 0")
     public boolean unSusbcribeActivity(@Param("userMail") String userEmail, @Param("activityID") String activityID);
+
+
 }
