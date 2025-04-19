@@ -53,5 +53,9 @@ public class ChartData {
         ChartData other = (ChartData) obj;
         return labels.equals(other.labels) && data.equals(other.data);
     }
+    @Override
+    public int hashCode() {
+        return 31 * labels.hashCode() + data.hashCode();
+    }
 
 }
