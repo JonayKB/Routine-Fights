@@ -30,4 +30,6 @@ public interface IUserRepository extends IUserCommon<User> {
      * @return User
      */
     public User update(User user);
+
+    
 }
