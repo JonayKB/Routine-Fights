@@ -14,21 +14,68 @@ import es.iespuertodelacruz.routinefights.shared.dto.ChartData;
 @Service
 public class GraphService {
 
+    private static final String TOTAL = "total";
     private final Neo4jClient neo4jClient;
 
     public GraphService(Neo4jClient neo4jClient) {
         this.neo4jClient = neo4jClient;
     }
 
-    public ChartData findAllUsersCreatedAt() {
+    public ChartData findPostsCreatedByDate() {
         String cypher = """
-                MATCH (u:User)
-                RETURN date(u.createdAt) AS createdAt, count(u) AS total
+                MATCH (p:Post)
+                RETURN date(p.createdAt) AS createdAt, count(p) AS total
                 ORDER BY createdAt
                 """;
 
+        return executeQuerry(cypher, "createdAt", TOTAL);
+    }
+
+    public ChartData findPointsAddedSumByDate() {
+        String cypher = """
+                MATCH (p:Post)
+                RETURN date(p.createdAt)   AS createdAt,
+                       sum(p.pointsToAdd) AS totalPoints
+                ORDER BY createdAt
+                """;
+
+        return executeQuerry(cypher, "createdAt", "totalPoints");
+    }
+
+    public ChartData findActivitiesByTimeRate() {
+        String cypher = """
+                MATCH (a:Activity)
+                RETURN a.timeRate AS rate, count(a) AS total
+                ORDER BY rate
+                """;
+
+        return executeQuerry(cypher, "rate", TOTAL);
+    }
+
+    public ChartData findTotalPointsByUser() {
+        String cypher = """
+                MATCH (u:User)-[:Posted]->(p:Post)
+                RETURN u.username         AS user,
+                       sum(p.pointsToAdd) AS totalPoints
+                ORDER BY totalPoints DESC
+                """;
+
+        return executeQuerry(cypher, "user", "totalPoints");
+    }
+
+    public ChartData findUserRegistrationsByDate() {
+        String cypher = """
+                MATCH (u:User)
+                RETURN date(u.createdAt) AS registeredAt, count(u) AS total
+                ORDER BY registeredAt
+                """;
+
+        return executeQuerry(cypher, "registeredAt", TOTAL);
+    }
+
+    ChartData executeQuerry(String cypher, String label, String data) {
         List<String> labels = new ArrayList<>();
-        List<Long> data = new ArrayList<>();
+        List<Long> dataList = new ArrayList<>();
 
         Collection<Map<String, Object>> rows = neo4jClient
                 .query(cypher)
@@ -36,14 +83,14 @@ public class GraphService {
                 .all();
 
         for (Map<String, Object> row : rows) {
-            LocalDate createdAt = (LocalDate) row.get("createdAt");
-            Number total = (Number) row.get("total");
+            String labelValue = String.valueOf(row.get(label));
+            Number dataValue = (Number) row.get(data);
 
-            labels.add(createdAt.toString());
-            data.add(total.longValue());
+            labels.add(labelValue);
+            dataList.add(dataValue.longValue());
         }
 
-        return new ChartData(labels, data);
+        return new ChartData(labels, dataList);
     }
 
 }

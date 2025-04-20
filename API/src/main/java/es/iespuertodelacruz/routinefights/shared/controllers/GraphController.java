@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class GraphController {
 
     private final GraphService graphService;
+
     public GraphController(GraphService graphService) {
         this.graphService = graphService;
     }
@@ -25,10 +26,50 @@ public class GraphController {
     @Secured("ROLE_ADMIN")
     public ResponseEntity<?> getUserCreationChart() {
         try {
-            return ResponseEntity.ok(graphService.findAllUsersCreatedAt());
+            return ResponseEntity.ok(graphService.findUserRegistrationsByDate());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+
+    @GetMapping("/posts/creation")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<?> getPostCreationChart() {
+        try {
+            return ResponseEntity.ok(graphService.findPostsCreatedByDate());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/posts/points")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<?> getPostPointsChart() {
+        try {
+            return ResponseEntity.ok(graphService.findPointsAddedSumByDate());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/users/points")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<?> getUsersTotalPoints() {
+        try {
+            return ResponseEntity.ok(graphService.findTotalPointsByUser());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/activities/timerate")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<?> getActivityTimeRate() {
+        try {
+            return ResponseEntity.ok(graphService.findActivitiesByTimeRate());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
