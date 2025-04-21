@@ -137,4 +137,11 @@ class UserServiceTest {
         when(userRepository.findByUsername(anyString())).thenReturn(new ArrayList<User>());
         assertNotNull(userService.findByUsername("username"));
     }
+
+    @Test
+    void findByEmailOnlyBaseTest() {
+        when(userRepository.findByEmailOnlyBase(anyString())).thenReturn(new User());
+        assertNotNull(userService.findByEmailOnlyBase("email"));
+    }
+
 }
