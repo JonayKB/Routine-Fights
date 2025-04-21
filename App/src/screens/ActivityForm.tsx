@@ -11,10 +11,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
+import { translations } from "../../translations/translation";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityForm">;
 
 const ActivityForm = (props: Props) => {
+  const { language } = useLanguageContext();
   const { uri, setUri } = useImageContext();
 
   return (
@@ -33,7 +36,10 @@ const ActivityForm = (props: Props) => {
                 className="border-white border-2 rounded-lg mb-5"
               >
                 <Text className="text-white font-bold text-xl text-center px-6 py-2">
-                  Change picture
+                  {
+                    translations[language || "en-EN"].screens.UploadForm
+                      .changePicture
+                  }
                 </Text>
               </TouchableOpacity>
             </View>
@@ -45,29 +51,38 @@ const ActivityForm = (props: Props) => {
         )}
         <View className="m-10">
           <TextInput
-            placeholder="Title"
+            placeholder={
+              translations[language || "en-EN"].screens.ActivityForm.title
+            }
             placeholderTextColor="#4B0082"
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
           />
           <TextInput
-            placeholder="Description"
+            placeholder={
+              translations[language || "en-EN"].screens.ActivityForm.description
+            }
             placeholderTextColor="#4B0082"
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
           />
           <TextInput
-            placeholder="timeRate"
+            placeholder={
+              translations[language || "en-EN"].screens.ActivityForm.timeRate
+            }
             placeholderTextColor="#4B0082"
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
           />
           <TextInput
-            placeholder="timesRequired"
+            placeholder={
+              translations[language || "en-EN"].screens.ActivityForm
+                .timesRequired
+            }
             placeholderTextColor="#4B0082"
             inputMode="numeric"
             className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
           />
           <TouchableOpacity className="bg-[#E4007C] rounded-lg py-3 w-full">
             <Text className="text-white font-bold text-xl text-center">
-              Post
+              {translations[language || "en-EN"].screens.ActivityForm.post}
             </Text>
           </TouchableOpacity>
         </View>

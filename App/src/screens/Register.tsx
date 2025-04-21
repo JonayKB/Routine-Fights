@@ -6,7 +6,7 @@ import PhoneInput from "react-native-phone-number-input";
 import { UserIn } from "../utils/User";
 import { resetNavigation } from "../utils/Utils";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/LanguageContextProvider";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { register } from "../repositories/RegisterRepository";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Register">;

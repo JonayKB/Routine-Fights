@@ -1,14 +1,14 @@
 import { View, Button, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { logout } from "../repositories/SettingsRepository";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { resetNavigation } from "../utils/Utils";
+import { languages, resetNavigation } from "../utils/Utils";
 import DropDown from "../components/DropDown";
 import { translations } from "../../translations/translation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileNavigation from "../components/ProfileNavigation";
-import { useLanguageContext } from "../contexts/LanguageContextProvider";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Settings">;
 
@@ -33,26 +33,25 @@ const Settings = ({ navigation }: Props) => {
     }
   };
 
-  const languages = [
-    { label: "English", value: "en-EN" },
-    { label: "Spanish", value: "es-ES" },
-  ];
-
   return (
     <View>
       <ProfileNavigation
         navigation={navigation}
         message={translations[language || "en-EN"].screens.Settings.settings}
       />
-      <TouchableOpacity>
-        <DropDown
-          data={languages}
-          message={translations[language || "en-EN"].screens.Settings.language}
-          value={language}
-          setValue={changeLanguage}
-        />
-      </TouchableOpacity>
-      <Button title="Logout" onPress={closeSession} />
+      <View className="p-5 gap-5">
+        <TouchableOpacity>
+          <DropDown
+            data={languages}
+            message={
+              translations[language || "en-EN"].screens.Settings.language
+            }
+            value={language}
+            setValue={changeLanguage}
+          />
+        </TouchableOpacity>
+        <Button title="Logout" onPress={closeSession} />
+      </View>
     </View>
   );
 };

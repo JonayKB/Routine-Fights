@@ -2,13 +2,11 @@ import {
   View,
   TextInput,
   FlatList,
-  RefreshControl,
   TouchableOpacity,
-  Alert,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/LanguageContextProvider";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { Followers } from "../utils/User";
 import { fetchUsersByName } from "../repositories/SearchRepository";
 import FollowBox from "../components/FollowBox";

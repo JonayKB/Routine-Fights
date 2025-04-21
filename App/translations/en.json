@@ -23,11 +23,29 @@
             "settings": "Settings"
         },
         "UploadForm": {
+            "takeFromCamera": "Take from camera",
+            "selectFromLibrary": "Select from library",
             "selectCategory": "Select a category",
+            "changePicture": "Change picture",
             "post": "Post"
         },
         "Home": {
             "search": "Search"
+        },
+        "Activities": {
+            "name": "Name"
+        },
+        "ActivityDetails": {
+            "numOfTimes": "Number of times",
+            "frequency": "Frequency",
+            "add": "Add"
+        },
+        "ActivityForm": {
+            "title": "Title",
+            "description": "Description",
+            "timeRate": "Time rate",
+            "timesRequired": "Times required",
+            "post": "Post"
         }
     }
 }

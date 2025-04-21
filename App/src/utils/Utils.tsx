@@ -23,3 +23,8 @@ export const convertQuantityToString = (quantity: number) => {
     return numberToString(quantity);
   }
 };
+
+export const languages = [
+  { label: "English", value: "en-EN" },
+  { label: "Spanish", value: "es-ES" },
+];

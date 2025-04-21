@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { useEffect, useState } from "react";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/LanguageContextProvider";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import ProfileNavigation from "../components/ProfileNavigation";
 import FollowBox from "../components/FollowBox";
 import { getFollows } from "../repositories/ProfileRepository";

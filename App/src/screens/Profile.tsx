@@ -115,6 +115,14 @@ const Profile = ({ navigation, route }: Props) => {
       )}
 
       <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
+        {!route.params?.id && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Settings")}
+            className="absolute top-5 right-5 z-10"
+          >
+            <Icon name="settings" size={28} color="black" />
+          </TouchableOpacity>
+        )}
         <View className="m-5 items-center">
           <ProfilePicture image={user.image} size={103} />
           {/* <View
@@ -126,19 +134,17 @@ const Profile = ({ navigation, route }: Props) => {
             </Text>
           </View> */}
         </View>
-        <View className="mt-5">
-          <Text className="text-black text-4xl font-bold mb-5">
+        <View className="mt-5 py-4">
+          <Text className="text-black text-4xl font-bold">
             {user?.username}
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-            <Icon name="settings" size={30} />
-          </TouchableOpacity>
           <FollowCount
             followers={followers}
             following={following}
             email={user.email}
             navigation={navigation}
           />
+          {/** TODO: Add button for following or unfollowing in case is not your own profile */}
         </View>
       </View>
 

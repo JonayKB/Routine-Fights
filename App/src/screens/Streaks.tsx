@@ -5,82 +5,38 @@ import {
   FlatList,
   RefreshControl,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
 import Streak from "../components/Streak";
+import { getActivities } from "../repositories/StreakRepository";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
 const Streaks = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
 
-  const activities: Activity[] = [
-    {
-      id: "1",
-      name: "Activity 1",
-      description: "Description 1",
-      image: "https://picsum.photos/200/300",
-      timeRate: "1",
-      timesRequired: "1",
-      category: "1",
-    },
-    {
-      id: "2",
-      name: "Activity 2",
-      description: "Description 2",
-      image: "https://picsum.photos/200/300",
-      timeRate: "2",
-      timesRequired: "2",
-      category: "2",
-    },
-    {
-      id: "3",
-      name: "Activity 3",
-      description: "Description 3",
-      image: "https://picsum.photos/200/300",
-      timeRate: "3",
-      timesRequired: "3",
-      category: "3",
-    },
-    {
-      id: "7",
-      name: "Activity 3",
-      description: "Description 3",
-      image: "https://picsum.photos/200/300",
-      timeRate: "3",
-      timesRequired: "3",
-      category: "3",
-    },
-    {
-      id: "4",
-      name: "Activity 3",
-      description: "Description 3",
-      image: "https://picsum.photos/200/300",
-      timeRate: "3",
-      timesRequired: "3",
-      category: "3",
-    },
-    {
-      id: "5",
-      name: "Activity 3",
-      description: "Description 3",
-      image: "https://picsum.photos/200/300",
-      timeRate: "3",
-      timesRequired: "3",
-      category: "3",
-    },
-    {
-      id: "true",
-      name: null,
-      description: null,
-      image: null,
-      timeRate: "3",
-      timesRequired: null,
-      category: null,
-    },
-  ];
+  const addActivity: Activity = {
+    id: "true",
+    name: null,
+    description: null,
+    image: null,
+    timeRate: "3",
+    timesRequired: null,
+    category: null,
+  };
+  
+  const [activities, setActivities] = useState<Activity[]>([addActivity]);
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      const list = await getActivities();
+      list.push(addActivity);
+      setActivities(list);
+    };
+    fetchActivities();
+  }, []);
 
   return (
     <View className="flex-1 items-center">

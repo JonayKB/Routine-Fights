@@ -7,7 +7,7 @@ import { resetNavigation } from "../utils/Utils";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLanguageContext } from "../contexts/LanguageContextProvider";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import style from "../styles/Styles.json";
 
