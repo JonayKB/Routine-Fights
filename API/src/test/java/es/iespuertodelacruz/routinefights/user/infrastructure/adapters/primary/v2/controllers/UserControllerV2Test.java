@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -49,6 +48,14 @@ class UserControllerV2Test extends UserInitializer {
     @Mock
     private MailService mailService;
 
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
+    private Authentication authentication;
+
+    
+
     private UserInputDTOV2 userInputDTOV2;
     private UserOutputDTOV2 userOutputDTOV2;
 
@@ -59,6 +66,7 @@ class UserControllerV2Test extends UserInitializer {
         userControllerV2.setUserOutputMapper(userOutputMapper);
         userControllerV2.setUserService(userService);
         userControllerV2.setMailService(mailService);
+        SecurityContextHolder.setContext(securityContext);
 
         userInputDTOV2 = new UserInputDTOV2("id", "username", "email", "password", "nationality", "phone_number",
                 "image");
@@ -120,15 +128,21 @@ class UserControllerV2Test extends UserInitializer {
     @Test
     void followUserTest() {
         when(userService.followUser(anyString(), anyString())).thenReturn(true);
-        assertTrue(userControllerV2.followUser("frEmail", "fdEmail"));
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        assertTrue(userControllerV2.followUser("fdEmail"));
     }
 
     @Test
     void followUserExceptionTest() {
         when(userService.followUser(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
+
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
-            userControllerV2.followUser("frEmail", "fdEmail");
+            userControllerV2.followUser("fdEmail");
         });
         assertEquals("Error following user", exception.getMessage());
     }
@@ -136,15 +150,20 @@ class UserControllerV2Test extends UserInitializer {
     @Test
     void unfollowUserTest() {
         when(userService.unfollowUser(anyString(), anyString())).thenReturn(true);
-        assertTrue(userControllerV2.unfollowUser("frEmail", "fdEmail"));
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        assertTrue(userControllerV2.unfollowUser( "fdEmail"));
     }
 
     @Test
     void unfollowUserExceptionTest() {
         when(userService.unfollowUser(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
-            userControllerV2.unfollowUser("frEmail", "fdEmail");
+            userControllerV2.unfollowUser( "fdEmail");
         });
         assertEquals("Error unfollowing user", exception.getMessage());
     }
@@ -226,8 +245,7 @@ class UserControllerV2Test extends UserInitializer {
 
     @Test
     void subscribeActivityTest() {
-        SecurityContext securityContext = mock(SecurityContext.class);
-        Authentication authentication = mock(Authentication.class);
+
         when(authentication.getName()).thenReturn("testUser");
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -247,8 +265,7 @@ class UserControllerV2Test extends UserInitializer {
 
     @Test
     void unsubscribeActivityTest() {
-        SecurityContext securityContext = mock(SecurityContext.class);
-        Authentication authentication = mock(Authentication.class);
+
         when(authentication.getName()).thenReturn("testUser");
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -268,8 +285,7 @@ class UserControllerV2Test extends UserInitializer {
 
     @Test
     void getOwnUserTest(){
-        SecurityContext securityContext = mock(SecurityContext.class);
-        Authentication authentication = mock(Authentication.class);
+
         when(authentication.getName()).thenReturn("testUser");
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -281,8 +297,7 @@ class UserControllerV2Test extends UserInitializer {
 
     @Test
     void getOwnUserExceptionTest(){
-        SecurityContext securityContext = mock(SecurityContext.class);
-        Authentication authentication = mock(Authentication.class);
+
         when(authentication.getName()).thenReturn("testUser");
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);

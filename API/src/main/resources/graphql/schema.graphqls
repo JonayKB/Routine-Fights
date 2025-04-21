@@ -48,6 +48,8 @@ type ActivityOutputV2 {
   updatedAt: String
   deletedAt: String
   creator: UserOutputV2
+  timeRate: String
+  timesRequiered: String
 }
 input ActivityInputV2 {
   name: String!
@@ -128,4 +130,5 @@ type Followers {
   createdAt: String
   followers: Int
   following: Int
+  isFollowing: Boolean
 }
