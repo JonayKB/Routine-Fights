@@ -3,10 +3,13 @@ import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { translations } from "../../translations/translation";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 
 const ActivityDetails = ({ navigation, route }: Props) => {
+  const { language } = useLanguageContext();
   const [activity, setActivity] = useState<Activity>({} as Activity);
 
   useEffect(() => {
@@ -32,10 +35,12 @@ const ActivityDetails = ({ navigation, route }: Props) => {
           {activity.description}
         </Text>
         <Text className="text-[#4B0082] text-xl">
-          Num of times: {activity.timesRequired}
+          {translations[language || "en-EN"].screens.ActivityDetails.numOfTimes}
+          : {activity.timesRequired}
         </Text>
         <Text className="text-[#4B0082] text-xl">
-          Frequency: {activity.timeRate}
+          {translations[language || "en-EN"].screens.ActivityDetails.frequency}:{" "}
+          {activity.timeRate}
         </Text>
       </View>
       <TouchableOpacity
@@ -46,7 +51,7 @@ const ActivityDetails = ({ navigation, route }: Props) => {
           className="text-white font-bold text-2xl text-center"
           style={{ fontFamily: "InriaSans-Regular" }}
         >
-          Add
+          {translations[language || "en-EN"].screens.ActivityDetails.add}
         </Text>
       </TouchableOpacity>
     </View>

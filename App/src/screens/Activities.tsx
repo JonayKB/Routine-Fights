@@ -11,10 +11,13 @@ import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { translations } from "../../translations/translation";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
 const Activities = ({ navigation, route }: Props) => {
+  const { language } = useLanguageContext();
   const [filteredActivities, setFilteredActivities] = useState<Activity[]>([]);
   const [search, setSearch] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
@@ -64,7 +67,7 @@ const Activities = ({ navigation, route }: Props) => {
     <View className="flex-1 bg-[#E4D8E9]">
       <View className="justify-center items-center">
         <TextInput
-          placeholder="Name"
+          placeholder={translations[language || 'en-EN'].screens.Activities.name}
           placeholderTextColor="#4B0082"
           inputMode="email"
           className="border-[#4B0082] border-2 rounded-xl bg-white text-2xl w-11/12 my-5 pl-3 text-black"

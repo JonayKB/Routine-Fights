@@ -9,16 +9,26 @@ import React, {
 export interface AppContextType {
   language: string;
   setLanguage: Dispatch<SetStateAction<string>>;
+  darkmode: boolean;
+  setDarkmode: Dispatch<SetStateAction<boolean>>;
+  lefthand: boolean;
+  setLefthand: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 
-const LanguageContextProvider = (props: any) => {
+const SettingsContextProvider = (props: any) => {
   const [language, setLanguage] = useState<string>("");
+  const [darkmode, setDarkmode] = useState<boolean>(false);
+  const [lefthand, setLefthand] = useState<boolean>(false);
 
   const contextValues: AppContextType = {
     language: language,
     setLanguage: setLanguage,
+    darkmode: darkmode,
+    setDarkmode: setDarkmode,
+    lefthand: lefthand,
+    setLefthand: setLefthand,
   };
 
   return (
@@ -32,4 +42,4 @@ export const useLanguageContext = () => {
   return useContext(AppContext);
 };
 
-export default LanguageContextProvider;
+export default SettingsContextProvider;

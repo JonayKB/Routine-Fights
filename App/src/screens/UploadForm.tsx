@@ -4,7 +4,7 @@ import { useImageContext } from "../contexts/ImageContextProvider";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
 import DropDown from "../components/DropDown";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/LanguageContextProvider";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
 
 type Props = {};
 
@@ -28,8 +28,8 @@ const UploadForm = (props: Props) => {
         label: "Category 3",
         value: "3",
       },
-    ])
-  }, [])
+    ]);
+  }, []);
 
   return (
     <View className="flex-1 justify-center items-center">
@@ -47,7 +47,10 @@ const UploadForm = (props: Props) => {
                 className="border-white border-2 rounded-lg mb-5"
               >
                 <Text className="text-white font-bold text-xl text-center px-6 py-2">
-                  Change picture
+                  {
+                    translations[language || "en-EN"].screens.UploadForm
+                      .changePicture
+                  }
                 </Text>
               </TouchableOpacity>
             </View>
@@ -58,7 +61,15 @@ const UploadForm = (props: Props) => {
           </View>
         )}
         <View className="m-10">
-          <DropDown data={categories} value={category} setValue={setCategory} message={translations[language || 'en-EN'].screens.UploadForm.selectCategory}/>
+          <DropDown
+            data={categories}
+            value={category}
+            setValue={setCategory}
+            message={
+              translations[language || "en-EN"].screens.UploadForm
+                .selectCategory
+            }
+          />
         </View>
         <TouchableOpacity className="bg-[#E4007C] rounded-lg py-3 m-5 w-10/12">
           <Text className="text-white font-bold text-xl text-center">Post</Text>

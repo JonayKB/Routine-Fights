@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import ProfilePicture from "./ProfilePicture";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/LanguageContextProvider";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { convertQuantityToString } from "../utils/Utils";
 
 type Props = {
@@ -39,7 +39,7 @@ const FollowBox = ({ navigation, item }: Props) => {
         </View>
         <TouchableOpacity className="border-[#E4007C] border-2 rounded-lg ml-5">
           <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
-            Follow
+            {translations[language || "en-EN"].screens.Profile.follow}
           </Text>
         </TouchableOpacity>
       </TouchableOpacity>

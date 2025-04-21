@@ -4,7 +4,8 @@ import Login from "../screens/Login";
 import Register from "../screens/Register";
 import MainTabNavigation from "./MainTabNavigation";
 import TokenContextProvider from "../contexts/TokenContextProvider";
-import LanguageContextProvider from "../contexts/LanguageContextProvider";
+import SettingsContextProvider from "../contexts/SettingsContextProvider";
+import Settings from "../screens/Settings";
 
 type Props = {};
 
@@ -12,13 +13,14 @@ export type LoginStackProps = {
   Login: undefined;
   Register: undefined;
   MainTabNavigation: undefined;
+  Settings: undefined;
 };
 
 const LoginStackNavigation = (props: Props) => {
   const Stack = createNativeStackNavigator<LoginStackProps>();
 
   return (
-    <LanguageContextProvider>
+    <SettingsContextProvider>
       <TokenContextProvider>
         <Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Login" component={Login} />
@@ -27,9 +29,10 @@ const LoginStackNavigation = (props: Props) => {
             name="MainTabNavigation"
             component={MainTabNavigation}
           />
+          <Stack.Screen name="Settings" component={Settings} />
         </Stack.Navigator>
       </TokenContextProvider>
-    </LanguageContextProvider>
+    </SettingsContextProvider>
   );
 };
 

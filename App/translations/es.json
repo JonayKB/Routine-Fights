@@ -24,10 +24,29 @@
         },
         "UploadForm": {
             "select a category": "Elige una categoria",
+            "takeFromCamera": "Tomar foto",
+            "selectFromLibrary": "Tomar de galería",
+            "selectCategory": "Escoge una categoría",
+            "changePicture": "Cambiar foto",
             "post": "Subir"
         },
         "Home": {
             "search": "Buscar"
+        },
+        "Activities": {
+            "name": "Nombre"
+        },
+        "ActivityDetails": {
+            "numOfTimes": "Numero de veces",
+            "frequency": "Frecuencia",
+            "add": "Añadir"
+        },
+        "ActivityForm": {
+            "title": "Título",
+            "description": "Descripcion",
+            "timeRate": "Intervalo de tiempo",
+            "timesRequired": "Veces requeridas",
+            "post": "Subir"
         }
     }
 }
