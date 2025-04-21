@@ -363,7 +363,7 @@ public class UserEntityService implements IUserRepository {
         try {
             return userEntityMapper.toDomain(userRepository.findByEmailOnlyBase(email));
         } catch (Exception e) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException(USER_NOT_FOUND);
         }
     }
 }

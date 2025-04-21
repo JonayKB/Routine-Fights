@@ -74,7 +74,7 @@ class PostControllerV2Test {
         Post post = new Post();
         PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, null, null, null);
 
-        when(userService.findByEmail(DUMMY_EMAIL)).thenReturn(user);
+        when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
         when(postService.uploadPost(IMAGE, user, ACTIVITY_ID)).thenReturn(post);
         when(postOutputV2Mapper.toDto(post)).thenReturn(dto);
 
@@ -126,7 +126,7 @@ class PostControllerV2Test {
         PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null);
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
 
-        when(userService.findByEmail(DUMMY_EMAIL)).thenReturn(user);
+        when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
         when(postService.getPaginationFollowing(date, LIMIT, USER_ID)).thenReturn(posts);
         when(postOutputV2Mapper.toDto(posts)).thenReturn(dtoList);
 
@@ -146,7 +146,7 @@ class PostControllerV2Test {
         PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null);
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
 
-        when(userService.findByEmail(DUMMY_EMAIL)).thenReturn(user);
+        when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
         when(postService.getPaginationSubscribedActivities(date, LIMIT, USER_ID)).thenReturn(posts);
         when(postOutputV2Mapper.toDto(posts)).thenReturn(dtoList);
 
