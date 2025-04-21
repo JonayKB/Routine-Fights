@@ -1,23 +1,31 @@
-import React, { useContext, useEffect } from 'react'
-import { MainContext } from '../components/MainContext';
+import React, { useContext, useEffect } from "react";
+import { MainContext } from "../components/MainContext";
+import { BarChart } from "@mui/x-charts";
 
-type Props = {}
+type Props = {};
 
 const HomeScreen = (props: Props) => {
-    const { token } = useContext(MainContext);
+  const { token } = useContext(MainContext);
 
-    useEffect(() => {
-      if (!token) {
-        window.location.href = '/login';
-      }
-    
-      
-    }, [token])
-    
+  useEffect(() => {
+    if (!token) {
+      window.location.href = "/login";
+    }
+  }, [token]);
 
   return (
-    <div>HomeScreen</div>
-  )
-}
+    <div>
+      @ts-ignore
+      <BarChart
+        series={[
+          { data: [2, 5, 3] }
+        ]}
+        xAxis={[{ scaleType: "band", data: ["A", "B", "C"] }]}
+        yAxis={[{ scaleType: "linear" }]}
+        height={300}
+      />
+    </div>
+  );
+};
 
-export default HomeScreen
+export default HomeScreen;
