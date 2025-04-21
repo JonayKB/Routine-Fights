@@ -36,7 +36,7 @@ public class ActivityControllerV2 {
     @MutationMapping("createActivity")
     public ActivityOutputV2 createActivity(@Argument ActivityInputV2 activityInput) {
 
-        User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Activity activity = activityService.save(activityInput.name(), activityInput.description(),
                 activityInput.image(),
@@ -55,7 +55,7 @@ public class ActivityControllerV2 {
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("getSubscribedActivities")
     public List<ActivityOutputV2> getSubscribedActivities() {
-        User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
         List<Activity> activities = activityService.getSubscribedActivities(user.getId());
         return activityOutputV2Mapper.toDTO(activities);
     }
