@@ -102,31 +102,36 @@ public class UserControllerV2 {
     @QueryMapping("followedByEmail")
     public List<Follower> findFollowedUsersByEmail(@Argument String email) {
         List<User> following;
+        User self;
         try {
             following = userService.findFollowedUsersByEmail(email);
+            self = userService.findByEmail(email);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(findFollowedUsersByEmail) Error finding followed users: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding followed users");
         }
-        return followerMapper.toFollower(following);
+        return followerMapper.toFollower(following,self);
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("followersByEmail")
     public List<Follower> findFollowersByEmail(@Argument String email) {
         List<User> followers;
+        User self;
         try {
             followers = userService.findFollowersByEmail(email);
+            self = userService.findByEmailOnlyBase(email);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(findFollowersByEmail) Error finding followers: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding followers");
         }
-        return followerMapper.toFollower(followers);
+        return followerMapper.toFollower(followers,self);
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("followUser")
-    public boolean followUser(@Argument String followerEmail, @Argument String followingEmail) {
+    public boolean followUser(@Argument String followingEmail) {
+        String followerEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
             return userService.followUser(followerEmail, followingEmail);
         } catch (Exception e) {
@@ -137,7 +142,8 @@ public class UserControllerV2 {
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("unfollowUser")
-    public boolean unfollowUser(@Argument String followerEmail, @Argument String followingEmail) {
+    public boolean unfollowUser( @Argument String followingEmail) {
+        String followerEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
             return userService.unfollowUser(followerEmail, followingEmail);
         } catch (Exception e) {

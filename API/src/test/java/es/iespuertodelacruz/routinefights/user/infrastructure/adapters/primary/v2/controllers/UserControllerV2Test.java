@@ -120,7 +120,7 @@ class UserControllerV2Test extends UserInitializer {
     @Test
     void followUserTest() {
         when(userService.followUser(anyString(), anyString())).thenReturn(true);
-        assertTrue(userControllerV2.followUser("frEmail", "fdEmail"));
+        assertTrue(userControllerV2.followUser("fdEmail"));
     }
 
     @Test
@@ -128,7 +128,7 @@ class UserControllerV2Test extends UserInitializer {
         when(userService.followUser(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
-            userControllerV2.followUser("frEmail", "fdEmail");
+            userControllerV2.followUser("fdEmail");
         });
         assertEquals("Error following user", exception.getMessage());
     }
@@ -136,7 +136,7 @@ class UserControllerV2Test extends UserInitializer {
     @Test
     void unfollowUserTest() {
         when(userService.unfollowUser(anyString(), anyString())).thenReturn(true);
-        assertTrue(userControllerV2.unfollowUser("frEmail", "fdEmail"));
+        assertTrue(userControllerV2.unfollowUser( "fdEmail"));
     }
 
     @Test
@@ -144,7 +144,7 @@ class UserControllerV2Test extends UserInitializer {
         when(userService.unfollowUser(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
-            userControllerV2.unfollowUser("frEmail", "fdEmail");
+            userControllerV2.unfollowUser( "fdEmail");
         });
         assertEquals("Error unfollowing user", exception.getMessage());
     }

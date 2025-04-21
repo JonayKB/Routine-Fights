@@ -136,5 +136,10 @@ public class UserService implements IUserService {
         return userRepository.unSubscribeActivity(userEmail, activityID);
     }
 
+    @Override
+    public User findByEmailOnlyBase(String email) {
+        return userRepository.findByEmailOnlyBase(email);
+    }
+
     
 }
