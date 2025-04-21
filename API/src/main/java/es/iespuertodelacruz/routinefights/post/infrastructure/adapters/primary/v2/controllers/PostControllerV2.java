@@ -49,7 +49,7 @@ public class PostControllerV2 {
     @MutationMapping("uploadPost")
     public PostOutputDTOV2 uploadPost(@Argument String image, @Argument String activityID) {
 
-        User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Post post = postService.uploadPost(image, user, activityID);
         return postOutputV2Mapper.toDto(post);
@@ -76,7 +76,7 @@ public class PostControllerV2 {
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("postsFollowingV2")
     public List<PostOutputDTOV2> getPaginationFollowing(@Argument String lastDate, @Argument int limit) {
-        User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
         LocalDateTime date = LocalDateTime.parse(lastDate);
         List<Post> posts = postService.getPaginationFollowing(date, limit, user.getId());
         return postOutputV2Mapper.toDto(posts);
@@ -85,7 +85,7 @@ public class PostControllerV2 {
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("postsSubscribedActivitiesV2")
     public List<PostOutputDTOV2> getPaginationSubscribedActivities(@Argument String lastDate, @Argument int limit) {
-        User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
         LocalDateTime date = LocalDateTime.parse(lastDate);
         List<Post> posts = postService.getPaginationSubscribedActivities(date, limit, user.getId());
         return postOutputV2Mapper.toDto(posts);

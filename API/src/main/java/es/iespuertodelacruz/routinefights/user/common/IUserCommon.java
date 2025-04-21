@@ -92,4 +92,6 @@ public interface IUserCommon<T> extends ICRUD<T> {
 
     public boolean unSubscribeActivity(String email, String activityID);
 
+    public T findByEmailOnlyBase(String email);
+
 }

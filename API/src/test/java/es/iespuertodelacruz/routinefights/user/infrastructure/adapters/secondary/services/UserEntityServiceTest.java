@@ -456,4 +456,22 @@ class UserEntityServiceTest extends UserInitializer {
         });
         assertEquals("Error updating user", exception.getMessage());
     }
+
+    @Test
+    void findByEmailOnlyBaseTest() {
+        when(userEntityRepository.findByEmailOnlyBase(anyString())).thenReturn(new UserEntity());
+        when(userEntityMapper.toDomain(any(UserEntity.class))).thenReturn(user);
+        assertNotNull(userEntityService.findByEmailOnlyBase("email"));
+    }
+
+    @Test
+    void findByEmailOnlyBaseExceptionTest() {
+        when(userEntityRepository.findByEmailOnlyBase(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.findByEmailOnlyBase("email");
+        });
+        assertEquals("User not found", exception.getMessage());
+    }
+
 }

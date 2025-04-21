@@ -12,6 +12,9 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
 @Repository
 public interface IUserEntityRepository extends Neo4jRepository<UserEntity, String> {
     public UserEntity findByEmail(String email);
+    
+    @Query("MATCH (u:User {email: $email}) RETURN u")
+    public UserEntity findByEmailOnlyBase(String email);
 
     public boolean existsByEmail(String email);
 

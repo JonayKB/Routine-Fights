@@ -357,4 +357,13 @@ public class UserEntityService implements IUserRepository {
     boolean checkIfEmailIsValid(String email) {
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
+
+    @Override
+    public User findByEmailOnlyBase(String email) {
+        try {
+            return userEntityMapper.toDomain(userRepository.findByEmailOnlyBase(email));
+        } catch (Exception e) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+    }
 }

@@ -24,7 +24,7 @@ public class AuthService {
     }
 
     public String login(String mail, String password) {
-        User user = userService.findByEmail(mail);
+        User user = userService.findByEmailOnlyBase(mail);
 
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             if (user.getVerified()) {

@@ -88,7 +88,7 @@ class ActivityControllerV2Test {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        when(userService.findByEmail("testUser")).thenReturn(testUser);
+        when(userService.findByEmailOnlyBase("testUser")).thenReturn(testUser);
         when(activityService.save(
                 activityInputV2.name(),
                 activityInputV2.description(),
@@ -112,7 +112,7 @@ class ActivityControllerV2Test {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        when(userService.findByEmail(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userService.findByEmailOnlyBase(anyString())).thenThrow(new UserNotFoundException("Test Exception"));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             activityControllerV2.createActivity(activityInputV2);
@@ -145,7 +145,7 @@ class ActivityControllerV2Test {
         List<Activity> activityList = Arrays.asList(testActivity);
         List<ActivityOutputV2> outputList = Arrays.asList(activityOutputV2);
 
-        when(userService.findByEmail("testUser")).thenReturn(testUser);
+        when(userService.findByEmailOnlyBase("testUser")).thenReturn(testUser);
         when(activityService.getSubscribedActivities(testUser.getId())).thenReturn(activityList);
         when(activityOutputV2Mapper.toDTO(activityList)).thenReturn(outputList);
 
