@@ -61,12 +61,12 @@ public class ActivityService implements IActivityService {
     }
 
     @Override
-    public List<Activity> getPaginationNotSubscribed(int page, int perPage, String userID) {
-        return activityRepository.getPaginationNotSubscribed(page, perPage, userID);
+    public List<Activity> getPaginationNotSubscribed(int page, int perPage, String userID, String activityName) {
+        return activityRepository.getPaginationNotSubscribed(page, perPage, userID, activityName);
     }
 
     @Override
-    public List<Activity> getSubscribedActivities(String userID, String activityName) {
+    public List<Activity> getSubscribedActivitiesWithStreak(String userID, String activityName) {
         return activityRepository.getSubscribedActivities(userID, activityName);
     }
 

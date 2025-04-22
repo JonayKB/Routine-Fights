@@ -28,21 +28,24 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                         RETURN a,c,u
                         SKIP $offset LIMIT $limit
                         """)
-        List<ActivityEntity> getPagination(int offset, int limit);
-        
-        @Query("""
-                MATCH (a:Activity)<-[c:Created]-(u:User)
-                WHERE NOT (u)-[:Participated]->(a)
-                RETURN a,c,u
-                SKIP $offset LIMIT $limit
-                """)
-        List<ActivityEntity> getPaginationNotSubscribed(int offset, int limit, String userID);
-        
+        List<ActivityEntity> getPagination(@Param("offset") int offset, @Param("limit") int limit);
 
         @Query("""
-                        MATCH (cc:User)-[c:Created]->(a:Activity)<-[r:Participated]-(u:User)
+                        MATCH (x:User)
+                        WHERE elementId(x) = $userID
+                        MATCH (a:Activity)<-[c:Created]-(u:User)
+                        WHERE NOT (x)-[:Participated]->(a) AND lower(a.name) CONTAINS lower($activityName)
+                        RETURN a,c,u
+                        SKIP $offset LIMIT $limit
+                        """)
+        List<ActivityEntity> getPaginationNotSubscribed(@Param("offset") int offset, @Param("limit")int limit,@Param("userID") String userID, @Param("activityName") String activityName);
+
+        @Query("""
+                        MATCH (u:User)
                         WHERE elementId(u) = $userID
-                        RETURN a,r,u,cc,c
+                        MATCH (cc:User)-[c:Created]->(a:Activity)
+                        WHERE NOT EXISTS { (u)-[:Participated]->(a) }
+                        RETURN a, cc, c
                         """)
         List<ActivityEntity> getSubscribedActivities(@Param("userID") String userID);
 
@@ -56,8 +59,9 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
 
         @Query("""
                         MATCH (u:User)-[:Participated]->(a:Activity)<-[:`Related-To`]-(p:Post)
-                        WHERE elementId(u)=$userID AND a.name=$activityName
-                        SET a.streak=p.streak
+                        WHERE elementId(u) = $userID
+                        AND lower(a.name) CONTAINS lower($activityName)
+                        SET a.streak = p.streak
                         RETURN a;
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID,

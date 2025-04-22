@@ -177,4 +177,45 @@ class ActivityControllerV2Test {
         List<ActivityOutputV2Streak> result = activityControllerV2.getSubscribedActivitiesWithStreaks();
         assertEquals(outputList, result);
     }
+
+    @Test
+    void paginationActivitiesNotSubscribedTest() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        int page = 0;
+        int perPage = 10;
+        List<Activity> activityList = Arrays.asList(testActivity);
+        List<ActivityOutputV2> outputList = Arrays.asList(activityOutputV2);
+
+        when(userService.findByEmailOnlyBase("testUser")).thenReturn(testUser);
+        when(activityService.getPaginationNotSubscribed(page, perPage, testUser.getId(),"")).thenReturn(activityList);
+        when(activityOutputV2Mapper.toDTO(activityList)).thenReturn(outputList);
+
+        List<ActivityOutputV2> result = activityControllerV2.paginationActivitiesNotSubscribed(page, perPage,"");
+        assertEquals(outputList, result);
+    }
+    @Test
+    void getSubscribedActivitiesWithStreakByNameTest() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        String activityName = "Test Activity";
+        List<Activity> activityList = Arrays.asList(testActivity);
+        List<ActivityOutputV2Streak> outputList = Arrays
+                .asList(new ActivityOutputV2Streak(null, null, null, null, null, null, null, null));
+
+        when(userService.findByEmailOnlyBase("testUser")).thenReturn(testUser);
+        when(activityService.getSubscribedActivitiesWithStreak(testUser.getId(), activityName)).thenReturn(activityList);
+        when(activityOutputV2StreakMapper.toDTO(activityList)).thenReturn(outputList);
+
+        List<ActivityOutputV2Streak> result = activityControllerV2.getSubscribedActivitiesWithStreak(activityName);
+        assertEquals(outputList, result);
+    }
 }

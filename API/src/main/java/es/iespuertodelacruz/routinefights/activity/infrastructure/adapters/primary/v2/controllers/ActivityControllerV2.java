@@ -74,17 +74,18 @@ public class ActivityControllerV2 {
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("paginationActivitiesNotSubscribed")
-    public List<ActivityOutputV2> paginationActivitiesNotSubscribed(@Argument int page, @Argument int perPage) {
+    public List<ActivityOutputV2> paginationActivitiesNotSubscribed(@Argument int page, @Argument int perPage,
+            @Argument String activityName) {
         User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
-        List<Activity> activities = activityService.getPaginationNotSubscribed(page, perPage, user.getId());
+        List<Activity> activities = activityService.getPaginationNotSubscribed(page, perPage, user.getId(), activityName);
         return activityOutputV2Mapper.toDTO(activities);
     }
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
-    @QueryMapping("getSubscribedActivitiesByName")
-    public List<ActivityOutputV2> getSubscribedActivities(@Argument String activityName) {
+    @QueryMapping("getSubscribedActivitiesWithStreakByName")
+    public List<ActivityOutputV2Streak> getSubscribedActivitiesWithStreak(@Argument String activityName) {
         User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
-        List<Activity> activities = activityService.getSubscribedActivities(user.getId(), activityName);
-        return activityOutputV2Mapper.toDTO(activities);
+        List<Activity> activities = activityService.getSubscribedActivitiesWithStreak(user.getId(), activityName);
+        return activityOutputV2StreakMapper.toDTO(activities);
     }
 
 }
