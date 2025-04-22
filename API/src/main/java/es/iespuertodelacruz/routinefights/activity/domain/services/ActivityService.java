@@ -55,4 +55,9 @@ public class ActivityService implements IActivityService {
         return activityRepository.getSubscribedActivities(userID);
     }
 
+    @Override
+    public List<Activity> getSubscribedActivitiesWithStreak(String userID) {
+        return activityRepository.getSubscribedActivitiesWithStreak(userID);
+    }
+
 }
