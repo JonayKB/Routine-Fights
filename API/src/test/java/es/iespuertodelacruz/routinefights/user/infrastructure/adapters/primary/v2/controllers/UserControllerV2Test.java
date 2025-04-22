@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -307,5 +308,20 @@ class UserControllerV2Test extends UserInitializer {
             userControllerV2.getOwnUser();
         });
         assertEquals("Error finding user", exception.getMessage());
+    }
+
+    @Test
+    void getPaginationByNameTest() {
+        when(userService.getPaginationByName(anyInt(),anyInt(),anyString())).thenReturn(new ArrayList<User>());
+        assertNotNull(userControllerV2.getUserPaginationByName(1, 10, "username"));
+    }
+
+    @Test
+    void getPaginationByNameExceptionTest() {
+        when(userService.getPaginationByName(anyInt(),anyInt(),anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userControllerV2.getUserPaginationByName(1, 10, "username");
+        });
+        assertEquals("Error finding users", exception.getMessage());
     }
 }
