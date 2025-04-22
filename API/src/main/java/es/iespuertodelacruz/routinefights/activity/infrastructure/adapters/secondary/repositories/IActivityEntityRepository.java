@@ -29,6 +29,15 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                         SKIP $offset LIMIT $limit
                         """)
         List<ActivityEntity> getPagination(int offset, int limit);
+        
+        @Query("""
+                MATCH (a:Activity)<-[c:Created]-(u:User)
+                WHERE NOT (u)-[:Participated]->(a)
+                RETURN a,c,u
+                SKIP $offset LIMIT $limit
+                """)
+        List<ActivityEntity> getPaginationNotSubscribed(int offset, int limit, String userID);
+        
 
         @Query("""
                         MATCH (cc:User)-[c:Created]->(a:Activity)<-[r:Participated]-(u:User)
@@ -38,11 +47,20 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
         List<ActivityEntity> getSubscribedActivities(@Param("userID") String userID);
 
         @Query("""
-                        MATCH (u:User)-[:Participated]->(a:Activity)<-[:`Related-To`]-(p:Post) 
+                        MATCH (u:User)-[:Participated]->(a:Activity)<-[:`Related-To`]-(p:Post)
                         WHERE elementId(u)=$userID
-                        SET a.streak=p.streak 
+                        SET a.streak=p.streak
                         RETURN a;
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID);
+
+        @Query("""
+                        MATCH (u:User)-[:Participated]->(a:Activity)<-[:`Related-To`]-(p:Post)
+                        WHERE elementId(u)=$userID AND a.name=$activityName
+                        SET a.streak=p.streak
+                        RETURN a;
+                        """)
+        List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID,
+                        @Param("activityName") String activityName);
 
 }
