@@ -14,7 +14,9 @@ import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.domain.ports.primary.IActivityService;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.dtos.ActivityInputV2;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.dtos.ActivityOutputV2;
+import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.dtos.ActivityOutputV2Streak;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.mappers.ActivityOutputV2Mapper;
+import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.mappers.ActivityOutputV2StreakMapper;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
 
@@ -23,13 +25,15 @@ import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService
 public class ActivityControllerV2 {
     private IActivityService activityService;
     private ActivityOutputV2Mapper activityOutputV2Mapper;
+    private ActivityOutputV2StreakMapper activityOutputV2StreakMapper;
     private IUserService userService;
 
     public ActivityControllerV2(IActivityService activityService, ActivityOutputV2Mapper activityOutputV2Mapper,
-            IUserService userService) {
+            IUserService userService, ActivityOutputV2StreakMapper activityOutputV2StreakMapper) {
         this.activityService = activityService;
         this.activityOutputV2Mapper = activityOutputV2Mapper;
         this.userService = userService;
+        this.activityOutputV2StreakMapper = activityOutputV2StreakMapper;
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
@@ -58,6 +62,14 @@ public class ActivityControllerV2 {
         User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
         List<Activity> activities = activityService.getSubscribedActivities(user.getId());
         return activityOutputV2Mapper.toDTO(activities);
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("getSubscribedActivitiesWithStreaks")
+    public List<ActivityOutputV2Streak> getSubscribedActivitiesWithStreaks() {
+        User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<Activity> activities = activityService.getSubscribedActivitiesWithStreak(user.getId());
+        return activityOutputV2StreakMapper.toDTO(activities);
     }
 
 }

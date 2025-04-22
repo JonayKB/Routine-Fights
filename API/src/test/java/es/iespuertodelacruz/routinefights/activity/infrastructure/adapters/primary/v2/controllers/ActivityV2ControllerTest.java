@@ -20,7 +20,9 @@ import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.domain.ports.primary.IActivityService;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.dtos.ActivityInputV2;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.dtos.ActivityOutputV2;
+import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.dtos.ActivityOutputV2Streak;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.mappers.ActivityOutputV2Mapper;
+import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.mappers.ActivityOutputV2StreakMapper;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserNotFoundException;
@@ -35,6 +37,7 @@ class ActivityControllerV2Test {
 
     private IActivityService activityService;
     private ActivityOutputV2Mapper activityOutputV2Mapper;
+    private ActivityOutputV2StreakMapper activityOutputV2StreakMapper;
     private IUserService userService;
 
     private ActivityInputV2 activityInputV2;
@@ -46,9 +49,11 @@ class ActivityControllerV2Test {
     void setUp() {
         activityService = mock(IActivityService.class);
         activityOutputV2Mapper = mock(ActivityOutputV2Mapper.class);
+        activityOutputV2StreakMapper = mock(ActivityOutputV2StreakMapper.class);
         userService = mock(IUserService.class);
 
-        activityControllerV2 = new ActivityControllerV2(activityService, activityOutputV2Mapper, userService);
+        activityControllerV2 = new ActivityControllerV2(activityService, activityOutputV2Mapper, userService,
+                activityOutputV2StreakMapper);
 
         activityInputV2 = new ActivityInputV2("Test Activity", "Test Description", "test-image.png", "weekly", 3,
                 "100L");
@@ -150,6 +155,26 @@ class ActivityControllerV2Test {
         when(activityOutputV2Mapper.toDTO(activityList)).thenReturn(outputList);
 
         List<ActivityOutputV2> result = activityControllerV2.getSubscribedActivities();
+        assertEquals(outputList, result);
+    }
+
+    @Test
+    void getSubscribedActivitiesWithStreakTest() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        List<Activity> activityList = Arrays.asList(testActivity);
+        List<ActivityOutputV2Streak> outputList = Arrays
+                .asList(new ActivityOutputV2Streak(null, null, null, null, null, null, null, null));
+
+        when(userService.findByEmailOnlyBase("testUser")).thenReturn(testUser);
+        when(activityService.getSubscribedActivitiesWithStreak(testUser.getId())).thenReturn(activityList);
+        when(activityOutputV2StreakMapper.toDTO(activityList)).thenReturn(outputList);
+
+        List<ActivityOutputV2Streak> result = activityControllerV2.getSubscribedActivitiesWithStreaks();
         assertEquals(outputList, result);
     }
 }
