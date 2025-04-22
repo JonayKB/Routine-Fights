@@ -20,8 +20,10 @@ type Query {
   postsSubscribedActivitiesV2(lastDate: String!, limit: Int): [PostOutputV2]
 
   paginationActivitiesV2(page: Int!, perPage: Int): [ActivityOutputV2]
+  paginationActivitiesNotSubscribed(page: Int!, perPage: Int): [ActivityOutputV2]
   getOwnUser: UserOutputV2
   getSubscribedActivities: [ActivityOutputV2]
+  getSubscribedActivitiesByName(name:String!): [ActivityOutputV2]
   getSubscribedActivitiesWithStreaks: [ActivityOutputV2Streak]
 }
 

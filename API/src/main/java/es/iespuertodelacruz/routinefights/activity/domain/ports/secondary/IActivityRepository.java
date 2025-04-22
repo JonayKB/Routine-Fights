@@ -17,4 +17,7 @@ public interface IActivityRepository {
     List<Activity> getSubscribedActivities(String userID);
 
     public List<Activity> getSubscribedActivitiesWithStreak(String userID);
+
+    List<Activity> getPaginationNotSubscribed(int page, int perPage, String userID);
+    List<Activity> getSubscribedActivities(String userID, String activityName);
 }
