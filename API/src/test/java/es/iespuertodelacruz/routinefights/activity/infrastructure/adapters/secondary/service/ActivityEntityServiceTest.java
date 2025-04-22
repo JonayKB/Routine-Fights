@@ -97,5 +97,36 @@ import es.iespuertodelacruz.routinefights.activity.infrastructure.exceptions.Act
 
         assertNotNull(list);
     }
+
+    @Test
+    void getSubscribedActivitiesWithStreak() {
+        String userId = "1L";
+        when(activityEntityRepository.getSubscribedActivitiesWithStreak(userId)).thenReturn(new ArrayList<>());
+
+        List<Activity> list = activityEntityService.getSubscribedActivitiesWithStreak(userId);
+
+        assertNotNull(list);
+    }
+    @Test
+    void getPaginationNotSubscribed() {
+        int page = 1;
+        int perPage = 10;
+        String userId = "1L";
+        when(activityEntityRepository.getPaginationNotSubscribed(0, perPage, userId,"")).thenReturn(new ArrayList<>());
+
+        List<Activity> list = activityEntityService.getPaginationNotSubscribed(page, perPage, userId,"");
+
+        assertNotNull(list);
+    }
+    @Test
+    void getSubscribedActivitiesWithStreakByName() {
+        String userId = "1L";
+        String activityName = "activityName";
+        when(activityEntityRepository.getSubscribedActivitiesWithStreak(userId, activityName)).thenReturn(new ArrayList<>());
+
+        List<Activity> list = activityEntityService.getSubscribedActivities(userId, activityName);
+
+        assertNotNull(list);
+    }
     
 }
