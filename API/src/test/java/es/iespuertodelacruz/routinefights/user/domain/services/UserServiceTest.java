@@ -20,6 +20,20 @@ import es.iespuertodelacruz.routinefights.user.domain.ports.secondary.IUserRepos
 
 @SpringBootTest
 class UserServiceTest {
+    private static final String IMAGE = "image";
+
+    private static final String PHONE_NUMBER = "phoneNumber";
+
+    private static final String NATIONALITY = "nationality";
+
+    private static final String PASSWORD = "password";
+
+    private static final String USERNAME = "username";
+
+    private static final String ID = "1";
+
+    private static final String EMAIL = "email";
+
     private UserService userService;
 
     @Mock
@@ -39,14 +53,14 @@ class UserServiceTest {
     @Test
     void deleteTest() {
         when(userRepository.delete(anyString())).thenReturn(true);
-        Boolean deleted = userService.delete("1");
+        Boolean deleted = userService.delete(ID);
         assertNotNull(deleted);
     }
 
     @Test
     void existsByEmailTest() {
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
-        assertNotNull(userService.existsByEmail("email"));
+        assertNotNull(userService.existsByEmail(EMAIL));
     }
 
     @Test
@@ -64,25 +78,25 @@ class UserServiceTest {
     @Test
     void findByEmailTest() {
         when(userRepository.findByEmail(anyString())).thenReturn(new User());
-        assertNotNull(userService.findByEmail("email"));
+        assertNotNull(userService.findByEmail(EMAIL));
     }
 
     @Test
     void findByIdTest() {
         when(userRepository.findById(anyString())).thenReturn(new User());
-        assertNotNull(userService.findById("1"));
+        assertNotNull(userService.findById(ID));
     }
 
     @Test
     void findFollowedUsersByEmailTest() {
         when(userRepository.findFollowedUsersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userService.findFollowedUsersByEmail("email"));
+        assertNotNull(userService.findFollowedUsersByEmail(EMAIL));
     }
 
     @Test
     void findFollowersByEmailTest() {
         when(userRepository.findFollowersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userService.findFollowersByEmail("email"));
+        assertNotNull(userService.findFollowersByEmail(EMAIL));
     }
 
     @Test
@@ -94,7 +108,7 @@ class UserServiceTest {
     @Test
     void postTest() {
         when(userRepository.post(any(User.class))).thenReturn(new User());
-        User user = userService.post("username", "email", "password", "nationality", "phoneNumber", "image", "role",
+        User user = userService.post(USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, "role",
                 true, "verificationToken", LocalDateTime.now(), LocalDateTime.now(), null);
         assertNotNull(user);
     }
@@ -102,7 +116,7 @@ class UserServiceTest {
     @Test
     void putTest() {
         when(userRepository.put(any(User.class))).thenReturn(new User());
-        User user = userService.put("1", "username", "email", "password", "nationality", "phoneNumber", "image", "role",
+        User user = userService.put(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, "role",
                 true, "verificationToken", LocalDateTime.now(), LocalDateTime.now(), null);
         assertNotNull(user);
     }
@@ -116,32 +130,32 @@ class UserServiceTest {
     @Test
     void restoreTest() {
         when(userRepository.restore(anyString())).thenReturn(true);
-        assertTrue(userService.restore("1"));
+        assertTrue(userService.restore(ID));
     }
 
     @Test
     void updateTest() {
         when(userRepository.update(any(User.class))).thenReturn(new User());
-        User user = userService.update("1", "username", "email", "password", "nationality", "phoneNumber", "image");
+        User user = userService.update(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE);
         assertNotNull(user);
     }
 
     @Test
     void softDeleteTest() {
         when(userRepository.softDelete(anyString())).thenReturn(true);
-        assertTrue(userService.softDelete("1"));
+        assertTrue(userService.softDelete(ID));
     }
 
     @Test
     void findByUsernameTest() {
         when(userRepository.findByUsername(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userService.findByUsername("username"));
+        assertNotNull(userService.findByUsername(USERNAME));
     }
 
     @Test
     void findByEmailOnlyBaseTest() {
         when(userRepository.findByEmailOnlyBase(anyString())).thenReturn(new User());
-        assertNotNull(userService.findByEmailOnlyBase("email"));
+        assertNotNull(userService.findByEmailOnlyBase(EMAIL));
     }
 
 }

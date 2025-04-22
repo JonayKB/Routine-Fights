@@ -12,4 +12,6 @@ public interface IActivityService {
     List<Activity> getPagination(int page, int perPage);
 
     List<Activity> getSubscribedActivities(String userID);
+
+    public List<Activity> getSubscribedActivitiesWithStreak(String userID);
 }
