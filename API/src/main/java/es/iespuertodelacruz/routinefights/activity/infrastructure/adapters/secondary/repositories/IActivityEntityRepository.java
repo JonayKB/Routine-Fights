@@ -60,9 +60,10 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
         @Query("""
                         MATCH (u:User)-[:Participated]->(a:Activity)<-[:`Related-To`]-(p:Post)
                         WHERE elementId(u) = $userID
-                        AND lower(a.name) CONTAINS lower($activityName)
+                        AND toLower(a.name) CONTAINS toLower($activityName)
                         SET a.streak = p.streak
-                        RETURN a;
+                        RETURN DISTINCT a;
+
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID,
                         @Param("activityName") String activityName);
