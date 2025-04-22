@@ -7,7 +7,7 @@ import { translations } from "../../translations/translation";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import ProfileNavigation from "../components/ProfileNavigation";
 import FollowBox from "../components/FollowBox";
-import { getFollows } from "../repositories/ProfileRepository";
+import { getFollows } from "../repositories/UserRepository";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 

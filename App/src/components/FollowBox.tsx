@@ -4,6 +4,7 @@ import ProfilePicture from "./ProfilePicture";
 import { translations } from "../../translations/translation";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { convertQuantityToString } from "../utils/Utils";
+import { followUser } from "../repositories/UserRepository";
 
 type Props = {
   navigation: any;

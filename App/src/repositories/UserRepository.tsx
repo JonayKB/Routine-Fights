@@ -136,3 +136,28 @@ export const getFollows = async (email: string) => {
 
   return response.data.data;
 };
+
+//TODO: remove first email with the own email in the ddbb
+export const followUser = async (ownEmail: string, email: string) => {
+  try {
+    const token = await RNSecureKeyStore.get("token");
+
+    const response = await axios.post(
+      neo4jUri,
+      {
+        query: `
+                mutation {
+                    followUser(followerEmail: ${ownEmail}, followingEmail: "${email}") {
+                }`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data.data.followUser;
+  } catch (error) {
+    throw new error("Error", error.response.data);
+  }
+};
