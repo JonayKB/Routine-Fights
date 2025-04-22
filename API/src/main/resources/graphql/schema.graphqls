@@ -11,13 +11,18 @@ type Query {
 
   postsV2(lastDate: String!, limit: Int): [PostOutputV2]
   postsByUserV2(userID: String!, lastDate: String!, limit: Int): [PostOutputV2]
-  postsByActivityV2(activityID: String!, lastDate: String!, limit: Int): [PostOutputV2]
+  postsByActivityV2(
+    activityID: String!
+    lastDate: String!
+    limit: Int
+  ): [PostOutputV2]
   postsFollowingV2(lastDate: String!, limit: Int): [PostOutputV2]
   postsSubscribedActivitiesV2(lastDate: String!, limit: Int): [PostOutputV2]
 
   paginationActivitiesV2(page: Int!, perPage: Int): [ActivityOutputV2]
   getOwnUser: UserOutputV2
   getSubscribedActivities: [ActivityOutputV2]
+  getSubscribedActivitiesWithStreaks: [ActivityOutputV2Streak]
 }
 
 type Mutation {
@@ -37,7 +42,6 @@ type Mutation {
   uploadPost(image: String!, activityID: String!): PostOutputV2
 
   createActivity(activityInput: ActivityInputV2!): ActivityOutputV2
-  
 }
 type ActivityOutputV2 {
   id: ID
@@ -50,6 +54,18 @@ type ActivityOutputV2 {
   creator: UserOutputV2
   timeRate: String
   timesRequiered: String
+}
+type ActivityOutputV2Streak {
+  id: ID
+  name: String
+  description: String
+  image: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  timeRate: String
+  timesRequiered: String
+  streak: Int
 }
 input ActivityInputV2 {
   name: String!

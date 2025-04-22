@@ -55,5 +55,9 @@ public class ActivityEntityService implements IActivityRepository {
     public List<Activity> getSubscribedActivities(String userID) {
         return activityEntityMapper.toDomain(activityEntityRepository.getSubscribedActivities(userID));
     }
+    @Override
+    public List<Activity> getSubscribedActivitiesWithStreak(String userID) {
+        return activityEntityMapper.toDomain(activityEntityRepository.getSubscribedActivitiesWithStreak(userID));
+    }
 
 }

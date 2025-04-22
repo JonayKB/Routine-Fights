@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
 
 @Service
@@ -36,5 +37,13 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                         RETURN a,r,u,cc,c
                         """)
         List<ActivityEntity> getSubscribedActivities(@Param("userID") String userID);
+
+        @Query("""
+                        MATCH (u:User)-[:Participated]->(a:Activity)<-[:`Related-To`]-(p:Post) 
+                        WHERE elementId(u)=$userID
+                        SET a.streak=p.streak 
+                        RETURN a;
+                        """)
+        List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID);
 
 }

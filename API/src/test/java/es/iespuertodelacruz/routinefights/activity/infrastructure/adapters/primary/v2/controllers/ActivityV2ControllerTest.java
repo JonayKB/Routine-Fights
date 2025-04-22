@@ -21,6 +21,7 @@ import es.iespuertodelacruz.routinefights.activity.domain.ports.primary.IActivit
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.dtos.ActivityInputV2;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.dtos.ActivityOutputV2;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.mappers.ActivityOutputV2Mapper;
+import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.mappers.ActivityOutputV2StreakMapper;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.exceptions.UserNotFoundException;
@@ -35,6 +36,7 @@ class ActivityControllerV2Test {
 
     private IActivityService activityService;
     private ActivityOutputV2Mapper activityOutputV2Mapper;
+    private ActivityOutputV2StreakMapper activityOutputV2StreakMapper;
     private IUserService userService;
 
     private ActivityInputV2 activityInputV2;
@@ -48,7 +50,8 @@ class ActivityControllerV2Test {
         activityOutputV2Mapper = mock(ActivityOutputV2Mapper.class);
         userService = mock(IUserService.class);
 
-        activityControllerV2 = new ActivityControllerV2(activityService, activityOutputV2Mapper, userService);
+        activityControllerV2 = new ActivityControllerV2(activityService, activityOutputV2Mapper, userService,
+                activityOutputV2StreakMapper);
 
         activityInputV2 = new ActivityInputV2("Test Activity", "Test Description", "test-image.png", "weekly", 3,
                 "100L");
