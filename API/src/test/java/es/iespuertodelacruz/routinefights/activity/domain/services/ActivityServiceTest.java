@@ -128,4 +128,20 @@ class ActivityServiceTest {
         assertEquals(2, result.size());
         verify(activityRepository, times(1)).getSubscribedActivities(userId);
     }
+
+    @Test
+    void testGetSubscribedActivitiesWithStreak(){
+        String userId = "user123";
+        List<Activity> activities = new ArrayList<>();
+        activities.add(new Activity());
+        activities.add(new Activity());
+
+        when(activityRepository.getSubscribedActivitiesWithStreak(userId)).thenReturn(activities);
+
+        List<Activity> result = activityService.getSubscribedActivitiesWithStreak(userId);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(activityRepository, times(1)).getSubscribedActivitiesWithStreak(userId);
+    }
 }
