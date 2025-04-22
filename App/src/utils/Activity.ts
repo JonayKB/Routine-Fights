@@ -4,6 +4,6 @@ export type Activity = {
     description: string;
     image: string;
     timeRate: string;
-    timesRequired: string;
-    category: string;
+    timesRequiered: string;
+    // category: string;
 }

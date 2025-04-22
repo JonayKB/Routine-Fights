@@ -5,6 +5,7 @@ import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
+import { subscribeActivity } from "../repositories/ActivitiesRepository";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 
@@ -15,8 +16,6 @@ const ActivityDetails = ({ navigation, route }: Props) => {
   useEffect(() => {
     setActivity(route.params.activity);
   }, [route.params.activity]);
-
-  const addActivity = () => {};
 
   return (
     <View className="flex-1 bg-[#E4DCE9] justify-center items-center">
@@ -36,15 +35,19 @@ const ActivityDetails = ({ navigation, route }: Props) => {
         </Text>
         <Text className="text-[#4B0082] text-xl">
           {translations[language || "en-EN"].screens.ActivityDetails.numOfTimes}
-          : {activity.timesRequired}
+          : {activity.timesRequiered}
         </Text>
         <Text className="text-[#4B0082] text-xl">
           {translations[language || "en-EN"].screens.ActivityDetails.frequency}:{" "}
           {activity.timeRate}
         </Text>
       </View>
+      {/** TODO: check if is subscribed or not */}
       <TouchableOpacity
-        onPress={addActivity}
+        onPress={async () => {
+          await subscribeActivity(activity.id);
+          navigation.goBack();
+        }}
         className="bg-[#E4007C] rounded-lg py-3 m-5 w-11/12 mb-10"
       >
         <Text

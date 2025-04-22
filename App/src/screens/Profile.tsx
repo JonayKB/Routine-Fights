@@ -29,21 +29,25 @@ const Profile = ({ navigation, route }: Props) => {
   const [following, setFollowing] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
+  const [ownUser, setOwnUser] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchUser = async () => {
-      let user: UserOut = null;
       try {
+        let user: UserOut;
         if (route.params?.id) {
           user = await getUser(route.params?.id);
         } else {
           user = await getOwnUser();
         }
+        let ownUser = await getOwnUser();
+        user.id === ownUser.id ? setOwnUser(true) : setOwnUser(false);
 
         setUser(user);
         setFollowers(convertQuantityToString(user.followers));
         setFollowing(convertQuantityToString(user.following));
       } catch (error) {
+        console.error("Error fetching user:", error);
         Alert.alert("Error", error.response.data);
       }
     };
@@ -108,10 +112,7 @@ const Profile = ({ navigation, route }: Props) => {
       )}
 
       {!!route.params?.id && (
-        <ProfileNavigation
-          navigation={navigation}
-          message={`${user.username}`}
-        />
+        <ProfileNavigation navigation={navigation} message={user.username} />
       )}
 
       <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">

@@ -10,7 +10,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
 import Streak from "../components/Streak";
-import { getActivities } from "../repositories/StreakRepository";
+import { getSubscribedActivities } from "../repositories/StreakRepository";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
@@ -23,20 +23,19 @@ const Streaks = ({ navigation, route }: Props) => {
     description: null,
     image: null,
     timeRate: "3",
-    timesRequired: null,
-    category: null,
+    timesRequiered: null
   };
   
   const [activities, setActivities] = useState<Activity[]>([addActivity]);
 
   useEffect(() => {
     const fetchActivities = async () => {
-      const list = await getActivities();
+      const list = await getSubscribedActivities();
       list.push(addActivity);
       setActivities(list);
     };
     fetchActivities();
-  }, []);
+  }, [load === true]);
 
   return (
     <View className="flex-1 items-center">

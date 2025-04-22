@@ -2,7 +2,7 @@ import axios from "axios";
 import { neo4jUri } from "../utils/Utils";
 import RNSecureKeyStore from "react-native-secure-key-store";
 
-export const getActivities = async () => {
+export const getSubscribedActivities = async () => {
   try {
     const token = await RNSecureKeyStore.get("token");
 
@@ -17,8 +17,7 @@ export const getActivities = async () => {
                         description,
                         image,
                         timeRate,
-                        timesRequired,
-                        category,
+                        timesRequiered
                     }
                 }`,
       },

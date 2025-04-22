@@ -7,67 +7,65 @@ import {
   Image,
   RefreshControl,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
+import { getActivities } from "../repositories/ActivitiesRepository";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
-const Activities = ({ navigation, route }: Props) => {
+const Activities = ({ navigation }: Props) => {
   const { language } = useLanguageContext();
-  const [filteredActivities, setFilteredActivities] = useState<Activity[]>([]);
   const [search, setSearch] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
-
-  const activities: Activity[] = [
-    {
-      id: "1",
-      name: "Activity 1",
-      description: "Description 1",
-      image: "https://picsum.photos/200/300",
-      timeRate: "1",
-      timesRequired: "1",
-      category: "1",
-    },
-    {
-      id: "2",
-      name: "Activity 2",
-      description: "Description 2",
-      image: "https://picsum.photos/200/300",
-      timeRate: "2",
-      timesRequired: "2",
-      category: "2",
-    },
-    {
-      id: "3",
-      name: "Activity 3",
-      description: "Description 3",
-      image: "https://picsum.photos/200/300",
-      timeRate: "3",
-      timesRequired: "3",
-      category: "3",
-    },
-  ];
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const pageNum = useRef(1);
 
   useEffect(() => {
-    if (search === "") {
-      return setFilteredActivities(activities);
+    pageNum.current = 1;
+    const fetchActivities = async () => {
+      try {
+        const response = await getActivities(pageNum.current);
+        setActivities(response);
+      } catch (error) {
+        console.error("Error fetching activities:", error);
+      }
+    };
+    fetchActivities();
+  }, [load === true]);
+
+  const loadMore = async () => {
+    pageNum.current += 1;
+    try {
+      const response = await getActivities(pageNum.current);
+      setActivities([...activities, response]);
+    } catch (error) {
+      console.error("Error fetching activities:", error);
     }
-    setFilteredActivities(
-      activities.filter((activity) =>
-        activity.name.toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [search]);
+  };
+
+  //TODO: delete this (use ddbb)
+  // useEffect(() => {
+  //   if (search === "") {
+  //     return setFilteredActivities(activities);
+  //   }
+  //   setFilteredActivities(
+  //     activities.filter((activity) =>
+  //       activity.name.toLowerCase().includes(search.toLowerCase())
+  //     )
+  //   );
+  // }, [search]);
 
   return (
     <View className="flex-1 bg-[#E4D8E9]">
       <View className="justify-center items-center">
         <TextInput
-          placeholder={translations[language || 'en-EN'].screens.Activities.name}
+          placeholder={
+            translations[language || "en-EN"].screens.Activities.name
+          }
           placeholderTextColor="#4B0082"
           inputMode="email"
           className="border-[#4B0082] border-2 rounded-xl bg-white text-2xl w-11/12 my-5 pl-3 text-black"
@@ -87,7 +85,7 @@ const Activities = ({ navigation, route }: Props) => {
           />
         }
         style={{ width: "100%" }}
-        data={filteredActivities}
+        data={activities}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
@@ -110,6 +108,7 @@ const Activities = ({ navigation, route }: Props) => {
         }}
         keyExtractor={(item) => item.id}
         numColumns={2}
+        onEndReached={loadMore}
       />
       <TouchableOpacity
         onPress={() => navigation.navigate("ActivityForm")}
