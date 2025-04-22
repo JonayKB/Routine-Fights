@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -472,6 +473,24 @@ class UserEntityServiceTest extends UserInitializer {
             userEntityService.findByEmailOnlyBase("email");
         });
         assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void getPaginationByNameTest() {
+        when(userEntityRepository.getPaginationByName(anyInt(), anyInt(), anyString())).thenReturn(new ArrayList<UserEntity>());
+        when(userEntityMapper.toDomain(anyList())).thenReturn(new ArrayList<User>());
+        assertNotNull(userEntityService.getPaginationByName(0, 10, "username"));
+    }
+
+    @Test
+    void getPaginationByNameExceptionTest() {
+        when(userEntityRepository.getPaginationByName(anyInt(), anyInt(), anyString()))
+                .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.getPaginationByName(0, 10, "username");
+        });
+        assertEquals(TEST_EXCEPTION, exception.getMessage());
     }
 
 }
