@@ -62,7 +62,8 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                         WHERE elementId(u) = $userID
                         AND lower(a.name) CONTAINS lower($activityName)
                         SET a.streak = p.streak
-                        RETURN a;
+                        RETURN DISTINCT a;
+
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID,
                         @Param("activityName") String activityName);
