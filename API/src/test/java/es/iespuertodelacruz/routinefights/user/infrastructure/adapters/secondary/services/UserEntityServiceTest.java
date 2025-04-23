@@ -477,18 +477,18 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void getPaginationByNameTest() {
-        when(userEntityRepository.getPaginationByName(anyInt(), anyInt(), anyString())).thenReturn(new ArrayList<UserEntity>());
+        when(userEntityRepository.getPaginationByName(anyInt(), anyInt(), anyString(),anyString())).thenReturn(new ArrayList<UserEntity>());
         when(userEntityMapper.toDomain(anyList())).thenReturn(new ArrayList<User>());
-        assertNotNull(userEntityService.getPaginationByName(0, 10, "username"));
+        assertNotNull(userEntityService.getPaginationByName(0, 10, "username", "id"));
     }
 
     @Test
     void getPaginationByNameExceptionTest() {
-        when(userEntityRepository.getPaginationByName(anyInt(), anyInt(), anyString()))
+        when(userEntityRepository.getPaginationByName(anyInt(), anyInt(), anyString(), anyString()))
                 .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userEntityService.getPaginationByName(0, 10, "username");
+            userEntityService.getPaginationByName(0, 10, "username", "id");
         });
         assertEquals(TEST_EXCEPTION, exception.getMessage());
     }

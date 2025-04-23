@@ -312,13 +312,21 @@ class UserControllerV2Test extends UserInitializer {
 
     @Test
     void getPaginationByNameTest() {
-        when(userService.getPaginationByName(anyInt(),anyInt(),anyString())).thenReturn(new ArrayList<User>());
+        when(userService.getPaginationByName(anyInt(),anyInt(),anyString(),anyString())).thenReturn(new ArrayList<User>());
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+
+
         assertNotNull(userControllerV2.getUserPaginationByName(1, 10, "username"));
     }
 
     @Test
     void getPaginationByNameExceptionTest() {
-        when(userService.getPaginationByName(anyInt(),anyInt(),anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+        when(userService.getPaginationByName(anyInt(),anyInt(),anyString(),anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userControllerV2.getUserPaginationByName(1, 10, "username");
         });
