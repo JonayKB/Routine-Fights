@@ -161,8 +161,8 @@ class UserServiceTest {
 
     @Test
     void getPaginationByNameTest() {
-        when(userRepository.getPaginationByName(anyInt(), anyInt(), anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userService.getPaginationByName(1, 10, "10"));
+        when(userRepository.getPaginationByName(anyInt(), anyInt(), anyString(),anyString())).thenReturn(new ArrayList<User>());
+        assertNotNull(userService.getPaginationByName(1, 10, "10", "1"));
     }
 
 }

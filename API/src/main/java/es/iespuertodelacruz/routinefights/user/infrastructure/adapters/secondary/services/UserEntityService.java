@@ -368,9 +368,9 @@ public class UserEntityService implements IUserRepository {
     }
 
     @Override
-    public List<User> getPaginationByName(int offset, int limit, String userName) {
+    public List<User> getPaginationByName(int offset, int limit, String userName, String userID) {
         try {
-            return userEntityMapper.toDomain(userRepository.getPaginationByName(offset, limit, userName));
+            return userEntityMapper.toDomain(userRepository.getPaginationByName(offset, limit, userName,userID));
         } catch (Exception e) {
             throw new UserNotFoundException(e.getMessage());
         }

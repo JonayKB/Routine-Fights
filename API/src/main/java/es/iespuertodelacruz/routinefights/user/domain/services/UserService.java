@@ -142,9 +142,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> getPaginationByName(int page,int perPage, String userName) {
+    public List<User> getPaginationByName(int page,int perPage, String userName, String userID) {
         int offset = (page - 1) * perPage;
-        return userRepository.getPaginationByName(offset, perPage, userName);
+        return userRepository.getPaginationByName(offset, perPage, userName, userID);
     }
 
     
