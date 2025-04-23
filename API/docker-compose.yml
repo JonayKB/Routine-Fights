@@ -31,6 +31,8 @@ services:
     environment:
         - NEO4J_AUTH=neo4j/***REMOVED***
     restart: always
+    ports:
+      - "7687:7687"
     networks:
       - apiNetwork
 
