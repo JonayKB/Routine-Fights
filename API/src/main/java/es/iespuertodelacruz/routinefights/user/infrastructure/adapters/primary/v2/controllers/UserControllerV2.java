@@ -221,4 +221,20 @@ public class UserControllerV2 {
         return userOutputMapper.toOutputDTOV2(user);
     }
 
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("getUserPaginationByName")
+    public List<UserOutputDTOV2> getUserPaginationByName(@Argument int page, @Argument int perPage,
+            @Argument String userName) {
+        try {
+            if (page < 0 || perPage <= 0) {
+                throw new IllegalArgumentException("Page and perPage must be greater than 0");
+            }
+            User self = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+            return userOutputMapper.toOutputDTOV2(userService.getPaginationByName(page, perPage, userName, self.getId()));
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(getUserPaginationByName) Error finding users: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding users");
+        }
+    }
+
 }

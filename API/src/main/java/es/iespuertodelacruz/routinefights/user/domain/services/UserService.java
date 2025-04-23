@@ -141,5 +141,11 @@ public class UserService implements IUserService {
         return userRepository.findByEmailOnlyBase(email);
     }
 
+    @Override
+    public List<User> getPaginationByName(int page,int perPage, String userName, String userID) {
+        int offset = (page - 1) * perPage;
+        return userRepository.getPaginationByName(offset, perPage, userName, userID);
+    }
+
     
 }
