@@ -4,6 +4,11 @@ type Query {
 
   usersV2(regex: String!): [Followers]
   userV2(id: ID!): UserOutputV2
+  getUserPaginationByName(
+    page: Int!
+    perPage: Int!
+    userName: String!
+  ): [UserOutputV2]
 
   followersByEmail(email: String!): [Followers]
   followedByEmail(email: String!): [Followers]

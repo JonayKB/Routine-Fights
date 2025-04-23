@@ -94,4 +94,6 @@ public interface IUserCommon<T> extends ICRUD<T> {
 
     public T findByEmailOnlyBase(String email);
 
+    public List<T> getPaginationByName(int page, int perPage, String userName, String userID);
+
 }
