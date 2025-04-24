@@ -1,5 +1,7 @@
 package es.iespuertodelacruz.routinefights.shared.controllers;
 
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,6 +26,7 @@ public class GraphController {
 
     @GetMapping("/users/creation")
     @Secured("ROLE_ADMIN")
+    @Cacheable(value = "userCreationChart")
     public ResponseEntity<?> getUserCreationChart() {
         try {
             return ResponseEntity.ok(graphService.findUserRegistrationsByDate());
@@ -34,6 +37,7 @@ public class GraphController {
 
     @GetMapping("/posts/creation")
     @Secured("ROLE_ADMIN")
+    @Cacheable(value = "postCreationChart")
     public ResponseEntity<?> getPostCreationChart() {
         try {
             return ResponseEntity.ok(graphService.findPostsCreatedByDate());
@@ -44,6 +48,7 @@ public class GraphController {
 
     @GetMapping("/posts/points")
     @Secured("ROLE_ADMIN")
+    @Cacheable(value = "postPointsChart")
     public ResponseEntity<?> getPostPointsChart() {
         try {
             return ResponseEntity.ok(graphService.findPointsAddedSumByDate());
@@ -54,6 +59,7 @@ public class GraphController {
 
     @GetMapping("/users/points")
     @Secured("ROLE_ADMIN")
+    @Cacheable(value = "userPointsChart")
     public ResponseEntity<?> getUsersTotalPoints() {
         try {
             return ResponseEntity.ok(graphService.findTotalPointsByUser());
@@ -64,6 +70,7 @@ public class GraphController {
 
     @GetMapping("/activities/timerate")
     @Secured("ROLE_ADMIN")
+    @Cacheable(value = "activityTimeRateChart")
     public ResponseEntity<?> getActivityTimeRate() {
         try {
             return ResponseEntity.ok(graphService.findActivitiesByTimeRate());
@@ -71,5 +78,7 @@ public class GraphController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    
 
 }
