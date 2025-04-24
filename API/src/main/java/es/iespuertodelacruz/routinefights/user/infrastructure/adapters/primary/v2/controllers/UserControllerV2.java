@@ -237,4 +237,28 @@ public class UserControllerV2 {
         }
     }
 
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @MutationMapping("likePost")
+    public Boolean likePost(@Argument String postID) {
+        try {
+            User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+            return userService.likePost(user.getId(), postID);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(likePost) Error liking post: {0}", e.getMessage());
+            throw new UserUpdateException("Error liking post");
+        }
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @MutationMapping("unLikePost")
+    public boolean unLikePost(@Argument String postID) {
+        try {
+            User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+            return userService.unLikePost(user.getId(), postID);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(unLikePost) Error unliking post: {0}", e.getMessage());
+            throw new UserUpdateException("Error unliking post");
+        }
+    }
+
 }
