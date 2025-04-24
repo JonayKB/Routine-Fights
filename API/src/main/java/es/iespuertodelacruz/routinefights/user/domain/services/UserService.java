@@ -147,5 +147,14 @@ public class UserService implements IUserService {
         return userRepository.getPaginationByName(offset, perPage, userName, userID);
     }
 
+    @Override
+    public Boolean likePost(String userId, String postId) {
+        return userRepository.likePost(userId, postId);
+    }
+
+    @Override
+    public Boolean unLikePost(String userId, String postId) {
+        return userRepository.unLikePost(userId, postId);
+    }
     
 }

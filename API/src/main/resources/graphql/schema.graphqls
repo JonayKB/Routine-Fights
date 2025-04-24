@@ -43,6 +43,8 @@ type Mutation {
 
   followUser(followerEmail: String!, followingEmail: String!): Boolean
   unfollowUser(followerEmail: String!, followingEmail: String!): Boolean
+  likePost(postID: String!): Boolean
+  unLikePost(postID: String!): Boolean
   subscribeActivity(activityID: String!): Boolean
   unSubscribeActivity(activityID: String!): Boolean
 
