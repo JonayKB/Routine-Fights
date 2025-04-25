@@ -157,34 +157,34 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void findFollowedUsersByEmailTest() {
-        when(userEntityRepository.findFollowedUsersByEmail(anyString())).thenReturn(new ArrayList<UserEntity>());
-        assertNotNull(userEntityService.findFollowedUsersByEmail("email"));
+        when(userEntityRepository.findFollowedUsersByEmail(anyString(),anyString())).thenReturn(new ArrayList<UserEntity>());
+        assertNotNull(userEntityService.findFollowedUsersByEmail("email","name"));
     }
 
     @Test
     void findFollowedUsersByEmailExceptionTest() {
-        when(userEntityRepository.findFollowedUsersByEmail(anyString()))
+        when(userEntityRepository.findFollowedUsersByEmail(anyString(),anyString()))
                 .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userEntityService.findFollowedUsersByEmail("email");
+            userEntityService.findFollowedUsersByEmail("email","name");
         });
         assertEquals("Followed users not found", exception.getMessage());
     }
 
     @Test
     void findFollowersByEmailTest() {
-        when(userEntityRepository.findFollowersByEmail(anyString())).thenReturn(new ArrayList<UserEntity>());
-        assertNotNull(userEntityService.findFollowersByEmail("email"));
+        when(userEntityRepository.findFollowersByEmail(anyString(),anyString())).thenReturn(new ArrayList<UserEntity>());
+        assertNotNull(userEntityService.findFollowersByEmail("email","name"));
     }
 
     @Test
     void findFollowersByEmailExceptionTest() {
-        when(userEntityRepository.findFollowersByEmail(anyString()))
+        when(userEntityRepository.findFollowersByEmail(anyString(),anyString()))
                 .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userEntityService.findFollowersByEmail("email");
+            userEntityService.findFollowersByEmail("email","name");
         });
         assertEquals("Followers not found", exception.getMessage());
     }
