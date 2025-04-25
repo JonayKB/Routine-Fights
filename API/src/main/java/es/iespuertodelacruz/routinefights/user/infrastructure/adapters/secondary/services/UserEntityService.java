@@ -277,18 +277,18 @@ public class UserEntityService implements IUserRepository {
     }
 
     @Override
-    public List<User> findFollowedUsersByEmail(String email) {
+    public List<User> findFollowedUsersByEmail(String email, String usernameFilter) {
         try {
-            return userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email));
+            return userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email, usernameFilter));
         } catch (Exception e) {
             throw new UserNotFoundException("Followed users not found");
         }
     }
 
     @Override
-    public List<User> findFollowersByEmail(String email) {
+    public List<User> findFollowersByEmail(String email, String usernameFilter) {
         try {
-            return userEntityMapper.toDomain(userRepository.findFollowersByEmail(email));
+            return userEntityMapper.toDomain(userRepository.findFollowersByEmail(email, usernameFilter));
         } catch (Exception e) {
             throw new UserNotFoundException("Followers not found");
         }
