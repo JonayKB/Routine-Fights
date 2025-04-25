@@ -165,4 +165,15 @@ class UserServiceTest {
         assertNotNull(userService.getPaginationByName(1, 10, "10", "1"));
     }
 
+    @Test
+    void likePostTest() {
+        when(userRepository.likePost(anyString(), anyString())).thenReturn(true);
+        assertTrue(userService.likePost("frEmail", "postId"));
+    }
+    @Test
+    void unlikePostTest() {
+        when(userRepository.unLikePost(anyString(), anyString())).thenReturn(true);
+        assertTrue(userService.unLikePost("frEmail", "postId"));
+    }
+
 }

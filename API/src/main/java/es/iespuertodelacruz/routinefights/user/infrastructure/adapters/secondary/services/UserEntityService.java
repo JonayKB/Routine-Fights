@@ -375,4 +375,22 @@ public class UserEntityService implements IUserRepository {
             throw new UserNotFoundException(e.getMessage());
         }
     }
+
+    @Override
+    public Boolean likePost(String userId, String postId) {
+        try {
+            return userRepository.likePost(userId, postId);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error liking post");
+        }
+    }
+
+    @Override
+    public Boolean unLikePost(String userId, String postId) {
+        try {
+            return userRepository.unLikePost(userId, postId);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error unliking post");
+        }
+    }
 }

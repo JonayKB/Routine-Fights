@@ -12,7 +12,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
 @Repository
 public interface IUserEntityRepository extends Neo4jRepository<UserEntity, String> {
     public UserEntity findByEmail(String email);
-    
+
     @Query("MATCH (u:User {email: $email}) RETURN u")
     public UserEntity findByEmailOnlyBase(String email);
 
@@ -45,4 +45,10 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
     @Query("MATCH (u: User) WHERE u.username CONTAINS $userName AND elementId(u) != $userID RETURN u SKIP $offset LIMIT $limit")
     public List<UserEntity> getPaginationByName(@Param("offset") int offset, @Param("limit") int limit,
             @Param("userName") String userName, @Param("userID") String userID);
+
+    @Query("MATCH (u: User) MATCH (p: Post) WHERE elementId(p) = $postID AND elementId(u) = $userID MERGE (u)-[:Liked]->(p) RETURN exists((u)-[:Liked]->(p))")
+    public Boolean likePost(@Param("userID") String userID, @Param("postID") String postID);
+
+    @Query("MATCH (u: User) MATCH (p: Post) WHERE elementId(p) = $postID AND elementId(u) = $userID MATCH (u)-[r:Liked]->(p) DELETE r RETURN COUNT(*) > 0")
+    public Boolean unLikePost(@Param("userID") String userID, @Param("postID") String postID);
 }

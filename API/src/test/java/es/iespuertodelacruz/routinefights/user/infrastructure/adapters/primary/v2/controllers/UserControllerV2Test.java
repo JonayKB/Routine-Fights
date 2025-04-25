@@ -332,4 +332,43 @@ class UserControllerV2Test extends UserInitializer {
         });
         assertEquals("Error finding users", exception.getMessage());
     }
+
+    @Test
+    void likePostTest() {
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+
+        when(userService.likePost(anyString(), anyString())).thenReturn(true);
+        assertTrue(userControllerV2.likePost("postId"));
+    }
+    @Test
+    void likePostExceptionTest() {
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+        when(userService.likePost(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV2.likePost("postId");
+        });
+        assertEquals("Error liking post", exception.getMessage());
+    }
+    @Test
+    void unlikePostTest() {
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+        when(userService.unLikePost(anyString(), anyString())).thenReturn(true);
+        assertTrue(userControllerV2.unLikePost("postId"));
+    }
+    @Test
+    void unlikePostExceptionTest() {
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+        when(userService.unLikePost(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV2.unLikePost("postId");
+        });
+        assertEquals("Error unliking post", exception.getMessage());
+    }
 }
