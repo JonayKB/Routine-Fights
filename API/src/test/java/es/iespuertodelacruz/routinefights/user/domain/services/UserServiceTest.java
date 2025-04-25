@@ -90,14 +90,14 @@ class UserServiceTest {
 
     @Test
     void findFollowedUsersByEmailTest() {
-        when(userRepository.findFollowedUsersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userService.findFollowedUsersByEmail(EMAIL));
+        when(userRepository.findFollowedUsersByEmail(anyString(),anyString())).thenReturn(new ArrayList<User>());
+        assertNotNull(userService.findFollowedUsersByEmail(EMAIL,"1"));
     }
 
     @Test
     void findFollowersByEmailTest() {
-        when(userRepository.findFollowersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userService.findFollowersByEmail(EMAIL));
+        when(userRepository.findFollowersByEmail(anyString(),anyString())).thenReturn(new ArrayList<User>());
+        assertNotNull(userService.findFollowersByEmail(EMAIL,"1"));
     }
 
     @Test

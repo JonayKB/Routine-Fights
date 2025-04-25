@@ -18,11 +18,13 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
 
     public boolean existsByEmail(String email);
 
-    @Query("MATCH (fr:User {email: $email})-[:FOLLOWS]->(fd: User) RETURN fd")
-    public List<UserEntity> findFollowedUsersByEmail(@Param("email") String email);
+    @Query("MATCH (fr:User {email: $email})-[:FOLLOWS]->(fd: User) WHERE lower(fd.username) CONTAINS lower($usernameFilter) RETURN fd")
+    public List<UserEntity> findFollowedUsersByEmail(@Param("email") String email,
+            @Param("usernameFilter") String usernameFilter);
 
-    @Query("MATCH (fr:User)-[:FOLLOWS]->(fd: User {email: $email}) RETURN fr")
-    public List<UserEntity> findFollowersByEmail(@Param("email") String email);
+    @Query("MATCH (fr:User)-[:FOLLOWS]->(fd: User {email: $email}) WHERE lower(fr.username) CONTAINS lower($usernameFilter) RETURN fr")
+    public List<UserEntity> findFollowersByEmail(@Param("email") String email,
+            @Param("usernameFilter") String usernameFilter);
 
     @Query("MATCH (fr: User {email: $frEmail}) MATCH (fd: User {email: $fdEmail}) MERGE (fr)-[:FOLLOWS]->(fd) RETURN COUNT(*) > 0")
     public boolean followUser(@Param("frEmail") String frEmail, @Param("fdEmail") String fdEmail);

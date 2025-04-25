@@ -100,11 +100,11 @@ public class UserControllerV2 {
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("followedByEmail")
-    public List<Follower> findFollowedUsersByEmail(@Argument String email) {
+    public List<Follower> findFollowedUsersByEmail(@Argument String email,@Argument String usernameFilter) {
         List<User> following;
         User self;
         try {
-            following = userService.findFollowedUsersByEmail(email);
+            following = userService.findFollowedUsersByEmail(email, usernameFilter);
             self = userService.findByEmail(email);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(findFollowedUsersByEmail) Error finding followed users: {0}", e.getMessage());
@@ -115,11 +115,11 @@ public class UserControllerV2 {
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("followersByEmail")
-    public List<Follower> findFollowersByEmail(@Argument String email) {
+    public List<Follower> findFollowersByEmail(@Argument String email, @Argument String usernameFilter) {
         List<User> followers;
         User self;
         try {
-            followers = userService.findFollowersByEmail(email);
+            followers = userService.findFollowersByEmail(email, usernameFilter);
             self = userService.findByEmailOnlyBase(email);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(findFollowersByEmail) Error finding followers: {0}", e.getMessage());

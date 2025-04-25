@@ -80,13 +80,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> findFollowedUsersByEmail(String email) {
-        return userRepository.findFollowedUsersByEmail(email);
+    public List<User> findFollowedUsersByEmail(String email, String usernameFilter) {
+        return userRepository.findFollowedUsersByEmail(email, usernameFilter);
     }
 
     @Override
-    public List<User> findFollowersByEmail(String email) {
-        return userRepository.findFollowersByEmail(email);
+    public List<User> findFollowersByEmail(String email, String usernameFilter) {
+        return userRepository.findFollowersByEmail(email, usernameFilter);
     }
 
     @Override
