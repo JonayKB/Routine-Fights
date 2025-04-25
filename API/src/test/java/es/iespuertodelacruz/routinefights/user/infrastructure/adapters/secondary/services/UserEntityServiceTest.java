@@ -493,4 +493,34 @@ class UserEntityServiceTest extends UserInitializer {
         assertEquals(TEST_EXCEPTION, exception.getMessage());
     }
 
+    @Test
+    void likePostTest() {
+        when(userEntityRepository.likePost(anyString(), anyString())).thenReturn(true);
+        assertTrue(userEntityService.likePost("id", "postId"));
+    }
+    @Test
+    void likePostExceptionTest() {
+        when(userEntityRepository.likePost(anyString(), anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.likePost("id", "postId");
+        });
+        assertEquals("Error liking post", exception.getMessage());
+    }
+    @Test
+    void unlikePostTest() {
+        when(userEntityRepository.unLikePost(anyString(), anyString())).thenReturn(true);
+        assertTrue(userEntityService.unLikePost("id", "postId"));
+    }
+
+    @Test
+    void unlikePostExceptionTest() {
+        when(userEntityRepository.unLikePost(anyString(), anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.unLikePost("id", "postId");
+        });
+        assertEquals("Error unliking post", exception.getMessage());
+    }
+
 }

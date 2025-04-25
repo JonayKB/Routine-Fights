@@ -96,4 +96,9 @@ public interface IUserCommon<T> extends ICRUD<T> {
 
     public List<T> getPaginationByName(int page, int perPage, String userName, String userID);
 
+    public Boolean likePost(String id, String postId);
+
+    public Boolean unLikePost(String id, String postId);
+
+
 }
