@@ -30,14 +30,14 @@ public interface IUserCommon<T> extends ICRUD<T> {
      * 
      * @return List<User>
      */
-    public List<T> findFollowedUsersByEmail(String email);
+    public List<T> findFollowedUsersByEmail(String email, String usernameFilter);
 
     /**
      * Method to find the followers by user's email
      * 
      * @return List<User>
      */
-    public List<T> findFollowersByEmail(String email);
+    public List<T> findFollowersByEmail(String email, String usernameFilter);
 
     /**
      * Method to follow a user

@@ -96,32 +96,32 @@ class UserControllerV2Test extends UserInitializer {
 
     @Test
     void findFollowedUsersByEmailTest() {
-        when(userService.findFollowedUsersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userControllerV2.findFollowedUsersByEmail("email"));
+        when(userService.findFollowedUsersByEmail(anyString(),anyString())).thenReturn(new ArrayList<User>());
+        assertNotNull(userControllerV2.findFollowedUsersByEmail("email","name"));
     }
 
     @Test
     void findFollowedUsersByEmailExceptionTest() {
-        when(userService.findFollowedUsersByEmail(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        when(userService.findFollowedUsersByEmail(anyString(),anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV2.findFollowedUsersByEmail("email");
+            userControllerV2.findFollowedUsersByEmail("email","name");
         });
         assertEquals("Error finding followed users", exception.getMessage());
     }
 
     @Test
     void findFollowersByEmailTest() {
-        when(userService.findFollowersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userControllerV2.findFollowersByEmail("email"));
+        when(userService.findFollowersByEmail(anyString(),anyString())).thenReturn(new ArrayList<User>());
+        assertNotNull(userControllerV2.findFollowersByEmail("email","name"));
     }
 
     @Test
     void findFollowersByEmailExceptionTest() {
-        when(userService.findFollowersByEmail(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        when(userService.findFollowersByEmail(anyString(),anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV2.findFollowersByEmail("email");
+            userControllerV2.findFollowersByEmail("email","name");
         });
         assertEquals("Error finding followers", exception.getMessage());
     }

@@ -10,8 +10,8 @@ type Query {
     userName: String!
   ): [UserOutputV2]
 
-  followersByEmail(email: String!): [Followers]
-  followedByEmail(email: String!): [Followers]
+  followersByEmail(email: String!,usernameFilter:String!): [Followers]
+  followedByEmail(email: String!,usernameFilter:String!): [Followers]
   images: [String]
 
   postsV2(lastDate: String!, limit: Int): [PostOutputV2]
