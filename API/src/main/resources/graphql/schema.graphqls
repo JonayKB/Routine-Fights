@@ -41,10 +41,10 @@ type Mutation {
   updateUserV2(user: UserInputV2): UserOutputV2
   deleteUserV2(id: ID!): Boolean
 
-  followUser(followerEmail: String!, followingEmail: String!): Boolean
-  unfollowUser(followerEmail: String!, followingEmail: String!): Boolean
   likePost(postID: String!): Boolean
   unLikePost(postID: String!): Boolean
+  followUser(followingEmail: String!): Boolean
+  unfollowUser(followingEmail: String!): Boolean
   subscribeActivity(activityID: String!): Boolean
   unSubscribeActivity(activityID: String!): Boolean
 
