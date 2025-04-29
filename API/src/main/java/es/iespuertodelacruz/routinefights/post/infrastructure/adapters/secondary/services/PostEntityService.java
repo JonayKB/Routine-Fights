@@ -68,6 +68,11 @@ public class PostEntityService implements IPostRepository {
     public List<String> findAllImages() {
         return postEntityRepository.findAllImages();
     }
-    
+
+    @Override
+    public Post findById(String id) {
+        return postEntityMapper.toDomain(postEntityRepository.findById(id).orElse(null));
+    }
+
 
 }

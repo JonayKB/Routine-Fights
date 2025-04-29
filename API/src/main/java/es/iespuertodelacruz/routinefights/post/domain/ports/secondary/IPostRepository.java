@@ -15,4 +15,5 @@ public interface IPostRepository {
     List<Post> getPaginationFollowing(LocalDateTime lastDate, int limit, String userID);
     List<Post> getPaginationSubscribedActivities(LocalDateTime lastDate, int limit, String userID);
     List<String> findAllImages();
+    Post findById(String postID);
 }

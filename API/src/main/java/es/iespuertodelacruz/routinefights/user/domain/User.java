@@ -21,6 +21,15 @@ public class User extends UserCommon {
     }
 
     /**
+     * Constructor with id
+     * 
+     * @param id The id of the user
+     */
+    public User(String id) {
+        this.id = id;
+    }
+
+    /**
      * Constructor with values
      * 
      * @param username          The username of the user
