@@ -2,8 +2,6 @@ type Query {
   usersV3: [UserOutputV3]
   userV3(id: ID!): UserOutputV3
 
-  usersV2(regex: String!): [Followers]
-  userV2(id: ID!): UserOutputV2
   getUserPaginationByName(
     page: Int!
     perPage: Int!
@@ -24,12 +22,11 @@ type Query {
   postsFollowingV2(lastDate: String!, limit: Int): [PostOutputV2]
   postsSubscribedActivitiesV2(lastDate: String!, limit: Int): [PostOutputV2]
 
-  paginationActivitiesV2(page: Int!, perPage: Int): [ActivityOutputV2]
   paginationActivitiesNotSubscribed(page: Int!, perPage: Int,activityName:String): [ActivityOutputV2]
   getOwnUser: UserOutputV2
-  getSubscribedActivities: [ActivityOutputV2]
   getSubscribedActivitiesWithStreakByName(activityName:String!): [ActivityOutputV2Streak]
-  getSubscribedActivitiesWithStreaks: [ActivityOutputV2Streak]
+  getComments(postID: String!): [CommentOutputV2]
+
 }
 
 type Mutation {
@@ -51,6 +48,21 @@ type Mutation {
   uploadPost(image: String!, activityID: String!): PostOutputV2
 
   createActivity(activityInput: ActivityInputV2!): ActivityOutputV2
+
+  postComment(commentInput: CommentInputV2!): CommentOutputV2
+}
+input CommentInputV2 {
+  message: String!
+  postID: String!
+  replingID: String
+}
+
+type CommentOutputV2 {
+  id: ID
+  message: String
+  postID: String
+  user: UserOutputV2
+  createdAt: String
 }
 type ActivityOutputV2 {
   id: ID
