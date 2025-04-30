@@ -23,6 +23,6 @@ export const getToken = async (): Promise<string | null> => {
   try {
     return await RNSecureKeyStore.get("token");
   } catch (error) {
-    return null;
+    throw new error("Error", error.response.data);
   }
 };

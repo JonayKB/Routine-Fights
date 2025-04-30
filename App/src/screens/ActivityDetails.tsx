@@ -5,7 +5,7 @@ import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
-import { subscribeActivity } from "../repositories/ActivitiesRepository";
+import { subscribeActivity } from "../repositories/ActivityRepository";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 

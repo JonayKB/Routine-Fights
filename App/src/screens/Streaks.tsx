@@ -8,25 +8,26 @@ import {
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
-import { Activity } from "../utils/Activity";
 import Streak from "../components/Streak";
-import { getSubscribedActivities } from "../repositories/StreakRepository";
+import { getSubscribedActivities } from "../repositories/ActivityRepository";
+import { ActivityWithStreak } from "../utils/ActivityWithStreak";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
 const Streaks = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
 
-  const addActivity: Activity = {
+  const addActivity: ActivityWithStreak = {
     id: "true",
     name: null,
     description: null,
     image: null,
     timeRate: "3",
-    timesRequiered: null
+    timesRequiered: null,
+    streak: 0
   };
   
-  const [activities, setActivities] = useState<Activity[]>([addActivity]);
+  const [activities, setActivities] = useState<ActivityWithStreak[]>([addActivity]);
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -67,7 +68,7 @@ const Streaks = ({ navigation, route }: Props) => {
                     </Text>
                   </TouchableOpacity>
                 ) : (
-                  <Streak name={item.name} description={item.description} />
+                  <Streak name={item.name} description={item.description} streak={item.streak}/>
                 )}
               </View>
             );

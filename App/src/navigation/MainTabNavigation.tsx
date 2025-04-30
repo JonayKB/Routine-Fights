@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "../screens/Home";
 import Events from "../screens/Events";
 import ActivitiesStackNavigation from "./ActivitiesStackNavigation";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -11,7 +10,7 @@ import { Image } from "react-native";
 import { uri } from "../utils/Utils";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import { UserOut } from "../utils/User";
-import { getOwnUserImage } from "../repositories/ProfileRepository";
+import { getOwnUserImage } from "../repositories/UserRepository";
 import HomeStackNavigation from "./HomeStackNavigation";
 
 type Props = {};

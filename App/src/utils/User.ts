@@ -23,9 +23,8 @@ export type UserOut = {
 export type Followers = {
   id: string;
   username: string;
-  nationality: string;
   image: string;
-  createdAt: string;
   followers: number;
   following: number;
+  isFollowing: boolean;
 };
