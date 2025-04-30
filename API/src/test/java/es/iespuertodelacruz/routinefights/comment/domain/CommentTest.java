@@ -2,6 +2,8 @@ package es.iespuertodelacruz.routinefights.comment.domain;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Test;
 import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -77,6 +79,8 @@ class CommentTest {
         LocalDateTime deletedAt = LocalDateTime.now();
         Post post = new Post();
         User user = new User();
+        user.setFollowers(new ArrayList<>());
+        user.setFollowing(new ArrayList<>());
         Comment replyingComment = new Comment("replyId");
 
         Comment comment = new Comment("id", "message", createdAt, updatedAt, deletedAt, post, user, replyingComment);
