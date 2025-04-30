@@ -45,7 +45,13 @@
             "description": "Description",
             "timeRate": "Time rate",
             "timesRequired": "Times required",
-            "post": "Post"
+            "post": "Post",
+            "timeRates": {
+                "daily": "daily",
+                "weekly": "weekly",
+                "monthly": "monthly",
+                "yearly": "yearly"
+            }
         }
     }
 }

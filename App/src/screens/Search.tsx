@@ -1,47 +1,28 @@
 import {
   View,
-  TextInput,
   FlatList,
-  TouchableOpacity,
 } from "react-native";
-import React, { useRef, useState } from "react";
-import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import React, { useState } from "react";
 import { Followers } from "../utils/User";
 import { fetchUsersByName } from "../repositories/SearchRepository";
 import FollowBox from "../components/FollowBox";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
-import Icon from "react-native-vector-icons/Ionicons";
+import SearchBar from '../components/SearchBar';
 
 type Props = NativeStackScreenProps<HomeStackProps, "Search">;
 
 const Search = ({ navigation }: Props) => {
-  const { language } = useLanguageContext();
   const [users, setUsers] = useState<Followers[]>([]);
-  const regex = useRef<string>(null);
 
   return (
     <View>
-      <View className="flex-row bg-[#F1FEFC] border-b-2 border-[#4B0082] p-5 items-center">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} color="#4B0082" />
-        </TouchableOpacity>
-        <TextInput
-          className="flex-1 bg-[#4B0082] rounded-xl p-3 ml-2"
-          placeholder={translations[language].screens.Home.search}
-          onChangeText={async (text) => {
-            regex.current = text;
-            setUsers(await fetchUsersByName(text));
-          }}
-        />
-      </View>
+      <SearchBar navigation={navigation} searchFunction={async (text) => setUsers(await fetchUsersByName(text))}/>
       <View className="items-center">
         <FlatList
           style={{ width: "100%" }}
           data={users}
           renderItem={({ item }) => {
-            regex.current = item.username;
             return <FollowBox navigation={navigation} item={item} />;
           }}
           keyExtractor={(item) => item.id}

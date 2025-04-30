@@ -94,7 +94,6 @@ export const getUser = async (id: string): Promise<UserOut> => {
     );
     return response.data.data.userV2;
   } catch (error) {
-    // TODO: try with typeORM
     throw new error("Error", error.response.data);
   }
 };
@@ -105,7 +104,7 @@ export const getFollows = async (email: string) => {
     {
       query: `
             query {
-                followersByEmail(email: "${email}") {
+                followersByEmail(email: "${email}", usernameFilter: "") {
                     id
                     username
                     nationality
@@ -113,9 +112,10 @@ export const getFollows = async (email: string) => {
                     createdAt
                     followers
                     following
+                    isFollowing
                 }
                     
-                followedByEmail(email: "${email}") {
+                followedByEmail(email: "${email}", usernameFilter: "") {
                     id
                     username
                     nationality
@@ -123,6 +123,7 @@ export const getFollows = async (email: string) => {
                     createdAt
                     followers
                     following
+                    isFollowing
                 }
             }
         `,
@@ -137,8 +138,7 @@ export const getFollows = async (email: string) => {
   return response.data.data;
 };
 
-//TODO: remove first email with the own email in the ddbb
-export const followUser = async (ownEmail: string, email: string) => {
+export const followUser = async (email: string) => {
   try {
     const token = await RNSecureKeyStore.get("token");
 
@@ -147,7 +147,31 @@ export const followUser = async (ownEmail: string, email: string) => {
       {
         query: `
                 mutation {
-                    followUser(followerEmail: ${ownEmail}, followingEmail: "${email}") {
+                    followUser(followingEmail: "${email}") {
+                }`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data.data.followUser;
+  } catch (error) {
+    throw new error("Error", error.response.data);
+  }
+};
+
+export const unfollowUser = async (email: string) => {
+  try {
+    const token = await RNSecureKeyStore.get("token");
+
+    const response = await axios.post(
+      neo4jUri,
+      {
+        query: `
+                mutation {
+                    unfollowUser(followingEmail: "${email}") {
                 }`,
       },
       {

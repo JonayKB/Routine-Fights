@@ -7,7 +7,11 @@ import { translations } from "../../translations/translation";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import ProfileNavigation from "../components/ProfileNavigation";
 import FollowBox from "../components/FollowBox";
-import { getFollows } from "../repositories/UserRepository";
+import {
+  followUser,
+  getFollows,
+  unfollowUser,
+} from "../repositories/UserRepository";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 
@@ -53,7 +57,18 @@ const FollowList = ({ navigation, route }: Props) => {
           style={{ width: "100%" }}
           data={users}
           renderItem={({ item }) => {
-            return <FollowBox navigation={navigation} item={item} />;
+            return (
+              <FollowBox
+                navigation={navigation}
+                item={item}
+                followFunction={async (item) =>
+                  item.isFollowing
+                  // TODO: Change item.id with item.email
+                    ? await unfollowUser(item.id)
+                    : await followUser(item.id)
+                }
+              />
+            );
           }}
           keyExtractor={(item) => item.id}
         />

@@ -46,7 +46,13 @@
             "description": "Descripcion",
             "timeRate": "Intervalo de tiempo",
             "timesRequired": "Veces requeridas",
-            "post": "Subir"
+            "post": "Subir",
+            "timeRates": {
+                "daily": "a diario",
+                "weekly": "semanal",
+                "monthly": "mensual",
+                "yearly": "anual"
+            }
         }
     }
 }

@@ -5,6 +5,8 @@ import ImageStackNavigation from "../navigation/ImageStackNavigation";
 import DropDown from "../components/DropDown";
 import { translations } from "../../translations/translation";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { getSubscribedActivities } from "../repositories/ActivityRepository";
+import { Activity } from "../utils/Activity";
 
 type Props = {};
 
@@ -15,20 +17,19 @@ const UploadForm = (props: Props) => {
   const { language } = useLanguageContext();
 
   useEffect(() => {
-    setCategories([
-      {
-        label: "Category 1",
-        value: "1",
-      },
-      {
-        label: "Category 2",
-        value: "2",
-      },
-      {
-        label: "Category 3",
-        value: "3",
-      },
-    ]);
+    const fetchCategories = async () => {
+      try {
+        const response = await getSubscribedActivities();
+        const categories = response.map((category: Activity) => ({
+          label: category.name,
+          value: category.id,
+        }));
+        setCategories(categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
   }, []);
 
   return (

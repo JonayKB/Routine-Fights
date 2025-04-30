@@ -13,13 +13,12 @@ import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
-import { getActivities } from "../repositories/ActivitiesRepository";
+import { getActivitiesNotSubscribed } from "../repositories/ActivityRepository";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
 const Activities = ({ navigation }: Props) => {
   const { language } = useLanguageContext();
-  const [search, setSearch] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
   const [activities, setActivities] = useState<Activity[]>([]);
   const pageNum = useRef(1);
@@ -28,7 +27,7 @@ const Activities = ({ navigation }: Props) => {
     pageNum.current = 1;
     const fetchActivities = async () => {
       try {
-        const response = await getActivities(pageNum.current);
+        const response = await getActivitiesNotSubscribed(pageNum.current, "");
         setActivities(response);
       } catch (error) {
         console.error("Error fetching activities:", error);
@@ -40,36 +39,22 @@ const Activities = ({ navigation }: Props) => {
   const loadMore = async () => {
     pageNum.current += 1;
     try {
-      const response = await getActivities(pageNum.current);
+      const response = await getActivitiesNotSubscribed(pageNum.current, "");
       setActivities([...activities, response]);
     } catch (error) {
       console.error("Error fetching activities:", error);
     }
   };
 
-  //TODO: delete this (use ddbb)
-  // useEffect(() => {
-  //   if (search === "") {
-  //     return setFilteredActivities(activities);
-  //   }
-  //   setFilteredActivities(
-  //     activities.filter((activity) =>
-  //       activity.name.toLowerCase().includes(search.toLowerCase())
-  //     )
-  //   );
-  // }, [search]);
-
   return (
     <View className="flex-1 bg-[#E4D8E9]">
       <View className="justify-center items-center">
         <TextInput
           placeholder={
-            translations[language || "en-EN"].screens.Activities.name
+            translations[language || "en-EN"].screens.Home.search
           }
           placeholderTextColor="#4B0082"
-          inputMode="email"
           className="border-[#4B0082] border-2 rounded-xl bg-white text-2xl w-11/12 my-5 pl-3 text-black"
-          onChangeText={(text) => setSearch(text)}
         />
       </View>
       <FlatList
