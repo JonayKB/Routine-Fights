@@ -1,38 +1,5 @@
 {
     "screens": {
-        "Login": {
-            "email": "Email",
-            "password": "Contraseña",
-            "login": "Iniciar sesion",
-            "register": "Registrarse"
-        },
-        "Register": {
-            "username": "Nombre de usuario",
-            "confirmPassword": "Confirmar contraseña"
-        },
-        "Profile": {
-            "followers": "seguidores",
-            "following": "siguiendo",
-            "follow": "seguir",
-            "unfollow": "dejar de seguir"
-        },
-        "Settings": {
-            "language": "Idioma",
-            "darkMode": "Modo oscuro",
-            "logout": "Cerrar sesion",
-            "settings": "Ajustes"
-        },
-        "UploadForm": {
-            "select a category": "Elige una categoria",
-            "takeFromCamera": "Tomar foto",
-            "selectFromLibrary": "Tomar de galería",
-            "selectCategory": "Escoge una categoría",
-            "changePicture": "Cambiar foto",
-            "post": "Subir"
-        },
-        "Home": {
-            "search": "Buscar"
-        },
         "Activities": {
             "name": "Nombre"
         },
@@ -42,9 +9,9 @@
             "add": "Añadir"
         },
         "ActivityForm": {
-            "title": "Título",
+            "title": "Titulo",
             "description": "Descripcion",
-            "timeRate": "Intervalo de tiempo",
+            "timeRate": "Rango de tiempo",
             "timesRequired": "Veces requeridas",
             "post": "Subir",
             "timeRates": {
@@ -53,6 +20,50 @@
                 "monthly": "mensual",
                 "yearly": "anual"
             }
+        },
+        "Events": {
+        },
+        "FollowList": {
+        },
+
+        "Home": {
+            "search": "Buscar"
+        },
+        "Login": {
+            "email": "Email",
+            "password": "Contraseña",
+            "login": "Iniciar sesion",
+            "register": "Registrarse"
+        },
+        "Profile": {
+            "followers": "seguidores",
+            "following": "siguiendo",
+            "follow": "seguir",
+            "unfollow": "dejar de seguir"
+        },
+        "ProfileForm": {
+        },
+        "Register": {
+            "username": "nombre de usuario",
+            "confirmPassword": "Confirmar contraseña"
+        },
+        "Search": {
+        },
+        "Settings": {
+            "language": "Idioma",
+            "darkMode": "Modo oscuro",
+            "logout": "Cerrar sesion",
+            "settings": "Ajustes",
+            "editProfile": "Editar perfil"
+        },
+        "Streaks": {
+        },
+        "UploadForm": {
+            "takeFromCamera": "Tomar de camara",
+            "selectFromLibrary": "Tomar de galeria",
+            "selectCategory": "Selecciona categoria",
+            "changePicture": "Cambiar imagen",
+            "post": "Subir"
         }
     }
 }

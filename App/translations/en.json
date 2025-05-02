@@ -1,37 +1,5 @@
 {
     "screens": {
-        "Login": {
-            "email": "Email",
-            "password": "Password",
-            "login": "Login",
-            "register": "Register"
-        },
-        "Register": {
-            "username": "Username",
-            "confirmPassword": "Confirm password"
-        },
-        "Profile": {
-            "followers": "followers",
-            "following": "following",
-            "follow": "follow",
-            "unfollow": "unfollow"
-        },
-        "Settings": {
-            "language": "Language",
-            "darkMode": "darkMode",
-            "logout": "Logout",
-            "settings": "Settings"
-        },
-        "UploadForm": {
-            "takeFromCamera": "Take from camera",
-            "selectFromLibrary": "Select from library",
-            "selectCategory": "Select a category",
-            "changePicture": "Change picture",
-            "post": "Post"
-        },
-        "Home": {
-            "search": "Search"
-        },
         "Activities": {
             "name": "Name"
         },
@@ -52,6 +20,50 @@
                 "monthly": "monthly",
                 "yearly": "yearly"
             }
+        },
+        "Events": {
+        },
+        "FollowList": {
+        },
+
+        "Home": {
+            "search": "Search"
+        },
+        "Login": {
+            "email": "Email",
+            "password": "Password",
+            "login": "Login",
+            "register": "Register"
+        },
+        "Profile": {
+            "followers": "followers",
+            "following": "following",
+            "follow": "follow",
+            "unfollow": "unfollow"
+        },
+        "ProfileForm": {
+        },
+        "Register": {
+            "username": "Username",
+            "confirmPassword": "Confirm password"
+        },
+        "Search": {
+        },
+        "Settings": {
+            "language": "Language",
+            "darkMode": "Dark Mode",
+            "logout": "Logout",
+            "settings": "Settings",
+            "editProfile": "Edit profile"
+        },
+        "Streaks": {
+        },
+        "UploadForm": {
+            "takeFromCamera": "Take from camera",
+            "selectFromLibrary": "Select from library",
+            "selectCategory": "Select a category",
+            "changePicture": "Change picture",
+            "post": "Post"
         }
     }
 }

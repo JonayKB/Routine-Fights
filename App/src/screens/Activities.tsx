@@ -14,6 +14,8 @@ import { Activity } from "../utils/Activity";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { getActivitiesNotSubscribed } from "../repositories/ActivityRepository";
+import style from "../styles/Styles.json";
+import ActivityCard from "../components/ActivityCard";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
@@ -50,11 +52,9 @@ const Activities = ({ navigation }: Props) => {
     <View className="flex-1 bg-[#E4D8E9]">
       <View className="justify-center items-center">
         <TextInput
-          placeholder={
-            translations[language || "en-EN"].screens.Home.search
-          }
+          placeholder={translations[language || "en-EN"].screens.Home.search}
           placeholderTextColor="#4B0082"
-          className="border-[#4B0082] border-2 rounded-xl bg-white text-2xl w-11/12 my-5 pl-3 text-black"
+          className={style.screens.Activities.searchBar}
         />
       </View>
       <FlatList
@@ -73,22 +73,12 @@ const Activities = ({ navigation }: Props) => {
         data={activities}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity
-              onPress={() =>
+            <ActivityCard
+              item={item}
+              navigateFunction={() =>
                 navigation.navigate("ActivityDetails", { activity: item })
               }
-              className="w-44 h-56 m-6"
-            >
-              <Image
-                source={{
-                  uri: item.image,
-                }}
-                className="w-full h-40 rounded-t-2xl border-[#4B0082] border-2"
-              />
-              <Text className="flex-1 rounded-b-2xl border-[#4B0082] border-2 align-middle text-[#4B0082] text-center text-xl bg-white">
-                {item.name}
-              </Text>
-            </TouchableOpacity>
+            />
           );
         }}
         keyExtractor={(item) => item.id}
@@ -97,10 +87,10 @@ const Activities = ({ navigation }: Props) => {
       />
       <TouchableOpacity
         onPress={() => navigation.navigate("ActivityForm")}
-        className="bg-[#E4007C] rounded-lg m-5"
+        className={style.screens.Activities.addButton}
       >
         <Text
-          className="text-white text-8xl font-bold text-center"
+          className={style.screens.Activities.addButtonText}
           style={{ fontFamily: "InriaSans-Regular" }}
         >
           +
