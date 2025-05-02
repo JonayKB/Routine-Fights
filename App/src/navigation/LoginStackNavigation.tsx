@@ -13,7 +13,6 @@ export type LoginStackProps = {
   Login: undefined;
   Register: undefined;
   MainTabNavigation: undefined;
-  Settings: undefined;
 };
 
 const LoginStackNavigation = (props: Props) => {
@@ -29,7 +28,6 @@ const LoginStackNavigation = (props: Props) => {
             name="MainTabNavigation"
             component={MainTabNavigation}
           />
-          <Stack.Screen name="Settings" component={Settings} />
         </Stack.Navigator>
       </TokenContextProvider>
     </SettingsContextProvider>

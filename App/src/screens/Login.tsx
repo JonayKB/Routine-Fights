@@ -90,7 +90,7 @@ const Login = ({ navigation }: Props) => {
             className="bg-[#E4007C] rounded-lg py-3 mb-5"
           >
             <Text
-              className={style.button}
+              className={style.utils.button}
               style={{ fontFamily: "InriaSans-Regular" }}
             >
               {translations[language || "en-EN"].screens.Login.login}

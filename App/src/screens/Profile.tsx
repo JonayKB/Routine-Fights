@@ -14,12 +14,17 @@ import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
-import { getUser, getOwnUser } from "../repositories/UserRepository";
+import {
+  getUser,
+  getOwnUser,
+  followUser,
+} from "../repositories/UserRepository";
 import { convertQuantityToString } from "../utils/Utils";
 import ProfilePost from "../components/ProfilePost";
 import FollowCount from "../components/FollowCount";
 import ProfilePicture from "../components/ProfilePicture";
 import ProfileNavigation from "../components/ProfileNavigation";
+import { translations } from "../../translations/translation";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -145,7 +150,20 @@ const Profile = ({ navigation, route }: Props) => {
             email={user.email}
             navigation={navigation}
           />
-          {/** TODO: Add button for following or unfollowing in case is not your own profile */}
+          {!!route.params?.id && (
+            <TouchableOpacity
+              className="border-[#E4007C] border-2 rounded-lg ml-5"
+              onPress={() => followUser(user.email)}
+            >
+              <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
+                {/* TODO: database method for checking if own user follows this user.
+                {user.isFollowing
+                  ? translations[language || "en-EN"].screens.Profile.unfollow
+                  : translations[language || "en-EN"].screens.Profile.follow}
+                  */}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 

@@ -1,7 +1,6 @@
 import { View, Button, TouchableOpacity } from "react-native";
 import React from "react";
 import { logout } from "../repositories/SettingsRepository";
-import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { languages, resetNavigation } from "../utils/Utils";
 import DropDown from "../components/DropDown";
@@ -9,8 +8,9 @@ import { translations } from "../../translations/translation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileNavigation from "../components/ProfileNavigation";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 
-type Props = NativeStackScreenProps<LoginStackProps, "Settings">;
+type Props = NativeStackScreenProps<ProfileStackProps, "Settings">;
 
 const Settings = ({ navigation }: Props) => {
   const { language, setLanguage } = useLanguageContext();
@@ -40,6 +40,7 @@ const Settings = ({ navigation }: Props) => {
         message={translations[language || "en-EN"].screens.Settings.settings}
       />
       <View className="p-5 gap-5">
+        <Button title={translations[language || "en-EN"].screens.Settings.editProfile} onPress={() => navigation.navigate("ProfileForm")}/>
         <TouchableOpacity>
           <DropDown
             data={languages}
