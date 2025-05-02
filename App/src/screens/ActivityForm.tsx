@@ -2,7 +2,6 @@ import {
   View,
   TouchableOpacity,
   Text,
-  TextInput,
   ScrollView,
   Alert,
 } from "react-native";
@@ -40,7 +39,8 @@ const ActivityForm = (props: Props) => {
     },
     {
       label:
-        translations[language || "en-EN"].screens.ActivityForm.timeRates.monthly,
+        translations[language || "en-EN"].screens.ActivityForm.timeRates
+          .monthly,
       value: "monthly",
     },
     {
@@ -88,20 +88,18 @@ const ActivityForm = (props: Props) => {
           <FormInput
             name={activity.name}
             label={translations[language || "en-EN"].screens.ActivityForm.title}
+            mode="text"
             setText={(text) => setActivity({ ...activity, name: text })}
           />
-          <TextInput
-            placeholder={
+          <FormInput
+            name={activity.description}
+            label={
               translations[language || "en-EN"].screens.ActivityForm.description
             }
-            placeholderTextColor="#4B0082"
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
-            onChangeText={(text) =>
-              setActivity({ ...activity, description: text })
-            }
-            value={activity.description}
+            mode="text"
+            setText={(text) => setActivity({ ...activity, description: text })}
           />
-          <View className="m-10">
+          <View className="mb-5">
             <DropDown
               data={timeRates}
               value={timeRate}
@@ -111,18 +109,16 @@ const ActivityForm = (props: Props) => {
               }
             />
           </View>
-          <TextInput
-            placeholder={
+          <FormInput
+            name={activity.timesRequiered}
+            label={
               translations[language || "en-EN"].screens.ActivityForm
                 .timesRequired
             }
-            placeholderTextColor="#4B0082"
-            inputMode="numeric"
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
-            onChangeText={(text) =>
+            mode="numeric"
+            setText={(text) =>
               setActivity({ ...activity, timesRequiered: text })
             }
-            value={activity.timesRequiered}
           />
           <TouchableOpacity
             className="bg-[#E4007C] rounded-lg py-3 w-full"
