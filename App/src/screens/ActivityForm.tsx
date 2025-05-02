@@ -1,6 +1,5 @@
 import {
   View,
-  Image,
   TouchableOpacity,
   Text,
   TextInput,
@@ -17,6 +16,8 @@ import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { Activity } from "../utils/Activity";
 import { createActivity } from "../repositories/ActivityRepository";
 import DropDown from "../components/DropDown";
+import ChangePicture from "../components/ChangePicture";
+import FormInput from "../components/FormInput";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityForm">;
 
@@ -28,26 +29,29 @@ const ActivityForm = (props: Props) => {
 
   const timeRates = [
     {
-      label: translations[language || "en-EN"].screens.ActivityForm.timeRates.daily,
+      label:
+        translations[language || "en-EN"].screens.ActivityForm.timeRates.daily,
       value: "daily",
     },
     {
-      label: translations[language || "en-EN"].screens.ActivityForm.timeRates.weekly,
+      label:
+        translations[language || "en-EN"].screens.ActivityForm.timeRates.weekly,
       value: "weekly",
     },
     {
-      label: translations[language || "en-EN"].screens.ActivityForm.timeRates.monthly,
+      label:
+        translations[language || "en-EN"].screens.ActivityForm.timeRates.monthly,
       value: "monthly",
     },
     {
-      label: translations[language || "en-EN"].screens.ActivityForm.timeRates.yearly,
+      label:
+        translations[language || "en-EN"].screens.ActivityForm.timeRates.yearly,
       value: "yearly",
-    }
-  ]
+    },
+  ];
 
   const addActivity = async () => {
     try {
-      console.log(activity);
       const id = await createActivity(
         activity.name,
         activity.description,
@@ -74,40 +78,17 @@ const ActivityForm = (props: Props) => {
     <View className="flex-1 items-center my-10">
       <ScrollView className="bg-[#E4D8E9] rounded-lg w-10/12">
         {uri ? (
-          <View className="items-center">
-            <View className="rounded-lg w-full bg-black items-center">
-              <Image
-                className="justify-center my-5"
-                source={{ uri: `file://${uri}` }}
-                style={{ width: 140, height: 250 }}
-              />
-              <TouchableOpacity
-                onPress={() => setUri(null)}
-                className="border-white border-2 rounded-lg mb-5"
-              >
-                <Text className="text-white font-bold text-xl text-center px-6 py-2">
-                  {
-                    translations[language || "en-EN"].screens.UploadForm
-                      .changePicture
-                  }
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <ChangePicture uri={uri} setUri={setUri} />
         ) : (
           <View className="w-full h-3/5">
             <ImageStackNavigation />
           </View>
         )}
         <View className="m-10">
-          <TextInput
-            placeholder={
-              translations[language || "en-EN"].screens.ActivityForm.title
-            }
-            placeholderTextColor="#4B0082"
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3 text-black"
-            onChangeText={(text) => setActivity({ ...activity, name: text })}
-            value={activity.name}
+          <FormInput
+            name={activity.name}
+            label={translations[language || "en-EN"].screens.ActivityForm.title}
+            setText={(text) => setActivity({ ...activity, name: text })}
           />
           <TextInput
             placeholder={
@@ -126,8 +107,7 @@ const ActivityForm = (props: Props) => {
               value={timeRate}
               setValue={setTimeRate}
               message={
-                translations[language || "en-EN"].screens.UploadForm
-                  .timeRate
+                translations[language || "en-EN"].screens.UploadForm.timeRate
               }
             />
           </View>

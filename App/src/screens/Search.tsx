@@ -9,6 +9,7 @@ import FollowBox from "../components/FollowBox";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import SearchBar from '../components/SearchBarHeader';
+import { followUser } from "../repositories/UserRepository";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Search">;
 
@@ -23,7 +24,7 @@ const Search = ({ navigation }: Props) => {
           style={{ width: "100%" }}
           data={users}
           renderItem={({ item }) => {
-            return <FollowBox navigation={navigation} item={item} />;
+            return <FollowBox navigation={navigation} item={item} followFunction={() => followUser(item.id)} />;
           }}
           keyExtractor={(item) => item.id}
         />
