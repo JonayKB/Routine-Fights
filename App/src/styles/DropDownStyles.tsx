@@ -8,10 +8,11 @@ export const styles = StyleSheet.create({
 
   dropdown: {
     height: 50,
-    borderColor: "gray",
-    borderWidth: 0.5,
+    borderColor: "#4B0082",
+    borderWidth: 2,
     borderRadius: 8,
     paddingHorizontal: 8,
+    backgroundColor: "#F8F7FE",
   },
 
   label: {
@@ -32,7 +33,7 @@ export const styles = StyleSheet.create({
 
   selectedTextStyle: {
     fontSize: 16,
-    color: "black",
+    color: "#4B0082",
   },
 
   inputSearchStyle: {
