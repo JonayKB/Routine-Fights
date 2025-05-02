@@ -8,7 +8,7 @@ import { fetchUsersByName } from "../repositories/SearchRepository";
 import FollowBox from "../components/FollowBox";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
-import SearchBar from '../components/SearchBar';
+import SearchBar from '../components/SearchBarHeader';
 
 type Props = NativeStackScreenProps<HomeStackProps, "Search">;
 
