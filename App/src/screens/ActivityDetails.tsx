@@ -6,6 +6,7 @@ import { Activity } from "../utils/Activity";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { subscribeActivity } from "../repositories/ActivityRepository";
+import ActivityDetailsBox from "../components/ActivityDetailsBox";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 
@@ -28,20 +29,7 @@ const ActivityDetails = ({ navigation, route }: Props) => {
           height={550}
         />
       </View>
-      <View className="bg-[#E4D8E9] rounded-2xl w-80 h-72 m-12 border-2 border-[#4B0082] justify-evenly items-center">
-        <Text className="text-[#4B0082] text-4xl">{activity.name}</Text>
-        <Text className="text-[#4B0082] text-lg mb-10">
-          {activity.description}
-        </Text>
-        <Text className="text-[#4B0082] text-xl">
-          {translations[language || "en-EN"].screens.ActivityDetails.numOfTimes}
-          : {activity.timesRequiered}
-        </Text>
-        <Text className="text-[#4B0082] text-xl">
-          {translations[language || "en-EN"].screens.ActivityDetails.frequency}:{" "}
-          {activity.timeRate}
-        </Text>
-      </View>
+      <ActivityDetailsBox activity={activity} />
       {/** TODO: check if is subscribed or not */}
       <TouchableOpacity
         onPress={async () => {

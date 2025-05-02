@@ -1,47 +1,42 @@
 import {
   View,
   FlatList,
-  TouchableOpacity,
-  TextInput,
-  Text,
-  Image,
   RefreshControl,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
-import { translations } from "../../translations/translation";
 import { getActivitiesNotSubscribed } from "../repositories/ActivityRepository";
-import style from "../styles/Styles.json";
 import ActivityCard from "../components/ActivityCard";
+import AddButton from "../components/AddButton";
+import SearchBar from '../components/SearchBar';
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
 const Activities = ({ navigation }: Props) => {
-  const { language } = useLanguageContext();
   const [load, setLoad] = useState<boolean>(false);
   const [activities, setActivities] = useState<Activity[]>([]);
+  const [searchText, setSearchText] = useState<string>("");
   const pageNum = useRef(1);
 
   useEffect(() => {
     pageNum.current = 1;
     const fetchActivities = async () => {
       try {
-        const response = await getActivitiesNotSubscribed(pageNum.current, "");
+        const response = await getActivitiesNotSubscribed(pageNum.current, searchText);
         setActivities(response);
       } catch (error) {
         console.error("Error fetching activities:", error);
       }
     };
     fetchActivities();
-  }, [load === true]);
+  }, [load === true, searchText]);
 
   const loadMore = async () => {
     pageNum.current += 1;
     try {
-      const response = await getActivitiesNotSubscribed(pageNum.current, "");
+      const response = await getActivitiesNotSubscribed(pageNum.current, searchText);
       setActivities([...activities, response]);
     } catch (error) {
       console.error("Error fetching activities:", error);
@@ -50,13 +45,7 @@ const Activities = ({ navigation }: Props) => {
 
   return (
     <View className="flex-1 bg-[#E4D8E9]">
-      <View className="justify-center items-center">
-        <TextInput
-          placeholder={translations[language || "en-EN"].screens.Home.search}
-          placeholderTextColor="#4B0082"
-          className={style.screens.Activities.searchBar}
-        />
-      </View>
+      <SearchBar searchFunction={(text) => setSearchText(text)} />
       <FlatList
         refreshControl={
           <RefreshControl
@@ -85,17 +74,7 @@ const Activities = ({ navigation }: Props) => {
         numColumns={2}
         onEndReached={loadMore}
       />
-      <TouchableOpacity
-        onPress={() => navigation.navigate("ActivityForm")}
-        className={style.screens.Activities.addButton}
-      >
-        <Text
-          className={style.screens.Activities.addButtonText}
-          style={{ fontFamily: "InriaSans-Regular" }}
-        >
-          +
-        </Text>
-      </TouchableOpacity>
+      <AddButton navigateFunction={() => navigation.navigate("ActivityForm")} />
     </View>
   );
 };
