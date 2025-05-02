@@ -10,7 +10,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import Streak from "../components/Streak";
 import { getSubscribedActivities } from "../repositories/ActivityRepository";
-import { ActivityWithStreak } from "../utils/ActivityWithStreak";
+import { ActivityWithStreak } from "../utils/Activity";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 

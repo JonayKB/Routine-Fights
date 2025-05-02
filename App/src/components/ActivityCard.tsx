@@ -1,7 +1,7 @@
 import { Image, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import style from "../styles/Styles.json";
 import { Activity } from "../utils/Activity";
+import style from "../styles/Styles.json";
 
 type Props = {
   navigateFunction: () => void;
