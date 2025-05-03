@@ -2,10 +2,15 @@ package es.iespuertodelacruz.routinefights.post.commons;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.Transient;
+
 import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
+
 
 public abstract class PostCommons extends EntitiesTimestamps {
     private String image;
+
+    @Transient
     private Integer streak;
     private Integer pointsToAdd;
     private LocalDateTime filedAt;
