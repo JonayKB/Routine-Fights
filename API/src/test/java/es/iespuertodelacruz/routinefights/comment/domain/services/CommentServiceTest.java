@@ -19,7 +19,7 @@ import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.post.domain.ports.secondary.IPostRepository;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 
-public class CommentServiceTest {
+class CommentServiceTest {
 
     private static final String POST_ID = "postId";
 
