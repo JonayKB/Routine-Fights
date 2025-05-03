@@ -36,6 +36,8 @@ public class ImagesTasks {
         List<String> images = new ArrayList<>(imageService.getAll());
         userService.findAllImages().forEach(images::remove);
         postService.findAllImages().forEach(images::remove);
+
+        //ADD COMUNITY EVENT, BADGES AND ACTIVITY IMAGES
         logger.log(Level.INFO, "Deleted not used images: {0} images going to be deleted", images.size());
         images.forEach(image -> imageService.delete(image));
         logger.log(Level.INFO, "Deleted images executed successfully at {0}", LocalDateTime.now());

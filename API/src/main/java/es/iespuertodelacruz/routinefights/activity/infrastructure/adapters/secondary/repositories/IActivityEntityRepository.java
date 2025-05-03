@@ -38,7 +38,8 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                         RETURN a,c,u
                         SKIP $offset LIMIT $limit
                         """)
-        List<ActivityEntity> getPaginationNotSubscribed(@Param("offset") int offset, @Param("limit")int limit,@Param("userID") String userID, @Param("activityName") String activityName);
+        List<ActivityEntity> getPaginationNotSubscribed(@Param("offset") int offset, @Param("limit") int limit,
+                        @Param("userID") String userID, @Param("activityName") String activityName);
 
         @Query("""
                         MATCH (u:User)
@@ -50,20 +51,24 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
         List<ActivityEntity> getSubscribedActivities(@Param("userID") String userID);
 
         @Query("""
-                        MATCH (u:User)-[:Participated]->(a:Activity)<-[:`Related-To`]-(p:Post)
-                        WHERE elementId(u)=$userID
-                        SET a.streak=p.streak
-                        RETURN a;
+                        MATCH (u:User)-[:Participated]->(a:Activity)
+                        WHERE elementId(u) = $userID
+                        OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
+                        WITH a, p
+                        SET a.streak = coalesce(p.streak, 0)
+                        RETURN DISTINCT a;
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID);
 
         @Query("""
-                        MATCH (u:User)-[:Participated]->(a:Activity)<-[:`Related-To`]-(p:Post)
+                        MATCH (u:User)-[:Participated]->(a:Activity)
                         WHERE elementId(u) = $userID
                         AND lower(a.name) CONTAINS lower($activityName)
+                        OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
+                        WITH a, p
+                        SET a.streak = coalesce(p.streak, 0)
                         SET a.streak = p.streak
                         RETURN DISTINCT a;
-
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID,
                         @Param("activityName") String activityName);

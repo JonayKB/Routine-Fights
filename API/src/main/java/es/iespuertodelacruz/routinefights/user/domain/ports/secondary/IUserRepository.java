@@ -31,5 +31,5 @@ public interface IUserRepository extends IUserCommon<User> {
      */
     public User update(User user);
 
-    
+
 }
