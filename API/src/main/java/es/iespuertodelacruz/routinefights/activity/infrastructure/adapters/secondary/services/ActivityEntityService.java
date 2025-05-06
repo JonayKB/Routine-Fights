@@ -6,14 +6,12 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import es.iespuertodelacruz.routinefights.activity.commons.TimeRates;
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.domain.ports.secondary.IActivityRepository;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.mappers.ActivityEntityMapper;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.repositories.IActivityEntityRepository;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.exceptions.ActivityNotFoundExcetion;
-import es.iespuertodelacruz.routinefights.post.exceptions.UploadPostException;
 import es.iespuertodelacruz.routinefights.shared.utils.TimeRatesDate;
 
 @Service

@@ -31,6 +31,8 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
 @Controller
 @CrossOrigin
 public class UserControllerV2 {
+    private static final String ERROR_FINDING_USER = "Error finding user";
+
     Logger logger = Logger.getLogger(UserControllerV2.class.getName());
 
     private IUserService userService;
@@ -82,7 +84,7 @@ public class UserControllerV2 {
             user = userService.findByEmail(email);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(findById) Error finding user: {0}", e.getMessage());
-            throw new UserNotFoundException("Error finding user");
+            throw new UserNotFoundException(ERROR_FINDING_USER);
         }
         return userOutputMapper.toOutputDTOV2(user);
     }
@@ -98,7 +100,7 @@ public class UserControllerV2 {
                     .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
         } catch (Exception e) {
             logger.log(Level.WARNING, "(findById) Error finding user: {0}", e.getMessage());
-            throw new UserNotFoundException("Error finding user");
+            throw new UserNotFoundException(ERROR_FINDING_USER);
         }
         return userOutputMapper.toOutputDTOV2(user, searchingUser);
     }
@@ -221,7 +223,7 @@ public class UserControllerV2 {
             user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         } catch (Exception e) {
             logger.log(Level.WARNING, "(getOwnUser) Error finding user: {0}", e.getMessage());
-            throw new UserNotFoundException("Error finding user");
+            throw new UserNotFoundException(ERROR_FINDING_USER);
         }
         return userOutputMapper.toOutputDTOV2(user);
     }
