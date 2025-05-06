@@ -2,6 +2,8 @@ package es.iespuertodelacruz.routinefights.activity.commons;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.Transient;
+
 import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
 
 public abstract class ActivityCommons extends EntitiesTimestamps {
@@ -11,6 +13,9 @@ public abstract class ActivityCommons extends EntitiesTimestamps {
     private String timeRate;
     private Integer timesRequiered;
     private Integer streak;
+    @Transient
+    private Integer timesRemaining;
+
     
 
     protected ActivityCommons(String name, String description, String image, String timeRate, Integer timesRequiered,
@@ -21,6 +26,7 @@ public abstract class ActivityCommons extends EntitiesTimestamps {
         this.image = image;
         this.timeRate = timeRate;
         this.timesRequiered = timesRequiered;
+
     }
 
     protected ActivityCommons() {
@@ -70,5 +76,11 @@ public abstract class ActivityCommons extends EntitiesTimestamps {
     }
     public void setStreak(Integer streak) {
         this.streak = streak;
+    }
+    public Integer getTimesRemaining() {
+        return this.timesRemaining;
+    }
+    public void setTimesRemaining(Integer timesRemaining) {
+        this.timesRemaining = timesRemaining;
     }
 }

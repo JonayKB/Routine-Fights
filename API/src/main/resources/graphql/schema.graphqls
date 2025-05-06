@@ -1,12 +1,12 @@
 type Query {
-  usersV3: [UserOutputV3]
-  userV3(id: ID!): UserOutputV3
-
   getUserPaginationByName(
     page: Int!
     perPage: Int!
     userName: String!
   ): [UserOutputV2]
+
+  getUserV2(email: String!): UserOutputV2
+  getUserV2IsFollowing(email: String!): UserOutputV2
 
   followersByEmail(email: String!,usernameFilter:String!): [Followers]
   followedByEmail(email: String!,usernameFilter:String!): [Followers]
@@ -87,6 +87,8 @@ type ActivityOutputV2Streak {
   timeRate: String
   timesRequiered: String
   streak: Int
+  creator: UserOutputV2
+  timesRemaining: Int
 }
 input ActivityInputV2 {
   name: String!
@@ -157,6 +159,7 @@ type UserOutputV2 {
   createdAt: String
   followers: Int
   following: Int
+  isFollowing: Boolean
 }
 
 type Followers {
