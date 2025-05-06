@@ -77,7 +77,8 @@ class ActivityControllerV2Test {
                         "testUser.getImage()",
                         LocalDateTime.now(),
                         0,
-                        0),
+                        0,
+                        false),
                 "weekly",
                 3,
                 LocalDateTime.now());
@@ -168,7 +169,7 @@ class ActivityControllerV2Test {
 
         List<Activity> activityList = Arrays.asList(testActivity);
         List<ActivityOutputV2Streak> outputList = Arrays
-                .asList(new ActivityOutputV2Streak(null, null, null, null, null, null, null, null));
+                .asList(new ActivityOutputV2Streak(null, null, null, null, null, null, null, null,null,null));
 
         when(userService.findByEmailOnlyBase("testUser")).thenReturn(testUser);
         when(activityService.getSubscribedActivitiesWithStreak(testUser.getId())).thenReturn(activityList);
@@ -209,7 +210,7 @@ class ActivityControllerV2Test {
         String activityName = "Test Activity";
         List<Activity> activityList = Arrays.asList(testActivity);
         List<ActivityOutputV2Streak> outputList = Arrays
-                .asList(new ActivityOutputV2Streak(null, null, null, null, null, null, null, null));
+                .asList(new ActivityOutputV2Streak(null, null, null, null, null, null, null, null,null,null));
 
         when(userService.findByEmailOnlyBase("testUser")).thenReturn(testUser);
         when(activityService.getSubscribedActivitiesWithStreak(testUser.getId(), activityName)).thenReturn(activityList);

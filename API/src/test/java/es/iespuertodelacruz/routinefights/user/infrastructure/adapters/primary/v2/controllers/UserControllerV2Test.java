@@ -71,7 +71,7 @@ class UserControllerV2Test extends UserInitializer {
 
         userInputDTOV2 = new UserInputDTOV2("id", "username", "email", "password", "nationality", "phone_number",
                 "image");
-        userOutputDTOV2 = new UserOutputDTOV2(null, null, null, null, null, null, null, 0, 0);
+        userOutputDTOV2 = new UserOutputDTOV2(null, null, null, null, null, null, null, 0, 0,false);
     }
 
     @Test
@@ -185,35 +185,21 @@ class UserControllerV2Test extends UserInitializer {
     }
 
     @Test
-    void findByIdTest() {
-        when(userService.findById(anyString())).thenReturn(new User());
+    void findByEmailTest() {
+        when(userService.findByEmail(anyString())).thenReturn(new User());
         when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
-        assertNotNull(userControllerV2.findById("id"));
+        assertNotNull(userControllerV2.findByEmail("id"));
     }
 
     @Test
-    void findByIdExceptionTest() {
-        when(userService.findById(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+    void findByEmailExceptionTest() {
+        when(userService.findByEmail(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV2.findById("id");
+            userControllerV2.findByEmail("id");
         });
         assertEquals("Error finding user", exception.getMessage());
     }
 
-    @Test
-    void findUsersByUsernameTest() {
-        when(userService.findByUsername(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userControllerV2.findUsersByUsername("username"));
-    }
-
-    @Test
-    void findUsersByUsernameExceptionTest() {
-        when(userService.findByUsername(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV2.findUsersByUsername("username");
-        });
-        assertEquals("Error finding users", exception.getMessage());
-    }
 
     @Test
     void updateTest() {

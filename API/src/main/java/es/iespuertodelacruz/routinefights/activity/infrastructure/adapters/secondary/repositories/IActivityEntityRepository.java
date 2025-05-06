@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.repositories;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,26 +52,35 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
         List<ActivityEntity> getSubscribedActivities(@Param("userID") String userID);
 
         @Query("""
-                        MATCH (u:User)-[:Participated]->(a:Activity)
+                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u:User)
                         WHERE elementId(u) = $userID
                         OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
-                        WITH a, p
+                        WITH a, p, c, u
                         SET a.streak = coalesce(p.streak, 0)
-                        RETURN DISTINCT a;
+                        RETURN DISTINCT a,c,u;
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID);
 
         @Query("""
-                        MATCH (u:User)-[:Participated]->(a:Activity)
+                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u:User)
                         WHERE elementId(u) = $userID
                         AND lower(a.name) CONTAINS lower($activityName)
                         OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
-                        WITH a, p
+                        WITH a, p, c, u
                         SET a.streak = coalesce(p.streak, 0)
-                        SET a.streak = p.streak
-                        RETURN DISTINCT a;
+                        RETURN DISTINCT a,c,u;
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID,
                         @Param("activityName") String activityName);
 
+        @Query("""
+                        MATCH (p:Post)-[:`Related-To`]->(a:Activity)
+                         WHERE elementId(a) = $activityID
+                         AND p.createdAt >= $startDate
+                         AND p.createdAt <= $endDate
+                         WITH a, COUNT(p) AS postCount
+                         RETURN a.timesRequiered - postCount AS remainingPosts
+                         """)
+        Integer getTimesRemaining(@Param("activityID") String activityID,
+                        @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }
