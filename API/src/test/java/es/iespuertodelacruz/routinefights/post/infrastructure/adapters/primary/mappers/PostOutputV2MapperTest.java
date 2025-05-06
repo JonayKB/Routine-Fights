@@ -40,7 +40,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
         User dummyUser = new User();
         dummyUser.setUsername("Test User");
 
-        UserOutputDTOV2 expectedUserDto = new UserOutputDTOV2(null, "Test User", null, null, null, null, null, 0, 0);
+        UserOutputDTOV2 expectedUserDto = new UserOutputDTOV2(null, "Test User", null, null, null, null, null, 0, 0, false);
         when(userOutputV2Mapper.toOutputDTOV2(dummyUser)).thenReturn(expectedUserDto);
 
         Post post = new Post();
@@ -67,7 +67,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
         User dummyUser = new User();
         dummyUser.setUsername("Test User");
 
-        UserOutputDTOV2 expectedUserDto = new UserOutputDTOV2(null, "Test User", null, null, null, null, null, 0, 0);
+        UserOutputDTOV2 expectedUserDto = new UserOutputDTOV2(null, "Test User", null, null, null, null, null, 0, 0, false);
 
         when(userOutputV2Mapper.toOutputDTOV2(dummyUser)).thenReturn(expectedUserDto);
 
