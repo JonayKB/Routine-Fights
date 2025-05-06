@@ -14,16 +14,19 @@ import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secon
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.repositories.IActivityEntityRepository;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.exceptions.ActivityNotFoundExcetion;
 import es.iespuertodelacruz.routinefights.post.exceptions.UploadPostException;
+import es.iespuertodelacruz.routinefights.shared.utils.TimeRatesDate;
 
 @Service
 public class ActivityEntityService implements IActivityRepository {
     private IActivityEntityRepository activityEntityRepository;
     private ActivityEntityMapper activityEntityMapper;
+    private TimeRatesDate timeRatesDate;
 
     public ActivityEntityService(IActivityEntityRepository activityEntityRepository,
             ActivityEntityMapper activityEntityMapper) {
         this.activityEntityRepository = activityEntityRepository;
         this.activityEntityMapper = activityEntityMapper;
+        this.timeRatesDate = new TimeRatesDate();
     }
 
     @Override
@@ -76,39 +79,11 @@ public class ActivityEntityService implements IActivityRepository {
         List<ActivityEntity> subscribedActivities = activityEntityRepository.getSubscribedActivitiesWithStreak(userID,
                 activityName);
         subscribedActivities.forEach(activity -> {
-            LocalDateTime startOfPeriod;
-            LocalDateTime endOfPeriod;
-            switch (activity.getTimeRate()) {
-                case TimeRates.DAILY:
-                    startOfPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                            .minusDays(1);
-                    endOfPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                            .minusDays(1);
-                    break;
-                case TimeRates.WEEKLY:
-                    startOfPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                            .minusWeeks(1).with(java.time.DayOfWeek.MONDAY);
-                    endOfPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                            .minusWeeks(1).with(java.time.DayOfWeek.SUNDAY);
-                    break;
-                case TimeRates.MONTHLY:
-                    startOfPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                            .minusMonths(1).withDayOfMonth(1);
-                    endOfPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                            .minusMonths(1)
-                            .withDayOfMonth(LocalDateTime.now().minusMonths(1).toLocalDate().lengthOfMonth());
-                    break;
-                case TimeRates.YEARLY:
-                    startOfPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                            .minusYears(1).withDayOfYear(1);
-                    endOfPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                            .minusYears(1)
-                            .withDayOfYear(LocalDateTime.now().minusYears(1).toLocalDate().lengthOfYear());
-                    break;
-                default:
-                    throw new UploadPostException("Invalid time rate");
-            }
-            activity.setTimesRemaining(activityEntityRepository.getTimesRemaining(activity.getId(), startOfPeriod, endOfPeriod));
+
+            LocalDateTime[] dates = timeRatesDate.getActualIterationDates(activity.getTimeRate());
+
+            activity.setTimesRemaining(
+                    activityEntityRepository.getTimesRemaining(activity.getId(), dates[0], dates[1]));
         });
         return activityEntityMapper.toDomain(subscribedActivities);
     }

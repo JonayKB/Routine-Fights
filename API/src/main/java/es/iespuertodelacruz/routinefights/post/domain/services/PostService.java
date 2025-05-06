@@ -12,16 +12,20 @@ import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.post.domain.ports.primary.IPostService;
 import es.iespuertodelacruz.routinefights.post.domain.ports.secondary.IPostRepository;
 import es.iespuertodelacruz.routinefights.post.exceptions.UploadPostException;
+import es.iespuertodelacruz.routinefights.shared.utils.TimeRatesDate;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 
 @Service
 public class PostService implements IPostService {
     private IPostRepository postRepository;
     private IActivityRepository activityRepository;
+    private TimeRatesDate timeRatesDate;
 
     public PostService(IPostRepository postRepository, IActivityRepository activityRepository) {
         this.postRepository = postRepository;
         this.activityRepository = activityRepository;
+        timeRatesDate = new TimeRatesDate();
+
     }
 
     @Override
@@ -52,78 +56,18 @@ public class PostService implements IPostService {
     }
 
     private void calculateStreak(User user, String activityID, Post post, Activity activity) {
-        LocalDateTime startOfActualPeriod;
-        LocalDateTime endOfActualPeriod;
-
-        switch (activity.getTimeRate()) {
-            case TimeRates.DAILY:
-                startOfActualPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
-                endOfActualPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999);
-                break;
-            case TimeRates.WEEKLY:
-                startOfActualPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                        .with(java.time.DayOfWeek.MONDAY);
-                endOfActualPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                        .with(java.time.DayOfWeek.SUNDAY);
-                break;
-            case TimeRates.MONTHLY:
-                startOfActualPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                        .withDayOfMonth(1);
-                endOfActualPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                        .withDayOfMonth(LocalDateTime.now().toLocalDate().lengthOfMonth());
-                break;
-            case TimeRates.YEARLY:
-                startOfActualPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                        .withDayOfYear(1);
-                endOfActualPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                        .withDayOfYear(LocalDateTime.now().toLocalDate().lengthOfYear());
-                break;
-            default:
-                throw new UploadPostException("Invalid time rate");
-        }
-
-        List<Post> actualPeriodPosts = postRepository.getRangeByActivity(activityID, user.getId(), startOfActualPeriod,
-                endOfActualPeriod);
+        LocalDateTime[] dates = timeRatesDate.getActualIterationDates(activity.getTimeRate());
+        List<Post> actualPeriodPosts = postRepository.getRangeByActivity(activityID, user.getId(), dates[0],
+                dates[1]);
         if (actualPeriodPosts.size() >= activity.getTimesRequiered()) {
             throw new UploadPostException("You have already completed this activity");
         }
 
         if (actualPeriodPosts.isEmpty()) {
-            LocalDateTime startOfPeriod;
-            LocalDateTime endOfPeriod;
-            switch (activity.getTimeRate()) {
-                case TimeRates.DAILY:
-                    startOfPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                            .minusDays(1);
-                    endOfPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                            .minusDays(1);
-                    break;
-                case TimeRates.WEEKLY:
-                    startOfPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                            .minusWeeks(1).with(java.time.DayOfWeek.MONDAY);
-                    endOfPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                            .minusWeeks(1).with(java.time.DayOfWeek.SUNDAY);
-                    break;
-                case TimeRates.MONTHLY:
-                    startOfPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                            .minusMonths(1).withDayOfMonth(1);
-                    endOfPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                            .minusMonths(1)
-                            .withDayOfMonth(LocalDateTime.now().minusMonths(1).toLocalDate().lengthOfMonth());
-                    break;
-                case TimeRates.YEARLY:
-                    startOfPeriod = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-                            .minusYears(1).withDayOfYear(1);
-                    endOfPeriod = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
-                            .minusYears(1)
-                            .withDayOfYear(LocalDateTime.now().minusYears(1).toLocalDate().lengthOfYear());
-                    break;
-                default:
-                    throw new UploadPostException("Invalid time rate");
-            }
+            LocalDateTime[] lastDates = timeRatesDate.getLastIterationDates(activity.getTimeRate());
 
-            List<Post> lastPeriodPosts = postRepository.getRangeByActivity(activityID, user.getId(), startOfPeriod,
-                    endOfPeriod);
+            List<Post> lastPeriodPosts = postRepository.getRangeByActivity(activityID, user.getId(), lastDates[0],
+                    lastDates[1]);
             if (lastPeriodPosts.size() >= activity.getTimesRequiered()) {
                 post.setStreak(lastPeriodPosts.get(lastPeriodPosts.size() - 1).getStreak() + 1);
             } else {
@@ -181,9 +125,5 @@ public class PostService implements IPostService {
     public List<String> findAllImages() {
         return postRepository.findAllImages();
     }
-
-    
-
-
 
 }
