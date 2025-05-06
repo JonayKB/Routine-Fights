@@ -76,7 +76,7 @@ public class UserControllerV2 {
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("getUserV2")
-    public UserOutputDTOV2 findById(@Argument String email) {
+    public UserOutputDTOV2 findByEmail(@Argument String email) {
         User user;
         try {
             user = userService.findByEmail(email);
