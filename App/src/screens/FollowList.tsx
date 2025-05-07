@@ -59,7 +59,7 @@ const FollowList = ({ navigation, route }: Props) => {
           renderItem={({ item }) => {
             return (
               <FollowBox
-                navigation={navigation}
+                navigateFunction={() => navigation.navigate("Profile", { email: item.email })}
                 item={item}
                 following={item.isFollowing}
                 followFunction={async (item) => {

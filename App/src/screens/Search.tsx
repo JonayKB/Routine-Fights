@@ -64,7 +64,12 @@ const Search = ({ navigation }: Props) => {
           renderItem={({ item }) => {
             return (
               <FollowBox
-                navigation={navigation}
+                navigateFunction={() =>
+                  navigation.navigate("ProfileStackNavigation", {
+                    screen: "Profile",
+                    params: { email: item.email },
+                  })
+                }
                 item={item}
                 following={item.isFollowing}
                 followFunction={async (item) => {
