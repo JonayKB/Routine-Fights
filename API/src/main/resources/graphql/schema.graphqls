@@ -164,6 +164,7 @@ type UserOutputV2 {
 
 type Followers {
   id: ID
+  email: String
   username: String
   nationality: String
   image: String
