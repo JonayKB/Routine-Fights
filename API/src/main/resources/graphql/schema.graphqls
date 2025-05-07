@@ -50,7 +50,15 @@ type Mutation {
   createActivity(activityInput: ActivityInputV2!): ActivityOutputV2
 
   postComment(commentInput: CommentInputV2!): CommentOutputV2
+
+  createCommunityEvent(name: String!,
+  totalRequired: Int!,
+  startDate: String!,
+  finishDate: String!,
+  activitiesIDs: [String!]!): Boolean
 }
+
+
 input CommentInputV2 {
   message: String!
   postID: String!

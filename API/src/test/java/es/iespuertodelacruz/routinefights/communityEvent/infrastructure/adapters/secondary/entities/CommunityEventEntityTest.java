@@ -45,7 +45,7 @@ class CommunityEventEntityTest {
     @Test
     void testConstructorAndGetters() {
         CommunityEventEntity event = new CommunityEventEntity(ID_1, NAME, TOTAL_REQUIRED, CREATED_AT, FINISH_DATE,
-                ACTIVITIES, BADGES, MEETINGS);
+                ACTIVITIES, BADGES, MEETINGS, CREATED_AT, FINISH_DATE, CREATED_AT);
         assertEquals(ID_1, event.getId());
         assertEquals(NAME, event.getName());
         assertEquals(TOTAL_REQUIRED, event.getTotalRequired());

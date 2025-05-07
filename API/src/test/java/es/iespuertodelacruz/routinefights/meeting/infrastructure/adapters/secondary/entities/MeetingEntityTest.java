@@ -57,7 +57,10 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
             CE_FINISH_DATE, 
             CE_ACTIVITIES, 
             CE_BADGES, 
-            CE_MEETINGS
+            CE_MEETINGS,
+            CE_CREATED_AT,
+            CE_FINISH_DATE,
+            CE_CREATED_AT
         );
     }
 
