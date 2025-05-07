@@ -1,10 +1,12 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
+import Icon from "react-native-vector-icons/Ionicons";
 
 type Props = {
-    name: string;
-    description: string;
-    streak: number;
+  name: string;
+  description: string;
+  streak: number;
+  unsubscribeFunction: () => void;
 };
 
 const Streak = (props: Props) => {
@@ -17,6 +19,9 @@ const Streak = (props: Props) => {
         <Text className="text-black text-3xl">{props.name}</Text>
         <Text className="text-black text-xl">{props.description}</Text>
       </View>
+      <TouchableOpacity onPress={props.unsubscribeFunction} className="ml-auto mr-5">
+        <Icon name="trash" size={30} color="black" />
+      </TouchableOpacity>
     </View>
   );
 };

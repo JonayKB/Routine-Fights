@@ -1,6 +1,3 @@
-import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
-
 export const uri: string = "http://64.226.71.234:8080";
 export const neo4jUri: string = uri + "/graphql";
 

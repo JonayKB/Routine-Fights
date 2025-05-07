@@ -8,7 +8,7 @@ import ProfileForm from "../screens/ProfileForm";
 type Props = {};
 
 export type ProfileStackProps = {
-  Profile: { id?: string };
+  Profile: { email?: string };
   FollowList: { email: string; type: "followers" | "following" };
   Settings: undefined;
   ProfileForm: undefined;

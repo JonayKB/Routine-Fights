@@ -37,7 +37,7 @@ const Activities = ({ navigation }: Props) => {
     pageNum.current += 1;
     try {
       const response = await getActivitiesNotSubscribed(pageNum.current, searchText);
-      setActivities([...activities, response]);
+      setActivities([...activities, ...response]);
     } catch (error) {
       console.error("Error fetching activities:", error);
     }

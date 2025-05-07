@@ -7,6 +7,7 @@ import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { subscribeActivity } from "../repositories/ActivityRepository";
 import ActivityDetailsBox from "../components/ActivityDetailsBox";
+import { resetNavigation } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 
@@ -34,7 +35,7 @@ const ActivityDetails = ({ navigation, route }: Props) => {
       <TouchableOpacity
         onPress={async () => {
           await subscribeActivity(activity.id);
-          navigation.goBack();
+          resetNavigation(navigation, "Streaks");
         }}
         className="bg-[#E4007C] rounded-lg py-3 m-5 w-11/12 mb-10"
       >
