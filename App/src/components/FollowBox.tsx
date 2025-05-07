@@ -7,10 +7,10 @@ import { convertQuantityToString } from "../utils/Utils";
 import { Followers } from "../utils/User";
 
 type Props = {
-  navigation: any;
   item: Followers;
   following: boolean;
   followFunction: (item: Followers) => void;
+  navigateFunction: () => void;
 };
 
 const FollowBox = (props: Props) => {
@@ -19,7 +19,7 @@ const FollowBox = (props: Props) => {
   return (
     <View>
       <TouchableOpacity
-        onPress={() => props.navigation.navigate("Profile", { email: props.item.email })}
+        onPress={props.navigateFunction}
         className="items-center bg-[#F1FEFC] flex-row mt-5 w-11/12 mx-auto rounded-xl p-2"
       >
         <ProfilePicture image={props.item.image} size={80} />

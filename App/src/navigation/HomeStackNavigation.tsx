@@ -9,7 +9,7 @@ type Props = {};
 export type HomeStackProps = {
   Home: undefined;
   Search: undefined;
-  ProfileStackNavigation: undefined;
+  ProfileStackNavigation: { screen: string; params: { email: string } };
 };
 
 const HomeStackNavigation = (props: Props) => {
