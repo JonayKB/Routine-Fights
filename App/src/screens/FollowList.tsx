@@ -33,6 +33,13 @@ const FollowList = ({ navigation, route }: Props) => {
     fetchFollows();
   }, [route.params.email, route.params.type, load === true]);
 
+  const reload = () => {
+    setLoad(true);
+    setTimeout(() => {
+      setLoad(false);
+    }, 1000);
+  };
+
   return (
     <View>
       <ProfileNavigation
@@ -44,32 +51,23 @@ const FollowList = ({ navigation, route }: Props) => {
       <View className="items-center">
         <FlatList
           refreshControl={
-            <RefreshControl
-              refreshing={load}
-              onRefresh={() => {
-                setLoad(true);
-                setTimeout(() => {
-                  setLoad(false);
-                }, 1000);
-              }}
-            />
+            <RefreshControl refreshing={load} onRefresh={reload} />
           }
           style={{ width: "100%" }}
           data={users}
           renderItem={({ item }) => {
             return (
               <FollowBox
-                navigateFunction={() => navigation.navigate("Profile", { email: item.email })}
+                navigateFunction={() =>
+                  navigation.navigate("Profile", { email: item.email })
+                }
                 item={item}
                 following={item.isFollowing}
                 followFunction={async (item) => {
                   item.isFollowing
                     ? await unfollowUser(item.email)
                     : await followUser(item.email);
-                  setLoad(true);
-                  setTimeout(() => {
-                    setLoad(false);
-                  }, 1000);
+                  reload();
                 }}
               />
             );

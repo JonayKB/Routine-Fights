@@ -63,6 +63,13 @@ const Profile = ({ navigation, route }: Props) => {
     fetchUser();
   }, [route.params?.email]);
 
+  const reload = () => {
+    setLoad(true);
+    setTimeout(() => {
+      setLoad(false);
+    }, 1000);
+  };
+
   const posts: PostDomain[] = [
     {
       id: "1",
@@ -173,17 +180,7 @@ const Profile = ({ navigation, route }: Props) => {
       </View>
 
       <FlatList
-        refreshControl={
-          <RefreshControl
-            refreshing={load}
-            onRefresh={() => {
-              setLoad(true);
-              setTimeout(() => {
-                setLoad(false);
-              }, 1000);
-            }}
-          />
-        }
+        refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
         style={{ width: "100%" }}
         data={posts}
         renderItem={({ item }) => {

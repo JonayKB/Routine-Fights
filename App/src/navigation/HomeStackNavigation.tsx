@@ -19,7 +19,10 @@ const HomeStackNavigation = (props: Props) => {
     <Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Search" component={Search} />
-      <Stack.Screen name="ProfileStackNavigation" component={ProfileStackNavigation} />
+      <Stack.Screen
+        name="ProfileStackNavigation"
+        component={ProfileStackNavigation}
+      />
     </Stack.Navigator>
   );
 };

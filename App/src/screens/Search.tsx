@@ -30,6 +30,13 @@ const Search = ({ navigation }: Props) => {
     getUsers();
   }, [load === true, searchText]);
 
+  const reload = () => {
+    setLoad(true);
+    setTimeout(() => {
+      setLoad(false);
+    }, 1000);
+  };
+
   const loadMore = async () => {
     pageNum.current += 1;
     try {
@@ -49,15 +56,7 @@ const Search = ({ navigation }: Props) => {
       <View className="items-center">
         <FlatList
           refreshControl={
-            <RefreshControl
-              refreshing={load}
-              onRefresh={() => {
-                setLoad(true);
-                setTimeout(() => {
-                  setLoad(false);
-                }, 1000);
-              }}
-            />
+            <RefreshControl refreshing={load} onRefresh={reload} />
           }
           style={{ width: "100%" }}
           data={users}
@@ -76,10 +75,7 @@ const Search = ({ navigation }: Props) => {
                   item.isFollowing
                     ? await unfollowUser(item.email)
                     : await followUser(item.email);
-                  setLoad(true);
-                  setTimeout(() => {
-                    setLoad(false);
-                  }, 1000);
+                  reload();
                 }}
               />
             );
