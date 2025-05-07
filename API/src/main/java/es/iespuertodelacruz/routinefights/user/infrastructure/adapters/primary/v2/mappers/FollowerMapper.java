@@ -25,6 +25,7 @@ public interface FollowerMapper {
     @Mapping(target = "followers", expression = "java(user.getFollowers() == null ? 0 : user.getFollowers().size())")
     @Mapping(target = "following", expression = "java(user.getFollowing() == null ? 0 : user.getFollowing().size())")
     @Mapping(target = "isFollowing", expression = "java(searchingUser != null && searchingUser.getFollowing() != null && searchingUser.getFollowing().contains(user))")
+    @Mapping(target = "email", source = "user.email")
     public Follower toFollower(User user, User searchingUser);
 
     public List<Follower> toFollower(List<User> users);
