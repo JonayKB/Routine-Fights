@@ -9,8 +9,8 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
 import es.iespuertodelacruz.routinefights.badge.infrastructure.adapters.secondary.entities.BadgeEntity;
+import es.iespuertodelacruz.routinefights.communityEvent.commons.CommunityEventCommons;
 import es.iespuertodelacruz.routinefights.meeting.infrastructure.adapters.secondary.entities.MeetingEntity;
-import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,13 +19,10 @@ import java.util.Objects;
 /**
  * CommunityEventEntity
  */
-public class CommunityEventEntity extends EntitiesTimestamps {
+public class CommunityEventEntity extends CommunityEventCommons {
     @Id
     @GeneratedValue
     private String id;
-    private String name;
-    private Integer totalRequired;
-    private LocalDateTime finishDate;
     @Relationship(type = "Related", direction = Relationship.Direction.OUTGOING)
     private List<ActivityEntity> activities;
     @Relationship(type = "Associated_With", direction = Relationship.Direction.INCOMING)
@@ -38,12 +35,9 @@ public class CommunityEventEntity extends EntitiesTimestamps {
 
     public CommunityEventEntity(String id, String name, Integer totalRequired, LocalDateTime createdAt,
             LocalDateTime finishDate, List<ActivityEntity> activities, List<BadgeEntity> badges,
-            List<MeetingEntity> meetings) {
-        super(createdAt, null, null);
+            List<MeetingEntity> meetings, LocalDateTime startDate, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+        super(name, totalRequired, startDate, finishDate, createdAt, updatedAt, deletedAt);
         this.id = id;
-        this.name = name;
-        this.totalRequired = totalRequired;
-        this.finishDate = finishDate;
         this.activities = activities;
         this.badges = badges;
         this.meetings = meetings;
@@ -55,31 +49,6 @@ public class CommunityEventEntity extends EntitiesTimestamps {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getTotalRequired() {
-        return this.totalRequired;
-    }
-
-    public void setTotalRequired(Integer totalRequired) {
-        this.totalRequired = totalRequired;
-    }
-
-    
-    public LocalDateTime getFinishDate() {
-        return this.finishDate;
-    }
-
-    public void setFinishDate(LocalDateTime finishDate) {
-        this.finishDate = finishDate;
     }
 
     public List<ActivityEntity> getActivities() {
