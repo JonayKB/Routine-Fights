@@ -3,7 +3,7 @@ import { neo4jUri } from "../utils/Utils";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import { Followers } from "../utils/User";
 
-export const fetchUsersByName = async (text: string): Promise<Followers[]> => {
+export const fetchUsersByName = async (pageNum: number, text: string): Promise<Followers[]> => {
   if (!text) {
     return [];
   }
@@ -16,14 +16,14 @@ export const fetchUsersByName = async (text: string): Promise<Followers[]> => {
       {
         query: `
             query {
-                usersV2(regex: "${text}") {
-                    createdAt
+                getUserPaginationByName(page: ${pageNum}, perPage: 10, userName: "${text}") {
                     followers
                     following
                     id
                     image
-                    nationality
                     username
+                    email
+                    isFollowing
                 }
             }`,
       },
@@ -34,7 +34,7 @@ export const fetchUsersByName = async (text: string): Promise<Followers[]> => {
       }
     );
 
-    return response.data.data.usersV2;
+    return response.data.data.getUserPaginationByName;
   } catch (error) {
     throw new Error(error.response.data);
   }

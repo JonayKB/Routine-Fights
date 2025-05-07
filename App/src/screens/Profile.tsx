@@ -18,6 +18,7 @@ import {
   getUser,
   getOwnUser,
   followUser,
+  unfollowUser,
 } from "../repositories/UserRepository";
 import { convertQuantityToString } from "../utils/Utils";
 import ProfilePost from "../components/ProfilePost";
@@ -25,6 +26,7 @@ import FollowCount from "../components/FollowCount";
 import ProfilePicture from "../components/ProfilePicture";
 import ProfileNavigation from "../components/ProfileNavigation";
 import { translations } from "../../translations/translation";
+import { useLanguageContext } from "../contexts/SettingsContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -35,13 +37,14 @@ const Profile = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
   const [ownUser, setOwnUser] = useState<boolean>(true);
+  const { language } = useLanguageContext();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         let user: UserOut;
-        if (route.params?.id) {
-          user = await getUser(route.params?.id);
+        if (route.params?.email) {
+          user = await getUser(route.params?.email);
         } else {
           user = await getOwnUser();
         }
@@ -58,7 +61,7 @@ const Profile = ({ navigation, route }: Props) => {
     };
 
     fetchUser();
-  }, [route.params?.id]);
+  }, [route.params?.email]);
 
   const posts: PostDomain[] = [
     {
@@ -116,12 +119,12 @@ const Profile = ({ navigation, route }: Props) => {
         </View>
       )}
 
-      {!!route.params?.id && (
+      {!!route.params?.email && (
         <ProfileNavigation navigation={navigation} message={user.username} />
       )}
 
       <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
-        {!route.params?.id && (
+        {!route.params?.email && (
           <TouchableOpacity
             onPress={() => navigation.navigate("Settings")}
             className="absolute top-5 right-5 z-10"
@@ -140,7 +143,7 @@ const Profile = ({ navigation, route }: Props) => {
             </Text>
           </View> */}
         </View>
-        <View className="mt-5 py-4">
+        <View className="mt-5">
           <Text className="text-black text-4xl font-bold">
             {user?.username}
           </Text>
@@ -150,17 +153,19 @@ const Profile = ({ navigation, route }: Props) => {
             email={user.email}
             navigation={navigation}
           />
-          {!!route.params?.id && (
+          {!ownUser && (
             <TouchableOpacity
-              className="border-[#E4007C] border-2 rounded-lg ml-5"
-              onPress={() => followUser(user.email)}
+              className="flex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
+              onPress={async () =>
+                user.isFollowing
+                  ? await unfollowUser(user.email)
+                  : await followUser(user.email)
+              }
             >
               <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
-                {/* TODO: database method for checking if own user follows this user.
                 {user.isFollowing
                   ? translations[language || "en-EN"].screens.Profile.unfollow
                   : translations[language || "en-EN"].screens.Profile.follow}
-                  */}
               </Text>
             </TouchableOpacity>
           )}

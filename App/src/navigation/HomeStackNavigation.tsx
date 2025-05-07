@@ -1,15 +1,15 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Profile from "../screens/Profile";
 import Home from "../screens/Home";
 import Search from "../screens/Search";
+import ProfileStackNavigation from "./ProfileStackNavigation";
 
 type Props = {};
 
 export type HomeStackProps = {
   Home: undefined;
   Search: undefined;
-  Profile: { email: string };
+  ProfileStackNavigation: undefined;
 };
 
 const HomeStackNavigation = (props: Props) => {
@@ -19,7 +19,7 @@ const HomeStackNavigation = (props: Props) => {
     <Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Search" component={Search} />
-      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="ProfileStackNavigation" component={ProfileStackNavigation} />
     </Stack.Navigator>
   );
 };

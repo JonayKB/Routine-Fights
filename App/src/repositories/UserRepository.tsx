@@ -65,23 +65,22 @@ export const getOwnUserImage = async (): Promise<UserOut> => {
   }
 };
 
-export const getUser = async (id: string): Promise<UserOut> => {
+export const getUser = async (email: string): Promise<UserOut> => {
   try {
     const response = await axios.post(
       neo4jUri,
       {
         query: `
               query {
-                  userV2(id: "${id}") {
+                  getUserV2IsFollowing(email: "${email}") {
                       id
                       username
                       email
-                      nationality
                       phoneNumber
                       image
-                      createdAt
                       followers
                       following
+                      isFollowing
                   }
               }
             `,
@@ -92,7 +91,7 @@ export const getUser = async (id: string): Promise<UserOut> => {
         },
       }
     );
-    return response.data.data.userV2;
+    return response.data.data.getUserV2IsFollowing;
   } catch (error) {
     throw new error("Error", error.response.data);
   }
@@ -113,6 +112,7 @@ export const getFollows = async (email: string) => {
                     followers
                     following
                     isFollowing
+                    email
                 }
                     
                 followedByEmail(email: "${email}", usernameFilter: "") {
@@ -124,6 +124,7 @@ export const getFollows = async (email: string) => {
                     followers
                     following
                     isFollowing
+                    email
                 }
             }
         `,
@@ -147,7 +148,7 @@ export const followUser = async (email: string) => {
       {
         query: `
                 mutation {
-                    followUser(followingEmail: "${email}") {
+                    followUser(followingEmail: "${email}")
                 }`,
       },
       {
@@ -171,7 +172,7 @@ export const unfollowUser = async (email: string) => {
       {
         query: `
                 mutation {
-                    unfollowUser(followingEmail: "${email}") {
+                    unfollowUser(followingEmail: "${email}")
                 }`,
       },
       {
@@ -180,7 +181,7 @@ export const unfollowUser = async (email: string) => {
         },
       }
     );
-    return response.data.data.followUser;
+    return response.data.data.unfollowUser;
   } catch (error) {
     throw new error("Error", error.response.data);
   }

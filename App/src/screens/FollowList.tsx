@@ -31,7 +31,7 @@ const FollowList = ({ navigation, route }: Props) => {
       }
     };
     fetchFollows();
-  }, [route.params.email, route.params.type]);
+  }, [route.params.email, route.params.type, load === true]);
 
   return (
     <View>
@@ -61,12 +61,16 @@ const FollowList = ({ navigation, route }: Props) => {
               <FollowBox
                 navigation={navigation}
                 item={item}
-                followFunction={async (item) =>
+                following={item.isFollowing}
+                followFunction={async (item) => {
                   item.isFollowing
-                  // TODO: Change item.id with item.email
-                    ? await unfollowUser(item.id)
-                    : await followUser(item.id)
-                }
+                    ? await unfollowUser(item.email)
+                    : await followUser(item.email);
+                  setLoad(true);
+                  setTimeout(() => {
+                    setLoad(false);
+                  }, 1000);
+                }}
               />
             );
           }}

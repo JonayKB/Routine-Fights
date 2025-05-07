@@ -9,33 +9,34 @@ import { Followers } from "../utils/User";
 type Props = {
   navigation: any;
   item: Followers;
+  following: boolean;
   followFunction: (item: Followers) => void;
 };
 
-const FollowBox = ({ navigation, item , followFunction}: Props) => {
+const FollowBox = (props: Props) => {
   const { language } = useLanguageContext();
 
   return (
     <View>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Profile", { id: item.id })}
+        onPress={() => props.navigation.navigate("Profile", { email: props.item.email })}
         className="items-center bg-[#F1FEFC] flex-row mt-5 w-11/12 mx-auto rounded-xl p-2"
       >
-        <ProfilePicture image={item.image} size={80} />
+        <ProfilePicture image={props.item.image} size={80} />
         <View className="ml-5">
-          <Text className="text-black font-bold text-2xl">{item.username}</Text>
+          <Text className="text-black font-bold text-2xl">{props.item.username}</Text>
           <Text className="text-black">
             {translations[language || "en-EN"].screens.Profile.followers}:{" "}
-            {convertQuantityToString(item.followers)}
+            {convertQuantityToString(props.item.followers)}
           </Text>
           <Text className="text-black">
             {translations[language || "en-EN"].screens.Profile.following}:{" "}
-            {convertQuantityToString(item.following)}
+            {convertQuantityToString(props.item.following)}
           </Text>
         </View>
-        <TouchableOpacity className="border-[#E4007C] border-2 rounded-lg ml-5" onPress={() => followFunction(item)}>
+        <TouchableOpacity className="border-[#E4007C] border-2 rounded-lg ml-5" onPress={() => props.followFunction(props.item)}>
           <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
-            {(item.isFollowing) ? translations[language || "en-EN"].screens.Profile.unfollow : translations[language || "en-EN"].screens.Profile.follow}
+            {(props.following) ? translations[language || "en-EN"].screens.Profile.unfollow : translations[language || "en-EN"].screens.Profile.follow}
           </Text>
         </TouchableOpacity>
       </TouchableOpacity>

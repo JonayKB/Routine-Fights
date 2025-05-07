@@ -18,6 +18,7 @@ export type UserOut = {
   createdAt: string;
   followers: number;
   following: number;
+  isFollowing: boolean;
 };
 
 export type Followers = {
@@ -27,4 +28,5 @@ export type Followers = {
   followers: number;
   following: number;
   isFollowing: boolean;
+  email: string;
 };
