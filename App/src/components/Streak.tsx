@@ -19,7 +19,10 @@ const Streak = (props: Props) => {
         <Text className="text-black text-3xl">{props.name}</Text>
         <Text className="text-black text-xl">{props.description}</Text>
       </View>
-      <TouchableOpacity onPress={props.unsubscribeFunction} className="ml-auto mr-5">
+      <TouchableOpacity
+        onPress={props.unsubscribeFunction}
+        className="ml-auto mr-5"
+      >
         <Icon name="trash" size={30} color="black" />
       </TouchableOpacity>
     </View>

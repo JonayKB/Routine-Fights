@@ -43,20 +43,19 @@ const Streaks = ({ navigation, route }: Props) => {
     fetchActivities();
   }, [load === true]);
 
+  const reload = () => {
+    setLoad(true);
+    setTimeout(() => {
+      setLoad(false);
+    }, 1000);
+  };
+
   return (
     <View className="flex-1 items-center">
       <View className="items-center w-full">
         <FlatList
           refreshControl={
-            <RefreshControl
-              refreshing={load}
-              onRefresh={() => {
-                setLoad(true);
-                setTimeout(() => {
-                  setLoad(false);
-                }, 1000);
-              }}
-            />
+            <RefreshControl refreshing={load} onRefresh={reload} />
           }
           style={{ width: "100%" }}
           data={activities}
@@ -79,10 +78,7 @@ const Streaks = ({ navigation, route }: Props) => {
                     streak={item.streak}
                     unsubscribeFunction={async () => {
                       await unsubscribeActivity(item.id);
-                      setLoad(true);
-                      setTimeout(() => {
-                        setLoad(false);
-                      }, 1000);
+                      reload();
                     }}
                   />
                 )}

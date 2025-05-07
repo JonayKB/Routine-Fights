@@ -1,4 +1,9 @@
-import { View, FlatList, RefreshControl, TouchableWithoutFeedback } from "react-native";
+import {
+  View,
+  FlatList,
+  RefreshControl,
+  TouchableWithoutFeedback,
+} from "react-native";
 import React, { useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
@@ -8,8 +13,15 @@ import { HomeStackProps } from "../navigation/HomeStackNavigation";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
-const Home = ({navigation}: Props) => {
+const Home = ({ navigation }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
+
+  const reload = () => {
+    setLoad(true);
+    setTimeout(() => {
+      setLoad(false);
+    }, 1000);
+  };
 
   const posts: PostDomain[] = [
     {
@@ -40,21 +52,16 @@ const Home = ({navigation}: Props) => {
 
   return (
     <View className="bg-white">
-      <TouchableWithoutFeedback className="absolute z-10 right-5 top-5" onPress={() => navigation.navigate("Search")}>
+      <TouchableWithoutFeedback
+        className="absolute z-10 right-5 top-5"
+        onPress={() => navigation.navigate("Search")}
+      >
         <Icon name="search" size={35} color="#7C5AF1" />
       </TouchableWithoutFeedback>
       <View className="items-center">
         <FlatList
           refreshControl={
-            <RefreshControl
-              refreshing={load}
-              onRefresh={() => {
-                setLoad(true);
-                setTimeout(() => {
-                  setLoad(false);
-                }, 1000);
-              }}
-            />
+            <RefreshControl refreshing={load} onRefresh={reload} />
           }
           data={posts}
           renderItem={({ item }) => {
