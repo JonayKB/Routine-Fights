@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.entities.CommunityEventEntity;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
+
 @Repository
 public interface ICommunityEventEntityRepository extends Neo4jRepository<CommunityEventEntity, String> {
 
@@ -24,4 +25,7 @@ public interface ICommunityEventEntityRepository extends Neo4jRepository<Communi
 
     @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post)<-[:`Posted`]-(u:User) WHERE elementId(ce) = $id AND p.createdAt > ce.startDate AND p.createdAt < ce.finishDate RETURN u")
     List<UserEntity> getUsersParticipatingInCommunityEvent(@Param("id") String id);
+
+    @Query("MATCH (ce:CommunityEvent) WHERE elementId(ce) = $id RETURN ce")
+    CommunityEventEntity findByIdOnlyBase(@Param("id") String id);
 }
