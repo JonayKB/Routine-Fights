@@ -11,7 +11,7 @@ import { register } from "../repositories/RegisterRepository";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Register">;
 
-const Register = ({ navigation, route }: Props) => {
+const RegisterScreen = ({ navigation, route }: Props) => {
   const [passwordShown, setPasswordShown] = useState<boolean>(false);
   const [userIn, setuserIn] = useState<UserIn>({} as UserIn);
   const phoneInput = useRef<PhoneInput>(null);
@@ -133,4 +133,4 @@ const Register = ({ navigation, route }: Props) => {
   );
 };
 
-export default Register;
+export default RegisterScreen;

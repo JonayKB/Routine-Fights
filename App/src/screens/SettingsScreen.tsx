@@ -12,7 +12,7 @@ import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Settings">;
 
-const Settings = ({ navigation }: Props) => {
+const SettingsScreen = ({ navigation }: Props) => {
   const { language, setLanguage } = useLanguageContext();
 
   const changeLanguage = async (language: string) => {
@@ -57,4 +57,4 @@ const Settings = ({ navigation }: Props) => {
   );
 };
 
-export default Settings;
+export default SettingsScreen;

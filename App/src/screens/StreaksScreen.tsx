@@ -17,7 +17,7 @@ import { ActivityWithStreak } from "../utils/Activity";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
-const Streaks = ({ navigation, route }: Props) => {
+const StreaksScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
 
   const addActivity: ActivityWithStreak = {
@@ -92,4 +92,4 @@ const Streaks = ({ navigation, route }: Props) => {
   );
 };
 
-export default Streaks;
+export default StreaksScreen;

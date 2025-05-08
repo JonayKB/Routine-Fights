@@ -15,7 +15,7 @@ import {
 
 type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 
-const FollowList = ({ navigation, route }: Props) => {
+const FollowListScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [users, setUsers] = useState<Followers[]>([]);
   const { language } = useLanguageContext();
@@ -79,4 +79,4 @@ const FollowList = ({ navigation, route }: Props) => {
   );
 };
 
-export default FollowList;
+export default FollowListScreen;

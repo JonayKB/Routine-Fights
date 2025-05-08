@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Events from "../screens/Events";
+import EventsScreen from "../screens/EventsScreen";
 import ActivitiesStackNavigation from "./ActivitiesStackNavigation";
 import Icon from "react-native-vector-icons/Ionicons";
 import ProfileStackNavigation from "./ProfileStackNavigation";
-import UploadForm from "../screens/UploadForm";
+import UploadFormScreen from "../screens/UploadFormScreen";
 import ImageContextProvider from "../contexts/ImageContextProvider";
 import { Image } from "react-native";
 import { uri } from "../utils/Utils";
@@ -77,7 +77,7 @@ const MainTabNavigation = (props: Props) => {
         />
         <Tab.Screen
           name="UploadForm"
-          component={UploadForm}
+          component={UploadFormScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Icon
@@ -90,7 +90,7 @@ const MainTabNavigation = (props: Props) => {
         />
         <Tab.Screen
           name="Events"
-          component={Events}
+          component={EventsScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Icon

@@ -10,7 +10,7 @@ import SearchBar from "../components/SearchBar";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
-const Activities = ({ navigation }: Props) => {
+const ActivitiesScreen = ({ navigation }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [searchText, setSearchText] = useState<string>("");
@@ -78,4 +78,4 @@ const Activities = ({ navigation }: Props) => {
   );
 };
 
-export default Activities;
+export default ActivitiesScreen;

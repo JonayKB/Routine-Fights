@@ -1,10 +1,10 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Activities from "../screens/Activities";
-import ActivityDetails from "../screens/ActivityDetails";
+import ActivitiesScreen from "../screens/ActivitiesScreen";
+import ActivityDetailsScreen from "../screens/ActivityDetailsScreen";
 import { Activity } from "../utils/Activity";
-import Streaks from "../screens/Streaks";
-import ActivityForm from "../screens/ActivityForm";
+import StreaksScreen from "../screens/StreaksScreen";
+import ActivityFormScreen from "../screens/ActivityFormScreen";
 
 type Props = {};
 
@@ -20,10 +20,10 @@ const ActivitiesStackNavigation = (props: Props) => {
 
   return (
     <Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Streaks" component={Streaks} />
-      <Stack.Screen name="Activities" component={Activities} />
-      <Stack.Screen name="ActivityDetails" component={ActivityDetails} />
-      <Stack.Screen name="ActivityForm" component={ActivityForm}/>
+      <Stack.Screen name="Streaks" component={StreaksScreen} />
+      <Stack.Screen name="Activities" component={ActivitiesScreen} />
+      <Stack.Screen name="ActivityDetails" component={ActivityDetailsScreen} />
+      <Stack.Screen name="ActivityForm" component={ActivityFormScreen}/>
     </Stack.Navigator>
   );
 };

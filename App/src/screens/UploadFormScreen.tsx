@@ -10,7 +10,7 @@ import { Activity } from "../utils/Activity";
 
 type Props = {};
 
-const UploadForm = (props: Props) => {
+const UploadFormScreen = (props: Props) => {
   const { uri, setUri } = useImageContext();
   const [categories, setCategories] = useState<any[]>([]);
   const [category, setCategory] = useState<string>(null);
@@ -80,4 +80,4 @@ const UploadForm = (props: Props) => {
   );
 };
 
-export default UploadForm;
+export default UploadFormScreen;
