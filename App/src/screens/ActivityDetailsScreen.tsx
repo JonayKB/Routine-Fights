@@ -11,7 +11,7 @@ import { resetNavigation } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 
-const ActivityDetails = ({ navigation, route }: Props) => {
+const ActivityDetailsScreen = ({ navigation, route }: Props) => {
   const { language } = useLanguageContext();
   const [activity, setActivity] = useState<Activity>({} as Activity);
 
@@ -50,4 +50,4 @@ const ActivityDetails = ({ navigation, route }: Props) => {
   );
 };
 
-export default ActivityDetails;
+export default ActivityDetailsScreen;

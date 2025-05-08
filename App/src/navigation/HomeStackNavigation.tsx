@@ -1,7 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Home from "../screens/Home";
-import Search from "../screens/Search";
+import HomeScreen from "../screens/HomeScreen";
+import SearchScreen from "../screens/SearchScreen";
 import ProfileStackNavigation from "./ProfileStackNavigation";
 
 type Props = {};
@@ -17,8 +17,8 @@ const HomeStackNavigation = (props: Props) => {
 
   return (
     <Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen
         name="ProfileStackNavigation"
         component={ProfileStackNavigation}

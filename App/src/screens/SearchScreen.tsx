@@ -10,7 +10,7 @@ import SearchBarHeader from "../components/SearchBarHeader";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Search">;
 
-const Search = ({ navigation }: Props) => {
+const SearchScreen = ({ navigation }: Props) => {
   const [users, setUsers] = useState<Followers[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const pageNum = useRef<number>(1);
@@ -88,4 +88,4 @@ const Search = ({ navigation }: Props) => {
   );
 };
 
-export default Search;
+export default SearchScreen;

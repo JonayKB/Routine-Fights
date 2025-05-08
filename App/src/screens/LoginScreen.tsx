@@ -13,7 +13,7 @@ import style from "../styles/Styles.json";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
-const Login = ({ navigation }: Props) => {
+const LoginScreen = ({ navigation }: Props) => {
   const [passwordShown, setPasswordShown] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -110,4 +110,4 @@ const Login = ({ navigation }: Props) => {
   );
 };
 
-export default Login;
+export default LoginScreen;

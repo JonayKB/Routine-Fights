@@ -3,12 +3,12 @@ import React from 'react'
 
 type Props = {}
 
-const Events = (props: Props) => {
+const ProfileFormScreen = (props: Props) => {
   return (
     <View>
-      <Text>Events</Text>
+      <Text>ProfileForm</Text>
     </View>
   )
 }
 
-export default Events
+export default ProfileFormScreen

@@ -13,7 +13,7 @@ import { HomeStackProps } from "../navigation/HomeStackNavigation";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
-const Home = ({ navigation }: Props) => {
+const HomeScreen = ({ navigation }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
 
   const reload = () => {
@@ -74,4 +74,4 @@ const Home = ({ navigation }: Props) => {
   );
 };
 
-export default Home;
+export default HomeScreen;

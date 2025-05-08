@@ -30,7 +30,7 @@ import { useLanguageContext } from "../contexts/SettingsContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
-const Profile = ({ navigation, route }: Props) => {
+const ProfileScreen = ({ navigation, route }: Props) => {
   const [user, setUser] = useState<UserOut>({} as UserOut);
   const [followers, setFollowers] = useState<string>("");
   const [following, setFollowing] = useState<string>("");
@@ -200,4 +200,4 @@ const Profile = ({ navigation, route }: Props) => {
   );
 };
 
-export default Profile;
+export default ProfileScreen;

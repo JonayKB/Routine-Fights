@@ -20,7 +20,7 @@ import FormInput from "../components/FormInput";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityForm">;
 
-const ActivityForm = (props: Props) => {
+const ActivityFormScreen = (props: Props) => {
   const { language } = useLanguageContext();
   const { uri, setUri } = useImageContext();
   const [activity, setActivity] = useState<Activity>({} as Activity);
@@ -134,4 +134,4 @@ const ActivityForm = (props: Props) => {
   );
 };
 
-export default ActivityForm;
+export default ActivityFormScreen;

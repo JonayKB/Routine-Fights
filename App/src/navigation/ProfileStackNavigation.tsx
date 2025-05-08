@@ -1,9 +1,9 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Profile from "../screens/Profile";
-import FollowList from "../screens/FollowList";
-import Settings from "../screens/Settings";
-import ProfileForm from "../screens/ProfileForm";
+import ProfileScreen from "../screens/ProfileScreen";
+import FollowListScreen from "../screens/FollowListScreen";
+import SettingsScreen from "../screens/SettingsScreen";
+import ProfileFormScreen from "../screens/ProfileFormScreen";
 
 type Props = {};
 
@@ -19,10 +19,10 @@ const ProfileStackNavigation = (props: Props) => {
 
   return (
     <Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="FollowList" component={FollowList} />
-      <Stack.Screen name="Settings" component={Settings} />
-      <Stack.Screen name="ProfileForm" component={ProfileForm} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="FollowList" component={FollowListScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="ProfileForm" component={ProfileFormScreen} />
     </Stack.Navigator>
   );
 };
