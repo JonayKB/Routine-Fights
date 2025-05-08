@@ -39,7 +39,7 @@ public class CommunityEventService implements ICommunityEventService {
 
     @Override
     public CommunityEvent getCommunityEventById(String id) {
-        return communityEventRepository.findById(id);
+        return communityEventRepository.findByIdOnlyBase(id);
     }
 
     @Override

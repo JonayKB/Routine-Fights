@@ -59,4 +59,10 @@ public class CommunityEventEntityService implements ICommunityEventRepository {
 
     }
 
+    @Override
+    public CommunityEvent findByIdOnlyBase(String id) {
+        return communityEventEntityMapper
+                .toDomain(communityEventEntityRepository.findByIdOnlyBase(id));
+    }
+
 }

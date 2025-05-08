@@ -13,6 +13,7 @@ public interface ICommunityEventRepository {
     CommunityEvent getNearestCommunityEvent();
     Integer getActualCommunityEventPoints(String id);
     List<User> getUsersParticipatingInCommunityEvent(String id);
+    CommunityEvent findByIdOnlyBase(String id);
 
     
 }
