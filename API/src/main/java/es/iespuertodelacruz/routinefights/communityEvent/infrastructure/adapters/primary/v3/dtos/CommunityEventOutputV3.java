@@ -5,5 +5,5 @@ import java.time.LocalDateTime;
 public record CommunityEventOutputV3(String id, String name,
         Integer totalRequired, LocalDateTime startDate,
         LocalDateTime finishDate, LocalDateTime createdAt,
-        LocalDateTime updatedAt, LocalDateTime deletedAt) {
+        LocalDateTime updatedAt, LocalDateTime deletedAt, String image) {
 }

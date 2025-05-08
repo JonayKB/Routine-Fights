@@ -8,8 +8,8 @@ type Query {
   getUserV2(email: String!): UserOutputV2
   getUserV2IsFollowing(email: String!): UserOutputV2
 
-  followersByEmail(email: String!,usernameFilter:String!): [Followers]
-  followedByEmail(email: String!,usernameFilter:String!): [Followers]
+  followersByEmail(email: String!, usernameFilter: String!): [Followers]
+  followedByEmail(email: String!, usernameFilter: String!): [Followers]
   images: [String]
 
   postsV2(lastDate: String!, limit: Int): [PostOutputV2]
@@ -22,11 +22,23 @@ type Query {
   postsFollowingV2(lastDate: String!, limit: Int): [PostOutputV2]
   postsSubscribedActivitiesV2(lastDate: String!, limit: Int): [PostOutputV2]
 
-  paginationActivitiesNotSubscribed(page: Int!, perPage: Int,activityName:String): [ActivityOutputV2]
+  paginationActivitiesNotSubscribed(
+    page: Int!
+    perPage: Int
+    activityName: String
+  ): [ActivityOutputV2]
   getOwnUser: UserOutputV2
-  getSubscribedActivitiesWithStreakByName(activityName:String!): [ActivityOutputV2Streak]
+  getSubscribedActivitiesWithStreakByName(
+    activityName: String!
+  ): [ActivityOutputV2Streak]
   getComments(postID: String!): [CommentOutputV2]
 
+  getCommunityEventById(id: String!): CommunityEventOutputV3
+  getUsersParticipatingInCommunityEvent(id: String!): [UserOutputV2]
+
+  getActiveCommunityEvents: [CommunityEventOutputV2]
+  getNearestCommunityEvent: CommunityEventOutputV2
+  getCommunityEventPointsById(id:String!): Int
 }
 
 type Mutation {
@@ -51,13 +63,35 @@ type Mutation {
 
   postComment(commentInput: CommentInputV2!): CommentOutputV2
 
-  createCommunityEvent(name: String!,
-  totalRequired: Int!,
-  startDate: String!,
-  finishDate: String!,
-  activitiesIDs: [String!]!): Boolean
+  createCommunityEvent(
+    name: String!
+    totalRequired: Int!
+    startDate: String!
+    finishDate: String!
+    image: String!
+    activitiesIDs: [String!]!
+  ): CommunityEventOutputV3
+}
+type CommunityEventOutputV3 {
+  id: ID
+  name: String
+  totalRequired: Int
+  image: String
+  startDate: String
+  finishDate: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
 }
 
+type CommunityEventOutputV2 {
+  id: ID
+  name: String
+  totalRequired: Int
+  image: String
+  startDate: String
+  finishDate: String
+}
 
 input CommentInputV2 {
   message: String!

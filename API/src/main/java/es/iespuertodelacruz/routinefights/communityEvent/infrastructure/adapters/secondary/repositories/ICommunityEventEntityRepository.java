@@ -23,5 +23,5 @@ public interface ICommunityEventEntityRepository extends Neo4jRepository<Communi
     Integer getActualCommunityEventPoints(@Param("id") String id);
 
     @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post)<-[:`Posted`]-(u:User) WHERE elementId(ce) = $id AND p.createdAt > ce.startDate AND p.createdAt < ce.finishDate RETURN u")
-    List<UserEntity> getUserParticipatingInCommunityEvent(@Param("id") String id);
+    List<UserEntity> getUsersParticipatingInCommunityEvent(@Param("id") String id);
 }

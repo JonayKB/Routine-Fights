@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
- class MeetingEntityTest {
+class MeetingEntityTest {
 
     private static final String MEETING_ID = "M1";
     private static final LocalDateTime MEETING_DATE = LocalDateTime.of(2023, 3, 15, 14, 30);
@@ -36,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
     private static final List<ActivityEntity> CE_ACTIVITIES = new ArrayList<>();
     private static final List<BadgeEntity> CE_BADGES = new ArrayList<>();
     private static final List<MeetingEntity> CE_MEETINGS = new ArrayList<>();
+    private static final String IMAGE = "image";
 
     private TeamEntity createTeam() {
         TeamEntity team = new TeamEntity();
@@ -50,22 +51,21 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
     private CommunityEventEntity createCommunityEvent() {
         return new CommunityEventEntity(
-            CE_ID, 
-            CE_NAME, 
-            CE_TOTAL_REQUIRED, 
-            CE_CREATED_AT, 
-            CE_FINISH_DATE, 
-            CE_ACTIVITIES, 
-            CE_BADGES, 
-            CE_MEETINGS,
-            CE_CREATED_AT,
-            CE_FINISH_DATE,
-            CE_CREATED_AT
-        );
+                CE_ID,
+                CE_NAME,
+                CE_TOTAL_REQUIRED,
+                CE_CREATED_AT,
+                CE_FINISH_DATE,
+                CE_ACTIVITIES,
+                CE_BADGES,
+                CE_MEETINGS,
+                CE_CREATED_AT,
+                CE_FINISH_DATE,
+                CE_CREATED_AT, IMAGE);
     }
 
     @Test
-     void testSettersAndGetters() {
+    void testSettersAndGetters() {
         MeetingEntity meeting = new MeetingEntity();
         meeting.setId(MEETING_ID);
         meeting.setDate(MEETING_DATE);
@@ -82,15 +82,14 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
     }
 
     @Test
-     void testConstructorAndGetters() {
+    void testConstructorAndGetters() {
         MeetingEntity meeting = new MeetingEntity(
-            MEETING_ID,
-            MEETING_DATE,
-            LOCATION,
-            USERS,
-            createTeam(),
-            createCommunityEvent()
-        );
+                MEETING_ID,
+                MEETING_DATE,
+                LOCATION,
+                USERS,
+                createTeam(),
+                createCommunityEvent());
         assertEquals(MEETING_ID, meeting.getId());
         assertEquals(MEETING_DATE, meeting.getDate());
         assertEquals(LOCATION, meeting.getLocation());
@@ -100,7 +99,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
     }
 
     @Test
-     void testEqualsAndHashCode() {
+    void testEqualsAndHashCode() {
         MeetingEntity meeting1 = new MeetingEntity();
         MeetingEntity meeting2 = new MeetingEntity();
         assertEquals(meeting1, meeting2);
@@ -116,17 +115,16 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
     }
 
     @Test
-     void testToString() {
+    void testToString() {
         TeamEntity team = createTeam();
         CommunityEventEntity communityEvent = createCommunityEvent();
         MeetingEntity meeting = new MeetingEntity(
-            MEETING_ID,
-            MEETING_DATE,
-            LOCATION,
-            USERS,
-            team,
-            communityEvent
-        );
+                MEETING_ID,
+                MEETING_DATE,
+                LOCATION,
+                USERS,
+                team,
+                communityEvent);
         String expected = "{" +
                 " id='" + MEETING_ID + "'" +
                 ", date='" + MEETING_DATE.toString() + "'" +

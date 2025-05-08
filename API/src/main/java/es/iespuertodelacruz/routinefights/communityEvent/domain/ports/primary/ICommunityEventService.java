@@ -4,9 +4,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
+import es.iespuertodelacruz.routinefights.user.domain.User;
 
 public interface ICommunityEventService {
     CommunityEvent createCommunityEvent(String name, Integer totalRequired, LocalDateTime startDate,
-    LocalDateTime finishDate, List<String> activityIDs);
+    LocalDateTime finishDate,String image, List<String> activityIDs);
+    CommunityEvent getCommunityEventById(String id);
+    List<CommunityEvent> getActiveCommunityEvent();
+    CommunityEvent getNearestCommunityEvent();
+    Integer getCommunityEventPointsById(String id);
+    List<User> getUsersParticipatingInCommunityEvent(String id);
     
 }

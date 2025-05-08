@@ -35,8 +35,8 @@ public class CommunityEventEntity extends CommunityEventCommons {
 
     public CommunityEventEntity(String id, String name, Integer totalRequired, LocalDateTime createdAt,
             LocalDateTime finishDate, List<ActivityEntity> activities, List<BadgeEntity> badges,
-            List<MeetingEntity> meetings, LocalDateTime startDate, LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        super(name, totalRequired, startDate, finishDate, createdAt, updatedAt, deletedAt);
+            List<MeetingEntity> meetings, LocalDateTime startDate, LocalDateTime updatedAt, LocalDateTime deletedAt,String image) {
+        super(name, totalRequired, startDate, finishDate, createdAt, updatedAt, deletedAt,image);
         this.id = id;
         this.activities = activities;
         this.badges = badges;
