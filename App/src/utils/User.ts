@@ -1,5 +1,4 @@
 export type UserIn = {
-  id: string;
   username: string;
   email: string;
   password: string;
