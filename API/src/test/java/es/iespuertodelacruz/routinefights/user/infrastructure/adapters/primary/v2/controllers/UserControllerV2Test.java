@@ -203,18 +203,12 @@ class UserControllerV2Test extends UserInitializer {
 
     @Test
     void updateTest() {
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
         when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString()))
                 .thenReturn(new User());
-        when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
-        assertNotNull(userControllerV2.update(userInputDTOV2));
-    }
-
-    @Test
-    void updateWithMailTest() {
-        when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString()))
-                .thenReturn(user);
         when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
         assertNotNull(userControllerV2.update(userInputDTOV2));
     }

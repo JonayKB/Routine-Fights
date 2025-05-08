@@ -163,12 +163,16 @@ public class UserControllerV2 {
     @MutationMapping("updateUserV2")
     public UserOutputDTOV2 update(@Argument UserInputDTOV2 user) {
         User userDomain;
+
         try {
-            userDomain = userService.update(user.id(), user.username(), user.email(), user.password(),
+            User previousUser = userService
+                    .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+
+            userDomain = userService.update(previousUser.getId(), user.username(), user.email(), user.password(),
                     user.nationality(), user.phoneNumber(), user.image());
 
             if (userDomain != null && (!userDomain.getVerified() && userDomain.getVerificationToken() != null)) {
-                mailService.sentVerifyToken(userDomain.getEmail(), "Verify your email: " + userDomain.getUsername(),
+                mailService.sentVerifyToken(userDomain.getEmail(), "Verify your new email: " + userDomain.getUsername(),
                         userDomain.getVerificationToken());
             }
         } catch (Exception e) {
