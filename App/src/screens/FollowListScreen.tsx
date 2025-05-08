@@ -7,6 +7,7 @@ import { translations } from "../../translations/translation";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import ProfileNavigation from "../components/ProfileNavigation";
 import FollowBox from "../components/FollowBox";
+import SearchBar from "../components/SearchBar";
 import {
   followUser,
   getFollows,
@@ -19,19 +20,26 @@ const FollowListScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [users, setUsers] = useState<Followers[]>([]);
   const { language } = useLanguageContext();
+  const [searchText, setSearchText] = useState<string>("");
 
   useEffect(() => {
     const fetchFollows = async () => {
       if (route.params.type === "followers") {
-        const { followersByEmail } = await getFollows(route.params.email);
+        const { followersByEmail } = await getFollows(
+          route.params.email,
+          searchText
+        );
         setUsers(followersByEmail);
       } else if (route.params.type === "following") {
-        const { followedByEmail } = await getFollows(route.params.email);
+        const { followedByEmail } = await getFollows(
+          route.params.email,
+          searchText
+        );
         setUsers(followedByEmail);
       }
     };
     fetchFollows();
-  }, [route.params.email, route.params.type, load === true]);
+  }, [route.params.email, route.params.type, load === true, searchText]);
 
   const reload = () => {
     setLoad(true);
@@ -49,6 +57,9 @@ const FollowListScreen = ({ navigation, route }: Props) => {
         }: ${users.length}`}
       />
       <View className="items-center">
+        <View className="w-full">
+          <SearchBar searchFunction={(text) => setSearchText(text)} />
+        </View>
         <FlatList
           refreshControl={
             <RefreshControl refreshing={load} onRefresh={reload} />
