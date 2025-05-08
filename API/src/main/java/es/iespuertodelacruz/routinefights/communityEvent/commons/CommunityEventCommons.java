@@ -9,16 +9,18 @@ public class CommunityEventCommons extends EntitiesTimestamps {
     private Integer totalRequired;
     private LocalDateTime startDate;
     private LocalDateTime finishDate;
+    private String image;
 
     public CommunityEventCommons() {
     }
     public CommunityEventCommons(String name, Integer totalRequired, LocalDateTime startDate, LocalDateTime finishDate,
-            LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+            LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, String image) {
         super(createdAt, updatedAt, deletedAt);
         this.name = name;
         this.totalRequired = totalRequired;
         this.startDate = startDate;
         this.finishDate = finishDate;
+        this.image = image;
     }
 
 
@@ -59,6 +61,12 @@ public class CommunityEventCommons extends EntitiesTimestamps {
 
     public void setFinishDate(LocalDateTime finishDate) {
         this.finishDate = finishDate;
+    }
+    public String getImage() {
+        return this.image;
+    }
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public CommunityEventCommons name(String name) {

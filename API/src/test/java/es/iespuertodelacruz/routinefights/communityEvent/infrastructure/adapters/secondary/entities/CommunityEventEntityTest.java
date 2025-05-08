@@ -22,6 +22,7 @@ class CommunityEventEntityTest {
     private static final List<ActivityEntity> ACTIVITIES = new ArrayList<>();
     private static final List<BadgeEntity> BADGES = new ArrayList<>();
     private static final List<MeetingEntity> MEETINGS = new ArrayList<>();
+    private static final String IMAGE = "image";
 
     @Test
     void testSettersAndGetters() {
@@ -45,7 +46,7 @@ class CommunityEventEntityTest {
     @Test
     void testConstructorAndGetters() {
         CommunityEventEntity event = new CommunityEventEntity(ID_1, NAME, TOTAL_REQUIRED, CREATED_AT, FINISH_DATE,
-                ACTIVITIES, BADGES, MEETINGS, CREATED_AT, FINISH_DATE, CREATED_AT);
+                ACTIVITIES, BADGES, MEETINGS, CREATED_AT, FINISH_DATE, CREATED_AT, IMAGE);
         assertEquals(ID_1, event.getId());
         assertEquals(NAME, event.getName());
         assertEquals(TOTAL_REQUIRED, event.getTotalRequired());

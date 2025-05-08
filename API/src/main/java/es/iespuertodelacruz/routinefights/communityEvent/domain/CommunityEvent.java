@@ -18,8 +18,8 @@ public class CommunityEvent extends CommunityEventCommons {
 
     public CommunityEvent(String id, String name, Integer totalRequired, LocalDateTime startDate,
             LocalDateTime finishDate,
-            LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,List<Activity> activities) {
-        super(name, totalRequired, startDate, finishDate, createdAt, updatedAt, deletedAt);
+            LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,List<Activity> activities,String image) {
+        super(name, totalRequired, startDate, finishDate, createdAt, updatedAt, deletedAt, image);
         this.id = id;
         this.activities = activities;
     }

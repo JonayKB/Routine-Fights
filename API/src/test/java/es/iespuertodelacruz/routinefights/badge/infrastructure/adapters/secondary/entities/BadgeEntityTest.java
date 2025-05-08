@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
         badge.setImage(IMAGE);
         badge.setLevel(LEVEL);
         badge.setUser(USERS);
-        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT);
+        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT, IMAGE);
         badge.setCommunityEvent(communityEvent);
         assertEquals(BADGE_ID_1, badge.getId());
         assertEquals(IMAGE, badge.getImage());
@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
     @Test
      void testConstructorAndGetters() {
-        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT);
+        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT, IMAGE);
         BadgeEntity badge = new BadgeEntity(BADGE_ID_1, IMAGE, LEVEL, USERS, communityEvent);
         assertEquals(BADGE_ID_1, badge.getId());
         assertEquals(IMAGE, badge.getImage());
@@ -59,7 +59,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
     @Test
      void testFluentMethods() {
-        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT);
+        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT, IMAGE);
         BadgeEntity badge = new BadgeEntity();
         badge.id(BADGE_ID_1)
              .image(IMAGE)
@@ -91,7 +91,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
     @Test
      void testToString() {
-        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT);
+        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT, IMAGE);
         BadgeEntity badge = new BadgeEntity(BADGE_ID_1, IMAGE, LEVEL, USERS, communityEvent);
         String expected = "{" +
                           " id='" + BADGE_ID_1 + "'" +

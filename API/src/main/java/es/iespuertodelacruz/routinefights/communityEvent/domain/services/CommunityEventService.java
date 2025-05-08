@@ -9,6 +9,7 @@ import es.iespuertodelacruz.routinefights.activity.domain.ports.secondary.IActiv
 import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.primary.ICommunityEventService;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.secondary.ICommunityEventRepository;
+import es.iespuertodelacruz.routinefights.user.domain.User;
 @Service
 public class CommunityEventService implements ICommunityEventService {
     private ICommunityEventRepository communityEventRepository;
@@ -22,17 +23,43 @@ public class CommunityEventService implements ICommunityEventService {
 
     @Override
     public CommunityEvent createCommunityEvent(String name, Integer totalRequired, LocalDateTime startDate,
-            LocalDateTime finishDate, List<String> activityIDs) {
+            LocalDateTime finishDate,String image,List<String> activityIDs) {
         CommunityEvent communityEvent = new CommunityEvent();
         communityEvent.setName(name);
         communityEvent.setTotalRequired(totalRequired);
         communityEvent.setStartDate(startDate);
         communityEvent.setFinishDate(finishDate);
         communityEvent.setCreatedAt(LocalDateTime.now());
+        communityEvent.setImage(image);
         communityEvent.setActivities(activityIDs.stream()
                 .map(activityID -> activityRepository.findById(activityID))
                 .toList());
         return communityEventRepository.save(communityEvent);
+    }
+
+    @Override
+    public CommunityEvent getCommunityEventById(String id) {
+        return communityEventRepository.findById(id);
+    }
+
+    @Override
+    public List<CommunityEvent> getActiveCommunityEvent() {
+        return communityEventRepository.getActiveCommunityEvents();
+    }
+
+    @Override
+    public CommunityEvent getNearestCommunityEvent() {
+        return communityEventRepository.getNearestCommunityEvent();
+    }
+
+    @Override
+    public Integer getCommunityEventPointsById(String id) {
+        return communityEventRepository.getActualCommunityEventPoints(id);
+    }
+
+    @Override
+    public List<User> getUsersParticipatingInCommunityEvent(String id) {
+        return communityEventRepository.getUsersParticipatingInCommunityEvent(id);
     }
 
 }
