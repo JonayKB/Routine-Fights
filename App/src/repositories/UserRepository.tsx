@@ -97,13 +97,13 @@ export const getUser = async (email: string): Promise<UserOut> => {
   }
 };
 
-export const getFollows = async (email: string) => {
+export const getFollows = async (email: string, name?: string) => {
   const response = await axios.post(
     neo4jUri,
     {
       query: `
             query {
-                followersByEmail(email: "${email}", usernameFilter: "") {
+                followersByEmail(email: "${email}", usernameFilter: "${name}") {
                     id
                     username
                     nationality
@@ -115,7 +115,7 @@ export const getFollows = async (email: string) => {
                     email
                 }
                     
-                followedByEmail(email: "${email}", usernameFilter: "") {
+                followedByEmail(email: "${email}", usernameFilter: "${name}") {
                     id
                     username
                     nationality

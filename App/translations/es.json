@@ -39,7 +39,7 @@
             "followers": "seguidores",
             "following": "siguiendo",
             "follow": "seguir",
-            "unfollow": "dejar de seguir"
+            "unfollow": "siguiendo"
         },
         "ProfileForm": {
         },
