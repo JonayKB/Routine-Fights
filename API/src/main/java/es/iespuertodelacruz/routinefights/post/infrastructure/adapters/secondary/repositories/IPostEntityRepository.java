@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondar
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -86,7 +87,7 @@ public interface IPostEntityRepository extends Neo4jRepository<PostEntity, Strin
             MATCH (p:Post)
             RETURN p.image
             """)
-    List<String> findAllImages();
+    Set<String> findAllImages();
 
     @Query("""
             MATCH (u:User)-[:Posted]->(p:Post)-[:`Related-To`]->(a:Activity)

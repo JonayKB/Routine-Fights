@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.post.domain.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -122,7 +123,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public List<String> findAllImages() {
+    public Set<String> findAllImages() {
         return postRepository.findAllImages();
     }
 

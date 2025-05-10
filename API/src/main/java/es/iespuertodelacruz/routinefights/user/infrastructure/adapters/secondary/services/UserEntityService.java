@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondar
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -323,7 +324,7 @@ public class UserEntityService implements IUserRepository {
     }
 
     @Override
-    public List<String> findAllImages() {
+    public Set<String> findAllImages() {
         try {
             return userRepository.findAllImages();
         } catch (Exception e) {

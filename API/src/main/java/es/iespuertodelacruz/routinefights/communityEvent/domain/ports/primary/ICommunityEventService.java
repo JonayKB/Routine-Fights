@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.communityEvent.domain.ports.primary;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -14,5 +15,6 @@ public interface ICommunityEventService {
     CommunityEvent getNearestCommunityEvent();
     Integer getCommunityEventPointsById(String id);
     List<User> getUsersParticipatingInCommunityEvent(String id);
+    Set<String> findAllImages();
     
 }

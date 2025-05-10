@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.seco
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -84,6 +85,11 @@ public class ActivityEntityService implements IActivityRepository {
                     activityEntityRepository.getTimesRemaining(activity.getId(), dates[0], dates[1]));
         });
         return activityEntityMapper.toDomain(subscribedActivities);
+    }
+
+    @Override
+    public Set<String> findAllImages() {
+        return activityEntityRepository.findAllImages();
     }
 
 }

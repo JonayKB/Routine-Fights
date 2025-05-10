@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondar
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -65,7 +66,7 @@ public class PostEntityService implements IPostRepository {
     }
 
     @Override
-    public List<String> findAllImages() {
+    public Set<String> findAllImages() {
         return postEntityRepository.findAllImages();
     }
 

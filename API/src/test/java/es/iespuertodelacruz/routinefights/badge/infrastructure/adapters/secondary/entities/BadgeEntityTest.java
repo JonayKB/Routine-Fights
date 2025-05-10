@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
     private static final String BADGE_ID_1 = "B1";
     private static final String BADGE_ID_2 = "B2";
     private static final String IMAGE = "http://example.com/badge.png";
-    private static final String LEVEL = "Gold";
+    private static final Integer LEVEL = 3;
     private static final List<UserEntity> USERS = new ArrayList<>();
 
     private static final String CE_ID = "CE1";

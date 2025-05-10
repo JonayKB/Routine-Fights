@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.communityEvent.domain.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -60,6 +61,11 @@ public class CommunityEventService implements ICommunityEventService {
     @Override
     public List<User> getUsersParticipatingInCommunityEvent(String id) {
         return communityEventRepository.getUsersParticipatingInCommunityEvent(id);
+    }
+
+    @Override
+    public Set<String> findAllImages() {
+        return communityEventRepository.getAllImages();
     }
 
 }
