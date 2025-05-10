@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.activity.domain.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -68,6 +69,11 @@ public class ActivityService implements IActivityService {
     @Override
     public List<Activity> getSubscribedActivitiesWithStreak(String userID, String activityName) {
         return activityRepository.getSubscribedActivities(userID, activityName);
+    }
+
+    @Override
+    public Set<String> findAllImages() {
+        return activityRepository.findAllImages();
     }
 
 

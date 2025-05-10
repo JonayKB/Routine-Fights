@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapter
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -63,6 +64,11 @@ public class CommunityEventEntityService implements ICommunityEventRepository {
     public CommunityEvent findByIdOnlyBase(String id) {
         return communityEventEntityMapper
                 .toDomain(communityEventEntityRepository.findByIdOnlyBase(id));
+    }
+
+    @Override
+    public Set<String> getAllImages() {
+        return communityEventEntityRepository.getAllImages();
     }
 
 }

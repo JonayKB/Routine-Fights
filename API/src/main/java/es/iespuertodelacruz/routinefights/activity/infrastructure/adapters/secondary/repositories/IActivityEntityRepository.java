@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.seco
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -83,4 +84,10 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                          """)
         Integer getTimesRemaining(@Param("activityID") String activityID,
                         @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+        @Query("""
+                        MATCH (a:Activity)
+                        RETURN a.image
+                        """)
+        Set<String> findAllImages();
 }

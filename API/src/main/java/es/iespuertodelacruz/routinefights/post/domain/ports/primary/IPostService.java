@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.post.domain.ports.primary;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -20,6 +21,6 @@ public interface IPostService {
 
     List<Post> getPaginationSubscribedActivities(LocalDateTime lastDate, int limit, String userID);
 
-    List<String> findAllImages();
+    Set<String> findAllImages();
 
 }

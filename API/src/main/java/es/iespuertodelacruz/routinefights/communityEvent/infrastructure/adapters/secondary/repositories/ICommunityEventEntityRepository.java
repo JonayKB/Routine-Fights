@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapter
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -28,4 +29,7 @@ public interface ICommunityEventEntityRepository extends Neo4jRepository<Communi
 
     @Query("MATCH (ce:CommunityEvent) WHERE elementId(ce) = $id RETURN ce")
     CommunityEventEntity findByIdOnlyBase(@Param("id") String id);
+
+    @Query("MATCH (ce:CommunityEvent) RETURN ce.image")
+    Set<String> getAllImages();
 }

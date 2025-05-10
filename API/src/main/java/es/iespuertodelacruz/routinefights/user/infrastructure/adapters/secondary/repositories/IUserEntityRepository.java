@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.repositories;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -33,7 +34,7 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
     public boolean unfollowUser(@Param("frEmail") String frEmail, @Param("fdEmail") String fdEmail);
 
     @Query("MATCH (u: User) WHERE u.image IS NOT NULL RETURN u.image")
-    public List<String> findAllImages();
+    public Set<String> findAllImages();
 
     @Query("MATCH (u: User) WHERE u.username CONTAINS $regex RETURN u")
     public List<UserEntity> findByUsername(@Param("regex") String regex);

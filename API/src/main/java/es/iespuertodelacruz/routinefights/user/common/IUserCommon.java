@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.routinefights.user.common;
 
 import java.util.List;
+import java.util.Set;
 
 import es.iespuertodelacruz.routinefights.shared.services.ICRUD;
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -62,7 +63,7 @@ public interface IUserCommon<T> extends ICRUD<T> {
      * 
      * @return List<String>
      */
-    public List<String> findAllImages();
+    public Set<String> findAllImages();
 
     /**
      * Method to restore a user

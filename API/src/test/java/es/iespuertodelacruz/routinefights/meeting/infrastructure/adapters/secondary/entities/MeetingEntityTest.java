@@ -26,7 +26,7 @@ class MeetingEntityTest {
     private static final LocalDateTime TEAM_CREATED_AT = LocalDateTime.of(2023, 3, 1, 10, 0);
     private static final LocalDateTime TEAM_DELETED_AT = null;
     private static final List<MeetingEntity> TEAM_MEETINGS = new ArrayList<>();
-    private static final List<MeetingEntity> TEAM_CREATOR = new ArrayList<>();
+    private static final UserEntity TEAM_CREATOR = new UserEntity();
 
     private static final String CE_ID = "CE1";
     private static final String CE_NAME = "Community Event";
