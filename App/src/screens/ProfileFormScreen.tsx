@@ -7,7 +7,6 @@ import { UserIn, UserOut } from "../utils/User";
 import { getOwnUser, updateUser } from "../repositories/UserRepository";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
-import SearchBarHeader from '../components/SearchBarHeader';
 
 type Props = NativeStackScreenProps<ProfileStackProps, "ProfileForm">;
 

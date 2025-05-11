@@ -198,7 +198,7 @@ export const updateUser = async (user: UserIn): Promise<UserOut> => {
         query: `
           mutation {
             updateUserV2(
-              user: {username: "${user.username}", email: "${user.email}", nationality: "${user.nationality}", phoneNumber: "${user.phoneNumber}" ${password}}
+              user: {id: "", username: "${user.username}", email: "${user.email}", nationality: "${user.nationality}", phoneNumber: "${user.phoneNumber}" ${password}}
             ) {
               id
               username
@@ -218,7 +218,6 @@ export const updateUser = async (user: UserIn): Promise<UserOut> => {
         },
       }
     );
-    console.log(response.data);
     return response.data.data.updateUserV2;
   } catch (error) {
     console.error("Error updating user:", error);

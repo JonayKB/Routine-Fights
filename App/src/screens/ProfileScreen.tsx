@@ -1,6 +1,7 @@
 import {
   Text,
   View,
+  ScrollView,
   TouchableOpacity,
   FlatList,
   RefreshControl,
@@ -35,6 +36,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [followers, setFollowers] = useState<string>("");
   const [following, setFollowing] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
+  const [profileLoad, setProfileLoad] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
   const [ownUser, setOwnUser] = useState<boolean>(true);
   const { language } = useLanguageContext();
@@ -61,12 +63,19 @@ const ProfileScreen = ({ navigation, route }: Props) => {
     };
 
     fetchUser();
-  }, [route.params?.email]);
+  }, [route.params?.email, profileLoad === true]);
 
   const reload = () => {
     setLoad(true);
     setTimeout(() => {
       setLoad(false);
+    }, 1000);
+  };
+
+  const profileReload = () => {
+    setProfileLoad(true);
+    setTimeout(() => {
+      setProfileLoad(false);
     }, 1000);
   };
 
@@ -130,18 +139,22 @@ const ProfileScreen = ({ navigation, route }: Props) => {
         <ProfileNavigation navigation={navigation} message={user.username} />
       )}
 
-      <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
-        {!route.params?.email && (
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Settings")}
-            className="absolute top-5 right-5 z-10"
-          >
-            <Icon name="settings" size={28} color="black" />
-          </TouchableOpacity>
-        )}
-        <View className="m-5 items-center">
-          <ProfilePicture image={user.image} size={103} />
-          {/* <View
+      <ScrollView
+        className="flex-1"
+        refreshControl={<RefreshControl refreshing={profileLoad} onRefresh={profileReload} />}
+      >
+        <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
+          {!route.params?.email && (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Settings")}
+              className="absolute top-5 right-5 z-10"
+            >
+              <Icon name="settings" size={28} color="black" />
+            </TouchableOpacity>
+          )}
+          <View className="m-5 items-center">
+            <ProfilePicture image={user.image} size={103} />
+            {/* <View
             style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
             className="-mt-4 w-10 rounded-xl justify-center items-center border-2 border-white"
           >
@@ -149,35 +162,36 @@ const ProfileScreen = ({ navigation, route }: Props) => {
               {Math.floor(Math.random() * 300)}
             </Text>
           </View> */}
+          </View>
+          <View className="mt-5">
+            <Text className="text-black text-4xl font-bold">
+              {user?.username}
+            </Text>
+            <FollowCount
+              followers={followers}
+              following={following}
+              email={user.email}
+              navigation={navigation}
+            />
+            {!ownUser && (
+              <TouchableOpacity
+                className="flex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
+                onPress={async () =>
+                  user.isFollowing
+                    ? await unfollowUser(user.email)
+                    : await followUser(user.email)
+                }
+              >
+                <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
+                  {user.isFollowing
+                    ? translations[language || "en-EN"].screens.Profile.unfollow
+                    : translations[language || "en-EN"].screens.Profile.follow}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
-        <View className="mt-5">
-          <Text className="text-black text-4xl font-bold">
-            {user?.username}
-          </Text>
-          <FollowCount
-            followers={followers}
-            following={following}
-            email={user.email}
-            navigation={navigation}
-          />
-          {!ownUser && (
-            <TouchableOpacity
-              className="flex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
-              onPress={async () =>
-                user.isFollowing
-                  ? await unfollowUser(user.email)
-                  : await followUser(user.email)
-              }
-            >
-              <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
-                {user.isFollowing
-                  ? translations[language || "en-EN"].screens.Profile.unfollow
-                  : translations[language || "en-EN"].screens.Profile.follow}
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
+      </ScrollView>
 
       <FlatList
         refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
