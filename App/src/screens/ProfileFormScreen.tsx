@@ -1,15 +1,17 @@
-import { View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import FormInput from "../components/FormInput";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { UserIn, UserOut } from "../utils/User";
-import { getOwnUser } from "../repositories/UserRepository";
-import { runOnRuntime } from "react-native-reanimated";
+import { getOwnUser, updateUser } from "../repositories/UserRepository";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
+import SearchBarHeader from '../components/SearchBarHeader';
 
-type Props = {};
+type Props = NativeStackScreenProps<ProfileStackProps, "ProfileForm">;
 
-const ProfileFormScreen = (props: Props) => {
+const ProfileFormScreen = ({ navigation }: Props) => {
   const { language } = useLanguageContext();
   const [user, setUser] = useState<UserIn>({} as UserIn);
 
@@ -32,6 +34,20 @@ const ProfileFormScreen = (props: Props) => {
     };
     fetchOwnUser();
   }, []);
+
+  const updateProfile = async () => {
+    try {
+      const response = await updateUser(user);
+      if (response) {
+        Alert.alert("Profile updated");
+        navigation.navigate("Profile");
+      } else {
+        throw new Error("Error updating profile");
+      }
+    } catch (error) {
+      console.log("Error updating profile", error);
+    }
+  };
 
   return (
     <View className="flex-1 items-center my-10">
@@ -75,6 +91,14 @@ const ProfileFormScreen = (props: Props) => {
             setText={(text) => setUser({ ...user, phoneNumber: text })}
             mode="text"
           />
+          <TouchableOpacity
+            className="bg-[#E4007C] rounded-lg py-3 w-full"
+            onPress={updateProfile}
+          >
+            <Text className="text-white font-bold text-xl text-center">
+              {translations[language || "en-EN"].screens.ProfileForm.update}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

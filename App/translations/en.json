@@ -47,7 +47,8 @@
             "nationality": "Nationality",
             "phoneNumber": "Phone number",
             "username": "Username",
-            "password": "Password"
+            "password": "Password",
+            "update": "Update"
         },
         "Register": {
             "username": "Username",

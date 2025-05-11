@@ -42,6 +42,13 @@
             "unfollow": "siguiendo"
         },
         "ProfileForm": {
+            "email": "Email",
+            "image": "Imagen",
+            "nationality": "Nacionalidad",
+            "phoneNumber": "Telefono",
+            "username": "Nombre de usuario",
+            "password": "Contraseña",
+            "update": "Actualizar"
         },
         "Register": {
             "username": "nombre de usuario",
