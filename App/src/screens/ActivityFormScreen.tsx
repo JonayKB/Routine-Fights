@@ -55,7 +55,7 @@ const ActivityFormScreen = (props: Props) => {
       const id = await createActivity(
         activity.name,
         activity.description,
-        activity.timeRate,
+        timeRate,
         activity.timesRequiered,
         ""
       );
