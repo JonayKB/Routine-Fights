@@ -146,7 +146,7 @@ input UserInputV2 {
   password: String
   nationality: String!
   phoneNumber: String!
-  image: String
+  image: String!
 }
 
 type UserOutputV2 {
