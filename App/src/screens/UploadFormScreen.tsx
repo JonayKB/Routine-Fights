@@ -1,4 +1,4 @@
-import { Image, View, TouchableOpacity, Text } from "react-native";
+import { Image, View, TouchableOpacity, Text, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
@@ -7,12 +7,18 @@ import { translations } from "../../translations/translation";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { getSubscribedActivities } from "../repositories/ActivityRepository";
 import { Activity } from "../utils/Activity";
+import { uploadPost } from "../repositories/PostRepository";
 
 type Props = {};
 
+type Categories = {
+  label: string;
+  value: string;
+};
+
 const UploadFormScreen = (props: Props) => {
   const { uri, setUri } = useImageContext();
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Categories[]>([]);
   const [category, setCategory] = useState<string>(null);
   const { language } = useLanguageContext();
 
@@ -20,7 +26,7 @@ const UploadFormScreen = (props: Props) => {
     const fetchCategories = async () => {
       try {
         const response = await getSubscribedActivities();
-        const categories = response.map((category: Activity) => ({
+        const categories: Categories[] = response.map((category: Activity) => ({
           label: category.name,
           value: category.id,
         }));
@@ -31,6 +37,22 @@ const UploadFormScreen = (props: Props) => {
     };
     fetchCategories();
   }, []);
+
+  const createPost = async () => {
+    try {
+      const response = await uploadPost(
+        categories.filter((c: Categories) => c.label === category)[0].value,
+        ""
+      );
+      if (response) {
+        Alert.alert("Post created");
+        setUri(null);
+        setCategory(null);
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+  };
 
   return (
     <View className="flex-1 justify-center items-center">
@@ -72,7 +94,10 @@ const UploadFormScreen = (props: Props) => {
             }
           />
         </View>
-        <TouchableOpacity className="bg-[#E4007C] rounded-lg py-3 m-5 w-10/12">
+        <TouchableOpacity
+          className="bg-[#E4007C] rounded-lg py-3 m-5 w-10/12"
+          onPress={createPost}
+        >
           <Text className="text-white font-bold text-xl text-center">Post</Text>
         </TouchableOpacity>
       </View>
