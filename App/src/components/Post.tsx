@@ -35,13 +35,13 @@ const Post = ({ post }: Props) => {
             className="mt-10"
           />
         </TouchableOpacity>
-        <Text className="text-black text-center text-lg">{post.likes}</Text>
+        {/* <Text className="text-black text-center text-lg">{post.likes}</Text> */}
         <TouchableOpacity>
           <Icon name="chatbox" size={53} color="#7B5BF2" className="mt-10" />
         </TouchableOpacity>
-        <Text className="text-black text-center text-lg">{post.likes}</Text>
+        {/* <Text className="text-black text-center text-lg">{post.likes}</Text> */}
         <Icon name="flame" size={53} color="#E4007C" className="mt-32" />
-        <Text className="text-black text-center text-lg">{post.likes}</Text>
+        {/* <Text className="text-black text-center text-lg">{post.likes}</Text> */}
       </View>
     </View>
   );

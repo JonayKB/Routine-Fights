@@ -3,8 +3,9 @@ import {
   FlatList,
   RefreshControl,
   TouchableWithoutFeedback,
+  Button,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -15,6 +16,7 @@ type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
 const HomeScreen = ({ navigation }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
+  const [posts, setPosts] = useState<PostDomain[]>([]);
 
   const reload = () => {
     setLoad(true);
@@ -22,33 +24,6 @@ const HomeScreen = ({ navigation }: Props) => {
       setLoad(false);
     }, 1000);
   };
-
-  const posts: PostDomain[] = [
-    {
-      id: "1",
-      streak: 100,
-      points: 100,
-      createdAt: "2021-09-01",
-      image: "https://picsum.photos/200/300",
-      likes: 100,
-    },
-    {
-      id: "2",
-      streak: 200,
-      points: 200,
-      createdAt: "2021-09-01",
-      image: "https://picsum.photos/200/300",
-      likes: 200,
-    },
-    {
-      id: "3",
-      streak: 300,
-      points: 300,
-      createdAt: "2021-09-01",
-      image: "https://picsum.photos/200/300",
-      likes: 300,
-    },
-  ];
 
   return (
     <View className="bg-white">
@@ -58,6 +33,11 @@ const HomeScreen = ({ navigation }: Props) => {
       >
         <Icon name="search" size={35} color="#7C5AF1" />
       </TouchableWithoutFeedback>
+      <View className="flex-row justify-evenly items-center absolute z-10 top-8 w-full">
+        <Button title="Following" />
+        <Button title="Home" />
+        <Button title="Category" />
+      </View>
       <View className="items-center">
         <FlatList
           refreshControl={

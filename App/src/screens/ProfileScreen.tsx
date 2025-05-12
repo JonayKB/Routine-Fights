@@ -12,8 +12,6 @@ import React, { useEffect, useState } from "react";
 import { UserOut } from "../utils/User";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
-import { Post as PostDomain } from "../utils/Post";
-import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
 import {
   getUser,
@@ -28,6 +26,8 @@ import ProfilePicture from "../components/ProfilePicture";
 import ProfileNavigation from "../components/ProfileNavigation";
 import { translations } from "../../translations/translation";
 import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import Post from "../components/Post";
+import { Post as PostDomain } from "../utils/Post";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -40,6 +40,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
   const [ownUser, setOwnUser] = useState<boolean>(true);
   const { language } = useLanguageContext();
+  const [posts, setPosts] = useState<PostDomain[]>([]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -79,49 +80,6 @@ const ProfileScreen = ({ navigation, route }: Props) => {
     }, 1000);
   };
 
-  const posts: PostDomain[] = [
-    {
-      id: "1",
-      streak: 1,
-      points: 10,
-      createdAt: "2021-09-01",
-      image: "https://picsum.photos/200/300",
-      likes: 100,
-    },
-    {
-      id: "2",
-      streak: 1,
-      points: 10,
-      createdAt: "2021-09-01",
-      image: "https://picsum.photos/200/300",
-      likes: 200,
-    },
-    {
-      id: "3",
-      streak: 1,
-      points: 10,
-      createdAt: "2021-09-01",
-      image: "https://picsum.photos/200/300",
-      likes: 100,
-    },
-    {
-      id: "4",
-      streak: 1,
-      points: 10,
-      createdAt: "2021-09-01",
-      image: "https://picsum.photos/200/300",
-      likes: 100,
-    },
-    {
-      id: "5",
-      streak: 1,
-      points: 10,
-      createdAt: "2021-09-01",
-      image: "https://picsum.photos/200/300",
-      likes: 100,
-    },
-  ];
-
   return (
     <View className="flex-1">
       {selectedPost && (
@@ -141,7 +99,9 @@ const ProfileScreen = ({ navigation, route }: Props) => {
 
       <ScrollView
         className="flex-1"
-        refreshControl={<RefreshControl refreshing={profileLoad} onRefresh={profileReload} />}
+        refreshControl={
+          <RefreshControl refreshing={profileLoad} onRefresh={profileReload} />
+        }
       >
         <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
           {!route.params?.email && (
