@@ -11,6 +11,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -107,7 +108,7 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void findAllImagesTest() {
-        when(userEntityRepository.findAllImages()).thenReturn(new ArrayList<String>());
+        when(userEntityRepository.findAllImages()).thenReturn(new HashSet<String>());
         assertNotNull(userEntityService.findAllImages());
     }
 

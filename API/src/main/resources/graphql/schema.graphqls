@@ -38,7 +38,12 @@ type Query {
 
   getActiveCommunityEvents: [CommunityEventOutputV2]
   getNearestCommunityEvent: CommunityEventOutputV2
-  getCommunityEventPointsById(id:String!): Int
+  getCommunityEventPointsById(id: String!): Int
+
+  getBadgesByEmail(email: String!): [BadgeOutputV2]
+  getOwnBadges: [BadgeOutputV2]
+  findBadgeById(id: String!): BadgeOutputV3
+  findBadgeByCommunityEvent(communityEventId: String!): BadgeOutputV3
 }
 
 type Mutation {
@@ -71,6 +76,32 @@ type Mutation {
     image: String!
     activitiesIDs: [String!]!
   ): CommunityEventOutputV3
+
+  createBadge(
+    image: String!
+    level: Int!
+    communityEventId: String!
+  ): BadgeOutputV3
+
+  addBadgeToUser(
+    userEmail: String!
+    badgeId: String!
+  ): Boolean
+  addBadgeToUsers(
+    userEmail: [String!]!
+    badgeId: String!
+  ): [Boolean]
+}
+type BadgeOutputV3 {
+  id: ID
+  image: String
+  level: Int
+  communityEvent: CommunityEventOutputV3
+}
+type BadgeOutputV2 {
+  image: String
+  level: Int
+  communityEvent: CommunityEventOutputV2
 }
 type CommunityEventOutputV3 {
   id: ID
