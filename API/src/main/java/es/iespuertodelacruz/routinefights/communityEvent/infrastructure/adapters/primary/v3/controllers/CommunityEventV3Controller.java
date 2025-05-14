@@ -10,7 +10,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.primary.ICommunityEventService;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.primary.v3.dtos.CommunityEventOutputV3;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.primary.v3.mappers.ICommunityEventOutputV3Mapper;

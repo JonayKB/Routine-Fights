@@ -45,11 +45,11 @@ public class BadgeEntity extends BadgeCommons {
         this.id = id;
     }
 
-    public List<UserEntity> getUser() {
+    public List<UserEntity> getUsers() {
         return this.users;
     }
 
-    public void setUser(List<UserEntity> users) {
+    public void setUsers(List<UserEntity> users) {
         this.users = users;
     }
 
@@ -67,8 +67,8 @@ public class BadgeEntity extends BadgeCommons {
     }
 
 
-    public BadgeEntity user(List<UserEntity> user) {
-        setUser(user);
+    public BadgeEntity users(List<UserEntity> user) {
+        setUsers(user);
         return this;
     }
 
@@ -107,7 +107,7 @@ public class BadgeEntity extends BadgeCommons {
                 " id='" + getId() + "'" +
                 ", image='" + getImage() + "'" +
                 ", level='" + getLevel() + "'" +
-                ", user='" + getUser() + "'" +
+                ", user='" + getUsers() + "'" +
                 ", communityEvent='" + getCommunityEvent() + "'" +
                 "}";
     }

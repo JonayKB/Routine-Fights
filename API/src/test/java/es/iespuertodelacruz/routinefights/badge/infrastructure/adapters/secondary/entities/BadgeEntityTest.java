@@ -36,13 +36,13 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
         badge.setId(BADGE_ID_1);
         badge.setImage(IMAGE);
         badge.setLevel(LEVEL);
-        badge.setUser(USERS);
+        badge.setUsers(USERS);
         CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT, IMAGE);
         badge.setCommunityEvent(communityEvent);
         assertEquals(BADGE_ID_1, badge.getId());
         assertEquals(IMAGE, badge.getImage());
         assertEquals(LEVEL, badge.getLevel());
-        assertEquals(USERS, badge.getUser());
+        assertEquals(USERS, badge.getUsers());
         assertEquals(communityEvent, badge.getCommunityEvent());
     }
 
@@ -53,7 +53,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
         assertEquals(BADGE_ID_1, badge.getId());
         assertEquals(IMAGE, badge.getImage());
         assertEquals(LEVEL, badge.getLevel());
-        assertEquals(USERS, badge.getUser());
+        assertEquals(USERS, badge.getUsers());
         assertEquals(communityEvent, badge.getCommunityEvent());
     }
 
@@ -64,12 +64,12 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
         badge.id(BADGE_ID_1)
              .image(IMAGE)
              .level(LEVEL)
-             .user(USERS)
+             .users(USERS)
              .communityEvent(communityEvent);
         assertEquals(BADGE_ID_1, badge.getId());
         assertEquals(IMAGE, badge.getImage());
         assertEquals(LEVEL, badge.getLevel());
-        assertEquals(USERS, badge.getUser());
+        assertEquals(USERS, badge.getUsers());
         assertEquals(communityEvent, badge.getCommunityEvent());
     }
 

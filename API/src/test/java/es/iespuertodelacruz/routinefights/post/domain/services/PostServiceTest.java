@@ -13,12 +13,15 @@ import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.post.domain.ports.secondary.IPostRepository;
 import es.iespuertodelacruz.routinefights.post.exceptions.UploadPostException;
 import es.iespuertodelacruz.routinefights.user.domain.User;
+import java.util.HashSet;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -242,7 +245,7 @@ class PostServiceTest {
         }
 
         @Test
-        void testUploadPost_InvalidTimeRate(){
+        void testUploadPost_InvalidTimeRate() {
                 String activityID = "activityInvalidTimeRate";
                 User user = new User();
                 user.setId("1L");
@@ -256,12 +259,12 @@ class PostServiceTest {
                 Mockito.when(postRepository.save(any(Post.class)))
                                 .thenAnswer(invocation -> invocation.getArgument(0));
                 UploadPostException ex = assertThrows(UploadPostException.class,
-                                                () -> postService.uploadPost("imageInvalidTimeRate.png", user, activityID));
+                                () -> postService.uploadPost("imageInvalidTimeRate.png", user, activityID));
                 assertEquals("Invalid time rate", ex.getMessage());
         }
 
         @Test
-        void testGetPaginationByUser(){
+        void testGetPaginationByUser() {
                 LocalDateTime lastDate = LocalDateTime.of(2025, 3, 15, 0, 0);
                 int limit = 10;
                 String userID = "1L";
@@ -272,19 +275,19 @@ class PostServiceTest {
         }
 
         @Test
-        void testGetPaginationByActivity(){
+        void testGetPaginationByActivity() {
                 LocalDateTime lastDate = LocalDateTime.of(2025, 3, 15, 0, 0);
                 int limit = 10;
                 String activityID = "1L";
                 List<Post> expectedPosts = Arrays.asList(new Post(), new Post());
-                Mockito.when(postRepository.getPaginationByActivity(lastDate, limit, activityID)).thenReturn(expectedPosts);
+                Mockito.when(postRepository.getPaginationByActivity(lastDate, limit, activityID))
+                                .thenReturn(expectedPosts);
                 List<Post> result = postService.getPaginationByActivity(lastDate, limit, activityID);
                 assertEquals(expectedPosts, result);
         }
 
         @Test
-        void testGetPaginationFollowing()
-        {
+        void testGetPaginationFollowing() {
                 LocalDateTime lastDate = LocalDateTime.of(2025, 3, 15, 0, 0);
                 int limit = 10;
                 String userID = "1L";
@@ -295,21 +298,22 @@ class PostServiceTest {
         }
 
         @Test
-        void testGetPaginationSubscribedAcitivites(){
+        void testGetPaginationSubscribedAcitivites() {
                 LocalDateTime lastDate = LocalDateTime.of(2025, 3, 15, 0, 0);
                 int limit = 10;
                 String userID = "1L";
                 List<Post> expectedPosts = Arrays.asList(new Post(), new Post());
-                Mockito.when(postRepository.getPaginationSubscribedActivities(lastDate, limit, userID)).thenReturn(expectedPosts);
+                Mockito.when(postRepository.getPaginationSubscribedActivities(lastDate, limit, userID))
+                                .thenReturn(expectedPosts);
                 List<Post> result = postService.getPaginationSubscribedActivities(lastDate, limit, userID);
                 assertEquals(expectedPosts, result);
         }
 
         @Test
-        void testFindAllImages(){
-                List<String> expectedImages = Arrays.asList("image1", "image2");
+        void testFindAllImages() {
+                Set<String> expectedImages = new HashSet<>(Arrays.asList("image1", "image2"));
                 Mockito.when(postRepository.findAllImages()).thenReturn(expectedImages);
-                List<String> result = postService.findAllImages();
+                Set<String> result = postService.findAllImages();
                 assertEquals(expectedImages, result);
         }
 
