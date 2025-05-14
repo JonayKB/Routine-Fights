@@ -1,5 +1,5 @@
 import { Image, View, TouchableOpacity, Text, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
 import DropDown from "../components/DropDown";
@@ -8,6 +8,7 @@ import { useLanguageContext } from "../contexts/SettingsContextProvider";
 import { getSubscribedActivities } from "../repositories/ActivityRepository";
 import { Activity } from "../utils/Activity";
 import { uploadPost } from "../repositories/PostRepository";
+import { uploadImage } from "../repositories/ImageRepository";
 
 type Props = {};
 
@@ -40,9 +41,10 @@ const UploadFormScreen = (props: Props) => {
 
   const createPost = async () => {
     try {
+      const imageName = await uploadImage(uri);
       const response = await uploadPost(
         categories.filter((c: Categories) => c.label === category)[0].value,
-        ""
+        imageName
       );
       if (response) {
         Alert.alert("Post created");
@@ -50,7 +52,7 @@ const UploadFormScreen = (props: Props) => {
         setCategory(null);
       }
     } catch (error) {
-      console.error("Error creating post:", error);
+      console.log("Error creating post:", error);
     }
   };
 

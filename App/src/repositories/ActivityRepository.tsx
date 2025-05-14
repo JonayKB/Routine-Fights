@@ -157,7 +157,6 @@ export const createActivity = async (
       }
     );
 
-    console.log(response.data);
     return response.data.data.createActivity;
   } catch (error) {
     throw new Error(error.response.data);

@@ -34,7 +34,7 @@ export const getPostsFollowing = async (
 
     return response.data.data.getPostsFollowing;
   } catch (error) {
-    throw new error("Error fetching posts", error.response.data);
+    throw new Error("Error fetching posts");
   }
 };
 
@@ -69,7 +69,7 @@ export const getPosts = async (
 
     return response.data.data.postsV2;
   } catch (error) {
-    throw new error("Error fetching posts", error.response.data);
+    throw new Error("Error fetching posts");
   }
 };
 
@@ -77,7 +77,7 @@ export const uploadPost = async (activityID: string, image: string) => {
   try {
     const token = await RNSecureKeyStore.get("token");
 
-    console.log(activityID);
+    console.log(activityID, image);
 
     const response = await axios.post(
       neo4jUri,
@@ -97,6 +97,7 @@ export const uploadPost = async (activityID: string, image: string) => {
 
     return response.data.data.uploadPost;
   } catch (error) {
-    throw new error("Error uploading post", error.response.data);
+    console.error("Error uploading post:", error);
+    throw new Error("Error uploading post");
   }
 };
