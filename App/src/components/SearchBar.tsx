@@ -1,7 +1,7 @@
 import { View, TextInput } from "react-native";
 import React from "react";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import style from "../styles/Styles.json";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 };
 
 const SearchBar = (props: Props) => {
-  const { language } = useLanguageContext();
+  const { language } = useSettingsContext();
 
   return (
     <View className="justify-center items-center">

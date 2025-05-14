@@ -1,7 +1,7 @@
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import FormInput from "../components/FormInput";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { UserIn, UserOut } from "../utils/User";
 import { getOwnUser, updateUser } from "../repositories/UserRepository";
@@ -11,7 +11,7 @@ import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 type Props = NativeStackScreenProps<ProfileStackProps, "ProfileForm">;
 
 const ProfileFormScreen = ({ navigation }: Props) => {
-  const { language } = useLanguageContext();
+  const { language, darkmode } = useSettingsContext();
   const [user, setUser] = useState<UserIn>({} as UserIn);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const ProfileFormScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className="flex-1 items-center my-10">
+    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}] items-center my-10`}>
       <View className="bg-[#E4D8E9] rounded-lg w-10/12">
         <View className="m-10">
           <FormInput

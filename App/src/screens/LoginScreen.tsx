@@ -7,7 +7,7 @@ import { resetNavigation } from "../utils/Utils";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import style from "../styles/Styles.json";
 
@@ -18,9 +18,10 @@ const LoginScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setToken } = useTokenContext();
-  const { language, setLanguage } = useLanguageContext();
+  const { language, setLanguage, darkmode, setDarkmode } = useSettingsContext();
 
   useEffect(() => {
+    fetchMode();
     fetchLanguage();
     fetchToken();
   }, []);
@@ -30,6 +31,15 @@ const LoginScreen = ({ navigation }: Props) => {
     if (token) {
       setToken(token);
       resetNavigation(navigation, "MainTabNavigation");
+    }
+  };
+
+  const fetchMode = async () => {
+    try {
+      const darkMode = await AsyncStorage.getItem("darkMode");
+      setDarkmode(darkMode === "true");
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -53,7 +63,7 @@ const LoginScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className="flex-1 bg-[#E4DCE9] justify-center items-center">
+    <View className={`flex-1 bg-[#${darkmode ? "CCCCCC" : "F5F5F7"}] justify-center items-center`}>
       <View
         className="justify-evenly bg-white rounded-2xl w-96"
         style={{ height: 400 }}

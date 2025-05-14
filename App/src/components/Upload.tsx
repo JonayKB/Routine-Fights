@@ -5,12 +5,12 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ImageStackProps } from "../navigation/ImageStackNavigation";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = NativeStackScreenProps<ImageStackProps, "Upload">;
 
 const Upload = ({ navigation }: Props) => {
-  const { language } = useLanguageContext();
+  const { language } = useSettingsContext();
 
   return (
     <View className="flex-1 bg-[#E4D8E9] justify-center items-center rounded-t-lg">

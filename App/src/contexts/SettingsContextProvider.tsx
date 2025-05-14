@@ -19,7 +19,7 @@ export const AppContext = createContext<AppContextType>({} as AppContextType);
 
 const SettingsContextProvider = (props: any) => {
   const [language, setLanguage] = useState<string>("");
-  const [darkmode, setDarkmode] = useState<boolean>(false);
+  const [darkmode, setDarkmode] = useState<boolean>(true);
   const [lefthand, setLefthand] = useState<boolean>(false);
 
   const contextValues: AppContextType = {
@@ -38,7 +38,7 @@ const SettingsContextProvider = (props: any) => {
   );
 };
 
-export const useLanguageContext = () => {
+export const useSettingsContext = () => {
   return useContext(AppContext);
 };
 

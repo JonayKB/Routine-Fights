@@ -3,15 +3,15 @@ import RNFS from "react-native-fs";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import { uri } from "../utils/Utils";
 
-const getBinaryImage = async (uri: string): Promise<ArrayBuffer> => {
-  try {
-    const base64: string = await RNFS.readFile(uri, "base64");
-    const binary = Buffer.from(base64, "base64");
-    return binary;
-  } catch (error) {
-    throw new Error("Error reading file");
-  }
-};
+// const getBinaryImage = async (uri: string): Promise<ArrayBuffer> => {
+//   try {
+//     const base64: string = await RNFS.readFile(uri, "base64");
+//     const binary = Buffer.from(base64, "base64");
+//     return binary;
+//   } catch (error) {
+//     throw new Error("Error reading file");
+//   }
+// };
 
 export const uploadImage = async (imageUri: string): Promise<string> => {
   try {

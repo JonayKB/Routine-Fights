@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = {
   followers: string;
@@ -13,7 +13,7 @@ type Props = {
 };
 
 const FollowCount = (props: Props) => {
-  const { language } = useLanguageContext();
+  const { language } = useSettingsContext();
 
   return (
     <View className="flex-1 flex-col">

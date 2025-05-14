@@ -5,18 +5,20 @@ import {
   TouchableWithoutFeedback,
   Button,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
 const HomeScreen = ({ navigation }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [posts, setPosts] = useState<PostDomain[]>([]);
+  const { darkmode } = useSettingsContext();
 
   const reload = () => {
     setLoad(true);
@@ -26,7 +28,7 @@ const HomeScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className="bg-white">
+    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
       <TouchableWithoutFeedback
         className="absolute z-10 right-5 top-5"
         onPress={() => navigation.navigate("Search")}

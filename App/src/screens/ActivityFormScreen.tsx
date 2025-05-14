@@ -11,7 +11,7 @@ import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { Activity } from "../utils/Activity";
 import { createActivity } from "../repositories/ActivityRepository";
 import DropDown from "../components/DropDown";
@@ -21,7 +21,7 @@ import FormInput from "../components/FormInput";
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityForm">;
 
 const ActivityFormScreen = (props: Props) => {
-  const { language } = useLanguageContext();
+  const { language, darkmode } = useSettingsContext();
   const { uri, setUri } = useImageContext();
   const [activity, setActivity] = useState<Activity>({} as Activity);
   const [timeRate, setTimeRate] = useState("daily");
@@ -75,7 +75,7 @@ const ActivityFormScreen = (props: Props) => {
   };
 
   return (
-    <View className="flex-1 items-center my-10">
+    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}] items-center m-10`}>
       <ScrollView className="bg-[#E4D8E9] rounded-lg w-10/12">
         {uri ? (
           <ChangePicture uri={uri} setUri={setUri} />
