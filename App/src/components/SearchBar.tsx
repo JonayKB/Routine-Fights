@@ -16,7 +16,7 @@ const SearchBar = (props: Props) => {
       <TextInput
         placeholder={translations[language || "en-EN"].screens.Home.search}
         placeholderTextColor="#4B0082"
-        className={style.screens.Activities.searchBar}
+        className="border-[#4B0082] border-2 rounded-xl bg-white text-2xl w-11/12 my-5 pl-3 text-black"
         onChangeText={(text) => props.searchFunction(text)}
       />
     </View>

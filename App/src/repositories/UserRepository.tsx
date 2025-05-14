@@ -34,7 +34,8 @@ export const getOwnUser = async (): Promise<UserOut> => {
     );
     return response.data.data.getOwnUser;
   } catch (error) {
-    throw new error("Error", error.response.data);
+    console.error("Error fetching user:", error);
+    throw new Error("Error fetching user");
   }
 };
 
@@ -61,7 +62,8 @@ export const getOwnUserImage = async (): Promise<UserOut> => {
     );
     return response.data.data.getOwnUser;
   } catch (error) {
-    throw new error("Error", error.response.data);
+    console.error("Error fetching user image:", error);
+    throw new Error("Error fetching user image");
   }
 };
 
@@ -93,7 +95,8 @@ export const getUser = async (email: string): Promise<UserOut> => {
     );
     return response.data.data.getUserV2IsFollowing;
   } catch (error) {
-    throw new error("Error", error.response.data);
+    console.error("Error fetching user:", error);
+    throw new Error("Error fetching user");
   }
 };
 
@@ -159,7 +162,8 @@ export const followUser = async (email: string) => {
     );
     return response.data.data.followUser;
   } catch (error) {
-    throw new error("Error", error.response.data);
+    console.error("Error following user:", error);
+    throw new Error("Error following user");
   }
 };
 
@@ -183,7 +187,8 @@ export const unfollowUser = async (email: string) => {
     );
     return response.data.data.unfollowUser;
   } catch (error) {
-    throw new error("Error", error.response.data);
+    console.error("Error unfollowing user:", error);
+    throw new Error("Error unfollowing user");
   }
 };
 
@@ -221,5 +226,6 @@ export const updateUser = async (user: UserIn): Promise<UserOut> => {
     return response.data.data.updateUserV2;
   } catch (error) {
     console.error("Error updating user:", error);
+    throw new Error("Error updating user");
   }
 };

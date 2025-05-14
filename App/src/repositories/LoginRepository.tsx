@@ -15,7 +15,8 @@ export const login = async (email: string, password: string) => {
       return await RNSecureKeyStore.get("token");
     }
   } catch (error) {
-    throw new error("Error", error.response.data);
+    console.error("Login error:", error);
+    throw new Error("Error logging in");
   }
 };
 
@@ -23,6 +24,7 @@ export const getToken = async (): Promise<string | null> => {
   try {
     return await RNSecureKeyStore.get("token");
   } catch (error) {
-    throw new error("Error", error.response.data);
+    console.error("Error getting token:", error);
+    throw new Error("Error getting token");
   }
 };
