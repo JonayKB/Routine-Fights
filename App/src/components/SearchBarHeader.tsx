@@ -2,7 +2,7 @@ import React from "react";
 import { TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = {
   navigation: any;
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const SearchBarHeader = (props: Props) => {
-  const { language } = useLanguageContext();
+  const { language } = useSettingsContext();
   
   return (
     <View className="flex-row bg-[#F1FEFC] border-b-2 border-[#4B0082] p-5 items-center">

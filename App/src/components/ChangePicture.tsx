@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = {
     uri: string;
@@ -9,7 +9,7 @@ type Props = {
 };
 
 const ChangePicture = ({uri, setUri}: Props) => {
-  const { language } = useLanguageContext();
+  const { language } = useSettingsContext();
   return (
     <View className="items-center">
       <View className="rounded-lg w-full bg-black items-center">

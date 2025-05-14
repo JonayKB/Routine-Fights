@@ -25,7 +25,7 @@ import FollowCount from "../components/FollowCount";
 import ProfilePicture from "../components/ProfilePicture";
 import ProfileNavigation from "../components/ProfileNavigation";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import Post from "../components/Post";
 import { Post as PostDomain } from "../utils/Post";
 
@@ -39,7 +39,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [profileLoad, setProfileLoad] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
   const [ownUser, setOwnUser] = useState<boolean>(true);
-  const { language } = useLanguageContext();
+  const { language, darkmode } = useSettingsContext();
   const [posts, setPosts] = useState<PostDomain[]>([]);
 
   useEffect(() => {
@@ -81,7 +81,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <View className="flex-1">
+    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
       {selectedPost && (
         <View className="absolute w-full h-full z-10">
           <TouchableWithoutFeedback onPress={() => setSelectedPost(null)}>

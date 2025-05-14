@@ -1,10 +1,10 @@
 import { Image, View, TouchableOpacity, Text, Alert } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
 import DropDown from "../components/DropDown";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { getSubscribedActivities } from "../repositories/ActivityRepository";
 import { Activity } from "../utils/Activity";
 import { uploadPost } from "../repositories/PostRepository";
@@ -21,7 +21,7 @@ const UploadFormScreen = (props: Props) => {
   const { uri, setUri } = useImageContext();
   const [categories, setCategories] = useState<Categories[]>([]);
   const [category, setCategory] = useState<string>(null);
-  const { language } = useLanguageContext();
+  const { language, darkmode } = useSettingsContext();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -57,7 +57,7 @@ const UploadFormScreen = (props: Props) => {
   };
 
   return (
-    <View className="flex-1 justify-center items-center">
+    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}] justify-center items-center`}>
       <View className="bg-[#E4D8E9] rounded-lg w-10/12">
         {uri ? (
           <View className="items-center">

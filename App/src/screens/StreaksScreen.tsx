@@ -14,11 +14,13 @@ import {
   unsubscribeActivity,
 } from "../repositories/ActivityRepository";
 import { ActivityWithStreak } from "../utils/Activity";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
 const StreaksScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
+  const { darkmode } = useSettingsContext();
 
   const addActivity: ActivityWithStreak = {
     id: "true",
@@ -51,7 +53,9 @@ const StreaksScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <View className="flex-1 items-center">
+    <View
+      className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}] items-center`}
+    >
       <View className="items-center w-full">
         <FlatList
           refreshControl={

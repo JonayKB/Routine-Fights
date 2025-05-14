@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import { followUser, unfollowUser } from "../repositories/UserRepository";
 import SearchBarHeader from "../components/SearchBarHeader";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Search">;
 
@@ -15,6 +16,7 @@ const SearchScreen = ({ navigation }: Props) => {
   const [searchText, setSearchText] = useState<string>("");
   const pageNum = useRef<number>(1);
   const [load, setLoad] = useState<boolean>(false);
+  const { darkmode} = useSettingsContext();
 
   useEffect(() => {
     pageNum.current = 1;
@@ -48,7 +50,7 @@ const SearchScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View>
+    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
       <SearchBarHeader
         navigation={navigation}
         searchFunction={(text) => setSearchText(text)}

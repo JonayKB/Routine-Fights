@@ -59,6 +59,7 @@
         "Settings": {
             "language": "Idioma",
             "darkMode": "Modo oscuro",
+            "lightMode": "Modo claro",
             "logout": "Cerrar sesion",
             "settings": "Ajustes",
             "editProfile": "Editar perfil"

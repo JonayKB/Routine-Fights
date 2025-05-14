@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import ProfilePicture from "./ProfilePicture";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { convertQuantityToString } from "../utils/Utils";
 import { Followers } from "../utils/User";
 
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const FollowBox = (props: Props) => {
-  const { language } = useLanguageContext();
+  const { language } = useSettingsContext();
 
   return (
     <View>

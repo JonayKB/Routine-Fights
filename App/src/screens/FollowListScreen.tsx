@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { useEffect, useState } from "react";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import ProfileNavigation from "../components/ProfileNavigation";
 import FollowBox from "../components/FollowBox";
 import SearchBar from "../components/SearchBar";
@@ -19,7 +19,7 @@ type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 const FollowListScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [users, setUsers] = useState<Followers[]>([]);
-  const { language } = useLanguageContext();
+  const { language, darkmode } = useSettingsContext();
   const [searchText, setSearchText] = useState<string>("");
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const FollowListScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <View>
+    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
       <ProfileNavigation
         navigation={navigation}
         message={`${

@@ -2,14 +2,14 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Activity } from "../utils/Activity";
 import { translations } from "../../translations/translation";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = {
   activity: Activity;
 };
 
 const ActivityDetailsBox = ({ activity }: Props) => {
-  const { language } = useLanguageContext();
+  const { language } = useSettingsContext();
   
   return (
     <View className="bg-[#E4D8E9] rounded-2xl w-80 h-72 m-12 border-2 border-[#4B0082] justify-evenly items-center">

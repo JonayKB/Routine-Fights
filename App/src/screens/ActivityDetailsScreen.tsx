@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { Activity } from "../utils/Activity";
-import { useLanguageContext } from "../contexts/SettingsContextProvider";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { subscribeActivity } from "../repositories/ActivityRepository";
 import ActivityDetailsBox from "../components/ActivityDetailsBox";
@@ -12,7 +12,7 @@ import { resetNavigation } from "../utils/Utils";
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 
 const ActivityDetailsScreen = ({ navigation, route }: Props) => {
-  const { language } = useLanguageContext();
+  const { language, darkmode } = useSettingsContext();
   const [activity, setActivity] = useState<Activity>({} as Activity);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
   }, [route.params.activity]);
 
   return (
-    <View className="flex-1 bg-[#E4DCE9] justify-center items-center">
+    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}] justify-center items-center`}>
       <View className="flex-1">
         <Image
           source={{

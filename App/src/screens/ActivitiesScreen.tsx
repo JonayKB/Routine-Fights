@@ -7,6 +7,7 @@ import { getActivitiesNotSubscribed } from "../repositories/ActivityRepository";
 import ActivityCard from "../components/ActivityCard";
 import AddButton from "../components/AddButton";
 import SearchBar from "../components/SearchBar";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
@@ -15,6 +16,7 @@ const ActivitiesScreen = ({ navigation }: Props) => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const pageNum = useRef(1);
+  const { darkmode } = useSettingsContext();
 
   useEffect(() => {
     pageNum.current = 1;
@@ -53,7 +55,7 @@ const ActivitiesScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className="flex-1 bg-[#E4D8E9]">
+    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
       <SearchBar searchFunction={(text) => setSearchText(text)} />
       <FlatList
         refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
