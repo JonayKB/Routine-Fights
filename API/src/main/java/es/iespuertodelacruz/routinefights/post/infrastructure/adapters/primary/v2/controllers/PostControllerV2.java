@@ -42,7 +42,8 @@ public class PostControllerV2 {
     public List<PostOutputDTOV2> getPagination(@Argument String lastDate, @Argument int limit) {
         LocalDateTime date = LocalDateTime.parse(lastDate);
         List<Post> posts = postService.getPagination(date, limit);
-        return postOutputV2Mapper.toDto(posts);
+        User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+        return postOutputV2Mapper.toDto(posts, user);
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
@@ -61,7 +62,8 @@ public class PostControllerV2 {
             @Argument String userID) {
         LocalDateTime date = LocalDateTime.parse(lastDate);
         List<Post> posts = postService.getPaginationByUser(date, limit, userID);
-        return postOutputV2Mapper.toDto(posts);
+        User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+        return postOutputV2Mapper.toDto(posts, user);
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
@@ -70,7 +72,8 @@ public class PostControllerV2 {
             @Argument String activityID) {
         LocalDateTime date = LocalDateTime.parse(lastDate);
         List<Post> posts = postService.getPaginationByActivity(date, limit, activityID);
-        return postOutputV2Mapper.toDto(posts);
+        User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+        return postOutputV2Mapper.toDto(posts, user);
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
@@ -79,7 +82,7 @@ public class PostControllerV2 {
         User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
         LocalDateTime date = LocalDateTime.parse(lastDate);
         List<Post> posts = postService.getPaginationFollowing(date, limit, user.getId());
-        return postOutputV2Mapper.toDto(posts);
+        return postOutputV2Mapper.toDto(posts, user);
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
@@ -88,7 +91,7 @@ public class PostControllerV2 {
         User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
         LocalDateTime date = LocalDateTime.parse(lastDate);
         List<Post> posts = postService.getPaginationSubscribedActivities(date, limit, user.getId());
-        return postOutputV2Mapper.toDto(posts);
+        return postOutputV2Mapper.toDto(posts, user);
     }
 
 }

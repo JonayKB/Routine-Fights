@@ -99,6 +99,7 @@ class PostEntityMapperTest {
         post.setFiledAt(now);
         post.user(createUser());
         post.setActivity(createActivity());
+        post.setComments(new ArrayList<>());
         return post;
     }
 
@@ -151,6 +152,9 @@ class PostEntityMapperTest {
         userEntity.setDeletedAt(null);
         userEntity.setFollowers(new ArrayList<>());
         userEntity.setFollowing(new ArrayList<>());
+        userEntity.setPosts(new ArrayList<>());
+        userEntity.setActivities(new ArrayList<>());
+        userEntity.setComments(new ArrayList<>());
 
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setId(ACTIVITY_ID);
@@ -176,6 +180,7 @@ class PostEntityMapperTest {
         postEntity.setFiledAt(now);
         postEntity.setUser(userEntity);
         postEntity.setActivity(activityEntity);
+        postEntity.setComments(new ArrayList<>());
 
         Post post = mapper.toDomain(postEntity);
         assertNotNull(post);
