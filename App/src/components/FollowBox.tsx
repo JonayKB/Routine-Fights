@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import ProfilePicture from "./ProfilePicture";
+import Picture from "./Picture";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { convertQuantityToString } from "../utils/Utils";
@@ -22,7 +22,7 @@ const FollowBox = (props: Props) => {
         onPress={props.navigateFunction}
         className="items-center bg-[#F1FEFC] flex-row mt-5 w-11/12 mx-auto rounded-xl p-2"
       >
-        <ProfilePicture image={props.item.image} size={80} />
+        <Picture image={props.item.image} size={80} style="rounded-full border-2 border-[#4B0082] filter invert"/>
         <View className="ml-5">
           <Text className="text-black font-bold text-2xl">
             {props.item.username}

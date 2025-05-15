@@ -6,9 +6,11 @@ import { useTokenContext } from "../contexts/TokenContextProvider";
 type Props = {
   image: string;
   size: number;
+  height?: number;
+  style: string;
 };
 
-const ProfilePicture = ({ image, size }: Props) => {
+const Picture = ({ image, size, style, height }: Props) => {
   const { token } = useTokenContext();
 
   return (
@@ -20,10 +22,10 @@ const ProfilePicture = ({ image, size }: Props) => {
         },
       }}
       width={size}
-      height={size}
-      className="rounded-full border-2 border-[#4B0082] filter invert"
+      height={height ?? size}
+      className={style}
     />
   );
 };
 
-export default ProfilePicture;
+export default Picture;
