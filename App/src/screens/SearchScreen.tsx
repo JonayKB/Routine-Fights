@@ -5,7 +5,6 @@ import { fetchUsersByName } from "../repositories/SearchRepository";
 import FollowBox from "../components/FollowBox";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
-import { followUser, unfollowUser } from "../repositories/UserRepository";
 import SearchBarHeader from "../components/SearchBarHeader";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
@@ -16,15 +15,14 @@ const SearchScreen = ({ navigation }: Props) => {
   const [searchText, setSearchText] = useState<string>("");
   const pageNum = useRef<number>(1);
   const [load, setLoad] = useState<boolean>(false);
-  const { darkmode} = useSettingsContext();
+  const { darkmode } = useSettingsContext();
 
   useEffect(() => {
     pageNum.current = 1;
     const getUsers = async () => {
       try {
         const response = await fetchUsersByName(pageNum.current, searchText);
-        setUsers(response);
-        console.log(response);
+        setUsers([...response]);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -72,13 +70,6 @@ const SearchScreen = ({ navigation }: Props) => {
                   })
                 }
                 item={item}
-                following={item.isFollowing}
-                followFunction={async (item) => {
-                  item.isFollowing
-                    ? await unfollowUser(item.email)
-                    : await followUser(item.email);
-                  reload();
-                }}
               />
             );
           }}
