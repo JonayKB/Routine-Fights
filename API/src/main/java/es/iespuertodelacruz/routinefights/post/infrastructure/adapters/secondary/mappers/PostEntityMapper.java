@@ -25,7 +25,7 @@ public interface PostEntityMapper {
     @Named("mapCommentsToComments")
     default List<Comment> mapCommentsToComments(List<CommentEntity> commentsEntities) {
         if (commentsEntities == null) {
-            return null;
+            return List.of();
         }
         return commentsEntities.stream()
                 .map(commentEntity -> {
