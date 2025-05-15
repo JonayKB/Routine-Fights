@@ -13,13 +13,13 @@ import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary
 @Repository
 public interface IPostEntityRepository extends Neo4jRepository<PostEntity, String> {
         @Query("""
-                        MATCH (p:Post)
+                        MATCH (u:User)-[pp:`Posted`]->(p:Post)
                         OPTIONAL MATCH (p)-[r1:`Related-To`]->(a:Activity)
                         OPTIONAL MATCH (p)<-[r2:`To_Report`]-(rep:Report)
                         OPTIONAL MATCH (p)<-[r3:`Liked`]-(u:User)
                         OPTIONAL MATCH (p)<-[r4:`On`]-(c:Comment)
                         WHERE p.createdAt < $lastDate
-                        RETURN p, collect(r1), collect(a), collect(r2), collect(rep), collect(r3), collect(u), collect(r4), collect(c)
+                        RETURN p,u,pp, collect(r1), collect(a), collect(r2), collect(rep), collect(r3), collect(u), collect(r4), collect(c)
                         ORDER BY p.createdAt DESC
                         LIMIT $limit
                         """)
