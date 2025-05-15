@@ -100,6 +100,7 @@ class PostEntityMapperTest {
         post.user(createUser());
         post.setActivity(createActivity());
         post.setComments(new ArrayList<>());
+        post.setLikedBy(List.of(new User()));
         return post;
     }
 

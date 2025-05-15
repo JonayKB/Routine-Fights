@@ -7,7 +7,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import es.iespuertodelacruz.routinefights.comment.domain.Comment;
-import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.primary.v2.mapper.CommentOutputV2Mapper;
 import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.primary.v2.dtos.PostOutputDTOV2;
 import es.iespuertodelacruz.routinefights.user.domain.User;
