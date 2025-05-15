@@ -32,6 +32,7 @@ public abstract class UserInitializer {
     protected static final List<UserEntity> followingEntity = new ArrayList<>();
 
     protected User user;
+    protected User follower;
     protected UserEntity userEntity;
 
     @BeforeEach
@@ -39,7 +40,11 @@ public abstract class UserInitializer {
         user = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN,
                 CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);
-        followers.add(new User());
+        follower = new User("followerId", "followerUsername", "followerEmail", "followerPassword",
+                "followerNationality",
+                "followerPhoneNumber", "followerImage", "followerRole", true, "followerVerificationToken",
+                LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>(), new ArrayList<>());
+        followers.add(follower);
 
         userEntity = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);
