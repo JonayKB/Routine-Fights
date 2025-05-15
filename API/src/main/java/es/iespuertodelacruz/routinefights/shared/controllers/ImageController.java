@@ -49,6 +49,7 @@ public class ImageController {
                 logger.log(Level.INFO, "Image uploaded: {0}", filename);
                 return ResponseEntity.ok(filename);
             }
+            logger.warning("Error uploading image: Content type is null");
             throw new ImageUploadException("File is empty");
         } catch (RuntimeException e) {
             logger.warning("Error uploading image: " + e.getMessage());
