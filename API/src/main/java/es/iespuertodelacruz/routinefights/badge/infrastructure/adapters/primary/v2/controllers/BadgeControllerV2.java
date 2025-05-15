@@ -30,9 +30,9 @@ public class BadgeControllerV2 {
         return badgeV2OutputMapper.toDTO(badgeService.findByUserEmail(SecurityContextHolder.getContext()
                 .getAuthentication().getName()));
     }
-
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("getBadgesByEmail")
-    public List<BadgeV2Output> getBadgesByUserId(String email) {
+    public List<BadgeV2Output> getBadgesByUserEmail(@Argument String email) {
         return badgeV2OutputMapper.toDTO(badgeService.findByUserEmail(email));
     }
 

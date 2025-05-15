@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -23,16 +24,19 @@ public class CommunityEventV2Controller {
         this.communityEventOutputV2Mapper = communityEventOutputV2Mapper;
     }
 
+    @Secured({ "ROLE_USER" })
     @QueryMapping("getActiveCommunityEvents")
     public List<CommunityEventOutputV2> getActiveCommunityEvents() {
         return communityEventOutputV2Mapper.toDto(communityEventService.getActiveCommunityEvent());
     }
 
+    @Secured({ "ROLE_USER" })
     @QueryMapping("getNearestCommunityEvent")
     public CommunityEventOutputV2 getNearestCommunityEvent() {
         return communityEventOutputV2Mapper.toDto(communityEventService.getNearestCommunityEvent());
     }
 
+    @Secured({ "ROLE_USER" })
     @QueryMapping("getCommunityEventPointsById")
     public Integer getCommunityEventPointsById(@Argument String id) {
         return communityEventService.getCommunityEventPointsById(id);

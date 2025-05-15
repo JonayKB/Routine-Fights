@@ -43,7 +43,7 @@ type Query {
   getBadgesByEmail(email: String!): [BadgeOutputV2]
   getOwnBadges: [BadgeOutputV2]
   findBadgeById(id: String!): BadgeOutputV3
-  findBadgeByCommunityEvent(communityEventId: String!): BadgeOutputV2
+  findBadgeByCommunityEvent(communityEventId: String!): [BadgeOutputV2]
 }
 
 type Mutation {

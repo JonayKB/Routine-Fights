@@ -68,4 +68,14 @@ public class CommunityEventService implements ICommunityEventService {
         return communityEventRepository.getAllImages();
     }
 
+    @Override
+    public List<User> getUsersParticipatingInCommunityEventEndsToday() {
+        return communityEventRepository.getUsersParticipatingInCommunityEventEndsToday();
+    }
+
+    @Override
+    public CommunityEvent getCommunityEventEndsToday() {
+        return communityEventRepository.getCommunityEventEndsToday();
+    }
+
 }

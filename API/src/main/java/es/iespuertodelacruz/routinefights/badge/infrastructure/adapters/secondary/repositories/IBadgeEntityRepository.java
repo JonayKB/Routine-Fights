@@ -12,9 +12,10 @@ import es.iespuertodelacruz.routinefights.badge.infrastructure.adapters.secondar
 @Repository
 public interface IBadgeEntityRepository extends Neo4jRepository<BadgeEntity, String> {
 
-    List<BadgeEntity> findByCommunityEventId(String communityEventId);
+    @Query("MATCH (b:Badge)-[r:Associated_With]->(c:CommunityEvent) WHERE elementId(c) = $communityEventId RETURN b,r,c")
+    List<BadgeEntity> findByCommunityEventId(@Param("communityEventId") String communityEventId);
 
-    @Query("MATCH (u:User {email:$email})-[r:Has_Badge]->(b:Badge) RETURN b,r,u")
+    @Query("MATCH (u:User {email:$email})-[r:Has_Badge]->(b:Badge)-[a:Associated_With]->(c:CommunityEvent) RETURN b,r,u,a,c")
     List<BadgeEntity> findByUserEmail(@Param("email") String email);
 
     @Query("MATCH (u:User {email: $userEmail}), (b:Badge) WHERE elementId(b) = $badgeId MERGE (u)-[r:Has_Badge]->(b) RETURN exists((u)-[:Has_Badge]->(b))")
