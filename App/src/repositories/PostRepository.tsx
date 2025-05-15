@@ -77,8 +77,6 @@ export const uploadPost = async (activityID: string, image: string) => {
   try {
     const token = await RNSecureKeyStore.get("token");
 
-    console.log(activityID, image);
-
     const response = await axios.post(
       neo4jUri,
       {
@@ -95,6 +93,7 @@ export const uploadPost = async (activityID: string, image: string) => {
       }
     );
 
+    console.log(response.data.data.uploadPost);
     return response.data.data.uploadPost;
   } catch (error) {
     console.error("Error uploading post:", error);
