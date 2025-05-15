@@ -18,6 +18,10 @@ export const getPostsFollowing = async (
                     id
                     image
                     updatedAt
+                    streak
+                    comments
+                    likes
+                    isLiked
                     user {
                       email
                       image
@@ -54,6 +58,10 @@ export const getPosts = async (
                     id
                     image
                     updatedAt
+                    streak
+                    comments
+                    likes
+                    isLiked
                     user {
                       email
                       image
@@ -95,10 +103,59 @@ export const uploadPost = async (activityID: string, image: string) => {
       }
     );
 
-    console.log(response.data.data.uploadPost);
     return response.data.data.uploadPost;
   } catch (error) {
     console.error("Error uploading post:", error);
     throw new Error("Error uploading post");
+  }
+};
+
+export const likePost = async (postID: string) => {
+  try {
+    const token = await RNSecureKeyStore.get("token");
+
+    const response = await axios.post(
+      neo4jUri,
+      {
+        query: `mutation {
+                  likePost(postID: "${postID}")
+              }`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data.data.likePost;
+  } catch (error) {
+    console.error("Error liking post:", error);
+    throw new Error("Error liking post");
+  }
+};
+
+export const unLikePost = async (postID: string) => {
+  try {
+    const token = await RNSecureKeyStore.get("token");
+
+    const response = await axios.post(
+      neo4jUri,
+      {
+        query: `mutation {
+                  unLikePost(postID: "${postID}")
+              }`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    
+    return response.data.data.unLikePost;
+  } catch (error) {
+    console.error("Error unliking post:", error);
+    throw new Error("Error unliking post");
   }
 };

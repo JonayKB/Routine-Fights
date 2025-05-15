@@ -14,7 +14,7 @@ const numberToString = (number: number) => {
 };
 
 export const convertQuantityToString = (quantity: number) => {
-  if (quantity.toString().length > 5) {
+  if (quantity?.toString().length > 5) {
     if (quantity > 999999) {
       return numberToString(quantity).slice(0, 5) + "M";
     }

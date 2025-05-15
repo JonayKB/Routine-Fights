@@ -8,11 +8,7 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import ProfileNavigation from "../components/ProfileNavigation";
 import FollowBox from "../components/FollowBox";
 import SearchBar from "../components/SearchBar";
-import {
-  followUser,
-  getFollows,
-  unfollowUser,
-} from "../repositories/UserRepository";
+import { getFollows } from "../repositories/UserRepository";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 
@@ -73,13 +69,6 @@ const FollowListScreen = ({ navigation, route }: Props) => {
                   navigation.navigate("Profile", { email: item.email })
                 }
                 item={item}
-                following={item.isFollowing}
-                followFunction={async (item) => {
-                  item.isFollowing
-                    ? await unfollowUser(item.email)
-                    : await followUser(item.email);
-                  reload();
-                }}
               />
             );
           }}

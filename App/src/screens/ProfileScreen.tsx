@@ -66,6 +66,29 @@ const ProfileScreen = ({ navigation, route }: Props) => {
     fetchUser();
   }, [route.params?.email, profileLoad === true]);
 
+  const handleFollow = async () => {
+    try {
+      if (user.isFollowing) {
+        await unfollowUser(user.email);
+      } else {
+        await followUser(user.email);
+      }
+      setUser({
+        ...user,
+        isFollowing: !user.isFollowing,
+        followers: user.isFollowing ? user.followers - 1 : user.followers + 1,
+      });
+
+      const updatedFollowers: number = user.isFollowing
+        ? Math.max(0, user.followers - 1)
+        : user.followers + 1;
+      setFollowers(convertQuantityToString(updatedFollowers));
+    } catch (error) {
+      console.error("Error following user:", error);
+      Alert.alert("Error", error.response.data);
+    }
+  };
+
   const reload = () => {
     setLoad(true);
     setTimeout(() => {
@@ -116,7 +139,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
             <Picture
               image={user.image}
               size={103}
-              style="rounded-full border-2 border-[#4B0082] filter invert"
+              style="rounded-full border-2 border-[#4B0082]"
             />
             {/* <View
             style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
@@ -140,11 +163,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
             {!ownUser && (
               <TouchableOpacity
                 className="flex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
-                onPress={async () =>
-                  user.isFollowing
-                    ? await unfollowUser(user.email)
-                    : await followUser(user.email)
-                }
+                onPress={handleFollow}
               >
                 <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
                   {user.isFollowing
