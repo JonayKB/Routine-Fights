@@ -32,7 +32,7 @@ public interface PostOutputV2Mapper {
     @Mapping(target = "likes", source = "post.likedBy", qualifiedByName = "mapLikedByToLikes")
     @Mapping(target = "id", source = "post.id")
     @Mapping(target = "comments", source = "post.comments", qualifiedByName = "mapCommentsToComments")
-    @Mapping(target = "isLiked", expression = "java(post.getLikedBy().contains(user))")
+    @Mapping(target = "isLiked", expression = "java(post.getLikedBy() != null && post.getLikedBy().contains(user))")
     @Mapping(target = "image", source = "post.image")
     @Mapping(target = "createdAt", source = "post.createdAt")
     PostOutputDTOV2 toDto(Post post, User user);
