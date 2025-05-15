@@ -43,7 +43,7 @@ type Query {
   getBadgesByEmail(email: String!): [BadgeOutputV2]
   getOwnBadges: [BadgeOutputV2]
   findBadgeById(id: String!): BadgeOutputV3
-  findBadgeByCommunityEvent(communityEventId: String!): BadgeOutputV3
+  findBadgeByCommunityEvent(communityEventId: String!): BadgeOutputV2
 }
 
 type Mutation {
@@ -83,14 +83,8 @@ type Mutation {
     communityEventId: String!
   ): BadgeOutputV3
 
-  addBadgeToUser(
-    userEmail: String!
-    badgeId: String!
-  ): Boolean
-  addBadgeToUsers(
-    userEmail: [String!]!
-    badgeId: String!
-  ): [Boolean]
+  addBadgeToUser(userEmail: String!, badgeId: String!): Boolean
+  addBadgeToUsers(userEmail: [String!]!, badgeId: String!): [Boolean]
 }
 type BadgeOutputV3 {
   id: ID
@@ -99,6 +93,7 @@ type BadgeOutputV3 {
   communityEvent: CommunityEventOutputV3
 }
 type BadgeOutputV2 {
+  id:ID
   image: String
   level: Int
   communityEvent: CommunityEventOutputV2

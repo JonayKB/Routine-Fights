@@ -21,10 +21,10 @@ public interface ICommunityEventEntityRepository extends Neo4jRepository<Communi
     @Query("MATCH (ce:CommunityEvent) WHERE ce.finishDate > $currentDate RETURN ce ORDER BY ce.startDate ASC LIMIT 1")
     CommunityEventEntity getNearestCommunityEvent(@Param("currentDate") LocalDateTime currentDate);
 
-    @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post) WHERE elementId(ce) = $id AND p.createdAt > ce.startDate AND p.createdAt < ce.finishDate RETURN SUM(p.pointsToAdd)")
+    @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post) WHERE elementId(ce) = $id AND p.createdAt >= ce.startDate AND p.createdAt <= ce.finishDate RETURN SUM(p.pointsToAdd)")
     Integer getActualCommunityEventPoints(@Param("id") String id);
 
-    @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post)<-[:`Posted`]-(u:User) WHERE elementId(ce) = $id AND p.createdAt > ce.startDate AND p.createdAt < ce.finishDate RETURN u")
+    @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post)<-[:`Posted`]-(u:User) WHERE elementId(ce) = $id AND p.createdAt >= ce.startDate AND p.createdAt <= ce.finishDate RETURN DISTINCT u")
     List<UserEntity> getUsersParticipatingInCommunityEvent(@Param("id") String id);
 
     @Query("MATCH (ce:CommunityEvent) WHERE elementId(ce) = $id RETURN ce")
