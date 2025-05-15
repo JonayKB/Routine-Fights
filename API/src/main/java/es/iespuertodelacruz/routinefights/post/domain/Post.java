@@ -3,15 +3,19 @@ package es.iespuertodelacruz.routinefights.post.domain;
 import java.time.LocalDateTime;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
+import es.iespuertodelacruz.routinefights.comment.domain.Comment;
 import es.iespuertodelacruz.routinefights.post.commons.PostCommons;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Post extends PostCommons {
     private String id;
     private User user;
     private Activity activity;
+    private List<User> likedBy;
+    private List<Comment> comments;
 
     public Post(String id, String image, Integer streak, Integer pointsToAdd, LocalDateTime createdAt,
             LocalDateTime updatedAt,
@@ -66,6 +70,30 @@ public class Post extends PostCommons {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+    }
+    public Post activity(Activity activity) {
+        setActivity(activity);
+        return this;
+    }
+    public List<User> getLikedBy() {
+        return this.likedBy;
+    }
+    public void setLikedBy(List<User> likedBy) {
+        this.likedBy = likedBy;
+    }
+    public Post likedBy(List<User> likedBy) {
+        setLikedBy(likedBy);
+        return this;
+    }
+    public List<Comment> getComments() {
+        return this.comments;
+    }
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+    public Post comments(List<Comment> comments) {
+        setComments(comments);
+        return this;
     }
 
     @Override

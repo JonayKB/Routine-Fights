@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import es.iespuertodelacruz.routinefights.comment.domain.Comment;
 import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.primary.v2.dtos.PostOutputDTOV2;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.primary.v2.mappers.PostOutputV2Mapper;
@@ -28,6 +29,9 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
     private static final int CONSTANT_STREAK = 10;
     private static final LocalDateTime CONSTANT_FILED_AT = LocalDateTime.of(2025, 3, 16, 10, 0);
     private static final LocalDateTime CONSTANT_CREATED_AT = LocalDateTime.of(2025, 3, 16, 9, 0);
+    private static final List<Comment> CONSTANT_COMMENTS = Arrays.asList(new Comment(), new Comment());
+    private static final List<User> CONSTANT_LIKED_BY = Arrays.asList(new User(), new User());
+
 
     @Autowired
     private PostOutputV2Mapper postOutputV2Mapper;
@@ -50,6 +54,8 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
         post.setFiledAt(CONSTANT_FILED_AT);
         post.setCreatedAt(CONSTANT_CREATED_AT);
         post.setUser(dummyUser);
+        post.setComments(CONSTANT_COMMENTS);
+        post.setLikedBy(CONSTANT_LIKED_BY);
 
         PostOutputDTOV2 result = postOutputV2Mapper.toDto(post);
 
@@ -78,6 +84,8 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
         post.setFiledAt(CONSTANT_FILED_AT);
         post.setCreatedAt(CONSTANT_CREATED_AT);
         post.setUser(dummyUser);
+        post.setComments(CONSTANT_COMMENTS);
+        post.setLikedBy(CONSTANT_LIKED_BY);
 
         List<Post> posts = Arrays.asList(post);
         List<PostOutputDTOV2> resultList = postOutputV2Mapper.toDto(posts);
