@@ -84,6 +84,8 @@ const HomeScreen = ({ navigation }: Props) => {
           }
           data={posts}
           renderItem={({ item }) => {
+            //TODO: remove
+            console.log(item);
             return <Post post={item} />;
           }}
           keyExtractor={(item) => item.id}

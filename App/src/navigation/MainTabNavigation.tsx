@@ -23,7 +23,6 @@ type MainTabProps = {
 };
 
 const MainTabNavigation = (props: Props) => {
-  const { token } = useTokenContext();
   const Tab = createBottomTabNavigator<MainTabProps>();
   const [image, setImage] = useState<string>(null);
 
