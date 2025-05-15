@@ -11,7 +11,9 @@ export interface ImageContextType {
   setUri: Dispatch<SetStateAction<string>>;
 }
 
-export const ImageContext = createContext<ImageContextType>({} as ImageContextType);
+export const ImageContext = createContext<ImageContextType>(
+  {} as ImageContextType
+);
 
 const ImageContextProvider = (props: any) => {
   const [uri, setUri] = useState<string>("");

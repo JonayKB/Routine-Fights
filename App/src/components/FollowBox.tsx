@@ -6,6 +6,7 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { convertQuantityToString } from "../utils/Utils";
 import { Followers } from "../utils/User";
 import { followUser, unfollowUser } from "../repositories/UserRepository";
+import { useTokenContext } from "../contexts/TokenContextProvider";
 
 type Props = {
   item: Followers;
@@ -15,6 +16,7 @@ type Props = {
 const FollowBox = (props: Props) => {
   const [follower, setFollower] = useState<Followers>({} as Followers);
   const { language } = useSettingsContext();
+  const { email } = useTokenContext();
 
   useEffect(() => {
     setFollower({ ...props.item });
@@ -65,16 +67,18 @@ const FollowBox = (props: Props) => {
             {convertQuantityToString(follower.following)}
           </Text>
         </View>
-        <TouchableOpacity
-          className="border-[#E4007C] border-2 rounded-lg ml-5"
-          onPress={handleFollow}
-        >
-          <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
-            {follower.isFollowing
-              ? translations[language || "en-EN"].screens.Profile.unfollow
-              : translations[language || "en-EN"].screens.Profile.follow}
-          </Text>
-        </TouchableOpacity>
+        {(follower.email !== email) && (
+          <TouchableOpacity
+            className="border-[#E4007C] border-2 rounded-lg ml-5"
+            onPress={handleFollow}
+          >
+            <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
+              {follower.isFollowing
+                ? translations[language || "en-EN"].screens.Profile.unfollow
+                : translations[language || "en-EN"].screens.Profile.follow}
+            </Text>
+          </TouchableOpacity>
+        )}
       </TouchableOpacity>
     </View>
   );
