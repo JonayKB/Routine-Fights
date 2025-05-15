@@ -4,9 +4,7 @@ public class HTMLTemplates {
     private HTMLTemplates() {
     }
 
-    public static final String VERIFICATION_EMAIL = """
-            <html>
-            <head>
+    private static final String COMMON_STYLES = """
                 <style>
                     body {
                         font-family: Arial, sans-serif;
@@ -24,7 +22,7 @@ public class HTMLTemplates {
                         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                     }
                     .header {
-                        background:rgb(130, 76, 175);
+                        background: rgb(130, 76, 175);
                         color: #ffffff;
                         padding: 10px;
                         border-radius: 10px 10px 0 0;
@@ -40,12 +38,12 @@ public class HTMLTemplates {
                         padding: 10px 20px;
                         font-size: 16px;
                         color: #ffffff;
-                        background-color:rgb(175, 76, 167);
+                        background-color: rgb(175, 76, 167);
                         text-decoration: none;
                         border-radius: 5px;
                     }
                     .button:hover {
-                        background-color:rgb(139, 69, 160);
+                        background-color: rgb(139, 69, 160);
                     }
                     .footer {
                         margin-top: 20px;
@@ -54,7 +52,11 @@ public class HTMLTemplates {
                         text-align: center;
                     }
                 </style>
-            </head>
+            """;
+
+    public static final String VERIFICATION_EMAIL = """
+            <html>
+            <head>%s</head>
             <body>
                 <div class='container'>
                     <div class='header'>
@@ -70,45 +72,70 @@ public class HTMLTemplates {
                 </div>
             </body>
             </html>
-            """;
+            """.formatted(COMMON_STYLES, "%s", "%s");
 
     public static final String NEED_EMAIL_TOKEN = """
             <html>
-            <head><title>Error</title></head>
+            <head><title>Error</title>%s</head>
             <body>
-                <h1>Faltan datos</h1>
-                <p>Necesitas proporcionar correo y token para verificar tu cuenta.</p>
+                <div class='container'>
+                    <div class='header'>
+                        <h1>Faltan datos</h1>
+                    </div>
+                    <div class='content'>
+                        <p>Necesitas proporcionar correo y token para verificar tu cuenta.</p>
+                    </div>
+                </div>
             </body>
             </html>
-            """;
+            """.formatted(COMMON_STYLES);
+
     public static final String ERROR = """
             <html>
-            <head>
-                <title>Error</title>
-            </head>
+            <head><title>Error</title>%s</head>
             <body>
-                <h1>Error al verificar</h1>
-                <p>Ha ocurrido un error al verificar tu cuenta.</p>
-                <p>%s</p>
+                <div class='container'>
+                    <div class='header'>
+                        <h1>Error al verificar</h1>
+                    </div>
+                    <div class='content'>
+                        <p>Ha ocurrido un error al verificar tu cuenta.</p>
+                        <p><strong>%s</strong></p>
+                    </div>
+                </div>
             </body>
             </html>
-            """;
+            """.formatted(COMMON_STYLES, "%s");
+
     public static final String VERIFIED = """
             <html>
-            <head><title>Verificado</title></head>
+            <head><title>Verificado</title>%s</head>
             <body>
-                <h1>Cuenta verificada</h1>
-                <p>Tu cuenta ha sido verificada correctamente.</p>
+                <div class='container'>
+                    <div class='header'>
+                        <h1>Cuenta verificada</h1>
+                    </div>
+                    <div class='content'>
+                        <p>Tu cuenta ha sido verificada correctamente.</p>
+                    </div>
+                </div>
             </body>
             </html>
-            """;
+            """.formatted(COMMON_STYLES);
+
     public static final String BAD_REQUEST = """
             <html>
-            <head><title>Error</title></head>
+            <head><title>Error</title>%s</head>
             <body>
-                <h1>Error al verificar</h1>
-                <p>Ha ocurrido un error al verificar tu cuenta.</p>
+                <div class='container'>
+                    <div class='header'>
+                        <h1>Error al verificar</h1>
+                    </div>
+                    <div class='content'>
+                        <p>Ha ocurrido un error al verificar tu cuenta.</p>
+                    </div>
+                </div>
             </body>
             </html>
-            """;
+            """.formatted(COMMON_STYLES);
 }
