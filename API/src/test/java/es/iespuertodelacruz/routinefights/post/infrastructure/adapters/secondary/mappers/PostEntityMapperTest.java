@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
+import es.iespuertodelacruz.routinefights.comment.domain.Comment;
 import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -99,7 +100,7 @@ class PostEntityMapperTest {
         post.setFiledAt(now);
         post.user(createUser());
         post.setActivity(createActivity());
-        post.setComments(new ArrayList<>());
+        post.setComments(List.of(new Comment()));
         post.setLikedBy(List.of(new User()));
         return post;
     }
