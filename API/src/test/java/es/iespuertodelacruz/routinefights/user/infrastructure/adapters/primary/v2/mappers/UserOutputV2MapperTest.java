@@ -46,7 +46,7 @@ class UserOutputV2MapperTest extends UserInitializer {
 
     @Test
     void toOutputDTOV2WithSearchingUserTest() {
-        UserOutputDTOV2 userOutputDTOV2 = mapper.toOutputDTOV2(user, user);
+        UserOutputDTOV2 userOutputDTOV2 = mapper.toOutputDTOV2(user, follower);
         assertNotNull(userOutputDTOV2, "Error mapping to output DTO");
         assertEquals(ID, userOutputDTOV2.id(), ERROR_MAPPING_PROPERTY + "id");
         assertEquals(USERNAME, userOutputDTOV2.username(), ERROR_MAPPING_PROPERTY + "username");
