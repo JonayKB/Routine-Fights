@@ -28,6 +28,7 @@ import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import Post from "../components/Post";
 import { Post as PostDomain } from "../utils/Post";
+import { useTokenContext } from "../contexts/TokenContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -38,8 +39,8 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [profileLoad, setProfileLoad] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
-  const [ownUser, setOwnUser] = useState<boolean>(true);
   const { language, darkmode } = useSettingsContext();
+  const { email } = useTokenContext();
   const [posts, setPosts] = useState<PostDomain[]>([]);
 
   useEffect(() => {
@@ -51,8 +52,6 @@ const ProfileScreen = ({ navigation, route }: Props) => {
         } else {
           user = await getOwnUser();
         }
-        let ownUser = await getOwnUser();
-        user.id === ownUser.id ? setOwnUser(true) : setOwnUser(false);
 
         setUser(user);
         setFollowers(convertQuantityToString(user.followers));
@@ -160,10 +159,13 @@ const ProfileScreen = ({ navigation, route }: Props) => {
               email={user.email}
               navigation={navigation}
             />
-            {!ownUser && (
+            {user.email !== email && (
               <TouchableOpacity
                 className="flex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
-                onPress={handleFollow}
+                onPress={() => {
+                  handleFollow();
+                  console.log(user.email, email);
+                }}
               >
                 <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
                   {user.isFollowing

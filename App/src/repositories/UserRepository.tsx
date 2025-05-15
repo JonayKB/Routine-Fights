@@ -39,7 +39,7 @@ export const getOwnUser = async (): Promise<UserOut> => {
   }
 };
 
-export const getOwnUserImage = async (): Promise<UserOut> => {
+export const getOwnUserImageAndEmail = async (): Promise<UserOut> => {
   try {
     const token = await RNSecureKeyStore.get("token");
 
@@ -50,6 +50,7 @@ export const getOwnUserImage = async (): Promise<UserOut> => {
                 query {
                     getOwnUser {
                         image
+                        email
                     }
                 }
             `,
