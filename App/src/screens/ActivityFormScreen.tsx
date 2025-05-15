@@ -1,10 +1,4 @@
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  ScrollView,
-  Alert,
-} from "react-native";
+import { View, TouchableOpacity, Text, ScrollView, Alert } from "react-native";
 import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
@@ -17,6 +11,7 @@ import { createActivity } from "../repositories/ActivityRepository";
 import DropDown from "../components/DropDown";
 import ChangePicture from "../components/ChangePicture";
 import FormInput from "../components/FormInput";
+import { uploadImage } from "../repositories/ImageRepository";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityForm">;
 
@@ -52,18 +47,22 @@ const ActivityFormScreen = (props: Props) => {
 
   const addActivity = async () => {
     try {
+      const imageName = await uploadImage(uri);
+      console.log(imageName); // Debugging line
+
       const id = await createActivity(
         activity.name,
         activity.description,
         timeRate,
         activity.timesRequiered,
-        ""
+        imageName
       );
 
       if (id) {
         Alert.alert(
           translations[language || "en-EN"].screens.ActivityForm.success
         );
+        setUri(null);
         props.navigation.goBack();
       } else {
         throw new Error("Failed to create activity");
@@ -75,7 +74,11 @@ const ActivityFormScreen = (props: Props) => {
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}] items-center m-10`}>
+    <View
+      className={`flex-1 bg-[#${
+        darkmode ? "2C2C2C" : "CCCCCC"
+      }] items-center m-10`}
+    >
       <ScrollView className="bg-[#E4D8E9] rounded-lg w-10/12">
         {uri ? (
           <ChangePicture uri={uri} setUri={setUri} />
