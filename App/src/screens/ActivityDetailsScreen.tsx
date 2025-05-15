@@ -8,6 +8,7 @@ import { translations } from "../../translations/translation";
 import { subscribeActivity } from "../repositories/ActivityRepository";
 import ActivityDetailsBox from "../components/ActivityDetailsBox";
 import { resetNavigation } from "../utils/Utils";
+import Picture from "../components/Picture";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 
@@ -20,15 +21,13 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
   }, [route.params.activity]);
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}] justify-center items-center`}>
+    <View
+      className={`flex-1 bg-[#${
+        darkmode ? "2C2C2C" : "CCCCCC"
+      }] justify-center items-center`}
+    >
       <View className="flex-1">
-        <Image
-          source={{
-            uri: activity.image,
-          }}
-          width={440}
-          height={550}
-        />
+        <Picture image={activity.image} size={440} height={550} style="" />
       </View>
       <ActivityDetailsBox activity={activity} />
       {/** TODO: check if is subscribed or not */}
