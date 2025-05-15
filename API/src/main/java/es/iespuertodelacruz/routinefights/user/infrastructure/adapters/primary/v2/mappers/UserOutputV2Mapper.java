@@ -30,4 +30,9 @@ public interface UserOutputV2Mapper {
     public UserOutputDTOV2 toOutputDTOV2(User user, User searchingUser);
 
     public List<UserOutputDTOV2> toOutputDTOV2(List<User> users);
+
+    default List<UserOutputDTOV2> toOutputDTOV2(List<User> users, User searchingUser) {
+        return users.stream()
+                .map(user -> toOutputDTOV2(user, searchingUser)).toList();
+    }
 }

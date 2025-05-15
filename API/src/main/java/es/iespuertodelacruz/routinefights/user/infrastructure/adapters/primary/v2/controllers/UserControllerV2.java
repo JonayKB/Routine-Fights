@@ -243,7 +243,7 @@ public class UserControllerV2 {
             User self = userService
                     .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
             return userOutputMapper
-                    .toOutputDTOV2(userService.getPaginationByName(page, perPage, userName, self.getId()));
+                    .toOutputDTOV2(userService.getPaginationByName(page, perPage, userName, self.getId()),self);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(getUserPaginationByName) Error finding users: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding users");
