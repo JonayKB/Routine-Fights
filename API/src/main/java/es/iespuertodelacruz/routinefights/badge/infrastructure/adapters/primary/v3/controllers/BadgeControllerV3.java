@@ -38,11 +38,7 @@ public class BadgeControllerV3 {
         return badgeV3OutputMapper.toDTO(badgeService.findById(id));
     }
 
-    @Secured("ROLE_ADMIN")
-    @QueryMapping("findBadgeByCommunityEvent")
-    public List<BadgeV3Output> getBadgesCommunityEvent(@Argument String communityEventId) {
-        return badgeV3OutputMapper.toDTO(badgeService.findByCommunityEvent(communityEventId));
-    }
+    
     @Secured("ROLE_ADMIN" )
     @MutationMapping("addBadgeToUser")
     public Boolean addBadgeToUser(@Argument String userEmail, @Argument String badgeId) {
