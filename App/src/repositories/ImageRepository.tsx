@@ -28,6 +28,7 @@ export const uploadImage = async (imageUri: string): Promise<string> => {
     const response = await axios.post(uri + "/images/", formData, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
       },
     });
 
