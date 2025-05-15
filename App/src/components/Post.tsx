@@ -1,7 +1,13 @@
-import { View, Image, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
 import React from "react";
 import { Post as PostDomain } from "../utils/Post";
 import Icon from "react-native-vector-icons/Ionicons";
+import Picture from "./Picture";
 
 type Props = {
   post: PostDomain;
@@ -11,20 +17,19 @@ const Post = ({ post }: Props) => {
   return (
     <View className="bg-[#E4D8E9] flex-row rounded-xl m-5">
       <TouchableWithoutFeedback>
-        <Image
-          source={{ uri: post.image }}
+        <Picture
+          image={post.image}
+          size={281}
           height={500}
-          width={281}
-          className="rounded-xl"
+          style="rounded-xl"
         />
       </TouchableWithoutFeedback>
       <View className="flex-col m-3">
         <TouchableOpacity>
-          <Image
-            source={{ uri: post.image }}
-            height={53}
-            width={53}
-            className="rounded-full border-2 border-[#7B5BF2]"
+          <Picture
+            image={post.user?.image}
+            size={53}
+            style="rounded-full border-2 border-[#7B5BF2]"
           />
         </TouchableOpacity>
         <TouchableOpacity>

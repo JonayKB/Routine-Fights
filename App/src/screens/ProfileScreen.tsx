@@ -22,7 +22,7 @@ import {
 import { convertQuantityToString } from "../utils/Utils";
 import ProfilePost from "../components/ProfilePost";
 import FollowCount from "../components/FollowCount";
-import ProfilePicture from "../components/ProfilePicture";
+import Picture from "../components/Picture";
 import ProfileNavigation from "../components/ProfileNavigation";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
@@ -113,7 +113,11 @@ const ProfileScreen = ({ navigation, route }: Props) => {
             </TouchableOpacity>
           )}
           <View className="m-5 items-center">
-            <ProfilePicture image={user.image} size={103} />
+            <Picture
+              image={user.image}
+              size={103}
+              style="rounded-full border-2 border-[#4B0082] filter invert"
+            />
             {/* <View
             style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
             className="-mt-4 w-10 rounded-xl justify-center items-center border-2 border-white"

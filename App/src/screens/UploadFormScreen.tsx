@@ -41,11 +41,11 @@ const UploadFormScreen = (props: Props) => {
 
   const createPost = async () => {
     try {
-      // const imageName = await uploadImage(uri);
-      // console.log(imageName); // Debugging line
+      const imageName = await uploadImage(uri);
+      console.log(imageName); // Debugging line
       const response = await uploadPost(
         categories.filter((c: Categories) => c.value === category)[0]?.value,
-        "2025-05-15T08-28-52.852Z.png"
+        imageName
       );
       if (response) {
         Alert.alert("Post created");

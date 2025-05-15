@@ -6,12 +6,11 @@ import Icon from "react-native-vector-icons/Ionicons";
 import ProfileStackNavigation from "./ProfileStackNavigation";
 import UploadFormScreen from "../screens/UploadFormScreen";
 import ImageContextProvider from "../contexts/ImageContextProvider";
-import { Image } from "react-native";
-import { uri } from "../utils/Utils";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import { UserOut } from "../utils/User";
 import { getOwnUserImage } from "../repositories/UserRepository";
 import HomeStackNavigation from "./HomeStackNavigation";
+import Picture from "../components/Picture";
 
 type Props = {};
 
@@ -106,14 +105,10 @@ const MainTabNavigation = (props: Props) => {
           component={ProfileStackNavigation}
           options={{
             tabBarIcon: ({ focused }) => (
-              <Image
-                source={{
-                  uri: uri + "/images/" + image,
-                  headers: { Authorization: `Bearer ${token}` },
-                }}
-                width={32}
-                height={32}
-                className={`rounded-full ${
+              <Picture
+                image={image}
+                size={32}
+                style={`rounded-full ${
                   focused && "border-2 border-[#7B5BF2]"
                 } filter invert`}
               />
