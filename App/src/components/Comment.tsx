@@ -10,7 +10,7 @@ type Props = {
 
 const Comment = ({ navigation, comment }: Props) => {
   return (
-    <View className="p-4 border-b border-gray-300">
+    <View className="bg-[#F1FEFC] mt-5 w-11/12 mx-auto rounded-xl p-2 flex-row">
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("ProfileStackNavigation", {
@@ -25,9 +25,18 @@ const Comment = ({ navigation, comment }: Props) => {
           style="rounded-full border-2 border-[#4B0082]"
         />
       </TouchableOpacity>
-      <Text className="text-lg font-bold">{comment.user?.username}</Text>
-      <Text className="text-gray-700">{comment.message}</Text>
-      <Text className="text-gray-700">{comment.createdAt}</Text>
+      <View className="ml-4">
+        <Text className="text-black text-2xl font-bold">
+          {comment.user?.username}
+        </Text>
+        <Text className="text-black text-lg mt-2">{comment.message}</Text>
+        <View className="flex-row justify-between mt-2">
+          <Text className="text-black">{comment.createdAt.slice(12, 16)}</Text>
+          <Text className="text-black ml-2">
+            {comment.createdAt.slice(0, 10)}
+          </Text>
+        </View>
+      </View>
     </View>
   );
 };
