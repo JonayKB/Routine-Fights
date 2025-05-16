@@ -50,7 +50,7 @@ class CommentServiceTest {
         expectedComment.setUser(new User());
         expectedComment.setCreatedAt(LocalDateTime.now());
         expectedComment.setReplingComment(null);
-        when(commentRepository.comment(any(Comment.class))).thenReturn(expectedComment);
+        when(commentRepository.comment(any(),any(),any(),any())).thenReturn(expectedComment);
 
         Comment comment = commentService.save(MESSAGE, new User(), POST_ID, null);
 
@@ -86,7 +86,7 @@ class CommentServiceTest {
         expectedComment.setUser(new User());
         expectedComment.setCreatedAt(LocalDateTime.now());
         expectedComment.setReplingComment(replingComment);
-        when(commentRepository.comment(any(Comment.class))).thenReturn(expectedComment);
+        when(commentRepository.comment(any(),any(),any(),any())).thenReturn(expectedComment);
 
         Comment comment = commentService.save(MESSAGE, new User(), POST_ID, "replingId");
 
