@@ -44,10 +44,14 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [posts, setPosts] = useState<PostDomain[]>([]);
 
   useEffect(() => {
+    fetchUser();
+  }, [route.params?.email]);
+
+  useEffect(() => {
     if (profileLoad) {
       fetchUser();
     }
-  }, [route.params?.email, profileLoad]);
+  }, [profileLoad]);
 
   const fetchUser = async () => {
     try {
@@ -169,7 +173,14 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       </ScrollView>
 
       <FlatList
-        refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={load}
+            onRefresh={() => {
+              /**TODO: searchPosts*/
+            }}
+          />
+        }
         style={{ width: "100%" }}
         data={posts}
         renderItem={({ item }) => {

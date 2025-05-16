@@ -31,8 +31,7 @@ const RegisterScreen = ({ navigation, route }: Props) => {
     if (confirmPassword !== userIn.password) {
       return Alert.alert("Passwords do not match");
     }
-
-    // TODO: If any unique field is found on another user in the database, return an error
+    
     try {
       await register(userIn);
     } catch (error) {

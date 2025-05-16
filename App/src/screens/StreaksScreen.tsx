@@ -38,19 +38,33 @@ const StreaksScreen = ({ navigation, route }: Props) => {
 
   useEffect(() => {
     fetchActivities();
-  }, [load === true]);
+  }, []);
+
+  useEffect(() => {
+    if (load) {
+      fetchActivities();
+    }
+  }, [load]);
 
   const fetchActivities = async () => {
-    const list = await getSubscribedActivities();
-    list.push(addActivity);
-    setActivities(list);
-  };
-  
-  const reload = () => {
-    setLoad(true);
-    setTimeout(() => {
+    try {
+      const list = await getSubscribedActivities();
+      list.push(addActivity);
+      setActivities(list);
+    } catch (error) {
+      console.error("Error fetching activities:", error);
+    } finally {
       setLoad(false);
-    }, 1000);
+    }
+  };
+
+  const deleteActivity = async (id: string) => {
+    try {
+      await unsubscribeActivity(id);
+      setLoad(true);
+    } catch (error) {
+      console.error("Error unsubscribing activity:", error);
+    }
   };
 
   return (
@@ -60,7 +74,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
       <View className="items-center w-full">
         <FlatList
           refreshControl={
-            <RefreshControl refreshing={load} onRefresh={reload} />
+            <RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />
           }
           style={{ width: "100%" }}
           data={activities}
@@ -81,10 +95,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
                     name={item.name}
                     description={item.description}
                     streak={item.streak}
-                    unsubscribeFunction={async () => {
-                      await unsubscribeActivity(item.id);
-                      reload();
-                    }}
+                    unsubscribeFunction={() => deleteActivity(item.id)}
                   />
                 )}
               </View>

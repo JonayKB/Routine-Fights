@@ -21,6 +21,10 @@ const ActivitiesScreen = ({ navigation }: Props) => {
   const { darkmode } = useSettingsContext();
 
   useEffect(() => {
+      fetchActivities();
+  }, []);
+
+  useEffect(() => {
     if (load || isLoadingMore) {
       fetchActivities();
     }

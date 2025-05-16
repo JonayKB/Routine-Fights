@@ -28,6 +28,10 @@ const HomeScreen = ({ navigation }: Props) => {
   const lastDate = useRef(new Date().toISOString().slice(0, 19));
 
   useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  useEffect(() => {
     if (load || isLoadingMore) {
       fetchPosts();
     }
