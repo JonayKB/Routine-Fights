@@ -61,7 +61,7 @@ public class UserControllerV3 {
             logger.log(Level.WARNING, "(findAll) Error finding users: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding users");
         }
-        return userOutputMapper.tOutputDTOV3(users);
+        return userOutputMapper.toDTO(users);
     }
 
     @Secured("ROLE_ADMIN")
@@ -74,7 +74,7 @@ public class UserControllerV3 {
             logger.log(Level.WARNING, "(findById) Error finding user: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding user");
         }
-        return userOutputMapper.tOutputDTOV3(user);
+        return userOutputMapper.toDTO(user);
     }
 
     @Secured("ROLE_ADMIN")
@@ -91,7 +91,7 @@ public class UserControllerV3 {
             logger.log(Level.WARNING, "(post) Unable to create the user: {0}", e.getMessage());
             throw new UserSaveException("Unable to create the user");
         }
-        return userOutputMapper.tOutputDTOV3(userDomain);
+        return userOutputMapper.toDTO(userDomain);
     }
 
     @Secured("ROLE_ADMIN")
@@ -108,7 +108,7 @@ public class UserControllerV3 {
             logger.log(Level.WARNING, "(put) Unable to update the user: {0}", e.getMessage());
             throw new UserUpdateException("Unable to update the user");
         }
-        return userOutputMapper.tOutputDTOV3(userDomain);
+        return userOutputMapper.toDTO(userDomain);
     }
 
     @Secured("ROLE_ADMIN")

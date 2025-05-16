@@ -1,7 +1,7 @@
 package es.iespuertodelacruz.routinefights.activity.domain.ports.primary;
 
 import java.util.List;
-
+import java.util.Set;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 
@@ -16,6 +16,8 @@ public interface IActivityService {
 
     List<Activity> getSubscribedActivitiesWithStreak(String userID);
     List<Activity> getSubscribedActivitiesWithStreak(String userID, String activityName);
+
+    Set<String> findAllImages();
 
 
 }

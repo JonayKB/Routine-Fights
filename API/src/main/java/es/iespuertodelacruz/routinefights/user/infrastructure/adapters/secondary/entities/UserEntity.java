@@ -38,7 +38,7 @@ public class UserEntity extends UserCommon {
     private List<ReportEntity> reports;
 
     @Relationship(type = "Posted", direction = Relationship.Direction.OUTGOING)
-    private List<ReportEntity> posts;
+    private List<PostEntity> posts;
 
     @Relationship(type = "Commented", direction = Relationship.Direction.OUTGOING)
     private List<CommentEntity> comments;
@@ -98,7 +98,7 @@ public class UserEntity extends UserCommon {
     }
 
     public UserEntity(String id, List<UserEntity> followers, List<UserEntity> following, List<ReportEntity> reports,
-            List<ReportEntity> posts, List<CommentEntity> comments, List<PostEntity> likedPosts,
+            List<PostEntity> posts, List<CommentEntity> comments, List<PostEntity> likedPosts,
             List<MeetingEntity> meetings, List<ActivityEntity> createdActivities, TeamEntity team,
             List<BadgeEntity> badges, List<ActivityEntity> activities) {
         this.id = id;
@@ -123,11 +123,11 @@ public class UserEntity extends UserCommon {
         this.reports = reports;
     }
 
-    public List<ReportEntity> getPosts() {
+    public List<PostEntity> getPosts() {
         return this.posts;
     }
 
-    public void setPosts(List<ReportEntity> posts) {
+    public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
     }
 
@@ -212,7 +212,7 @@ public class UserEntity extends UserCommon {
         return this;
     }
 
-    public UserEntity posts(List<ReportEntity> posts) {
+    public UserEntity posts(List<PostEntity> posts) {
         setPosts(posts);
         return this;
     }

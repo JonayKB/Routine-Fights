@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondar
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -99,6 +100,12 @@ public interface IPostEntityRepository extends Neo4jRepository<PostEntity, Strin
       @Param("endDate") LocalDateTime endDate);
 
   @Query("""
+      MATCH (p:Post)
+      RETURN p.image
+      """)
+  Set<String> findAllImages();
+
+  @Query("""
       MATCH (a:Activity)<-[rr:`Related-To`]-(p:Post)<-[r:Posted]-(u:User)
       WHERE elementId(a)= $activityID
         AND p.createdAt >= $startDate
@@ -109,12 +116,6 @@ public interface IPostEntityRepository extends Neo4jRepository<PostEntity, Strin
   Integer getRangeCountByActivity(@Param("activityID") String activityID, @Param("userID") String userID,
       @Param("startDate") LocalDateTime startDate,
       @Param("endDate") LocalDateTime endDate);
-
-  @Query("""
-      MATCH (p:Post)
-      RETURN p.image
-      """)
-  List<String> findAllImages();
 
   @Query("""
       MATCH (u:User)-[:Posted]->(p:Post)-[:`Related-To`]->(a:Activity)

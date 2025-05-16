@@ -6,12 +6,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.mappers.ActivityEntityMapper;
+import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.secondary.mappers.CommentEntityMapper;
 import es.iespuertodelacruz.routinefights.comment.domain.Comment;
 import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.secondary.entities.CommentEntity;
 import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.mappers.IUserEntityMapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        uses = { IUserEntityMapper.class, CommentEntityMapper.class, ActivityEntityMapper.class })
 public interface PostEntityMapper {
     List<PostEntity> toEntity(List<Post> posts);
 
