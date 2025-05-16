@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://cxf.apache.org/jaxws https://cxf.apache.org/schemas/jaxws.xsd">
+
+    <!-- Definicion del servicio -->
+    <jaxws:endpoint id="imageSOAPEndpoint"
+        implementor="#imageSOAPImpl"
+        address="/images">
+        <jaxws:inInterceptors>
+            <ref bean="cxfAuthInterceptor" />
+        </jaxws:inInterceptors>
+
+    </jaxws:endpoint>
+
+    <!-- Bean del servicio implementado -->
+    <bean id="imageSOAPImpl"
+        class="es.iespuertodelacruz.routinefights.shared.soap.ImageSOAPImpl" />
+
+    <bean id="cxfAuthInterceptor"
+        class="es.iespuertodelacruz.routinefights.shared.security.CxfAuthInterceptor" />
+
+
+</beans>
