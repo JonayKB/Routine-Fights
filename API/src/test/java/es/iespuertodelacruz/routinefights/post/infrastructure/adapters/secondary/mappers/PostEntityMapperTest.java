@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
@@ -17,7 +19,7 @@ import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
-
+@SpringBootTest
 class PostEntityMapperTest {
 
     private static final String MAIN_USER_ID = "1L";
@@ -49,7 +51,8 @@ class PostEntityMapperTest {
     private static final String POST2_ID = "101L";
 
     private final LocalDateTime now = LocalDateTime.now();
-    private final PostEntityMapperImpl mapper = new PostEntityMapperImpl();
+    @Autowired
+    private PostEntityMapper mapper;
 
     private User createUser() {
         User user = new User();
