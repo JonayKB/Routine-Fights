@@ -26,7 +26,7 @@ const Upload = ({ navigation }: Props) => {
       >
         <Icon name="camera" size={50} color="#4B0082" />
         <Text className="text-black font-bold text-xl ml-3">
-          {translations[language || 'en-EN'].screens.UploadForm.takeFromCamera}
+          {translations[language || "en-EN"].screens.UploadForm.takeFromCamera}
         </Text>
       </TouchableOpacity>
 
@@ -35,14 +35,19 @@ const Upload = ({ navigation }: Props) => {
         onPress={() => {
           launchImageLibrary({ mediaType: "photo" }, ({ assets }) => {
             if (assets) {
-              navigation.navigate("ImageCrop", { uri: assets[0]?.uri });
+              navigation.navigate("ImageCrop", {
+                uri: assets[0]?.uri,
+              });
             }
           });
         }}
       >
         <Icon name="image" size={50} color="#4B0082" />
         <Text className="text-black font-bold text-xl ml-3">
-          {translations[language || 'en-EN'].screens.UploadForm.selectFromLibrary}
+          {
+            translations[language || "en-EN"].screens.UploadForm
+              .selectFromLibrary
+          }
         </Text>
       </TouchableOpacity>
     </View>

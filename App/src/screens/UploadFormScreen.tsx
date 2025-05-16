@@ -18,13 +18,15 @@ type Categories = {
 };
 
 const UploadFormScreen = (props: Props) => {
-  const { uri, setUri } = useImageContext();
+  const { uri, setUri, setWidth, setHeight } = useImageContext();
   const [categories, setCategories] = useState<Categories[]>([]);
   const [category, setCategory] = useState<string>(null);
   const { language, darkmode } = useSettingsContext();
 
   useEffect(() => {
     fetchCategories();
+    setWidth(9);
+    setHeight(16);
   }, []);
 
   const fetchCategories = async () => {
@@ -59,7 +61,11 @@ const UploadFormScreen = (props: Props) => {
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}] justify-center items-center`}>
+    <View
+      className={`flex-1 bg-[#${
+        darkmode ? "2C2C2C" : "CCCCCC"
+      }] justify-center items-center`}
+    >
       <View className="bg-[#E4D8E9] rounded-lg w-10/12">
         {uri ? (
           <View className="items-center">

@@ -5,6 +5,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 import MainTabNavigation from "./MainTabNavigation";
 import TokenContextProvider from "../contexts/TokenContextProvider";
 import SettingsContextProvider from "../contexts/SettingsContextProvider";
+import ImageContextProvider from "../contexts/ImageContextProvider";
 
 type Props = {};
 
@@ -20,14 +21,19 @@ const LoginStackNavigation = (props: Props) => {
   return (
     <SettingsContextProvider>
       <TokenContextProvider>
-        <Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen
-            name="MainTabNavigation"
-            component={MainTabNavigation}
-          />
-        </Stack.Navigator>
+        <ImageContextProvider>
+          <Stack.Navigator
+            id={undefined}
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen
+              name="MainTabNavigation"
+              component={MainTabNavigation}
+            />
+          </Stack.Navigator>
+        </ImageContextProvider>
       </TokenContextProvider>
     </SettingsContextProvider>
   );

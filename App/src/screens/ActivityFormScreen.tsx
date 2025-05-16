@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Text, ScrollView, Alert } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { useImageContext } from "../contexts/ImageContextProvider";
@@ -17,9 +17,14 @@ type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityForm">;
 
 const ActivityFormScreen = (props: Props) => {
   const { language, darkmode } = useSettingsContext();
-  const { uri, setUri } = useImageContext();
+  const { uri, setUri, setWidth, setHeight } = useImageContext();
   const [activity, setActivity] = useState<Activity>({} as Activity);
   const [timeRate, setTimeRate] = useState("daily");
+
+  useEffect(() => {
+    setWidth(9);
+    setHeight(16);
+  }, []);
 
   const timeRates = [
     {
