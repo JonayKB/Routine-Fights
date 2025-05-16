@@ -22,9 +22,10 @@ const CommentsScreen = (props: Props) => {
   const [load, setLoad] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log("CommentsScreen: ", props.route.params.postID);
-    fetchComments();
-  }, [load === true, props.route.params.postID]);
+    if (load) {
+      fetchComments();
+    }
+  }, [load, props.route.params.postID]);
 
   const fetchComments = async () => {
     try {
