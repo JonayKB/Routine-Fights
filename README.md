@@ -20,6 +20,9 @@
     - [Queries](#queries)
     - [Mutations](#mutations)
   - [REST](#rest)
+    - [AUTH](#auth)
+    - [IMAGES](#images)
+    - [GRAPH](#graph)
   - [SOAP](#soap)
 - [Diagrams](#diagrams)
 - [Design](#design)
@@ -163,6 +166,43 @@ mvn clean spring-boot:run
 | `addBadgeToUsers(userEmail[], badgeId)`       | Awards a badge to multiple users, returning an array of success flags.                                    |
 
 ### REST
+
+#### AUTH
+
+| Method | Path                           | Parameters                                                                    | Request Body (JSON)                                                                                                                                                               | Description                                 |
+| ------ | ------------------------------ | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| POST   | `/auth/register`               | —                                                                             | <code>{"username": "string","email": "string","password": "string","nationality": "string","phoneNumber": "string","image": "string"}</code>
+ | Create a new user account.                  |
+| POST   | `/auth/login`                  | **email** (query, string, required)
+**password** (query, string, required) | —                                                                                                                                                                                 | Authenticate a user and return a JWT token. |
+| GET    | `/auth/verify/{email}/{token}` | **email** (path, string, required)
+**token** (path, string, required)      | —                                                                                                                                                                                 | Verify user’s email with a token.           |
+
+---
+
+#### IMAGES
+
+| Method | Path                  | Parameters                             | Request Body (multipart/form-data) | Description                    |
+| ------ | --------------------- | -------------------------------------- | ---------------------------------- | ------------------------------ |
+| POST   | `/images/`            | —                                      | **file** (binary, required)        | Upload an image file.          |
+| GET    | `/images/{imageName}` | **imageName** (path, string, required) | —                                  | Retrieve an image by filename. |
+
+---
+
+#### GRAPH
+
+*All `/graphs` endpoints return JSON chart‑data objects.*
+
+| Method | Path                          | Parameters | Request Body | Description                                     |
+| ------ | ----------------------------- | ---------- | ------------ | ----------------------------------------------- |
+| GET    | `/graphs/users/points`        | —          | —            | Total points per user (for leaderboard charts). |
+| GET    | `/graphs/users/creation`      | —          | —            | User sign‑up counts over time.                  |
+| GET    | `/graphs/posts/points`        | —          | —            | Points or likes per post over time.             |
+| GET    | `/graphs/posts/creation`      | —          | —            | Post creation counts over time.                 |
+| GET    | `/graphs/activities/timerate` | —          | —            | Activity duration/frequency statistics.         |
+
+---
+
 
 ### SOAP
 
