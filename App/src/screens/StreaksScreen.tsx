@@ -37,14 +37,15 @@ const StreaksScreen = ({ navigation, route }: Props) => {
   ]);
 
   useEffect(() => {
-    const fetchActivities = async () => {
-      const list = await getSubscribedActivities();
-      list.push(addActivity);
-      setActivities(list);
-    };
     fetchActivities();
   }, [load === true]);
 
+  const fetchActivities = async () => {
+    const list = await getSubscribedActivities();
+    list.push(addActivity);
+    setActivities(list);
+  };
+  
   const reload = () => {
     setLoad(true);
     setTimeout(() => {

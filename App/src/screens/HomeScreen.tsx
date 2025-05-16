@@ -13,6 +13,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { getPosts, getPostsFollowing } from "../repositories/PostRepository";
+import { limit } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
@@ -21,47 +22,52 @@ const HomeScreen = ({ navigation }: Props) => {
     "following"
   );
   const [load, setLoad] = useState<boolean>(false);
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [posts, setPosts] = useState<PostDomain[]>([]);
   const { darkmode } = useSettingsContext();
   const lastDate = useRef(new Date().toISOString().slice(0, 19));
 
   useEffect(() => {
-    switch (type) {
-      case "following":
-        fetchPostsFollowing();
-        break;
-      case "home":
-        fetchPosts();
-        break;
-      case "category":
-        break;
+    if (load || isLoadingMore) {
+      fetchPosts();
     }
-  }, [load === true, type]);
+  }, [load, isLoadingMore]);
 
-  const fetchPostsFollowing = async () => {
-    try {
-      const response = await getPostsFollowing(lastDate.current);
-      setPosts([...posts, ...response]);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    }
-  };
+  useEffect(() => {
+    reload();
+  }, [type]);
 
   const fetchPosts = async () => {
     try {
-      const response = await getPosts(lastDate.current);
-      console.log(lastDate.current, posts.length);
-      setPosts([...posts, ...response]);
+      let response = [];
+      switch (type) {
+        case "following":
+          response = await getPostsFollowing(lastDate.current);
+          break;
+        case "home":
+          response = await getPosts(lastDate.current);
+          break;
+        case "category":
+          break;
+      }
+      setPosts(isLoadingMore ? [...posts, ...response] : response);
     } catch (error) {
       console.error("Error fetching posts:", error);
+    } finally {
+      setLoad(false);
+      setIsLoadingMore(false);
     }
   };
 
   const reload = () => {
+    lastDate.current = new Date().toISOString().slice(0, 19);
     setLoad(true);
-    setTimeout(() => {
-      setLoad(false);
-    }, 1000);
+  };
+
+  const loadMore = () => {
+    if (isLoadingMore || posts.length === 0) return;
+    lastDate.current = posts[posts.length - 1].createdAt;
+    setIsLoadingMore(true);
   };
 
   return (
@@ -80,24 +86,15 @@ const HomeScreen = ({ navigation }: Props) => {
       <View className="items-center">
         <FlatList
           refreshControl={
-            <RefreshControl
-              refreshing={load}
-              onRefresh={() => {
-                lastDate.current = new Date().toISOString().slice(0, 19);
-                setPosts([]);
-                reload();
-              }}
-            />
+            <RefreshControl refreshing={load} onRefresh={reload} />
           }
           data={posts}
           renderItem={({ item }) => {
             return <Post post={item} navigation={navigation} />;
           }}
           keyExtractor={(item) => item.id}
-          onMomentumScrollEnd={() => {
-            lastDate.current = posts[posts.length - 1].createdAt;
-            reload();
-          }}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.5}
         />
       </View>
     </View>

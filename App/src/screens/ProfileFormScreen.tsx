@@ -15,24 +15,25 @@ const ProfileFormScreen = ({ navigation }: Props) => {
   const [user, setUser] = useState<UserIn>({} as UserIn);
 
   useEffect(() => {
-    const fetchOwnUser = async () => {
-      try {
-        const response: UserOut = await getOwnUser();
-        const ownUser: UserIn = {
-          username: response.username,
-          email: response.email,
-          nationality: response.nationality,
-          phoneNumber: response.phoneNumber,
-          password: "",
-          image: "null.jpg",
-        };
-        setUser(ownUser);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchOwnUser();
   }, []);
+
+  const fetchOwnUser = async () => {
+    try {
+      const response: UserOut = await getOwnUser();
+      const ownUser: UserIn = {
+        username: response.username,
+        email: response.email,
+        nationality: response.nationality,
+        phoneNumber: response.phoneNumber,
+        password: "",
+        image: "null.jpg",
+      };
+      setUser(ownUser);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const updateProfile = async () => {
     try {

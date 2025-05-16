@@ -44,26 +44,30 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [posts, setPosts] = useState<PostDomain[]>([]);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        let user: UserOut;
-        if (route.params?.email) {
-          user = await getUser(route.params?.email);
-        } else {
-          user = await getOwnUser();
-        }
+    if (profileLoad) {
+      fetchUser();
+    }
+  }, [route.params?.email, profileLoad]);
 
-        setUser(user);
-        setFollowers(convertQuantityToString(user.followers));
-        setFollowing(convertQuantityToString(user.following));
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        Alert.alert("Error", error.response.data);
+  const fetchUser = async () => {
+    try {
+      let user: UserOut;
+      if (route.params?.email) {
+        user = await getUser(route.params?.email);
+      } else {
+        user = await getOwnUser();
       }
-    };
 
-    fetchUser();
-  }, [route.params?.email, profileLoad === true]);
+      setUser(user);
+      setFollowers(convertQuantityToString(user.followers));
+      setFollowing(convertQuantityToString(user.following));
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      Alert.alert("Error", error.response.data);
+    } finally {
+      setProfileLoad(false);
+    }
+  };
 
   const handleFollow = async () => {
     try {
@@ -88,20 +92,6 @@ const ProfileScreen = ({ navigation, route }: Props) => {
     }
   };
 
-  const reload = () => {
-    setLoad(true);
-    setTimeout(() => {
-      setLoad(false);
-    }, 1000);
-  };
-
-  const profileReload = () => {
-    setProfileLoad(true);
-    setTimeout(() => {
-      setProfileLoad(false);
-    }, 1000);
-  };
-
   return (
     <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
       {selectedPost && (
@@ -110,7 +100,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
             <View className="flex-1 bg-black opacity-80 w-full h-full absolute"></View>
           </TouchableWithoutFeedback>
           <View className="absolute justify-center h-full">
-            <Post post={selectedPost} navigation={navigation}/>
+            <Post post={selectedPost} navigation={navigation} />
           </View>
         </View>
       )}
@@ -122,7 +112,10 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       <ScrollView
         className="flex-1"
         refreshControl={
-          <RefreshControl refreshing={profileLoad} onRefresh={profileReload} />
+          <RefreshControl
+            refreshing={profileLoad}
+            onRefresh={() => setProfileLoad(true)}
+          />
         }
       >
         <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">

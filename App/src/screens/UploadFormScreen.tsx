@@ -24,20 +24,21 @@ const UploadFormScreen = (props: Props) => {
   const { language, darkmode } = useSettingsContext();
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getSubscribedActivities();
-        const categories: Categories[] = response.map((category: Activity) => ({
-          label: category.name,
-          value: category.id,
-        }));
-        setCategories(categories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
     fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await getSubscribedActivities();
+      const categories: Categories[] = response.map((category: Activity) => ({
+        label: category.name,
+        value: category.id,
+      }));
+      setCategories(categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
   const createPost = async () => {
     try {

@@ -12,7 +12,7 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { getComments } from "../repositories/CommentRepository";
 import { Comment } from "../utils/Comment";
 import Picture from "../components/Picture";
-import ProfileNavigation from '../components/ProfileNavigation';
+import ProfileNavigation from "../components/ProfileNavigation";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Comments">;
 
@@ -32,21 +32,18 @@ const CommentsScreen = (props: Props) => {
       setComments(response);
     } catch (error) {
       console.error("Error fetching comments:", error);
-    }
-  };
-
-  const reload = () => {
-    setLoad(true);
-    setTimeout(() => {
+    } finally {
       setLoad(false);
-    }, 1000);
+    }
   };
 
   return (
     <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
       <ProfileNavigation message="" navigation={props.navigation} />
       <FlatList
-        refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
+        refreshControl={
+          <RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />
+        }
         style={{ width: "100%" }}
         data={comments}
         renderItem={({ item }) => (
