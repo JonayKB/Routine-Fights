@@ -172,6 +172,11 @@ type PostOutputV2 {
   updatedAt: String
   deletedAt: String
   user: UserOutputV2
+  streak: Int
+  activity: ActivityOutputV2
+  comments: Int
+  likes: Int
+  isLiked: Boolean
 }
 
 input UserInputV3 {
@@ -214,7 +219,7 @@ input UserInputV2 {
   password: String
   nationality: String!
   phoneNumber: String!
-  image: String
+  image: String!
 }
 
 type UserOutputV2 {
