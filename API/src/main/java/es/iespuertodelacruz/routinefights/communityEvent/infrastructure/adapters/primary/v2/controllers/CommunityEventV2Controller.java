@@ -24,19 +24,19 @@ public class CommunityEventV2Controller {
         this.communityEventOutputV2Mapper = communityEventOutputV2Mapper;
     }
 
-    @Secured({ "ROLE_USER" })
+    @Secured({ "ROLE_USER","ROLE_ADMIN" })
     @QueryMapping("getActiveCommunityEvents")
     public List<CommunityEventOutputV2> getActiveCommunityEvents() {
         return communityEventOutputV2Mapper.toDto(communityEventService.getActiveCommunityEvent());
     }
 
-    @Secured({ "ROLE_USER" })
+    @Secured({ "ROLE_USER","ROLE_ADMIN" })
     @QueryMapping("getNearestCommunityEvent")
     public CommunityEventOutputV2 getNearestCommunityEvent() {
         return communityEventOutputV2Mapper.toDto(communityEventService.getNearestCommunityEvent());
     }
 
-    @Secured({ "ROLE_USER" })
+    @Secured({ "ROLE_USER","ROLE_ADMIN" })
     @QueryMapping("getCommunityEventPointsById")
     public Integer getCommunityEventPointsById(@Argument String id) {
         return communityEventService.getCommunityEventPointsById(id);
