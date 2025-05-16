@@ -18,6 +18,7 @@ export const getPostsFollowing = async (
                     id
                     image
                     updatedAt
+                    createdAt
                     streak
                     comments
                     likes
@@ -58,6 +59,7 @@ export const getPosts = async (
                     id
                     image
                     updatedAt
+                    createdAt
                     streak
                     comments
                     likes

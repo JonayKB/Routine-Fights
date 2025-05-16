@@ -19,14 +19,13 @@ const ActivitiesScreen = ({ navigation }: Props) => {
   const { darkmode } = useSettingsContext();
 
   useEffect(() => {
-    pageNum.current = 1;
     const fetchActivities = async () => {
       try {
         const response = await getActivitiesNotSubscribed(
           pageNum.current,
           searchText
         );
-        setActivities(response);
+        setActivities([...activities, ...response]);
       } catch (error) {
         console.error("Error fetching activities:", error);
       }
@@ -41,24 +40,20 @@ const ActivitiesScreen = ({ navigation }: Props) => {
     }, 1000);
   };
 
-  const loadMore = async () => {
-    pageNum.current += 1;
-    try {
-      const response = await getActivitiesNotSubscribed(
-        pageNum.current,
-        searchText
-      );
-      setActivities([...activities, ...response]);
-    } catch (error) {
-      console.error("Error fetching activities:", error);
-    }
-  };
-
   return (
     <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
       <SearchBar searchFunction={(text) => setSearchText(text)} />
       <FlatList
-        refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={load}
+            onRefresh={() => {
+              pageNum.current = 1;
+              setActivities([]);
+              reload();
+            }}
+          />
+        }
         style={{ width: "100%" }}
         data={activities}
         renderItem={({ item }) => {
@@ -73,7 +68,10 @@ const ActivitiesScreen = ({ navigation }: Props) => {
         }}
         keyExtractor={(item) => item.id}
         numColumns={2}
-        onEndReached={loadMore}
+        onMomentumScrollEnd={() => {
+          pageNum.current += 1;
+          reload();
+        }}
       />
       <AddButton navigateFunction={() => navigation.navigate("ActivityForm")} />
     </View>
