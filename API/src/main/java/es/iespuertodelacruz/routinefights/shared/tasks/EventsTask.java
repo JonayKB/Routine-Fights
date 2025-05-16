@@ -24,7 +24,7 @@ public class EventsTask {
     }
 
     @Scheduled(cron = "0 0 3 * * *")
-    private List<User> giveTodayBadges() {
+    protected List<User> giveTodayBadges() {
         CommunityEvent communityEvent = communityEventService.getCommunityEventEndsToday();
         List<User> usersParticipated = communityEventService.getUsersParticipatingInCommunityEventEndsToday();
 
