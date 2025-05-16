@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import es.iespuertodelacruz.routinefights.activity.domain.ports.primary.IActivityService;
+import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.primary.ICommunityEventService;
 import es.iespuertodelacruz.routinefights.post.domain.ports.primary.IPostService;
 import es.iespuertodelacruz.routinefights.shared.services.ImageService;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
@@ -19,11 +21,16 @@ public class ImagesTasks {
     private ImageService imageService;
     private IUserService userService;
     private IPostService postService;
+    private ICommunityEventService communityEventService;
+    private IActivityService activityService;
 
-    public ImagesTasks(ImageService imageService, IUserService userService, IPostService postService) {
+    public ImagesTasks(ImageService imageService, IUserService userService, IPostService postService,
+            ICommunityEventService communityEventService, IActivityService activityService) {
+        this.communityEventService = communityEventService;
         this.imageService = imageService;
         this.userService = userService;
         this.postService = postService;
+        this.activityService = activityService;
     }
 
     @Scheduled(cron = "0 0 3 * * MON")
@@ -36,8 +43,11 @@ public class ImagesTasks {
         List<String> images = new ArrayList<>(imageService.getAll());
         userService.findAllImages().forEach(images::remove);
         postService.findAllImages().forEach(images::remove);
+        communityEventService.findAllImages().forEach(images::remove);
+        activityService.findAllImages().forEach(images::remove);
 
-        //ADD COMUNITY EVENT, BADGES AND ACTIVITY IMAGES
+        // ADD ACTIVITY IMAGES
+        // CHANGE TO SET
         logger.log(Level.INFO, "Deleted not used images: {0} images going to be deleted", images.size());
         images.forEach(image -> imageService.delete(image));
         logger.log(Level.INFO, "Deleted images executed successfully at {0}", LocalDateTime.now());

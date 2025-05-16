@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
     private static final String BADGE_ID_1 = "B1";
     private static final String BADGE_ID_2 = "B2";
     private static final String IMAGE = "http://example.com/badge.png";
-    private static final String LEVEL = "Gold";
+    private static final Integer LEVEL = 3;
     private static final List<UserEntity> USERS = new ArrayList<>();
 
     private static final String CE_ID = "CE1";
@@ -36,40 +36,40 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
         badge.setId(BADGE_ID_1);
         badge.setImage(IMAGE);
         badge.setLevel(LEVEL);
-        badge.setUser(USERS);
-        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS);
+        badge.setUsers(USERS);
+        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT, IMAGE);
         badge.setCommunityEvent(communityEvent);
         assertEquals(BADGE_ID_1, badge.getId());
         assertEquals(IMAGE, badge.getImage());
         assertEquals(LEVEL, badge.getLevel());
-        assertEquals(USERS, badge.getUser());
+        assertEquals(USERS, badge.getUsers());
         assertEquals(communityEvent, badge.getCommunityEvent());
     }
 
     @Test
      void testConstructorAndGetters() {
-        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS);
+        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT, IMAGE);
         BadgeEntity badge = new BadgeEntity(BADGE_ID_1, IMAGE, LEVEL, USERS, communityEvent);
         assertEquals(BADGE_ID_1, badge.getId());
         assertEquals(IMAGE, badge.getImage());
         assertEquals(LEVEL, badge.getLevel());
-        assertEquals(USERS, badge.getUser());
+        assertEquals(USERS, badge.getUsers());
         assertEquals(communityEvent, badge.getCommunityEvent());
     }
 
     @Test
      void testFluentMethods() {
-        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS);
+        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT, IMAGE);
         BadgeEntity badge = new BadgeEntity();
         badge.id(BADGE_ID_1)
              .image(IMAGE)
              .level(LEVEL)
-             .user(USERS)
+             .users(USERS)
              .communityEvent(communityEvent);
         assertEquals(BADGE_ID_1, badge.getId());
         assertEquals(IMAGE, badge.getImage());
         assertEquals(LEVEL, badge.getLevel());
-        assertEquals(USERS, badge.getUser());
+        assertEquals(USERS, badge.getUsers());
         assertEquals(communityEvent, badge.getCommunityEvent());
     }
 
@@ -91,7 +91,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
     @Test
      void testToString() {
-        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS);
+        CommunityEventEntity communityEvent = new CommunityEventEntity(CE_ID, CE_NAME, CE_TOTAL_REQUIRED, CE_CREATED_AT, CE_FINISH_DATE, CE_ACTIVITIES, CE_BADGES, CE_MEETINGS, CE_CREATED_AT, CE_FINISH_DATE, CE_CREATED_AT, IMAGE);
         BadgeEntity badge = new BadgeEntity(BADGE_ID_1, IMAGE, LEVEL, USERS, communityEvent);
         String expected = "{" +
                           " id='" + BADGE_ID_1 + "'" +

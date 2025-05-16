@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,7 +73,7 @@ class UserServiceTest {
 
     @Test
     void findAllImagesTest() {
-        when(userRepository.findAllImages()).thenReturn(new ArrayList<String>());
+        when(userRepository.findAllImages()).thenReturn(new HashSet<String>());
         assertNotNull(userService.findAllImages());
     }
 

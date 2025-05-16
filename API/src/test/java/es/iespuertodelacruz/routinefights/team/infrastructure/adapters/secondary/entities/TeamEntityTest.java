@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.team.infrastructure.adapters.secondar
 import org.junit.jupiter.api.Test;
 
 import es.iespuertodelacruz.routinefights.meeting.infrastructure.adapters.secondary.entities.MeetingEntity;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ class TeamEntityTest {
     private static final LocalDateTime UPDATED_AT = LocalDateTime.of(2023, 1, 2, 12, 0);
     private static final LocalDateTime DELETED_AT = LocalDateTime.of(2023, 1, 3, 12, 0);
     private static final List<MeetingEntity> MEETINGS = new ArrayList<>();
-    private static final List<MeetingEntity> CREATOR = new ArrayList<>();
+    private static final UserEntity CREATOR = new UserEntity();
 
     @Test
     void testSettersAndGetters() {

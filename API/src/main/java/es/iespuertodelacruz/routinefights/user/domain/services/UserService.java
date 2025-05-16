@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.user.domain.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,7 +101,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<String> findAllImages() {
+    public Set<String> findAllImages() {
         return userRepository.findAllImages();
     }
 

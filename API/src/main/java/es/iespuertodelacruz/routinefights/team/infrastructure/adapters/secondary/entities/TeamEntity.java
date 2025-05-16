@@ -9,6 +9,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 
 import es.iespuertodelacruz.routinefights.meeting.infrastructure.adapters.secondary.entities.MeetingEntity;
 import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,14 +27,14 @@ public class TeamEntity extends EntitiesTimestamps {
     @Relationship(type = "Has_Meeting", direction = Relationship.Direction.OUTGOING)
     private List<MeetingEntity> meetings;
 
-    @Relationship(type = "Belongs_To", direction = Relationship.Direction.INCOMING)
-    private List<MeetingEntity> creator;
+    @Relationship(type = "Owns", direction = Relationship.Direction.OUTGOING)
+    private UserEntity creator;
 
     public TeamEntity() {
     }
 
     public TeamEntity(String id, String name, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,
-            List<MeetingEntity> meetings, List<MeetingEntity> creator) {
+            List<MeetingEntity> meetings, UserEntity creator) {
         super(createdAt, updatedAt, deletedAt);
         this.id = id;
         this.name = name;
@@ -65,11 +66,11 @@ public class TeamEntity extends EntitiesTimestamps {
         this.meetings = meetings;
     }
 
-    public List<MeetingEntity> getCreator() {
+    public UserEntity getCreator() {
         return this.creator;
     }
 
-    public void setCreator(List<MeetingEntity> creator) {
+    public void setCreator(UserEntity creator) {
         this.creator = creator;
     }
 
@@ -98,7 +99,7 @@ public class TeamEntity extends EntitiesTimestamps {
         return this;
     }
 
-    public TeamEntity creator(List<MeetingEntity> creator) {
+    public TeamEntity creator(UserEntity creator) {
         setCreator(creator);
         return this;
     }
