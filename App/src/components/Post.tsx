@@ -12,6 +12,7 @@ import { likePost, unLikePost } from "../repositories/PostRepository";
 
 type Props = {
   post: PostDomain;
+  navigation: any;
 };
 
 const Post = (props: Props) => {
@@ -49,7 +50,14 @@ const Post = (props: Props) => {
         />
       </TouchableWithoutFeedback>
       <View className="flex-col m-3">
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            props.navigation.navigate("ProfileStackNavigation", {
+              screen: "Profile",
+              params: { email: post.user.email },
+            })
+          }
+        >
           <Picture
             image={post.user?.image}
             size={53}
@@ -63,12 +71,14 @@ const Post = (props: Props) => {
             color="#7B5BF2"
             className="mt-10"
           />
+          <Text className="text-black text-center text-lg">{post.likes}</Text>
         </TouchableOpacity>
-        <Text className="text-black text-center text-lg">{post.likes}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Comments", { postID: post.id })}>
           <Icon name="chatbox" size={53} color="#7B5BF2" className="mt-10" />
+          <Text className="text-black text-center text-lg">
+            {post.comments}
+          </Text>
         </TouchableOpacity>
-        <Text className="text-black text-center text-lg">{post.comments}</Text>
         <Icon name="flame" size={53} color="#E4007C" className="mt-32" />
         <Text className="text-black text-center text-lg">{post.streak}</Text>
       </View>

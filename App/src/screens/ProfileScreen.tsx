@@ -110,7 +110,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
             <View className="flex-1 bg-black opacity-80 w-full h-full absolute"></View>
           </TouchableWithoutFeedback>
           <View className="absolute justify-center h-full">
-            <Post post={selectedPost} />
+            <Post post={selectedPost} navigation={navigation}/>
           </View>
         </View>
       )}
@@ -162,10 +162,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
             {user.email !== email && (
               <TouchableOpacity
                 className="flex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
-                onPress={() => {
-                  handleFollow();
-                  console.log(user.email, email);
-                }}
+                onPress={handleFollow}
               >
                 <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
                   {user.isFollowing

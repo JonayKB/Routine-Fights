@@ -5,7 +5,7 @@ import {
   TouchableWithoutFeedback,
   Button,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -23,6 +23,7 @@ const HomeScreen = ({ navigation }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [posts, setPosts] = useState<PostDomain[]>([]);
   const { darkmode } = useSettingsContext();
+  const lastDate = useRef(new Date().toISOString().slice(0, 19));
 
   useEffect(() => {
     switch (type) {
@@ -39,10 +40,8 @@ const HomeScreen = ({ navigation }: Props) => {
 
   const fetchPostsFollowing = async () => {
     try {
-      const response = await getPostsFollowing(
-        new Date().toISOString().slice(0, 19)
-      );
-      setPosts(response);
+      const response = await getPostsFollowing(lastDate.current);
+      setPosts([...posts, ...response]);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -50,8 +49,9 @@ const HomeScreen = ({ navigation }: Props) => {
 
   const fetchPosts = async () => {
     try {
-      const response = await getPosts(new Date().toISOString().slice(0, 19));
-      setPosts(response);
+      const response = await getPosts(lastDate.current);
+      console.log(lastDate.current, posts.length);
+      setPosts([...posts, ...response]);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -80,15 +80,24 @@ const HomeScreen = ({ navigation }: Props) => {
       <View className="items-center">
         <FlatList
           refreshControl={
-            <RefreshControl refreshing={load} onRefresh={reload} />
+            <RefreshControl
+              refreshing={load}
+              onRefresh={() => {
+                lastDate.current = new Date().toISOString().slice(0, 19);
+                setPosts([]);
+                reload();
+              }}
+            />
           }
           data={posts}
           renderItem={({ item }) => {
-            //TODO: remove
-            console.log(item);
-            return <Post post={item} />;
+            return <Post post={item} navigation={navigation} />;
           }}
           keyExtractor={(item) => item.id}
+          onMomentumScrollEnd={() => {
+            lastDate.current = posts[posts.length - 1].createdAt;
+            reload();
+          }}
         />
       </View>
     </View>

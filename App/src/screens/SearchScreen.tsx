@@ -22,7 +22,7 @@ const SearchScreen = ({ navigation }: Props) => {
     const getUsers = async () => {
       try {
         const response = await fetchUsersByName(pageNum.current, searchText);
-        setUsers([...response]);
+        setUsers([...users, ...response]);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -37,16 +37,6 @@ const SearchScreen = ({ navigation }: Props) => {
     }, 1000);
   };
 
-  const loadMore = async () => {
-    pageNum.current += 1;
-    try {
-      const response = await fetchUsersByName(pageNum.current, searchText);
-      setUsers([...users, ...response]);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
-
   return (
     <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
       <SearchBarHeader
@@ -56,7 +46,14 @@ const SearchScreen = ({ navigation }: Props) => {
       <View className="items-center">
         <FlatList
           refreshControl={
-            <RefreshControl refreshing={load} onRefresh={reload} />
+            <RefreshControl
+              refreshing={load}
+              onRefresh={() => {
+                pageNum.current = 1;
+                setUsers([]);
+                reload();
+              }}
+            />
           }
           style={{ width: "100%" }}
           data={users}
@@ -74,7 +71,10 @@ const SearchScreen = ({ navigation }: Props) => {
             );
           }}
           keyExtractor={(item) => item.id}
-          onEndReached={loadMore}
+          onMomentumScrollEnd={() => {
+            pageNum.current += 1;
+            reload();
+          }}
         />
       </View>
     </View>

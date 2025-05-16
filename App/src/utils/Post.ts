@@ -6,6 +6,7 @@ export type Post = {
   likes: number;
   isLiked: boolean;
   updatedAt: string;
+  createdAt: string;
   user: {
     email: string;
     image: string;
