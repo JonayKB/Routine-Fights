@@ -82,7 +82,7 @@ const ActivityFormScreen = (props: Props) => {
     <View
       className={`flex-1 bg-[#${
         darkmode ? "2C2C2C" : "CCCCCC"
-      }] items-center m-10`}
+      }] items-center`}
     >
       <ScrollView className="bg-[#E4D8E9] rounded-lg w-10/12">
         {uri ? (
