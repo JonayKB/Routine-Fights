@@ -13,7 +13,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { getPosts, getPostsFollowing } from "../repositories/PostRepository";
-import { limit } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
