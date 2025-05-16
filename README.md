@@ -41,6 +41,52 @@
 
 ### Without Docker
 
+Execute this docker-compose
+
+```docker
+version: '3.3'
+
+services:
+  app:
+    image: jonaykb/apiroutinefights:latest
+    container_name: apiroutinefights
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_NEO4J_URI=bolt://db:7687
+      - SPRING_AUTHENTICATION_NEO4J_USER=neo4j
+      - SPRING_AUTHENTICATION_NEO4J_PASSWORD=1q2w3e4r
+      - MAIL_FROM=CHANGE_THIS@EMAIL.com
+      - MAIL_PASSWORD=YOUR_TOKEN
+      - SERVER_SSL_ENABLED=false
+      - JWT_SECRET=SECRET
+    depends_on:
+      - db
+    networks:
+      - apiNetwork
+    volumes:
+      - app_uploads:/uploads
+  db:
+    image: neo4j:latest
+    volumes:
+        - /$HOME/neo4j/logs:/logs
+        - /$HOME/neo4j/config:/config
+        - /$HOME/neo4j/data:/data
+        - /$HOME/neo4j/plugins:/plugins
+    environment:
+        - NEO4J_AUTH=neo4j/1q2w3e4r
+    restart: always
+    networks:
+      - apiNetwork
+
+volumes:
+  db_data:
+  app_uploads:
+networks:
+  apiNetwork:
+```
+
 #### Clone Repository
 
 ```bash
