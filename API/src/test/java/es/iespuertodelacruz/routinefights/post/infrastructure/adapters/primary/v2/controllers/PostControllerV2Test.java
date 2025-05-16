@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.routinefights.post.infrastructure.adapters.primary.v2.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -51,15 +52,19 @@ class PostControllerV2Test {
 
     @Test
     void testGetPaginationOK() {
+        User user = new User();
+        user.setId(USER_ID);
+        SecurityContextHolder.getContext()
+                .setAuthentication(new UsernamePasswordAuthenticationToken(DUMMY_EMAIL, null));
         LocalDateTime date = LocalDateTime.parse(LAST_DATE_STRING);
         Post post = new Post();
         List<Post> posts = Arrays.asList(post);
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, null, null, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, null, null, null, null, null, null);
 
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
-
+        when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
         when(postService.getPagination(date, LIMIT)).thenReturn(posts);
-        when(postOutputV2Mapper.toDto(posts)).thenReturn(dtoList);
+        when(postOutputV2Mapper.toDto(posts,user)).thenReturn(dtoList);
 
         List<PostOutputDTOV2> response = postController.getPagination(LAST_DATE_STRING, LIMIT);
         assertEquals(dtoList, response);
@@ -72,7 +77,7 @@ class PostControllerV2Test {
         User user = new User();
         user.setId(USER_ID);
         Post post = new Post();
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, null, null, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, null, null, null, null, null, null);
 
         when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
         when(postService.uploadPost(IMAGE, user, ACTIVITY_ID)).thenReturn(post);
@@ -84,15 +89,19 @@ class PostControllerV2Test {
 
     @Test
     void testGetPaginationByUserOK() {
+        User user = new User();
+        user.setId(USER_ID);
+        SecurityContextHolder.getContext()
+                .setAuthentication(new UsernamePasswordAuthenticationToken(DUMMY_EMAIL, null));
         LocalDateTime date = LocalDateTime.parse(LAST_DATE_STRING);
         Post post = new Post();
         List<Post> posts = Arrays.asList(post);
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null);
 
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
-
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
         when(postService.getPaginationByUser(date, LIMIT, USER_ID)).thenReturn(posts);
-        when(postOutputV2Mapper.toDto(posts)).thenReturn(dtoList);
+        when(postOutputV2Mapper.toDto(posts,user)).thenReturn(dtoList);
 
         List<PostOutputDTOV2> response = postController.getPaginationByUser(LAST_DATE_STRING, LIMIT, USER_ID);
         assertEquals(dtoList, response);
@@ -100,15 +109,19 @@ class PostControllerV2Test {
 
     @Test
     void testGetPaginationByActivityOK() {
+        User user = new User();
+        user.setId(USER_ID);
+        SecurityContextHolder.getContext()
+                .setAuthentication(new UsernamePasswordAuthenticationToken(DUMMY_EMAIL, null));
         LocalDateTime date = LocalDateTime.parse(LAST_DATE_STRING);
         Post post = new Post();
         List<Post> posts = Arrays.asList(post);
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null);
 
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
-
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
         when(postService.getPaginationByActivity(date, LIMIT, ACTIVITY_ID)).thenReturn(posts);
-        when(postOutputV2Mapper.toDto(posts)).thenReturn(dtoList);
+        when(postOutputV2Mapper.toDto(posts,user)).thenReturn(dtoList);
 
         List<PostOutputDTOV2> response = postController.getPaginationByActivity(LAST_DATE_STRING, LIMIT, ACTIVITY_ID);
         assertEquals(dtoList, response);
@@ -123,12 +136,12 @@ class PostControllerV2Test {
         LocalDateTime date = LocalDateTime.parse(LAST_DATE_STRING);
         Post post = new Post();
         List<Post> posts = Arrays.asList(post);
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null);
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
 
         when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
         when(postService.getPaginationFollowing(date, LIMIT, USER_ID)).thenReturn(posts);
-        when(postOutputV2Mapper.toDto(posts)).thenReturn(dtoList);
+        when(postOutputV2Mapper.toDto(posts,user)).thenReturn(dtoList);
 
         List<PostOutputDTOV2> response = postController.getPaginationFollowing(LAST_DATE_STRING, LIMIT);
         assertEquals(dtoList, response);
@@ -143,12 +156,12 @@ class PostControllerV2Test {
         LocalDateTime date = LocalDateTime.parse(LAST_DATE_STRING);
         Post post = new Post();
         List<Post> posts = Arrays.asList(post);
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null);
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
 
-        when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
         when(postService.getPaginationSubscribedActivities(date, LIMIT, USER_ID)).thenReturn(posts);
-        when(postOutputV2Mapper.toDto(posts)).thenReturn(dtoList);
+        when(postOutputV2Mapper.toDto(posts, user)).thenReturn(dtoList);
 
         List<PostOutputDTOV2> response = postController.getPaginationSubscribedActivities(LAST_DATE_STRING, LIMIT);
         assertEquals(dtoList, response);

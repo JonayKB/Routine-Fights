@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
+import es.iespuertodelacruz.routinefights.comment.domain.Comment;
 import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -102,6 +103,8 @@ class PostEntityMapperTest {
         post.setFiledAt(now);
         post.user(createUser());
         post.setActivity(createActivity());
+        post.setComments(List.of(new Comment()));
+        post.setLikedBy(List.of(new User()));
         return post;
     }
 
@@ -154,6 +157,9 @@ class PostEntityMapperTest {
         userEntity.setDeletedAt(null);
         userEntity.setFollowers(new ArrayList<>());
         userEntity.setFollowing(new ArrayList<>());
+        userEntity.setPosts(new ArrayList<>());
+        userEntity.setActivities(new ArrayList<>());
+        userEntity.setComments(new ArrayList<>());
 
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setId(ACTIVITY_ID);
@@ -179,6 +185,7 @@ class PostEntityMapperTest {
         postEntity.setFiledAt(now);
         postEntity.setUser(userEntity);
         postEntity.setActivity(activityEntity);
+        postEntity.setComments(new ArrayList<>());
 
         Post post = mapper.toDomain(postEntity);
         assertNotNull(post);

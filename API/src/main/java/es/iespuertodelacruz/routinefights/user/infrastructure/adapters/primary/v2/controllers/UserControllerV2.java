@@ -163,12 +163,16 @@ public class UserControllerV2 {
     @MutationMapping("updateUserV2")
     public UserOutputDTOV2 update(@Argument UserInputDTOV2 user) {
         User userDomain;
+
         try {
-            userDomain = userService.update(user.id(), user.username(), user.email(), user.password(),
+            User previousUser = userService
+                    .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+
+            userDomain = userService.update(previousUser.getId(), user.username(), user.email(), user.password(),
                     user.nationality(), user.phoneNumber(), user.image());
 
             if (userDomain != null && (!userDomain.getVerified() && userDomain.getVerificationToken() != null)) {
-                mailService.sentVerifyToken(userDomain.getEmail(), "Verify your email: " + userDomain.getUsername(),
+                mailService.sentVerifyToken(userDomain.getEmail(), "Verify your new email: " + userDomain.getUsername(),
                         userDomain.getVerificationToken());
             }
         } catch (Exception e) {
@@ -239,7 +243,7 @@ public class UserControllerV2 {
             User self = userService
                     .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
             return userOutputMapper
-                    .toOutputDTOV2(userService.getPaginationByName(page, perPage, userName, self.getId()));
+                    .toOutputDTOV2(userService.getPaginationByName(page, perPage, userName, self.getId()),self);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(getUserPaginationByName) Error finding users: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding users");
