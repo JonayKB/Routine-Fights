@@ -1,17 +1,20 @@
 package es.iespuertodelacruz.routinefights.communityEvent.domain.services;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.domain.ports.secondary.IActivityRepository;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.secondary.ICommunityEventRepository;
@@ -34,7 +37,9 @@ class CommunityEventServiceTest {
     @Test
     void createCommunityEvent() {
         CommunityEvent communityEvent = new CommunityEvent();
-        when(repository.save(communityEvent)).thenReturn(communityEvent);
+        when(repository.save(any(CommunityEvent.class))).thenReturn(communityEvent);
+        when(activityRepository.findById(anyString())).thenReturn(new Activity());
+
         CommunityEvent createdEvent = service.createCommunityEvent(
             "Event Name", 
             10, 
