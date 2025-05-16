@@ -19,7 +19,11 @@ const FollowListScreen = ({ navigation, route }: Props) => {
   const [searchText, setSearchText] = useState<string>("");
 
   useEffect(() => {
-    const fetchFollows = async () => {
+    fetchFollows();
+  }, [route.params.email, route.params.type, load === true, searchText]);
+
+  const fetchFollows = async () => {
+    try {
       if (route.params.type === "followers") {
         const { followersByEmail } = await getFollows(
           route.params.email,
@@ -33,15 +37,11 @@ const FollowListScreen = ({ navigation, route }: Props) => {
         );
         setUsers(followedByEmail);
       }
-    };
-    fetchFollows();
-  }, [route.params.email, route.params.type, load === true, searchText]);
-
-  const reload = () => {
-    setLoad(true);
-    setTimeout(() => {
+    } catch (error) {
+      console.error("Error fetching follows:", error);
+    } finally {
       setLoad(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -58,7 +58,7 @@ const FollowListScreen = ({ navigation, route }: Props) => {
         </View>
         <FlatList
           refreshControl={
-            <RefreshControl refreshing={load} onRefresh={reload} />
+            <RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />
           }
           style={{ width: "100%" }}
           data={users}

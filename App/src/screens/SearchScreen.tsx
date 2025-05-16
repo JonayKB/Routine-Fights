@@ -19,17 +19,18 @@ const SearchScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     pageNum.current = 1;
-    const getUsers = async () => {
-      try {
-        const response = await fetchUsersByName(pageNum.current, searchText);
-        setUsers([...users, ...response]);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
     getUsers();
   }, [load === true, searchText]);
 
+  const getUsers = async () => {
+    try {
+      const response = await fetchUsersByName(pageNum.current, searchText);
+      setUsers([...users, ...response]);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+  
   const reload = () => {
     setLoad(true);
     setTimeout(() => {
