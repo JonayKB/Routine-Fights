@@ -33,9 +33,9 @@
 
 ## Tools
 
-| **Database** | **API**         | **CI/CD**        | **FrontEnd APP** | **FrontEnd Administration** |
-|--------------|-----------------|------------------|------------------|-----------------------------|
-| Neo4J        | Spring          | Github Actions   | React Native     | React                       |
+| **Database**                                                                            | **API**                                                              | **CI/CD**                                                                   | **FrontEnd APP**                                                                                          | **FrontEnd Administration**                                                                                                                                                                   |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Neo4J                                                                                   | Spring                                                               | Github Actions                                                              | React Native                                                                                              | React                                                                                                                                                                                         |
 | ![Neo4j logo](https://upload.wikimedia.org/wikipedia/commons/e/e5/Neo4j-logo_color.png) | ![Spring logo](https://img.icons8.com/?size=512&id=90519&format=png) | ![Github Actions logo](https://cdn-icons-png.flaticon.com/512/25/25231.png) | ![React Native logo](https://static-00.iconduck.com/assets.00/sdk-react-native-icon-512x490-ynyk8t4w.png) | ![React logo](https://cdn.iconscout.com/icon/free/png-256/free-react-logo-icon-download-in-svg-png-gif-file-formats--technology-social-media-vol-5-pack-logos-icons-2945110.png?f=webp&w=256) |
 
 ## Usage
@@ -169,14 +169,12 @@ mvn clean spring-boot:run
 
 #### AUTH
 
-| Method | Path                           | Parameters                                                                    | Request Body (JSON)                                                                                                                                                               | Description                                 |
-| ------ | ------------------------------ | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| POST   | `/auth/register`               | —                                                                             | <code>{"username": "string","email": "string","password": "string","nationality": "string","phoneNumber": "string","image": "string"}</code>
- | Create a new user account.                  |
-| POST   | `/auth/login`                  | **email** (query, string, required)
-**password** (query, string, required) | —                                                                                                                                                                                 | Authenticate a user and return a JWT token. |
-| GET    | `/auth/verify/{email}/{token}` | **email** (path, string, required)
-**token** (path, string, required)      | —                                                                                                                                                                                 | Verify user’s email with a token.           |
+| Method | Path                           | Parameters                                                                    | Request Body (JSON)                                                                                                                          | Description                                 |
+| ------ | ------------------------------ | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| POST   | `/auth/register`               | —                                                                             | <code>{"username": "string","email": "string","password": "string","nationality": "string","phoneNumber": "string","image": "string"}</code> | Create a new user account.                  |
+| POST   | `/auth/login`                  | **email** (query, string, required)<br>**password** (query, string, required) | —                                                                                                                                            | Authenticate a user and return a JWT token. |
+| GET    | `/auth/verify/{email}/{token}` | **email** (path, string, required)<br>**token** (path, string, required)      | —                                                                                                                                            | Verify user’s email with a token.           |
+
 
 ---
 
