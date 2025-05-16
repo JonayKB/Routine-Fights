@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.comment.domain.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -50,7 +51,7 @@ class CommentServiceTest {
         expectedComment.setUser(new User());
         expectedComment.setCreatedAt(LocalDateTime.now());
         expectedComment.setReplingComment(null);
-        when(commentRepository.comment(any(Comment.class))).thenReturn(expectedComment);
+        when(commentRepository.comment(anyString(),any(),anyString(),anyString())).thenReturn(expectedComment);
 
         Comment comment = commentService.save(MESSAGE, new User(), POST_ID, null);
 
@@ -86,7 +87,7 @@ class CommentServiceTest {
         expectedComment.setUser(new User());
         expectedComment.setCreatedAt(LocalDateTime.now());
         expectedComment.setReplingComment(replingComment);
-        when(commentRepository.comment(any(Comment.class))).thenReturn(expectedComment);
+        when(commentRepository.comment(anyString(),any(),anyString(),anyString())).thenReturn(expectedComment);
 
         Comment comment = commentService.save(MESSAGE, new User(), POST_ID, "replingId");
 

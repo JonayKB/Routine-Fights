@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.secon
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -35,9 +36,9 @@ class CommentEntityServiceTest {
     @Test
     void commentTest() {
         when(commentEntityMapper.toEntity(any(Comment.class))).thenReturn(new CommentEntity());
-        when(commentRepository.save(any())).thenReturn(new CommentEntity());
+        when(commentRepository.comment(anyString(),any(),anyString(),anyString())).thenReturn(new CommentEntity());
         when(commentEntityMapper.toDomain(any(CommentEntity.class))).thenReturn(comment);
-        Comment savedComment = commentEntityService.comment(comment);
+        Comment savedComment = commentEntityService.comment("message", null, "userId", "postId");
         assertNotNull(savedComment);
     }
 
