@@ -2,7 +2,6 @@ import { View, TextInput } from "react-native";
 import React from "react";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import style from "../styles/Styles.json";
 
 type Props = {
     searchFunction: (text: string) => void;

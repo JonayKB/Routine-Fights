@@ -1,5 +1,6 @@
 export const uri: string = "http://64.226.71.234:8080";
 export const neo4jUri: string = uri + "/graphql";
+export const limit: number = 10;
 
 export const resetNavigation = (navigation: any, path: string) => {
   navigation.navigate(path);

@@ -1,12 +1,12 @@
 import axios from "axios";
-import { neo4jUri } from "../utils/Utils";
+import { limit, neo4jUri } from "../utils/Utils";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import { Activity } from "../utils/Activity";
 
 export const getActivitiesNotSubscribed = async (
   page: number,
   name: string,
-  perPage: number = 10
+  perPage: number = limit
 ): Promise<Activity[]> => {
   try {
     const token = await RNSecureKeyStore.get("token");

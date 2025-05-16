@@ -1,9 +1,9 @@
 import axios from "axios";
-import { neo4jUri } from "../utils/Utils";
+import { limit, neo4jUri } from "../utils/Utils";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import { Followers } from "../utils/User";
 
-export const fetchUsersByName = async (pageNum: number, text: string): Promise<Followers[]> => {
+export const fetchUsersByName = async (pageNum: number, text: string, perPage: number = limit): Promise<Followers[]> => {
   if (!text) {
     return [];
   }
@@ -16,7 +16,7 @@ export const fetchUsersByName = async (pageNum: number, text: string): Promise<F
       {
         query: `
             query {
-                getUserPaginationByName(page: ${pageNum}, perPage: 10, userName: "${text}") {
+                getUserPaginationByName(page: ${pageNum}, perPage: ${perPage}, userName: "${text}") {
                     followers
                     following
                     id
