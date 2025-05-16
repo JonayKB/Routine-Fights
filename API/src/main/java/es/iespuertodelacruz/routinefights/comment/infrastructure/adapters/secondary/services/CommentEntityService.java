@@ -9,8 +9,6 @@ import es.iespuertodelacruz.routinefights.comment.domain.ports.secondary.ICommen
 import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.secondary.entities.CommentEntity;
 import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.secondary.mappers.CommentEntityMapper;
 import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.secondary.repositories.ICommentEntityRepository;
-import es.iespuertodelacruz.routinefights.user.domain.User;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.repositories.IUserEntityRepository;
 
 @Service
@@ -18,11 +16,8 @@ public class CommentEntityService implements ICommentRepository {
 
     private ICommentEntityRepository commentRepository;
     private CommentEntityMapper commentEntityMapper;
-    private IUserEntityRepository userRepository;
 
-    public CommentEntityService(ICommentEntityRepository commentRepository, CommentEntityMapper commentEntityMapper,
-            IUserEntityRepository userRepository) {
-        this.userRepository = userRepository;
+    public CommentEntityService(ICommentEntityRepository commentRepository, CommentEntityMapper commentEntityMapper) {
         this.commentEntityMapper = commentEntityMapper;
         this.commentRepository = commentRepository;
     }
