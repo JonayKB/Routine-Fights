@@ -35,7 +35,7 @@ public class CommentControllerV2 {
     @Secured({ "ROLE_USER","ROLE_ADMIN" })
     @MutationMapping("postComment")
     public CommentOutputV2 postComment(@Argument("commentInput") CommentInputV2 commentInput) {
-        User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         return commentOutputV2Mapper.toDTO(commentService.save(commentInput.message(), user,
                 commentInput.postID(), commentInput.replingID()));
     }
