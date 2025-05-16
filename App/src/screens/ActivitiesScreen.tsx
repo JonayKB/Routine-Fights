@@ -8,70 +8,77 @@ import ActivityCard from "../components/ActivityCard";
 import AddButton from "../components/AddButton";
 import SearchBar from "../components/SearchBar";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { limit } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
 const ActivitiesScreen = ({ navigation }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const pageNum = useRef(1);
   const { darkmode } = useSettingsContext();
 
   useEffect(() => {
-    const fetchActivities = async () => {
-      try {
-        const response = await getActivitiesNotSubscribed(
-          pageNum.current,
-          searchText
-        );
-        setActivities([...activities, ...response]);
-      } catch (error) {
-        console.error("Error fetching activities:", error);
-      }
-    };
-    fetchActivities();
-  }, [load === true, searchText]);
+    if (load || isLoadingMore) {
+      fetchActivities();
+    }
+  }, [load, isLoadingMore]);
+
+  const fetchActivities = async () => {
+    try {
+      const response = await getActivitiesNotSubscribed(
+        pageNum.current,
+        searchText
+      );
+      setActivities((prev) =>
+        isLoadingMore ? [...prev, ...response] : response
+      );
+    } catch (error) {
+      console.error("Error fetching activities:", error);
+    } finally {
+      setLoad(false);
+      setIsLoadingMore(false);
+    }
+  };
+
+  const changeText = (text: string) => {
+    pageNum.current = 1;
+    setSearchText(text);
+    setLoad(true);
+  };
 
   const reload = () => {
+    pageNum.current = 1;
     setLoad(true);
-    setTimeout(() => {
-      setLoad(false);
-    }, 1000);
+  };
+
+  const loadMore = () => {
+    if (isLoadingMore || activities.length < pageNum.current * limit) return;
+    pageNum.current += 1;
+    setIsLoadingMore(true);
   };
 
   return (
     <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
-      <SearchBar searchFunction={(text) => setSearchText(text)} />
+      <SearchBar searchFunction={changeText} />
       <FlatList
-        refreshControl={
-          <RefreshControl
-            refreshing={load}
-            onRefresh={() => {
-              pageNum.current = 1;
-              setActivities([]);
-              reload();
-            }}
-          />
-        }
+        refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
         style={{ width: "100%" }}
         data={activities}
-        renderItem={({ item }) => {
-          return (
-            <ActivityCard
-              item={item}
-              navigateFunction={() =>
-                navigation.navigate("ActivityDetails", { activity: item })
-              }
-            />
-          );
-        }}
+        renderItem={({ item }) => (
+          <ActivityCard
+            item={item}
+            navigateFunction={() =>
+              navigation.navigate("ActivityDetails", { activity: item })
+            }
+          />
+        )}
         keyExtractor={(item) => item.id}
         numColumns={2}
-        onMomentumScrollEnd={() => {
-          pageNum.current += 1;
-          reload();
-        }}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
       />
       <AddButton navigateFunction={() => navigation.navigate("ActivityForm")} />
     </View>

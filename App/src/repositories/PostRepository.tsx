@@ -1,11 +1,11 @@
 import axios from "axios";
 import RNSecureKeyStore from "react-native-secure-key-store";
-import { neo4jUri } from "../utils/Utils";
+import { limit, neo4jUri } from "../utils/Utils";
 import { Post } from "../utils/Post";
 
 export const getPostsFollowing = async (
   lastDate: string,
-  limit: number = 10
+  perPage: number = limit
 ): Promise<Post[]> => {
   try {
     const token = await RNSecureKeyStore.get("token");
@@ -14,7 +14,7 @@ export const getPostsFollowing = async (
       neo4jUri,
       {
         query: `query {
-                  postsFollowingV2(lastDate: "${lastDate}", limit: ${limit}) {
+                  postsFollowingV2(lastDate: "${lastDate}", limit: ${perPage}) {
                     id
                     image
                     updatedAt
@@ -46,7 +46,7 @@ export const getPostsFollowing = async (
 
 export const getPosts = async (
   lastDate: string,
-  limit: number = 10
+  perPage: number = limit
 ): Promise<Post[]> => {
   try {
     const token = await RNSecureKeyStore.get("token");
@@ -55,7 +55,7 @@ export const getPosts = async (
       neo4jUri,
       {
         query: `query {
-                  postsV2(lastDate: "${lastDate}", limit: ${limit}) {
+                  postsV2(lastDate: "${lastDate}", limit: ${perPage}) {
                     id
                     image
                     updatedAt
