@@ -33,7 +33,7 @@
 | **Database** | **API**         | **CI/CD**        | **FrontEnd APP** | **FrontEnd Administration** |
 |--------------|-----------------|------------------|------------------|-----------------------------|
 | Neo4J        | Spring          | Github Actions   | React Native     | React                       |
-| ![Neo4j logo](https://upload.wikimedia.org/wikipedia/commons/e/e5/Neo4j-logo_color.png) | ![Spring logo](https://cdn.worldvectorlogo.com/logos/spring-3.svg) | ![Github Actions logo](https://cdn-icons-png.flaticon.com/512/25/25231.png) | ![React Native logo](https://static-00.iconduck.com/assets.00/sdk-react-native-icon-512x490-ynyk8t4w.png) | ![React logo](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlGmKtrnxElpqw3AExKXPWWBulcwjlvDJa1Q&s) |
+| ![Neo4j logo](https://upload.wikimedia.org/wikipedia/commons/e/e5/Neo4j-logo_color.png) | ![Spring logo](https://img.icons8.com/?size=512&id=90519&format=png) | ![Github Actions logo](https://cdn-icons-png.flaticon.com/512/25/25231.png) | ![React Native logo](https://static-00.iconduck.com/assets.00/sdk-react-native-icon-512x490-ynyk8t4w.png) | ![React logo](https://cdn.iconscout.com/icon/free/png-256/free-react-logo-icon-download-in-svg-png-gif-file-formats--technology-social-media-vol-5-pack-logos-icons-2945110.png?f=webp&w=256) |
 
 ## Usage
 
@@ -43,7 +43,7 @@
 
 Execute this docker-compose
 
-```docker
+```yaml
 version: '3.3'
 
 services:
