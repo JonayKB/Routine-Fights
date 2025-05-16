@@ -99,11 +99,12 @@ public interface IPostEntityRepository extends Neo4jRepository<PostEntity, Strin
       @Param("startDate") LocalDateTime startDate,
       @Param("endDate") LocalDateTime endDate);
 
-    @Query("""
-            MATCH (p:Post)
-            RETURN p.image
-            """)
-    Set<String> findAllImages();
+  @Query("""
+      MATCH (p:Post)
+      RETURN p.image
+      """)
+  Set<String> findAllImages();
+
   @Query("""
       MATCH (a:Activity)<-[rr:`Related-To`]-(p:Post)<-[r:Posted]-(u:User)
       WHERE elementId(a)= $activityID
@@ -115,12 +116,6 @@ public interface IPostEntityRepository extends Neo4jRepository<PostEntity, Strin
   Integer getRangeCountByActivity(@Param("activityID") String activityID, @Param("userID") String userID,
       @Param("startDate") LocalDateTime startDate,
       @Param("endDate") LocalDateTime endDate);
-
-  @Query("""
-      MATCH (p:Post)
-      RETURN p.image
-      """)
-  List<String> findAllImages();
 
   @Query("""
       MATCH (u:User)-[:Posted]->(p:Post)-[:`Related-To`]->(a:Activity)

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,6 +32,7 @@ public class CommentControllerV2 {
         this.userService = userService;
     }
 
+    @Secured({ "ROLE_USER","ROLE_ADMIN" })
     @MutationMapping("postComment")
     public CommentOutputV2 postComment(@Argument("commentInput") CommentInputV2 commentInput) {
         User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -38,6 +40,7 @@ public class CommentControllerV2 {
                 commentInput.postID(), commentInput.replingID()));
     }
 
+    @Secured({ "ROLE_USER","ROLE_ADMIN" })
     @QueryMapping("getComments")
     public List<CommentOutputV2> getComments(@Argument("postID") String postID) {
         return commentOutputV2Mapper.toDTO(commentService.findByPostID(postID));
