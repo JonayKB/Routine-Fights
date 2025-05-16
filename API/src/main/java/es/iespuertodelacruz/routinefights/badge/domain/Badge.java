@@ -60,8 +60,6 @@ public class Badge extends BadgeCommons {
             return true;
         if (!(o instanceof Badge badge))
             return false;
-        if (!super.equals(o))
-            return false;
         return id.equals(badge.id);
     }
 
