@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { UserOut } from "../utils/User";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
@@ -28,7 +28,9 @@ import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import Post from "../components/Post";
 import { Post as PostDomain } from "../utils/Post";
+import { getUserPosts } from "../repositories/PostRepository";
 import { useTokenContext } from "../contexts/TokenContextProvider";
+import { useImageContext } from "../contexts/ImageContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -37,21 +39,29 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [followers, setFollowers] = useState<string>("");
   const [following, setFollowing] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [profileLoad, setProfileLoad] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
   const { language, darkmode } = useSettingsContext();
   const { email } = useTokenContext();
   const [posts, setPosts] = useState<PostDomain[]>([]);
+  const lastDate = useRef<string>("");
+  const { uri } = useImageContext();
 
   useEffect(() => {
     fetchUser();
+    fetchPosts();
   }, [route.params?.email]);
 
   useEffect(() => {
-    if (profileLoad) {
-      fetchUser();
+    fetchUser();
+  }, [profileLoad === true, uri]);
+
+  useEffect(() => {
+    if (load || isLoadingMore) {
+      fetchPosts();
     }
-  }, [profileLoad]);
+  }, [load, isLoadingMore]);
 
   const fetchUser = async () => {
     try {
@@ -71,6 +81,29 @@ const ProfileScreen = ({ navigation, route }: Props) => {
     } finally {
       setProfileLoad(false);
     }
+  };
+
+  const fetchPosts = async () => {
+    try {
+      const response = await getUserPosts(lastDate.current, user.id);
+      setPosts(isLoadingMore ? [...posts, ...response] : response);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoad(false);
+      setIsLoadingMore(false);
+    }
+  };
+
+  const reload = () => {
+    lastDate.current = new Date().toISOString().slice(0, 19);
+    setLoad(true);
+  };
+
+  const loadMore = () => {
+    if (isLoadingMore || posts.length === 0) return;
+    lastDate.current = posts[posts.length - 1].createdAt;
+    setIsLoadingMore(true);
   };
 
   const handleFollow = async () => {
@@ -131,9 +164,14 @@ const ProfileScreen = ({ navigation, route }: Props) => {
               <Icon name="settings" size={28} color="black" />
             </TouchableOpacity>
           )}
-          <View className="m-5 items-center">
+          <TouchableOpacity
+            className="m-5 items-center"
+            onPress={() =>
+              navigation.navigate("ProfilePictureScreen", { email: user.email })
+            }
+          >
             <Picture
-              image={user.image}
+              image={user?.image}
               size={103}
               style="rounded-full border-2 border-[#4B0082]"
             />
@@ -145,7 +183,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
               {Math.floor(Math.random() * 300)}
             </Text>
           </View> */}
-          </View>
+          </TouchableOpacity>
           <View className="mt-5">
             <Text className="text-black text-4xl font-bold">
               {user?.username}
@@ -173,14 +211,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       </ScrollView>
 
       <FlatList
-        refreshControl={
-          <RefreshControl
-            refreshing={load}
-            onRefresh={() => {
-              /**TODO: searchPosts*/
-            }}
-          />
-        }
+        refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
         style={{ width: "100%" }}
         data={posts}
         renderItem={({ item }) => {
@@ -195,6 +226,8 @@ const ProfileScreen = ({ navigation, route }: Props) => {
         }}
         keyExtractor={(item) => item.id}
         numColumns={3}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
       />
     </View>
   );

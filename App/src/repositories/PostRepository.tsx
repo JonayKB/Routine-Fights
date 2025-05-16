@@ -85,6 +85,47 @@ export const getPosts = async (
   }
 };
 
+export const getUserPosts = async (
+  lastDate: string,
+  userID: string,
+  perPage: number = limit
+) => {
+  try {
+    const token = await RNSecureKeyStore.get("token");
+    const response = await axios.post(
+      neo4jUri,
+      {
+        query: `query {
+                postsByUserV2(lastDate: "${lastDate}", userID: "${userID}", limit: ${perPage}) {
+                  id
+                  streak
+                  comments
+                  image
+                  likes
+                  isLiked
+                  updatedAt
+                  createdAt
+                  user {
+                    email
+                    image
+                  }
+                }
+              }`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data.data.postsByUserV2;
+  } catch (error) {
+    console.error("Error fetching user posts:", error);
+    throw new Error("Error fetching user posts");
+  }
+};
+
 export const uploadPost = async (activityID: string, image: string) => {
   try {
     const token = await RNSecureKeyStore.get("token");
@@ -154,7 +195,7 @@ export const unLikePost = async (postID: string) => {
         },
       }
     );
-    
+
     return response.data.data.unLikePost;
   } catch (error) {
     console.error("Error unliking post:", error);

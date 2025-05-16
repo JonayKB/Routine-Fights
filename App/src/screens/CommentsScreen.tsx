@@ -72,7 +72,6 @@ const CommentsScreen = (props: Props) => {
         )}
         keyExtractor={(item) => item.id}
       />
-      {/* TODO: Add a comment input field and replies */}
       <View className="flex-row justify-center items-center w-full">
         <TextInput
           placeholder={translations[language || "en-EN"].screens.Home.search}

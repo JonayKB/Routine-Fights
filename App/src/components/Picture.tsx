@@ -11,8 +11,8 @@ type Props = {
 };
 
 const Picture = ({ image, size, style, height }: Props) => {
-  const { token } = useTokenContext();
-
+  const { token } = useTokenContext();  
+  
   return (
     <Image
       source={{

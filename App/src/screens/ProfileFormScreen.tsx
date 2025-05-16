@@ -27,7 +27,7 @@ const ProfileFormScreen = ({ navigation }: Props) => {
         nationality: response.nationality,
         phoneNumber: response.phoneNumber,
         password: "",
-        image: "null.jpg",
+        image: response.image,
       };
       setUser(ownUser);
     } catch (error) {

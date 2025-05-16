@@ -204,7 +204,7 @@ export const updateUser = async (user: UserIn): Promise<UserOut> => {
         query: `
           mutation {
             updateUserV2(
-              user: {id: "", username: "${user.username}", email: "${user.email}", nationality: "${user.nationality}", phoneNumber: "${user.phoneNumber}" ${password}}
+              user: {id: "", username: "${user.username}", image: "${user.image}", email: "${user.email}", nationality: "${user.nationality}", phoneNumber: "${user.phoneNumber}" ${password}}
             ) {
               id
               username

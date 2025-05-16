@@ -4,7 +4,7 @@ export type UserIn = {
   password: string;
   nationality: string;
   phoneNumber: string;
-  image: "null.jpg";
+  image: string;
 };
 
 export type UserOut = {

@@ -5,7 +5,7 @@ import ActivitiesStackNavigation from "./ActivitiesStackNavigation";
 import Icon from "react-native-vector-icons/Ionicons";
 import ProfileStackNavigation from "./ProfileStackNavigation";
 import UploadFormScreen from "../screens/UploadFormScreen";
-import ImageContextProvider from "../contexts/ImageContextProvider";
+import ImageContextProvider, { useImageContext } from "../contexts/ImageContextProvider";
 import { UserOut } from "../utils/User";
 import { getOwnUserImageAndEmail } from "../repositories/UserRepository";
 import HomeStackNavigation from "./HomeStackNavigation";
@@ -26,6 +26,7 @@ const MainTabNavigation = (props: Props) => {
   const Tab = createBottomTabNavigator<MainTabProps>();
   const [image, setImage] = useState<string>(null);
   const { setEmail } = useTokenContext();
+  const { uri } = useImageContext();
 
   useEffect(() => {
     const fetchImageAndEmail = async () => {
@@ -34,10 +35,9 @@ const MainTabNavigation = (props: Props) => {
       setEmail(user.email);
     };
     fetchImageAndEmail();
-  }, []);
+  }, [uri]);
 
   return (
-    <ImageContextProvider>
       <Tab.Navigator
         id={undefined}
         screenOptions={{
@@ -117,7 +117,6 @@ const MainTabNavigation = (props: Props) => {
           }}
         />
       </Tab.Navigator>
-    </ImageContextProvider>
   );
 };
 
