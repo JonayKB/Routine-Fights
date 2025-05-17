@@ -19,8 +19,6 @@ import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.mappers.CommunityEventEntityMapper;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.repositories.ICommunityEventEntityRepository;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.services.CommunityEventEntityService;
-import es.iespuertodelacruz.routinefights.user.domain.User;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.mappers.IUserEntityMapper;
 
 class CommunityEventEntityServiceTest {
     private CommunityEventEntityService communityEventEntityService;
@@ -29,8 +27,6 @@ class CommunityEventEntityServiceTest {
     private ICommunityEventEntityRepository communityEventEntityRepository;
     @Mock
     private CommunityEventEntityMapper communityEventEntityMapper;
-    @Mock
-    private IUserEntityMapper userEntityMapper;
 
     CommunityEventEntity communityEventEntity;
     CommunityEvent communityEvent;
@@ -39,7 +35,7 @@ class CommunityEventEntityServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         communityEventEntityService = new CommunityEventEntityService(communityEventEntityRepository,
-                communityEventEntityMapper, userEntityMapper);
+                communityEventEntityMapper);
 
         communityEventEntity = new CommunityEventEntity();
         communityEventEntity.setId("evt1");
@@ -51,7 +47,8 @@ class CommunityEventEntityServiceTest {
     @Test
     void saveTest() {
         when(communityEventEntityMapper.toEntity(any(CommunityEvent.class))).thenReturn(new CommunityEventEntity());
-        when(communityEventEntityRepository.save(any())).thenReturn(new CommunityEventEntity());
+        when(communityEventEntityRepository.create(any(), any(), any(), any(), any(), any(), anyList()))
+                .thenReturn(new CommunityEventEntity());
         when(communityEventEntityMapper.toDomain(any(CommunityEventEntity.class))).thenReturn(new CommunityEvent());
 
         CommunityEvent savedCommunityEvent = communityEventEntityService.save(communityEvent);
@@ -97,9 +94,8 @@ class CommunityEventEntityServiceTest {
 
     @Test
     void getUsersParticipatingInCommunityEventTest() {
-        when(userEntityMapper.toDomain(anyList())).thenReturn(List.of(new User()));
         when(communityEventEntityRepository.getUsersParticipatingInCommunityEvent(any()))
-                .thenReturn(List.of(new String()));
+                .thenReturn(List.of(""));
 
         List<String> users = communityEventEntityService.getUsersParticipatingInCommunityEvent("evt1");
         assertNotNull(users);
@@ -123,7 +119,6 @@ class CommunityEventEntityServiceTest {
 
     @Test
     void getUsersParticipatingInCommunityEventEndsTodayTest() {
-        when(userEntityMapper.toDomain(anyList())).thenReturn(List.of(new User()));
         when(communityEventEntityRepository.getUsersParticipatingInCommunityEventEndsToday(any(LocalDateTime.class)))
                 .thenReturn(List.of(new String()));
 

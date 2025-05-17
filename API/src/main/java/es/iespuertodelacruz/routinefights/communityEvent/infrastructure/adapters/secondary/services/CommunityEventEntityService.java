@@ -10,7 +10,6 @@ import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.secondary.ICommunityEventRepository;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.mappers.CommunityEventEntityMapper;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.repositories.ICommunityEventEntityRepository;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.mappers.IUserEntityMapper;
 
 @Service
 public class CommunityEventEntityService implements ICommunityEventRepository {
