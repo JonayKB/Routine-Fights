@@ -196,7 +196,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
             />
             {user.email !== email && (
               <TouchableOpacity
-                className="flex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
+                className="fImagelex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
                 onPress={handleFollow}
               >
                 <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
@@ -212,7 +212,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
 
       <FlatList
         refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
-        style={{ width: "100%" }}
+        style={{ width: "100%", flex: 1, backgroundColor: "black" }}
         data={posts}
         renderItem={({ item }) => {
           return (
