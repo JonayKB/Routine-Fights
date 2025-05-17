@@ -82,7 +82,7 @@ const RegisterScreen = ({ navigation, route }: Props) => {
           <TouchableOpacity onPress={() => setPasswordShown(!passwordShown)}>
             <Text
               className="text-[#4B0082] font-bold text-lg mb-5"
-              style={{ fontFamily: "InriaSans-Regular" }}
+              style={{ fontFamily: "Lexend-Regular" }}
             >
               {passwordShown ? "Hide" : "Show"}
             </Text>
