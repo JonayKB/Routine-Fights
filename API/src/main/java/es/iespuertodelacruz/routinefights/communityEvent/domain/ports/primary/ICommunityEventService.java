@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
-import es.iespuertodelacruz.routinefights.user.domain.User;
 
 public interface ICommunityEventService {
 
