@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import Picture from "./Picture";
 import { Comment as CommentDomain } from "../utils/Comment";
+import DateFormatString from "./DateFormatString";
 
 type Props = {
   navigation: any;
@@ -30,12 +31,7 @@ const Comment = ({ navigation, comment }: Props) => {
           {comment.user?.username}
         </Text>
         <Text className="text-black text-lg mt-2">{comment.message}</Text>
-        <View className="flex-row justify-between mt-2">
-          <Text className="text-black">{comment.createdAt.slice(12, 16)}</Text>
-          <Text className="text-black ml-2">
-            {comment.createdAt.slice(0, 10)}
-          </Text>
-        </View>
+        <DateFormatString date={comment.createdAt} />
       </View>
     </View>
   );
