@@ -12,7 +12,7 @@ import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.second
 
 @Repository
 public interface ICommentEntityRepository extends Neo4jRepository<CommentEntity, String> {
-    @Query("MATCH (u:User)-[r:Commented]->(c:Comment)-[r2:On]->(p:Post) WHERE elementId(p) =  RETURN c,r2,p,u,r")
+    @Query("MATCH (u:User)-[r:Commented]->(c:Comment)-[r2:On]->(p:Post) WHERE elementId(p) =$postID RETURN c,r2,p,u,r")
     List<CommentEntity> findByPostId(@Param("postID") String postID);
 
     @Query("""
