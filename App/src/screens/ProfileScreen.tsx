@@ -30,6 +30,8 @@ import { Post as PostDomain } from "../utils/Post";
 import { getUserPosts } from "../repositories/PostRepository";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import { useImageContext } from "../contexts/ImageContextProvider";
+import { Badge } from "../utils/Badge";
+import { getBadgesByEmail } from "../repositories/BadgeRepository";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -45,10 +47,12 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [posts, setPosts] = useState<PostDomain[]>([]);
   const lastDate = useRef<string>(new Date().toISOString().slice(0, 19));
   const { uri } = useImageContext();
+  const [badges, setBadges] = useState<Badge[]>([]);
 
   useEffect(() => {
     fetchUser();
     fetchPosts();
+    fetchBadges();
   }, [route.params?.email, uri]);
 
   useEffect(() => {
@@ -87,6 +91,18 @@ const ProfileScreen = ({ navigation, route }: Props) => {
     } finally {
       setLoad(false);
       setIsLoadingMore(false);
+    }
+  };
+
+  const fetchBadges = async () => {
+    try {
+      const response = await getBadgesByEmail(user.email);
+      console.log(JSON.stringify(response));
+      setBadges(response);
+    } catch (error) {
+      console.error("Error fetching badges:", error);
+    } finally {
+      setLoad(false);
     }
   };
 
@@ -193,6 +209,17 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           )}
         </View>
       </View>
+      <FlatList
+        style={{ height: 100, width: "100%", flexGrow: 0 }}
+        className="border-b-2 border-[#4B0082] bg-white"
+        horizontal
+        data={badges}
+        renderItem={({ item }) => {
+          return (
+            <Picture image={item.image} size={72} style="rounded-full mt-4 ml-5" />
+          );
+        }}
+      />
 
       <FlatList
         refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
