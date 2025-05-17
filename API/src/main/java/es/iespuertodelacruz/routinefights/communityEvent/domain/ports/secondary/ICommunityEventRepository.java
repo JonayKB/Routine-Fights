@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
-import es.iespuertodelacruz.routinefights.user.domain.User;
 
 public interface ICommunityEventRepository {
 
@@ -13,10 +12,10 @@ public interface ICommunityEventRepository {
     List<CommunityEvent> getActiveCommunityEvents();
     CommunityEvent getNearestCommunityEvent();
     Integer getActualCommunityEventPoints(String id);
-    List<User> getUsersParticipatingInCommunityEvent(String id);
+    List<String> getUsersParticipatingInCommunityEvent(String id);
     CommunityEvent findByIdOnlyBase(String id);
     Set<String> getAllImages();
-    List<User> getUsersParticipatingInCommunityEventEndsToday();
+    List<String> getUsersParticipatingInCommunityEventEndsToday();
     CommunityEvent getCommunityEventEndsToday();
 
     

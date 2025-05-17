@@ -53,7 +53,7 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
         List<ActivityEntity> getSubscribedActivities(@Param("userID") String userID);
 
         @Query("""
-                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u:User)
+                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u2:User)
                         WHERE elementId(u) = $userID
                         OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
                         WITH a, p, c, u
@@ -63,7 +63,7 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID);
 
         @Query("""
-                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u:User)
+                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u2:User)
                         WHERE elementId(u) = $userID
                         AND lower(a.name) CONTAINS lower($activityName)
                         OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
@@ -75,22 +75,23 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                         @Param("activityName") String activityName);
 
         @Query("""
-                        MATCH (p:Post)-[:`Related-To`]->(a:Activity)
+                        MATCH (u:User)-[:Posted]->(p:Post)-[:`Related-To`]->(a:Activity)
                          WHERE elementId(a) = $activityID
                          AND p.createdAt >= $startDate
                          AND p.createdAt <= $endDate
+                         AND elementId(u) = $userID
                          WITH a, COUNT(p) AS postCount
                          RETURN a.timesRequiered - postCount AS remainingPosts
                          """)
         Integer getTimesRemaining(@Param("activityID") String activityID,
-                        @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+                        @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate,
+                        @Param("userID") String userID);
 
         @Query("""
                         MATCH (a:Activity)
                         RETURN a.image
                         """)
         Set<String> findAllImages();
-
 
         @Query("""
                         MATCH (u:User)
@@ -99,6 +100,8 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                         CREATE (u)-[c:Created]->(a)
                         RETURN a,u,c
                         """)
-        ActivityEntity create(@Param("name") String name, @Param("description") String description, @Param("image") String image, @Param("timeRate") String timeRate, @Param("timesRequiered") Integer timesRequiered,
-                              @Param("userID") String userID, @Param("createdAt") LocalDateTime createdAt);
+        ActivityEntity create(@Param("name") String name, @Param("description") String description,
+                        @Param("image") String image, @Param("timeRate") String timeRate,
+                        @Param("timesRequiered") Integer timesRequiered,
+                        @Param("userID") String userID, @Param("createdAt") LocalDateTime createdAt);
 }
