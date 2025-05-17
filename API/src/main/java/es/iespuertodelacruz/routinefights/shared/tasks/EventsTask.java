@@ -10,7 +10,6 @@ import es.iespuertodelacruz.routinefights.badge.domain.Badge;
 import es.iespuertodelacruz.routinefights.badge.domain.ports.primary.IBadgeService;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.primary.ICommunityEventService;
-import es.iespuertodelacruz.routinefights.user.domain.User;
 
 @Component
 public class EventsTask {
@@ -24,9 +23,9 @@ public class EventsTask {
     }
 
     @Scheduled(cron = "0 0 3 * * *")
-    protected List<User> giveTodayBadges() {
+    protected List<String> giveTodayBadges() {
         CommunityEvent communityEvent = communityEventService.getCommunityEventEndsToday();
-        List<User> usersParticipated = communityEventService.getUsersParticipatingInCommunityEventEndsToday();
+        List<String> usersParticipated = communityEventService.getUsersParticipatingInCommunityEventEndsToday();
 
         List<Badge> badges = badgeService.findByCommunityEvent(communityEvent.getId())
                 .stream()
@@ -39,9 +38,7 @@ public class EventsTask {
             int threshold = (communityEvent.getTotalRequired() / badges.size()) * (i + 1);
             if (points >= threshold) {
                 badgeService.addBadgeToUser(
-                        usersParticipated.stream()
-                                .map(User::getEmail)
-                                .toList(),
+                        usersParticipated,
                         badges.get(i).getId());
                 logger.info("Badge " + badges.get(i).getId() + " given to users");
             }

@@ -59,7 +59,7 @@ class PostControllerV2Test {
         LocalDateTime date = LocalDateTime.parse(LAST_DATE_STRING);
         Post post = new Post();
         List<Post> posts = Arrays.asList(post);
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, null, null, null, null, null, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, null, null, null, null, null, null,null);
 
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
         when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
@@ -77,7 +77,7 @@ class PostControllerV2Test {
         User user = new User();
         user.setId(USER_ID);
         Post post = new Post();
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, null, null, null, null, null, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, null, null, null, null, null, null,null);
 
         when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
         when(postService.uploadPost(IMAGE, user, ACTIVITY_ID)).thenReturn(post);
@@ -96,7 +96,7 @@ class PostControllerV2Test {
         LocalDateTime date = LocalDateTime.parse(LAST_DATE_STRING);
         Post post = new Post();
         List<Post> posts = Arrays.asList(post);
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null,null);
 
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
         when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
@@ -116,7 +116,7 @@ class PostControllerV2Test {
         LocalDateTime date = LocalDateTime.parse(LAST_DATE_STRING);
         Post post = new Post();
         List<Post> posts = Arrays.asList(post);
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null,null);
 
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
         when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
@@ -136,7 +136,7 @@ class PostControllerV2Test {
         LocalDateTime date = LocalDateTime.parse(LAST_DATE_STRING);
         Post post = new Post();
         List<Post> posts = Arrays.asList(post);
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null,null);
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
 
         when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
@@ -156,7 +156,7 @@ class PostControllerV2Test {
         LocalDateTime date = LocalDateTime.parse(LAST_DATE_STRING);
         Post post = new Post();
         List<Post> posts = Arrays.asList(post);
-        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null);
+        PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, date, date, null, null, null, null,null);
         List<PostOutputDTOV2> dtoList = Arrays.asList(dto);
 
         when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);

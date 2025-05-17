@@ -10,26 +10,24 @@ import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.secondary.ICommunityEventRepository;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.mappers.CommunityEventEntityMapper;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.repositories.ICommunityEventEntityRepository;
-import es.iespuertodelacruz.routinefights.user.domain.User;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.mappers.IUserEntityMapper;
 
 @Service
 public class CommunityEventEntityService implements ICommunityEventRepository {
     private ICommunityEventEntityRepository communityEventEntityRepository;
     private CommunityEventEntityMapper communityEventEntityMapper;
-    private IUserEntityMapper userEntityMapper;
 
     public CommunityEventEntityService(ICommunityEventEntityRepository communityEventEntityRepository,
-            CommunityEventEntityMapper communityEventEntityMapper, IUserEntityMapper userEntityMapper) {
+            CommunityEventEntityMapper communityEventEntityMapper) {
         this.communityEventEntityRepository = communityEventEntityRepository;
         this.communityEventEntityMapper = communityEventEntityMapper;
-        this.userEntityMapper = userEntityMapper;
     }
 
     @Override
     public CommunityEvent save(CommunityEvent entity) {
         return communityEventEntityMapper
-                .toDomain(communityEventEntityRepository.save(communityEventEntityMapper.toEntity(entity)));
+                .toDomain(communityEventEntityRepository.create(entity.getName(), entity.getCreatedAt(),
+                        entity.getStartDate(), entity.getFinishDate(), entity.getTotalRequired(), entity.getImage(),
+                        entity.getActivities().stream().map(a -> a.getId()).toList()));
     }
 
     @Override
@@ -55,8 +53,8 @@ public class CommunityEventEntityService implements ICommunityEventRepository {
     }
 
     @Override
-    public List<User> getUsersParticipatingInCommunityEvent(String id) {
-        return userEntityMapper.toDomain(communityEventEntityRepository.getUsersParticipatingInCommunityEvent(id));
+    public List<String> getUsersParticipatingInCommunityEvent(String id) {
+        return communityEventEntityRepository.getUsersParticipatingInCommunityEvent(id);
 
     }
 
@@ -72,8 +70,9 @@ public class CommunityEventEntityService implements ICommunityEventRepository {
     }
 
     @Override
-    public List<User> getUsersParticipatingInCommunityEventEndsToday() {
-        return userEntityMapper.toDomain(communityEventEntityRepository.getUsersParticipatingInCommunityEventEndsToday(LocalDateTime.now()));
+    public List<String> getUsersParticipatingInCommunityEventEndsToday() {
+        return 
+                communityEventEntityRepository.getUsersParticipatingInCommunityEventEndsToday(LocalDateTime.now());
     }
 
     @Override

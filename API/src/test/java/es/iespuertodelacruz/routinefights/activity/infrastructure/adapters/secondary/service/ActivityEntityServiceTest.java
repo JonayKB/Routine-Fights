@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.seco
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -20,8 +21,11 @@ import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secon
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.repositories.IActivityEntityRepository;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.services.ActivityEntityService;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.exceptions.ActivityNotFoundExcetion;
+import es.iespuertodelacruz.routinefights.user.domain.User;
+import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
+
 @SpringBootTest
- class ActivityEntityServiceTest {
+class ActivityEntityServiceTest {
     @Mock
     private IActivityEntityRepository activityEntityRepository;
 
@@ -50,7 +54,7 @@ import es.iespuertodelacruz.routinefights.activity.infrastructure.exceptions.Act
         when(activityEntityRepository.findById(activityId)).thenReturn(Optional.of(activityEntity));
         when(activityEntityMapper.toDomain(activityEntity)).thenReturn(new Activity());
 
-        Activity activity= activityEntityService.findById(activityId);
+        Activity activity = activityEntityService.findById(activityId);
 
         assertNotNull(activity);
     }
@@ -66,9 +70,12 @@ import es.iespuertodelacruz.routinefights.activity.infrastructure.exceptions.Act
     @Test
     void saveTestOK() {
         Activity activity = new Activity();
+        activity.setCreator(new User());
         ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setCreator(new UserEntity());
         when(activityEntityMapper.toEntity(activity)).thenReturn(activityEntity);
-        when(activityEntityRepository.save(activityEntity)).thenReturn(activityEntity);
+        when(activityEntityRepository.create(any(), any(), any(), any(), any(), any(), any()))
+                .thenReturn(activityEntity);
         when(activityEntityMapper.toDomain(activityEntity)).thenReturn(activity);
 
         Activity result = activityEntityService.save(activity);
@@ -82,7 +89,7 @@ import es.iespuertodelacruz.routinefights.activity.infrastructure.exceptions.Act
         int perPage = 10;
         when(activityEntityRepository.getPagination(0, perPage)).thenReturn(new ArrayList<>());
 
-        List<Activity> list =activityEntityService.getPagination(page, perPage);
+        List<Activity> list = activityEntityService.getPagination(page, perPage);
 
         assertNotNull(list);
 
@@ -91,7 +98,10 @@ import es.iespuertodelacruz.routinefights.activity.infrastructure.exceptions.Act
     @Test
     void getSubscribedActivities() {
         String userId = "1L";
-        when(activityEntityRepository.getSubscribedActivities(userId)).thenReturn(new ArrayList<>());
+        ActivityEntity activityEntity = new ActivityEntity();
+
+        when(activityEntityRepository.getSubscribedActivities(userId)).thenReturn(List.of(activityEntity));
+        when(activityEntityRepository.getTimesRemaining(any(), any(), any(), any())).thenReturn(1);
 
         List<Activity> list = activityEntityService.getSubscribedActivities(userId);
 
@@ -101,32 +111,42 @@ import es.iespuertodelacruz.routinefights.activity.infrastructure.exceptions.Act
     @Test
     void getSubscribedActivitiesWithStreak() {
         String userId = "1L";
-        when(activityEntityRepository.getSubscribedActivitiesWithStreak(userId)).thenReturn(new ArrayList<>());
+        ActivityEntity activityEntity = new ActivityEntity();
+        when(activityEntityRepository.getSubscribedActivitiesWithStreak(userId)).thenReturn(List.of(activityEntity));
+        when(activityEntityMapper.toDomain(activityEntity)).thenReturn(new Activity());
 
         List<Activity> list = activityEntityService.getSubscribedActivitiesWithStreak(userId);
 
         assertNotNull(list);
     }
+
     @Test
     void getPaginationNotSubscribed() {
         int page = 1;
         int perPage = 10;
         String userId = "1L";
-        when(activityEntityRepository.getPaginationNotSubscribed(0, perPage, userId,"")).thenReturn(new ArrayList<>());
+        when(activityEntityRepository.getPaginationNotSubscribed(0, perPage, userId, "")).thenReturn(new ArrayList<>());
 
-        List<Activity> list = activityEntityService.getPaginationNotSubscribed(page, perPage, userId,"");
+        List<Activity> list = activityEntityService.getPaginationNotSubscribed(page, perPage, userId, "");
 
         assertNotNull(list);
     }
+
     @Test
     void getSubscribedActivitiesWithStreakByName() {
         String userId = "1L";
         String activityName = "activityName";
-        when(activityEntityRepository.getSubscribedActivitiesWithStreak(userId, activityName)).thenReturn(new ArrayList<>());
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setTimeRate("daily");
+
+        when(activityEntityRepository.getSubscribedActivitiesWithStreak(userId, activityName))
+                .thenReturn(List.of(activityEntity));
+        when(activityEntityRepository.getTimesRemaining(any(), any(), any(), any())).thenReturn(1);
+        when(activityEntityMapper.toDomain(activityEntity)).thenReturn(new Activity());
 
         List<Activity> list = activityEntityService.getSubscribedActivities(userId, activityName);
 
         assertNotNull(list);
     }
-    
+
 }
