@@ -86,7 +86,7 @@ const LoginScreen = ({ navigation }: Props) => {
             }
             placeholderTextColor="#4B0082"
             secureTextEntry={!passwordShown}
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl pl-3 text-black"
+            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] pl-3 text-black"
             onChangeText={(text) => setPassword(text)}
           />
           <TouchableOpacity onPress={() => setPasswordShown(!passwordShown)}>
