@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.routinefights.user.common;
 
 import java.util.List;
+import java.util.Set;
 
 import es.iespuertodelacruz.routinefights.shared.services.ICRUD;
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -30,14 +31,14 @@ public interface IUserCommon<T> extends ICRUD<T> {
      * 
      * @return List<User>
      */
-    public List<T> findFollowedUsersByEmail(String email);
+    public List<T> findFollowedUsersByEmail(String email, String usernameFilter);
 
     /**
      * Method to find the followers by user's email
      * 
      * @return List<User>
      */
-    public List<T> findFollowersByEmail(String email);
+    public List<T> findFollowersByEmail(String email, String usernameFilter);
 
     /**
      * Method to follow a user
@@ -62,7 +63,7 @@ public interface IUserCommon<T> extends ICRUD<T> {
      * 
      * @return List<String>
      */
-    public List<String> findAllImages();
+    public Set<String> findAllImages();
 
     /**
      * Method to restore a user
@@ -87,4 +88,19 @@ public interface IUserCommon<T> extends ICRUD<T> {
      * @return List<User>
      */
     public List<User> findByUsername(String regex);
+
+    public boolean subscribeActivity(String email, String activityID);
+
+    public boolean unSubscribeActivity(String email, String activityID);
+
+    public T findByEmailOnlyBase(String email);
+
+    public List<T> getPaginationByName(int page, int perPage, String userName, String userID);
+
+    public Boolean likePost(String id, String postId);
+
+    public Boolean unLikePost(String id, String postId);
+
+
+
 }

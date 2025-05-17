@@ -38,7 +38,7 @@ public class UserEntity extends UserCommon {
     private List<ReportEntity> reports;
 
     @Relationship(type = "Posted", direction = Relationship.Direction.OUTGOING)
-    private List<ReportEntity> posts;
+    private List<PostEntity> posts;
 
     @Relationship(type = "Commented", direction = Relationship.Direction.OUTGOING)
     private List<CommentEntity> comments;
@@ -57,6 +57,9 @@ public class UserEntity extends UserCommon {
 
     @Relationship(type = "Has_Badge", direction = Relationship.Direction.OUTGOING)
     private List<BadgeEntity> badges;
+
+    @Relationship(type = "Participated", direction = Relationship.Direction.OUTGOING)
+    private List<ActivityEntity> activities;
 
     /**
      * Default constructor
@@ -95,9 +98,9 @@ public class UserEntity extends UserCommon {
     }
 
     public UserEntity(String id, List<UserEntity> followers, List<UserEntity> following, List<ReportEntity> reports,
-            List<ReportEntity> posts, List<CommentEntity> comments, List<PostEntity> likedPosts,
+            List<PostEntity> posts, List<CommentEntity> comments, List<PostEntity> likedPosts,
             List<MeetingEntity> meetings, List<ActivityEntity> createdActivities, TeamEntity team,
-            List<BadgeEntity> badges) {
+            List<BadgeEntity> badges, List<ActivityEntity> activities) {
         this.id = id;
         this.followers = followers;
         this.following = following;
@@ -109,6 +112,7 @@ public class UserEntity extends UserCommon {
         this.createdActivities = createdActivities;
         this.team = team;
         this.badges = badges;
+        this.activities = activities;
     }
 
     public List<ReportEntity> getReports() {
@@ -119,11 +123,11 @@ public class UserEntity extends UserCommon {
         this.reports = reports;
     }
 
-    public List<ReportEntity> getPosts() {
+    public List<PostEntity> getPosts() {
         return this.posts;
     }
 
-    public void setPosts(List<ReportEntity> posts) {
+    public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
     }
 
@@ -180,6 +184,19 @@ public class UserEntity extends UserCommon {
         return this;
     }
 
+    public List<ActivityEntity> getActivities() {
+        return this.activities;
+    }
+
+    public void setActivities(List<ActivityEntity> activities) {
+        this.activities = activities;
+    }
+
+    public UserEntity activities(List<ActivityEntity> activities) {
+        setActivities(activities);
+        return this;
+    }
+
     public UserEntity followers(List<UserEntity> followers) {
         setFollowers(followers);
         return this;
@@ -195,7 +212,7 @@ public class UserEntity extends UserCommon {
         return this;
     }
 
-    public UserEntity posts(List<ReportEntity> posts) {
+    public UserEntity posts(List<PostEntity> posts) {
         setPosts(posts);
         return this;
     }

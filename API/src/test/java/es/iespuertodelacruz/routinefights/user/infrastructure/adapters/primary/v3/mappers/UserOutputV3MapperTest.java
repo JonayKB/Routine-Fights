@@ -21,7 +21,7 @@ class UserOutputV3MapperTest extends UserInitializer {
 
     @Test
     void toOutputDTOV3Test() {
-        UserOutputDTOV3 userOutputDTOV3 = mapper.tOutputDTOV3(user);
+        UserOutputDTOV3 userOutputDTOV3 = mapper.toDTO(user);
         assertNotNull(userOutputDTOV3, "Error mapping to output DTO");
         assertEquals(ID, userOutputDTOV3.id(), ERROR_MAPPING_PROPERTY + "id");
         assertEquals(USERNAME, userOutputDTOV3.username(), ERROR_MAPPING_PROPERTY + "username");
@@ -44,7 +44,7 @@ class UserOutputV3MapperTest extends UserInitializer {
         User user2 = new User();
         User user3 = new User();
         List<User> users = new ArrayList<>(List.of(user2, user3));
-        List<UserOutputDTOV3> usersOutputV3 = mapper.tOutputDTOV3(users);
+        List<UserOutputDTOV3> usersOutputV3 = mapper.toDTO(users);
         assertNotNull(users, "Error mapping to entity");
         assertEquals(users.size(), usersOutputV3.size(), "Error mapping to entity");
     }

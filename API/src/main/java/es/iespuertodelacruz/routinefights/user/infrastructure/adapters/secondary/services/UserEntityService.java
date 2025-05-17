@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondar
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
  */
 @Service
 public class UserEntityService implements IUserRepository {
+    private static final String INVALID_PHONENUMBER = "Invalid phone number, should be: +[country code][phone number], example: +34612345678";
+    private static final String INVALID_EMAIL = "Invalid email, should be: [email]@[domain].[tld], example: jonaykb@gmail.com";
     private static final String DATA_REQUIRED = "Data required";
     private static final String ERROR_UPDATING_USER = "Error updating user";
     private static final String USER_NOT_FOUND = "User not found";
@@ -121,6 +124,14 @@ public class UserEntityService implements IUserRepository {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserSaveException("Email already exists");
         }
+        if (!checkIfEmailIsValid(user.getEmail())) {
+            throw new UserUpdateException(
+                    INVALID_EMAIL);
+        }
+        if (!checkIfPhoneNumberIsValid(user.getPhoneNumber())) {
+            throw new UserUpdateException(
+                    INVALID_PHONENUMBER);
+        }
 
         UserEntity userEntity = userEntityMapper.toEntity(user);
         userEntity.setFollowers(new ArrayList<>());
@@ -147,6 +158,14 @@ public class UserEntityService implements IUserRepository {
 
         if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        if (!checkIfEmailIsValid(user.getEmail())) {
+            throw new UserUpdateException(
+                    INVALID_EMAIL);
+        }
+        if (!checkIfPhoneNumberIsValid(user.getPhoneNumber())) {
+            throw new UserUpdateException(
+                    INVALID_PHONENUMBER);
         }
 
         userEntity.setUsername(user.getUsername());
@@ -183,6 +202,10 @@ public class UserEntityService implements IUserRepository {
             if (userRepository.existsByEmail(user.getEmail())) {
                 throw new UserUpdateException("Email already exists");
             }
+            if (!checkIfEmailIsValid(user.getEmail())) {
+                throw new UserUpdateException(
+                        INVALID_EMAIL);
+            }
             userEntity.setEmail(user.getEmail());
             userEntity.setVerified(false);
             userEntity.setVerificationToken(UUID.randomUUID().toString());
@@ -190,6 +213,11 @@ public class UserEntityService implements IUserRepository {
 
         if (user.getPassword() != null && !user.getPassword().equals(userEntity.getPassword())) {
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        if (!checkIfPhoneNumberIsValid(user.getPhoneNumber())) {
+            throw new UserUpdateException(
+                    INVALID_PHONENUMBER);
         }
 
         userEntity.setUsername(user.getUsername());
@@ -250,18 +278,18 @@ public class UserEntityService implements IUserRepository {
     }
 
     @Override
-    public List<User> findFollowedUsersByEmail(String email) {
+    public List<User> findFollowedUsersByEmail(String email, String usernameFilter) {
         try {
-            return userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email));
+            return userEntityMapper.toDomain(userRepository.findFollowedUsersByEmail(email, usernameFilter));
         } catch (Exception e) {
             throw new UserNotFoundException("Followed users not found");
         }
     }
 
     @Override
-    public List<User> findFollowersByEmail(String email) {
+    public List<User> findFollowersByEmail(String email, String usernameFilter) {
         try {
-            return userEntityMapper.toDomain(userRepository.findFollowersByEmail(email));
+            return userEntityMapper.toDomain(userRepository.findFollowersByEmail(email, usernameFilter));
         } catch (Exception e) {
             throw new UserNotFoundException("Followers not found");
         }
@@ -296,11 +324,74 @@ public class UserEntityService implements IUserRepository {
     }
 
     @Override
-    public List<String> findAllImages() {
+    public Set<String> findAllImages() {
         try {
             return userRepository.findAllImages();
         } catch (Exception e) {
             throw new UserNotFoundException("Error finding images");
+        }
+    }
+
+    @Override
+    public boolean subscribeActivity(String userEmail,String activityID){
+        try {
+            return userRepository.susbcribeActivity(userEmail,activityID);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error subscribing activity: "+e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean unSubscribeActivity(String userEmail,String activityID){
+        try {
+            return userRepository.unSusbcribeActivity(userEmail,activityID);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error unsuscribing activity: "+e.getMessage());
+        }
+    }
+
+    
+    boolean checkIfPhoneNumberIsValid(String phoneNumber) {
+        return phoneNumber.matches("^\\+\\d{1,3}\\d{9}$");
+    }
+
+    boolean checkIfEmailIsValid(String email) {
+        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    @Override
+    public User findByEmailOnlyBase(String email) {
+        try {
+            return userEntityMapper.toDomain(userRepository.findByEmailOnlyBase(email));
+        } catch (Exception e) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public List<User> getPaginationByName(int offset, int limit, String userName, String userID) {
+        try {
+            return userEntityMapper.toDomain(userRepository.getPaginationByName(offset, limit, userName,userID));
+        } catch (Exception e) {
+            throw new UserNotFoundException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Boolean likePost(String userId, String postId) {
+        try {
+            return userRepository.likePost(userId, postId);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error liking post");
+        }
+    }
+
+    @Override
+    public Boolean unLikePost(String userId, String postId) {
+        try {
+            return userRepository.unLikePost(userId, postId);
+        } catch (Exception e) {
+            throw new UserNotFoundException("Error unliking post");
         }
     }
 }

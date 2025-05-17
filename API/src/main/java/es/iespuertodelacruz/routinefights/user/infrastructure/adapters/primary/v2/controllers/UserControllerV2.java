@@ -9,6 +9,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -30,6 +31,8 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
 @Controller
 @CrossOrigin
 public class UserControllerV2 {
+    private static final String ERROR_FINDING_USER = "Error finding user";
+
     Logger logger = Logger.getLogger(UserControllerV2.class.getName());
 
     private IUserService userService;
@@ -74,58 +77,68 @@ public class UserControllerV2 {
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
-    @QueryMapping("usersV2")
-    public List<UserOutputDTOV2> findUsersByUsername(@Argument String regex) {
-        try {
-            return userOutputMapper.toOutputDTOV2(userService.findByUsername(regex));
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "(findUsersByUsername) Error finding users: {0}", e.getMessage());
-            throw new UserNotFoundException("Error finding users");
-        }
-    }
-
-    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
-    @QueryMapping("userV2")
-    public UserOutputDTOV2 findById(@Argument String id) {
+    @QueryMapping("getUserV2")
+    public UserOutputDTOV2 findByEmail(@Argument String email) {
         User user;
         try {
-            user = userService.findById(id);
+            user = userService.findByEmail(email);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(findById) Error finding user: {0}", e.getMessage());
-            throw new UserNotFoundException("Error finding user");
+            throw new UserNotFoundException(ERROR_FINDING_USER);
         }
         return userOutputMapper.toOutputDTOV2(user);
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
-    @QueryMapping("followedByEmail")
-    public List<Follower> findFollowedUsersByEmail(@Argument String email) {
-        List<User> following;
+    @QueryMapping("getUserV2IsFollowing")
+    public UserOutputDTOV2 findByIdIsFollowing(@Argument String email) {
+        User user;
+        User searchingUser;
         try {
-            following = userService.findFollowedUsersByEmail(email);
+            user = userService.findByEmail(email);
+            searchingUser = userService
+                    .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(findById) Error finding user: {0}", e.getMessage());
+            throw new UserNotFoundException(ERROR_FINDING_USER);
+        }
+        return userOutputMapper.toOutputDTOV2(user, searchingUser);
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("followedByEmail")
+    public List<Follower> findFollowedUsersByEmail(@Argument String email, @Argument String usernameFilter) {
+        List<User> following;
+        User self;
+        try {
+            following = userService.findFollowedUsersByEmail(email, usernameFilter);
+            self = userService.findByEmail(email);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(findFollowedUsersByEmail) Error finding followed users: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding followed users");
         }
-        return followerMapper.toFollower(following);
+        return followerMapper.toFollower(following, self);
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("followersByEmail")
-    public List<Follower> findFollowersByEmail(@Argument String email) {
+    public List<Follower> findFollowersByEmail(@Argument String email, @Argument String usernameFilter) {
         List<User> followers;
+        User self;
         try {
-            followers = userService.findFollowersByEmail(email);
+            followers = userService.findFollowersByEmail(email, usernameFilter);
+            self = userService.findByEmailOnlyBase(email);
         } catch (Exception e) {
             logger.log(Level.WARNING, "(findFollowersByEmail) Error finding followers: {0}", e.getMessage());
             throw new UserNotFoundException("Error finding followers");
         }
-        return followerMapper.toFollower(followers);
+        return followerMapper.toFollower(followers, self);
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("followUser")
-    public boolean followUser(@Argument String followerEmail, @Argument String followingEmail) {
+    public boolean followUser(@Argument String followingEmail) {
+        String followerEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
             return userService.followUser(followerEmail, followingEmail);
         } catch (Exception e) {
@@ -136,7 +149,8 @@ public class UserControllerV2 {
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("unfollowUser")
-    public boolean unfollowUser(@Argument String followerEmail, @Argument String followingEmail) {
+    public boolean unfollowUser(@Argument String followingEmail) {
+        String followerEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
             return userService.unfollowUser(followerEmail, followingEmail);
         } catch (Exception e) {
@@ -149,12 +163,16 @@ public class UserControllerV2 {
     @MutationMapping("updateUserV2")
     public UserOutputDTOV2 update(@Argument UserInputDTOV2 user) {
         User userDomain;
+
         try {
-            userDomain = userService.update(user.id(), user.username(), user.email(), user.password(),
+            User previousUser = userService
+                    .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+
+            userDomain = userService.update(previousUser.getId(), user.username(), user.email(), user.password(),
                     user.nationality(), user.phoneNumber(), user.image());
 
             if (userDomain != null && (!userDomain.getVerified() && userDomain.getVerificationToken() != null)) {
-                mailService.sentVerifyToken(userDomain.getEmail(), "Verify your email: " + userDomain.getUsername(),
+                mailService.sentVerifyToken(userDomain.getEmail(), "Verify your new email: " + userDomain.getUsername(),
                         userDomain.getVerificationToken());
             }
         } catch (Exception e) {
@@ -174,4 +192,88 @@ public class UserControllerV2 {
             throw new UserDeleteException("Unable to delete the user");
         }
     }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @MutationMapping("subscribeActivity")
+    public boolean subscribeActivity(@Argument String activityID) {
+        try {
+            return userService.subscribeActivity(SecurityContextHolder.getContext().getAuthentication().getName(),
+                    activityID);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(subscribeActivity) Unable to subscribe the user to the activity: {0}",
+                    e.getMessage());
+            throw new UserUpdateException("Unable to subscribe the user to the activity");
+        }
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @MutationMapping("unSubscribeActivity")
+    public boolean unSubscribeActivity(@Argument String activityID) {
+        try {
+            return userService.unSubscribeActivity(SecurityContextHolder.getContext().getAuthentication().getName(),
+                    activityID);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(unSubscribeActivity) Unable to unsubscribe the user to the activity: {0}",
+                    e.getMessage());
+            throw new UserUpdateException("Unable to unsubscribe the user to the activity");
+        }
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("getOwnUser")
+    public UserOutputDTOV2 getOwnUser() {
+        User user;
+        try {
+            user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(getOwnUser) Error finding user: {0}", e.getMessage());
+            throw new UserNotFoundException(ERROR_FINDING_USER);
+        }
+        return userOutputMapper.toOutputDTOV2(user);
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @QueryMapping("getUserPaginationByName")
+    public List<UserOutputDTOV2> getUserPaginationByName(@Argument int page, @Argument int perPage,
+            @Argument String userName) {
+        try {
+            if (page < 0 || perPage <= 0) {
+                throw new IllegalArgumentException("Page and perPage must be greater than 0");
+            }
+            User self = userService
+                    .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+            return userOutputMapper
+                    .toOutputDTOV2(userService.getPaginationByName(page, perPage, userName, self.getId()),self);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(getUserPaginationByName) Error finding users: {0}", e.getMessage());
+            throw new UserNotFoundException("Error finding users");
+        }
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @MutationMapping("likePost")
+    public Boolean likePost(@Argument String postID) {
+        try {
+            User user = userService
+                    .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+            return userService.likePost(user.getId(), postID);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(likePost) Error liking post: {0}", e.getMessage());
+            throw new UserUpdateException("Error liking post");
+        }
+    }
+
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @MutationMapping("unLikePost")
+    public boolean unLikePost(@Argument String postID) {
+        try {
+            User user = userService
+                    .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
+            return userService.unLikePost(user.getId(), postID);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "(unLikePost) Error unliking post: {0}", e.getMessage());
+            throw new UserUpdateException("Error unliking post");
+        }
+    }
+
 }

@@ -100,7 +100,7 @@ class UserControllerV3Test {
     @Test
     void findByIdTest() {
         when(userService.findById(anyString())).thenReturn(new User());
-        when(userOutputMapper.tOutputDTOV3(any(User.class))).thenReturn(userOutputDTOV3);
+        when(userOutputMapper.toDTO(any(User.class))).thenReturn(userOutputDTOV3);
         assertNotNull(userControllerV3.findById("id"));
     }
 
@@ -119,7 +119,7 @@ class UserControllerV3Test {
         when(userService.post(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyBoolean(), anyString(), any(LocalDateTime.class), any(LocalDateTime.class),
                 any(LocalDateTime.class))).thenReturn(new User());
-        when(userOutputMapper.tOutputDTOV3(any(User.class))).thenReturn(userOutputDTOV3);
+        when(userOutputMapper.toDTO(any(User.class))).thenReturn(userOutputDTOV3);
         assertNotNull(userControllerV3.post(userInputDTOV3));
     }
 
@@ -140,7 +140,7 @@ class UserControllerV3Test {
         when(userService.put(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString(), anyBoolean(), anyString(), any(LocalDateTime.class), any(LocalDateTime.class),
                 any(LocalDateTime.class))).thenReturn(new User());
-        when(userOutputMapper.tOutputDTOV3(any(User.class))).thenReturn(userOutputDTOV3);
+        when(userOutputMapper.toDTO(any(User.class))).thenReturn(userOutputDTOV3);
         assertNotNull(userControllerV3.put(userInputDTOV3));
     }
 

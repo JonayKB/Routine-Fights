@@ -12,7 +12,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.v
  */
 @Mapper(componentModel = "spring")
 public interface UserOutputV3Mapper {
-    public UserOutputDTOV3 tOutputDTOV3(User user);
+    public UserOutputDTOV3 toDTO(User user);
 
-    public List<UserOutputDTOV3> tOutputDTOV3(List<User> users);
+    public List<UserOutputDTOV3> toDTO(List<User> users);
 }

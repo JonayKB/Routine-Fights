@@ -22,7 +22,7 @@ class PostEntityTest {
     private static final String ID_2 = "2";
     private static final String IMAGE = "http://example.com/image.png";
     private static final Integer STREAK = 5;
-    private static final String POINTS = "10";
+    private static final Integer POINTS = 10;
     private static final LocalDateTime FILED_AT = LocalDateTime.of(2023, 1, 1, 12, 0);
     private static final LocalDateTime CREATED_AT = LocalDateTime.of(2023, 1, 2, 12, 0);
     private static final LocalDateTime UPDATED_AT = LocalDateTime.of(2023, 1, 3, 12, 0);
@@ -107,7 +107,7 @@ class PostEntityTest {
         assertTrue(str.contains(ID_1));
         assertTrue(str.contains(IMAGE));
         assertTrue(str.contains(STREAK.toString()));
-        assertTrue(str.contains(POINTS));
+        assertTrue(str.contains(POINTS.toString()));
         assertTrue(str.contains(FILED_AT.toString()));
     }
 
@@ -122,4 +122,5 @@ class PostEntityTest {
         PostEntity post = new PostEntity();
         assertNotEquals(post, new Object());
     }
+    
 }
