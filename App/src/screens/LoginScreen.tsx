@@ -10,6 +10,7 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import style from "../styles/Styles.json";
 import { useTokenContext } from "../contexts/TokenContextProvider";
+import FormInput from "../components/FormInput";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
@@ -63,18 +64,21 @@ const LoginScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "CCCCCC" : "F5F5F7"}] justify-center items-center`}>
+    <View
+      className={`flex-1 bg-[#${
+        darkmode ? "CCCCCC" : "F5F5F7"
+      }] justify-center items-center`}
+    >
       <View
         className="justify-evenly bg-white rounded-2xl w-96"
         style={{ height: 400 }}
       >
         <View className="m-10 mb-5">
-          <TextInput
-            placeholder={translations[language || "en-EN"].screens.Login.email}
-            placeholderTextColor="#4B0082"
-            inputMode="email"
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-2xl mb-5 pl-3 text-black"
-            onChangeText={(text) => setEmail(text)}
+          <FormInput
+            label={translations[language || "en-EN"].screens.Login.email}
+            name={email}
+            setText={(text) => setEmail(text)}
+            mode="email"
           />
           <TextInput
             placeholder={

@@ -69,7 +69,7 @@
         "UploadForm": {
             "takeFromCamera": "Tomar de camara",
             "selectFromLibrary": "Tomar de galeria",
-            "selectCategory": "Selecciona categoria",
+            "selectactivity": "Selecciona categoria",
             "changePicture": "Cambiar imagen",
             "post": "Subir"
         }

@@ -27,9 +27,10 @@ const StreaksScreen = ({ navigation, route }: Props) => {
     name: null,
     description: null,
     image: null,
-    timeRate: "3",
+    timeRate: "daily",
     timesRequiered: null,
     streak: 0,
+    timesRemaining: 0,
   };
 
   const [activities, setActivities] = useState<ActivityWithStreak[]>([
@@ -95,6 +96,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
                     name={item.name}
                     description={item.description}
                     streak={item.streak}
+                    timesRemaining={item.timesRemaining}
                     unsubscribeFunction={() => deleteActivity(item.id)}
                   />
                 )}

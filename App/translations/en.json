@@ -69,7 +69,7 @@
         "UploadForm": {
             "takeFromCamera": "Take from camera",
             "selectFromLibrary": "Select from library",
-            "selectCategory": "Select a category",
+            "selectactivity": "Select a activity",
             "changePicture": "Change picture",
             "post": "Post"
         }
