@@ -93,10 +93,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
                   </TouchableOpacity>
                 ) : (
                   <Streak
-                    name={item.name}
-                    description={item.description}
-                    streak={item.streak}
-                    timesRemaining={item.timesRemaining}
+                    streak={item}
                     unsubscribeFunction={() => deleteActivity(item.id)}
                   />
                 )}
