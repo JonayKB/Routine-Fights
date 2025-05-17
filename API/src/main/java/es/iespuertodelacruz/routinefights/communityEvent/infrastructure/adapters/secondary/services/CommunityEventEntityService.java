@@ -10,20 +10,17 @@ import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.secondary.ICommunityEventRepository;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.mappers.CommunityEventEntityMapper;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.repositories.ICommunityEventEntityRepository;
-import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.mappers.IUserEntityMapper;
 
 @Service
 public class CommunityEventEntityService implements ICommunityEventRepository {
     private ICommunityEventEntityRepository communityEventEntityRepository;
     private CommunityEventEntityMapper communityEventEntityMapper;
-    private IUserEntityMapper userEntityMapper;
 
     public CommunityEventEntityService(ICommunityEventEntityRepository communityEventEntityRepository,
-            CommunityEventEntityMapper communityEventEntityMapper, IUserEntityMapper userEntityMapper) {
+            CommunityEventEntityMapper communityEventEntityMapper) {
         this.communityEventEntityRepository = communityEventEntityRepository;
         this.communityEventEntityMapper = communityEventEntityMapper;
-        this.userEntityMapper = userEntityMapper;
     }
 
     @Override
