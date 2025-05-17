@@ -13,7 +13,7 @@ const AddButton = (props: Props) => {
     >
       <Text
         className="text-white text-8xl font-bold text-center"
-        style={{ fontFamily: "InriaSans-Regular" }}
+        style={{ fontFamily: "Roboto-Regular" }}
       >
         +
       </Text>

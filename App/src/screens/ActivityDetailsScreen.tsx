@@ -40,7 +40,7 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
       >
         <Text
           className="text-white font-bold text-2xl text-center"
-          style={{ fontFamily: "InriaSans-Regular" }}
+          style={{ fontFamily: "Roboto-Regular" }}
         >
           {translations[language || "en-EN"].screens.ActivityDetails.add}
         </Text>

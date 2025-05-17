@@ -88,7 +88,7 @@ const LoginScreen = ({ navigation }: Props) => {
           <TouchableOpacity onPress={() => setPasswordShown(!passwordShown)}>
             <Text
               className="text-[#4B0082] font-bold text-lg mt-3"
-              style={{ fontFamily: "InriaSans-Regular" }}
+              style={{ fontFamily: "Lexend-Regular" }}
             >
               {passwordShown ? "Hide" : "Show"}
             </Text>
@@ -101,7 +101,7 @@ const LoginScreen = ({ navigation }: Props) => {
           >
             <Text
               className={style.utils.button}
-              style={{ fontFamily: "InriaSans-Regular" }}
+              style={{ fontFamily: "Lexend-Regular" }}
             >
               {translations[language || "en-EN"].screens.Login.login}
             </Text>
