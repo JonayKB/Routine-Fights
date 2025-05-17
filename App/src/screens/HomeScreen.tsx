@@ -3,7 +3,8 @@ import {
   FlatList,
   RefreshControl,
   TouchableWithoutFeedback,
-  Button,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
@@ -68,25 +69,44 @@ const HomeScreen = ({ navigation }: Props) => {
   };
 
   const loadMore = () => {
-    if (isLoadingMore || posts.length === 0) return;
-    lastDate.current = posts[posts.length - 1].createdAt;
+    if (isLoadingMore || posts?.length === 0) return;
+    lastDate.current = posts[posts?.length - 1]?.createdAt;
     setIsLoadingMore(true);
   };
 
   return (
     <View className={`flex-1 ${darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"}`}>
       <TouchableWithoutFeedback
-        className="absolute z-10 left-5 top-5"
+        className="absolute z-10 right-5 top-5"
         onPress={() => navigation.navigate("Search")}
       >
-        <Icon name="search" size={35} color="#7C5AF1" />
+        <Icon name="search" size={35} color="#7D3C98" />
       </TouchableWithoutFeedback>
-      <View className="flex-row justify-evenly items-center absolute z-10 top-8 w-full">
-        <Button title="Following" onPress={() => setType("following")} />
-        <Button title="Home" onPress={() => setType("home")} />
-        <Button title="activity" onPress={() => setType("activity")} />
+      <View className="flex-row justify-evenly items-center px-4 mt-2">
+        {["following", "home", "activity"].map((t) => {
+          const isActive = type === t;
+          return (
+            <TouchableOpacity
+              key={t}
+              onPress={() => setType(t as "following" | "home" | "activity")}
+              className={`
+              px-4 py-2 rounded-full
+              ${isActive ? "bg-[#F65261]" : "bg-[#E8E2F0]"}
+            `}
+            >
+              <Text
+                className={`
+                font-bold text-lg
+                ${isActive ? "text-white" : "text-[#7D3C98]"}
+              `}
+              >
+                {t.charAt(0).toUpperCase() + t.slice(1)}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
-      <View className="items-center">
+      <View className="flex-1 pt-6">
         <FlatList
           refreshControl={
             <RefreshControl refreshing={load} onRefresh={reload} />
