@@ -44,8 +44,10 @@ public class ActivityEntityService implements IActivityRepository {
 
     @Override
     public Activity save(Activity activity) {
-        ActivityEntity activityEntity = activityEntityMapper.toEntity(activity);
-        return activityEntityMapper.toDomain(activityEntityRepository.save(activityEntity));
+
+        return activityEntityMapper.toDomain(activityEntityRepository.create(activity.getName(),
+                activity.getDescription(), activity.getImage(), activity.getTimeRate(),
+                activity.getTimesRequiered(), activity.getCreator().getId(), LocalDateTime.now()));
     }
 
     @Override
