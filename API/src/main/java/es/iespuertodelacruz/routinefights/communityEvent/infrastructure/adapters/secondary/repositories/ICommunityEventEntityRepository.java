@@ -39,11 +39,12 @@ public interface ICommunityEventEntityRepository extends Neo4jRepository<Communi
     CommunityEventEntity getCommunityEventEndsToday(@Param("currentDay") LocalDateTime now);
 
     @Query("""
+            CREATE (ce:CommunityEvent {name: $name, createdAt: $createdAt, startDate: $startDate, finishDate: $finishDate, totalRequired: $totalRequired, image: $image})
+            WITH ce
             UNWIND $activitiesIDs AS activityID
             MATCH (a:Activity) WHERE elementId(a) = activityID
-            CREATE (ce:CommunityEvent {name: $name, createdAt: $createdAt, startDate: $startDate, finishDate: $finishDate, totalRequired: $totalRequired, image: $image})
             CREATE (ce)-[r:Related]->(a)
-            RETURN ce,r,a
+            RETURN ce, r, a
             """)
     CommunityEventEntity create(@Param("name") String name, @Param("createdAt") LocalDateTime createdAt,
             @Param("startDate") LocalDateTime startDate, @Param("finishDate") LocalDateTime finishDate,
