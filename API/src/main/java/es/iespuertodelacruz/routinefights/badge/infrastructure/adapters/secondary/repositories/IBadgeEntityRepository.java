@@ -18,10 +18,13 @@ public interface IBadgeEntityRepository extends Neo4jRepository<BadgeEntity, Str
     @Query("MATCH (u:User {email:$email})-[r:Has_Badge]->(b:Badge)-[a:Associated_With]->(c:CommunityEvent) RETURN b,r,u,a,c")
     List<BadgeEntity> findByUserEmail(@Param("email") String email);
 
-    @Query("MATCH (u:User {email: $userEmail}), (b:Badge) WHERE elementId(b) = $badgeId MERGE (u)-[r:Has_Badge]->(b) RETURN exists((u)-[:Has_Badge]->(b))")
-    Boolean addBadgeToUser(@Param("userEmail") String userEmail, @Param("badgeId") String badgeId);
+    @Query("MATCH (u:User) WHERE elementId(u)=$userId MATCH (b:Badge) WHERE elementId(b) = $badgeId MERGE (u)-[r:Has_Badge]->(b) RETURN exists((u)-[:Has_Badge]->(b))")
+    Boolean addBadgeToUser(@Param("userId") String userId, @Param("badgeId") String badgeId);
 
-    @Query("UNWIND $userEmail AS email MATCH (u:User {email: email}), (b:Badge) WHERE elementId(b) = $badgeId MERGE (u)-[r:Has_Badge]->(b) RETURN exists((u)-[:Has_Badge]->(b))")
-    List<Boolean> addBadgeToUser(@Param("userEmail") List<String> userEmail, @Param("badgeId") String badgeId);
+    @Query("UNWIND $userIds AS userId MATCH (u:User) WHERE elementId(u)=userId MATCH (b:Badge) WHERE elementId(b) = $badgeId MERGE (u)-[r:Has_Badge]->(b) RETURN exists((u)-[:Has_Badge]->(b))")
+    List<Boolean> addBadgeToUser(@Param("userIds") List<String> userId, @Param("badgeId") String badgeId);
+
+    @Query("MATCH (c:CommunityEvent) WHERE elementId(c) = $communityEventId CREATE (b:Badge {image: $image, level: $level})-[r:Associated_With]->(c) RETURN b,r,c")
+    BadgeEntity create(@Param("image") String image, @Param("level") Integer level, @Param("communityEventId") String communityEventId);
 
 }

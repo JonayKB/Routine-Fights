@@ -20,9 +20,9 @@ public interface ICommunityEventService {
 
     Integer getCommunityEventPointsById(String id);
 
-    List<User> getUsersParticipatingInCommunityEvent(String id);
+    List<String> getUsersParticipatingInCommunityEvent(String id);
 
-    List<User> getUsersParticipatingInCommunityEventEndsToday();
+    List<String> getUsersParticipatingInCommunityEventEndsToday();
 
     Set<String> findAllImages();
 
