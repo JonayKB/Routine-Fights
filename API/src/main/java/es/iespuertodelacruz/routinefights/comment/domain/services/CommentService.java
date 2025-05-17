@@ -11,6 +11,7 @@ import es.iespuertodelacruz.routinefights.comment.domain.ports.secondary.ICommen
 import es.iespuertodelacruz.routinefights.post.domain.Post;
 import es.iespuertodelacruz.routinefights.post.domain.ports.secondary.IPostRepository;
 import es.iespuertodelacruz.routinefights.user.domain.User;
+
 @Service
 public class CommentService implements ICommentService {
 
@@ -41,7 +42,7 @@ public class CommentService implements ICommentService {
             comment.setReplingComment(replingComment);
         }
 
-        return commentRepository.comment(comment);
+        return commentRepository.comment(comment.getMessage(),comment.getCreatedAt(),user.getId(),post.getId());
     }
 
     @Override

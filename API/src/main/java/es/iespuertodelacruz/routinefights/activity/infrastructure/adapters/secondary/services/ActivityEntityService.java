@@ -44,8 +44,10 @@ public class ActivityEntityService implements IActivityRepository {
 
     @Override
     public Activity save(Activity activity) {
-        ActivityEntity activityEntity = activityEntityMapper.toEntity(activity);
-        return activityEntityMapper.toDomain(activityEntityRepository.save(activityEntity));
+
+        return activityEntityMapper.toDomain(activityEntityRepository.create(activity.getName(),
+                activity.getDescription(), activity.getImage(), activity.getTimeRate(),
+                activity.getTimesRequiered(), activity.getCreator().getId(), LocalDateTime.now()));
     }
 
     @Override
@@ -82,7 +84,7 @@ public class ActivityEntityService implements IActivityRepository {
             LocalDateTime[] dates = timeRatesDate.getActualIterationDates(activity.getTimeRate());
 
             activity.setTimesRemaining(
-                    activityEntityRepository.getTimesRemaining(activity.getId(), dates[0], dates[1]));
+                    activityEntityRepository.getTimesRemaining(activity.getId(), dates[0], dates[1], userID));
         });
         return activityEntityMapper.toDomain(subscribedActivities);
     }

@@ -16,8 +16,6 @@ public abstract class ActivityCommons extends EntitiesTimestamps {
     @Transient
     private Integer timesRemaining;
 
-    
-
     protected ActivityCommons(String name, String description, String image, String timeRate, Integer timesRequiered,
             LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
         super(createdAt, updatedAt, deletedAt);
@@ -71,15 +69,19 @@ public abstract class ActivityCommons extends EntitiesTimestamps {
     public void setTimesRequiered(Integer timesRequiered) {
         this.timesRequiered = timesRequiered;
     }
+
     public Integer getStreak() {
         return this.streak;
     }
+
     public void setStreak(Integer streak) {
         this.streak = streak;
     }
+
     public Integer getTimesRemaining() {
         return this.timesRemaining;
     }
+
     public void setTimesRemaining(Integer timesRemaining) {
         this.timesRemaining = timesRemaining;
     }
