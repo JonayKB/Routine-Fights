@@ -8,7 +8,7 @@ import { resetNavigation } from "../utils/Utils";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { register } from "../repositories/RegisterRepository";
-import FormInput from '../components/FormInput';
+import FormInput from "../components/FormInput";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Register">;
 
@@ -49,25 +49,50 @@ const RegisterScreen = ({ navigation, route }: Props) => {
     >
       <View
         className="justify-evenly bg-white rounded-2xl w-96"
-        style={{ height: 600 }}
+        style={{ height: 700 }}
       >
         <View className="m-10">
           <FormInput
-            label={
-              translations[language || "en-EN"].screens.Login.username
-            }
+            label={translations[language || "en-EN"].screens.Register.username}
             name={userIn.username}
             setText={(text) => setUserIn({ ...userIn, username: text })}
             mode="text"
           />
           <FormInput
-            label={
-              translations[language || "en-EN"].screens.Login.email
-            }
+            label={translations[language || "en-EN"].screens.Login.email}
             name={userIn.email}
             setText={(text) => setUserIn({ ...userIn, email: text })}
             mode="email"
           />
+          <FormInput
+            label={
+              translations[language || "en-EN"].screens.ProfileForm.nationality
+            }
+            name={userIn.nationality}
+            setText={(text) => setUserIn({ ...userIn, nationality: text })}
+            mode="text"
+          />
+          <View className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] mb-5 text-lg pl-8">
+            <PhoneInput
+              ref={phoneInput}
+              defaultCode="ES"
+              layout="first"
+              containerStyle={{
+                width: "100%",
+                height: 50,
+                marginLeft: -24,
+                backgroundColor: "#F8F7FE",
+              }}
+              textInputStyle={{
+                height: 49,
+                fontSize: 14,
+                backgroundColor: "#F8F7FE",
+              }}
+              onChangeFormattedText={(text) => {
+                setUserIn({ ...userIn, phoneNumber: text });
+              }}
+            />
+          </View>
           <TextInput
             placeholder={
               translations[language || "en-EN"].screens.Login.password
@@ -88,43 +113,14 @@ const RegisterScreen = ({ navigation, route }: Props) => {
           />
           <TouchableOpacity onPress={() => setPasswordShown(!passwordShown)}>
             <Text
-              className="text-[#4B0082] font-bold text-lg mb-5"
+              className="text-[#4B0082] font-bold text-lg"
               style={{ fontFamily: "Lexend-Regular" }}
             >
               {passwordShown ? "Hide" : "Show"}
             </Text>
           </TouchableOpacity>
-          <FormInput
-            label={
-              translations[language || "en-EN"].screens.ProfileForm.nationality
-            }
-            name={userIn.nationality}
-            setText={(text) => setUserIn({ ...userIn, nationality: text })}
-            mode="text"
-          />
-          <View className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3">
-            <PhoneInput
-              ref={phoneInput}
-              defaultCode="ES"
-              layout="first"
-              containerStyle={{
-                width: "100%",
-                height: 60,
-                marginLeft: -8,
-                backgroundColor: "#F8F7FE",
-              }}
-              textInputStyle={{
-                height: 60,
-                fontSize: 16,
-                backgroundColor: "#F8F7FE",
-              }}
-              onChangeFormattedText={(text) => {
-                setUserIn({ ...userIn, phoneNumber: text });
-              }}
-            />
-          </View>
         </View>
-        <View className="m-10">
+        <View className="mx-8">
           <TouchableOpacity
             onPress={validateForm}
             className="bg-[#E4007C] rounded-lg py-3 mb-5"

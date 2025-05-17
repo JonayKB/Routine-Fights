@@ -31,6 +31,8 @@ const ProfileFormScreen = ({ navigation }: Props) => {
         password: "",
         image: response.image,
       };
+
+      console.log("ownUser", ownUser);
       setUser(ownUser);
     } catch (error) {
       console.log(error);
@@ -55,7 +57,7 @@ const ProfileFormScreen = ({ navigation }: Props) => {
     <View
       className={`flex-1 bg-[#${
         darkmode ? "2C2C2C" : "CCCCCC"
-      }] items-center my-10`}
+      }] items-center justify-center`}
     >
       <View className="bg-[#E4D8E9] rounded-lg w-10/12">
         <View className="m-10">
@@ -89,27 +91,14 @@ const ProfileFormScreen = ({ navigation }: Props) => {
             setText={(text) => setUser({ ...user, nationality: text })}
             mode="text"
           />
-          <View className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] text-lg mb-5 pl-3">
-            <PhoneInput
-              ref={phoneInput}
-              defaultCode="ES"
-              layout="first"
-              containerStyle={{
-                width: "100%",
-                height: 60,
-                marginLeft: -8,
-                backgroundColor: "#F8F7FE",
-              }}
-              textInputStyle={{
-                height: 60,
-                fontSize: 16,
-                backgroundColor: "#F8F7FE",
-              }}
-              onChangeFormattedText={(text) => {
-                setUser({ ...user, phoneNumber: text });
-              }}
-            />
-          </View>
+          <FormInput
+            label={
+              translations[language || "en-EN"].screens.ProfileForm.phoneNumber
+            }
+            name={user.phoneNumber}
+            setText={(text) => setUser({ ...user, phoneNumber: text })}
+            mode="text"
+          />
           <TouchableOpacity
             className="bg-[#E4007C] rounded-lg py-3 w-full"
             onPress={updateProfile}
