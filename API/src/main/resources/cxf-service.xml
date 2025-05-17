@@ -14,13 +14,30 @@
         </jaxws:inInterceptors>
 
     </jaxws:endpoint>
+    <jaxws:endpoint id="AuthSOAPEndpoint"
+        implementor="#authSOAPImpl"
+        address="/auth">
+        <jaxws:inInterceptors>
+            <ref bean="cxfAuthInterceptor" />
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
+    <jaxws:endpoint id="GraphSOAPEndpoint"
+        implementor="#graphSOAPImpl"
+        address="/graphs">
+        <jaxws:inInterceptors>
+            <ref bean="cxfAuthInterceptor" />
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
 
     <!-- Bean del servicio implementado -->
     <bean id="imageSOAPImpl"
         class="es.iespuertodelacruz.routinefights.shared.soap.ImageSOAPImpl" />
-
+    <bean id="authSOAPImpl"
+        class="es.iespuertodelacruz.routinefights.shared.soap.AuthSOAPImpl" />
     <bean id="cxfAuthInterceptor"
         class="es.iespuertodelacruz.routinefights.shared.security.CxfAuthInterceptor" />
+    <bean id="graphSOAPImpl"
+        class="es.iespuertodelacruz.routinefights.shared.soap.GraphSOAPImpl" />
 
 
 </beans>
