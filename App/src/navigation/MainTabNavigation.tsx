@@ -57,7 +57,7 @@ const MainTabNavigation = (props: Props) => {
               <Icon
                 name={focused ? "home" : "home-outline"}
                 size={30}
-                color="#7B5BF2"
+                color="#7D3C98"
               />
             ),
           }}
@@ -70,7 +70,7 @@ const MainTabNavigation = (props: Props) => {
               <Icon
                 name={focused ? "flame" : "flame-outline"}
                 size={30}
-                color="#7B5BF2"
+                color="#7D3C98"
               />
             ),
           }}
@@ -83,7 +83,7 @@ const MainTabNavigation = (props: Props) => {
               <Icon
                 name={focused ? "add-circle" : "add-circle-outline"}
                 size={30}
-                color="#7B5BF2"
+                color="#7D3C98"
               />
             ),
           }}
@@ -96,7 +96,7 @@ const MainTabNavigation = (props: Props) => {
               <Icon
                 name={focused ? "people" : "people-outline"}
                 size={30}
-                color="#7B5BF2"
+                color="#7D3C98"
               />
             ),
           }}
@@ -110,7 +110,7 @@ const MainTabNavigation = (props: Props) => {
                 image={image}
                 size={32}
                 style={`rounded-full ${
-                  focused && "border-2 border-[#7B5BF2]"
+                  focused && "border-2 border-[#7D3C98]"
                 } filter invert`}
               />
             ),
