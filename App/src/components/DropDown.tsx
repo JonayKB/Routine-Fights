@@ -10,6 +10,7 @@ type Props = {
   }[];
   value: string;
   setValue: (value: string) => void;
+  onFocus?: () => void;
 };
 
 const DropDown = (props: Props) => {
@@ -33,6 +34,7 @@ const DropDown = (props: Props) => {
       onChange={(item) => {
         props.setValue(item.value);
       }}
+      onFocus={props.onFocus}
     />
   );
 };

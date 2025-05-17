@@ -102,6 +102,7 @@ const UploadFormScreen = (props: Props) => {
               translations[language || "en-EN"].screens.UploadForm
                 .selectCategory
             }
+            onFocus={fetchCategories}
           />
         </View>
         <TouchableOpacity

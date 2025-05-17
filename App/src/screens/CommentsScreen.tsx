@@ -37,7 +37,7 @@ const CommentsScreen = (props: Props) => {
   const fetchComments = async () => {
     try {
       const response = await getComments(props.route.params.postID);
-      console.log(response);
+      console.log(response, props.route.params.postID);
       setComments(response);
     } catch (error) {
       console.error("Error fetching comments:", error);
