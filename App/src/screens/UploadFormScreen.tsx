@@ -16,6 +16,7 @@ type Categories = {
   label: string;
   value: string;
   timesRemaining: number;
+  timesRequiered: string;
 };
 
 const UploadFormScreen = (props: Props) => {
@@ -34,7 +35,7 @@ const UploadFormScreen = (props: Props) => {
   useEffect(() => {
     setActivity(
       categories.filter((c: Categories) => c.value === activityName)[0]
-    ); 
+    );
   }, [activityName]);
 
   const fetchCategories = async () => {
@@ -45,6 +46,7 @@ const UploadFormScreen = (props: Props) => {
           label: activity.name,
           value: activity.id,
           timesRemaining: activity.timesRemaining,
+          timesRequiered: activity.timesRequiered,
         })
       );
       setCategories(categories);
@@ -118,13 +120,22 @@ const UploadFormScreen = (props: Props) => {
           />
         </View>
         <TouchableOpacity
-          className={`bg-[${(!activityName || !uri || activity?.timesRemaining === 0) ? "#CCCCCC" : "#E4007C"}] rounded-lg py-3 m-5 w-10/12`}
+          className={`bg-[${
+            !activityName || !uri || activity?.timesRemaining < 1
+              ? "#CCCCCC"
+              : "#E4007C"
+          }] rounded-lg py-3 m-5 w-10/12`}
           onPress={createPost}
-          disabled={!activityName || !uri || activity?.timesRemaining === 0}
+          disabled={!activityName || !uri || activity?.timesRemaining < 1}
         >
           <Text className="text-white font-bold text-xl text-center">Post</Text>
         </TouchableOpacity>
-        <Text className="m-auto text-black">Times Remaining: {activity?.timesRemaining}</Text>
+        <Text className="m-auto text-black">
+          Times Remaining:{" "}
+          {activity?.timesRemaining === null
+            ? activity?.timesRequiered
+            : activity?.timesRemaining}
+        </Text>
       </View>
     </View>
   );
