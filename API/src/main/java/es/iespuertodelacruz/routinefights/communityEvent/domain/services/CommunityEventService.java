@@ -10,7 +10,6 @@ import es.iespuertodelacruz.routinefights.activity.domain.ports.secondary.IActiv
 import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.primary.ICommunityEventService;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.secondary.ICommunityEventRepository;
-import es.iespuertodelacruz.routinefights.user.domain.User;
 @Service
 public class CommunityEventService implements ICommunityEventService {
     private ICommunityEventRepository communityEventRepository;
@@ -59,7 +58,7 @@ public class CommunityEventService implements ICommunityEventService {
     }
 
     @Override
-    public List<User> getUsersParticipatingInCommunityEvent(String id) {
+    public List<String> getUsersParticipatingInCommunityEvent(String id) {
         return communityEventRepository.getUsersParticipatingInCommunityEvent(id);
     }
 
@@ -69,7 +68,7 @@ public class CommunityEventService implements ICommunityEventService {
     }
 
     @Override
-    public List<User> getUsersParticipatingInCommunityEventEndsToday() {
+    public List<String> getUsersParticipatingInCommunityEventEndsToday() {
         return communityEventRepository.getUsersParticipatingInCommunityEventEndsToday();
     }
 

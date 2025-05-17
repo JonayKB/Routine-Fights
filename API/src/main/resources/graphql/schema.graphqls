@@ -34,7 +34,7 @@ type Query {
   getComments(postID: String!): [CommentOutputV2]
 
   getCommunityEventById(id: String!): CommunityEventOutputV3
-  getUsersParticipatingInCommunityEvent(id: String!): [UserOutputV2]
+  getUsersParticipatingInCommunityEvent(id: String!): [String]
 
   getActiveCommunityEvents: [CommunityEventOutputV2]
   getNearestCommunityEvent: CommunityEventOutputV2

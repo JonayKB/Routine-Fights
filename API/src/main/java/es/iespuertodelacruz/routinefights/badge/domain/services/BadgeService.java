@@ -50,15 +50,15 @@ public class BadgeService implements IBadgeService {
     }
 
     @Override
-    public Boolean addBadgeToUser(String userEmail, String badgeId) {
+    public Boolean addBadgeToUser(String userId, String badgeId) {
 
-        return badgeRepository.addBadgeToUser(userEmail, badgeId);
+        return badgeRepository.addBadgeToUser(userId, badgeId);
     }
 
     @Override
-    public List<Boolean> addBadgeToUser(List<String> userEmail, String badgeId) {
+    public List<Boolean> addBadgeToUser(List<String> userId, String badgeId) {
 
-        return badgeRepository.addBadgeToUser(userEmail, badgeId);
+        return badgeRepository.addBadgeToUser(userId, badgeId);
     }
 
 }

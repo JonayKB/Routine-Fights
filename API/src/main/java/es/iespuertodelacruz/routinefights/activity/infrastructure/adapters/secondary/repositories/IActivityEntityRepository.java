@@ -53,7 +53,7 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
         List<ActivityEntity> getSubscribedActivities(@Param("userID") String userID);
 
         @Query("""
-                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u:User)
+                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u2:User)
                         WHERE elementId(u) = $userID
                         OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
                         WITH a, p, c, u
@@ -63,7 +63,7 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID);
 
         @Query("""
-                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u:User)
+                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u2:User)
                         WHERE elementId(u) = $userID
                         AND lower(a.name) CONTAINS lower($activityName)
                         OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)

@@ -29,7 +29,9 @@ public class CommunityEventEntityService implements ICommunityEventRepository {
     @Override
     public CommunityEvent save(CommunityEvent entity) {
         return communityEventEntityMapper
-                .toDomain(communityEventEntityRepository.save(communityEventEntityMapper.toEntity(entity)));
+                .toDomain(communityEventEntityRepository.create(entity.getName(), entity.getCreatedAt(),
+                        entity.getStartDate(), entity.getFinishDate(), entity.getTotalRequired(), entity.getImage(),
+                        entity.getActivities().stream().map(a -> a.getId()).toList()));
     }
 
     @Override
@@ -55,8 +57,8 @@ public class CommunityEventEntityService implements ICommunityEventRepository {
     }
 
     @Override
-    public List<User> getUsersParticipatingInCommunityEvent(String id) {
-        return userEntityMapper.toDomain(communityEventEntityRepository.getUsersParticipatingInCommunityEvent(id));
+    public List<String> getUsersParticipatingInCommunityEvent(String id) {
+        return communityEventEntityRepository.getUsersParticipatingInCommunityEvent(id);
 
     }
 
@@ -72,8 +74,9 @@ public class CommunityEventEntityService implements ICommunityEventRepository {
     }
 
     @Override
-    public List<User> getUsersParticipatingInCommunityEventEndsToday() {
-        return userEntityMapper.toDomain(communityEventEntityRepository.getUsersParticipatingInCommunityEventEndsToday(LocalDateTime.now()));
+    public List<String> getUsersParticipatingInCommunityEventEndsToday() {
+        return 
+                communityEventEntityRepository.getUsersParticipatingInCommunityEventEndsToday(LocalDateTime.now());
     }
 
     @Override

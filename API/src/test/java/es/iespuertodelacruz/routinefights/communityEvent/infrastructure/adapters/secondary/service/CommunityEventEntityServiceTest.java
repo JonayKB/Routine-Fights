@@ -20,7 +20,6 @@ import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.repositories.ICommunityEventEntityRepository;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.services.CommunityEventEntityService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.mappers.IUserEntityMapper;
 
 class CommunityEventEntityServiceTest {
@@ -100,9 +99,9 @@ class CommunityEventEntityServiceTest {
     void getUsersParticipatingInCommunityEventTest() {
         when(userEntityMapper.toDomain(anyList())).thenReturn(List.of(new User()));
         when(communityEventEntityRepository.getUsersParticipatingInCommunityEvent(any()))
-                .thenReturn(List.of(new UserEntity()));
+                .thenReturn(List.of(new String()));
 
-        List<User> users = communityEventEntityService.getUsersParticipatingInCommunityEvent("evt1");
+        List<String> users = communityEventEntityService.getUsersParticipatingInCommunityEvent("evt1");
         assertNotNull(users);
     }
 
@@ -126,9 +125,9 @@ class CommunityEventEntityServiceTest {
     void getUsersParticipatingInCommunityEventEndsTodayTest() {
         when(userEntityMapper.toDomain(anyList())).thenReturn(List.of(new User()));
         when(communityEventEntityRepository.getUsersParticipatingInCommunityEventEndsToday(any(LocalDateTime.class)))
-                .thenReturn(List.of(new UserEntity()));
+                .thenReturn(List.of(new String()));
 
-        List<User> users = communityEventEntityService.getUsersParticipatingInCommunityEventEndsToday();
+        List<String> users = communityEventEntityService.getUsersParticipatingInCommunityEventEndsToday();
         assertNotNull(users);
     }
 

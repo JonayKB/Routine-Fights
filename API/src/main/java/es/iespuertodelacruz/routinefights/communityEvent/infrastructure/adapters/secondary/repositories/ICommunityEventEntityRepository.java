@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.entities.CommunityEventEntity;
-import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 
 @Repository
 public interface ICommunityEventEntityRepository extends Neo4jRepository<CommunityEventEntity, String> {
@@ -24,8 +23,8 @@ public interface ICommunityEventEntityRepository extends Neo4jRepository<Communi
     @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post) WHERE elementId(ce) = $id AND p.createdAt >= ce.startDate AND p.createdAt <= ce.finishDate RETURN SUM(p.pointsToAdd)")
     Integer getActualCommunityEventPoints(@Param("id") String id);
 
-    @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post)<-[:`Posted`]-(u:User) WHERE elementId(ce) = $id AND p.createdAt >= ce.startDate AND p.createdAt <= ce.finishDate RETURN DISTINCT u")
-    List<UserEntity> getUsersParticipatingInCommunityEvent(@Param("id") String id);
+    @Query("MATCH (ce:CommunityEvent)-[r:Related]->(a:Activity)<-[rr:`Related-To`]-(p:Post)<-[:`Posted`]-(u:User) WHERE elementId(ce) = $id AND p.createdAt >= ce.startDate AND p.createdAt <= ce.finishDate RETURN DISTINCT elementId(u)")
+    List<String> getUsersParticipatingInCommunityEvent(@Param("id") String id);
 
     @Query("MATCH (ce:CommunityEvent) WHERE elementId(ce) = $id RETURN ce")
     CommunityEventEntity findByIdOnlyBase(@Param("id") String id);
@@ -33,9 +32,21 @@ public interface ICommunityEventEntityRepository extends Neo4jRepository<Communi
     @Query("MATCH (ce:CommunityEvent) RETURN ce.image")
     Set<String> getAllImages();
 
-    @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post)<-[:`Posted`]-(u:User) WHERE p.createdAt >= ce.startDate AND p.createdAt <= ce.finishDate AND date(ce.finishDate)=date($currentDay) RETURN DISTINCT u")
-    List<UserEntity> getUsersParticipatingInCommunityEventEndsToday(@Param("currentDay") LocalDateTime currentDate);
+    @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post)<-[:`Posted`]-(u:User) WHERE p.createdAt >= ce.startDate AND p.createdAt <= ce.finishDate AND date(ce.finishDate)=date($currentDay) RETURN DISTINCT elementId(u)")
+    List<String> getUsersParticipatingInCommunityEventEndsToday(@Param("currentDay") LocalDateTime currentDate);
 
     @Query("MATCH (ce:CommunityEvent) WHERE date(ce.finishDate)=date($currentDay) RETURN ce")
-    CommunityEventEntity getCommunityEventEndsToday(LocalDateTime now);
+    CommunityEventEntity getCommunityEventEndsToday(@Param("currentDay") LocalDateTime now);
+
+    @Query("""
+            UNWIND $activitiesIDs AS activityID
+            MATCH (a:Activity) WHERE elementId(a) = activityID
+            CREATE (ce:CommunityEvent {name: $name, createdAt: $createdAt, startDate: $startDate, finishDate: $finishDate, totalRequired: $totalRequired, image: $image})
+            CREATE (ce)-[r:Related]->(a)
+            RETURN ce,r,a
+            """)
+    CommunityEventEntity create(@Param("name") String name, @Param("createdAt") LocalDateTime createdAt,
+            @Param("startDate") LocalDateTime startDate, @Param("finishDate") LocalDateTime finishDate,
+            @Param("totalRequired") Integer totalRequired, @Param("image") String image,
+            @Param("activitiesIDs") List<String> activitiesIDs);
 }

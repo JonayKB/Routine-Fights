@@ -23,7 +23,7 @@ public class BadgeEntityService implements IBadgeRepository {
     @Override
     public Badge save(Badge badge) {
 
-        return badgeEntityMapper.toDomain(badgeEntityRepository.save(badgeEntityMapper.toEntity(badge)));
+        return badgeEntityMapper.toDomain(badgeEntityRepository.create(badge.getImage(), badge.getLevel(),badge.getCommunityEvent().getId()));
     }
 
     @Override
