@@ -4,23 +4,20 @@ import { Post } from "../utils/Post";
 import Picture from "./Picture";
 
 type Props = {
-  item: {
-    id: string;
-    image: string;
-  };
+  item: Post;
   method: (item: Post) => void;
 };
 
 const ProfilePost = ({ item, method }: Props) => {
   return (
     <TouchableOpacity
-      onPress={() => method(item as Post)}
+      onPress={() => method(item)}
       className="m-2 rounded-xl shadow-md shadow-black"
     >
       <Picture image={item.image} size={117} height={210} style="rounded-xl" />
-      <View className="z-index-10 -mt-8 bg-[#00000070] rounded-xl">
+      <View className="z-index-10 -mt-10 bg-[#00000090] rounded-b-xl py-2">
         <Text className="text-white text-xl font-bold text-center">
-          Walking
+          {item.activity?.name}
         </Text>
       </View>
     </TouchableOpacity>

@@ -11,4 +11,7 @@ export type Post = {
     email: string;
     image: string;
   };
+  activity: {
+    name: string;
+  };
 };
