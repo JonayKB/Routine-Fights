@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -34,7 +33,9 @@ class EventsTaskTest {
         eventsTask = new EventsTask(communityEventService, badgeService);
         communityEvent = new CommunityEvent();
         communityEvent.setTotalRequired(100);
-        usersParticipated = List.of(new User());
+        User user = new User();
+        user.setId("user1");
+        usersParticipated = List.of(user);
         badges = List.of(new Badge("id1", null, 1, usersParticipated, communityEvent),
                 new Badge("id2", null, 2, usersParticipated, communityEvent),
                 new Badge("id3", null, 3, usersParticipated, communityEvent));
@@ -43,11 +44,12 @@ class EventsTaskTest {
     @Test
     void giveTodayBadgesTestCompleted() {
         when(communityEventService.getCommunityEventEndsToday()).thenReturn(communityEvent);
-        when(communityEventService.getUsersParticipatingInCommunityEventEndsToday()).thenReturn(usersParticipated);
+        when(communityEventService.getUsersParticipatingInCommunityEventEndsToday())
+                .thenReturn(usersParticipated.stream().map(User::getId).toList());
         when(badgeService.findByCommunityEvent(communityEvent.getId())).thenReturn(badges);
         when(communityEventService.getCommunityEventPointsById(communityEvent.getId())).thenReturn(100);
-        List<User> participatedUserActual = eventsTask.giveTodayBadges();
-        assertEquals(usersParticipated, participatedUserActual);
+        List<String> participatedUserActual = eventsTask.giveTodayBadges();
+        assertEquals(usersParticipated.get(0).getId(), participatedUserActual.get(0));
 
     }
 

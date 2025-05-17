@@ -98,7 +98,10 @@ class ActivityEntityServiceTest {
     @Test
     void getSubscribedActivities() {
         String userId = "1L";
-        when(activityEntityRepository.getSubscribedActivities(userId)).thenReturn(new ArrayList<>());
+        ActivityEntity activityEntity = new ActivityEntity();
+
+        when(activityEntityRepository.getSubscribedActivities(userId)).thenReturn(List.of(activityEntity));
+        when(activityEntityRepository.getTimesRemaining(any(), any(), any(), any())).thenReturn(1);
 
         List<Activity> list = activityEntityService.getSubscribedActivities(userId);
 
@@ -108,7 +111,9 @@ class ActivityEntityServiceTest {
     @Test
     void getSubscribedActivitiesWithStreak() {
         String userId = "1L";
-        when(activityEntityRepository.getSubscribedActivitiesWithStreak(userId)).thenReturn(new ArrayList<>());
+        ActivityEntity activityEntity = new ActivityEntity();
+        when(activityEntityRepository.getSubscribedActivitiesWithStreak(userId)).thenReturn(List.of(activityEntity));
+        when(activityEntityMapper.toDomain(activityEntity)).thenReturn(new Activity());
 
         List<Activity> list = activityEntityService.getSubscribedActivitiesWithStreak(userId);
 
@@ -131,8 +136,13 @@ class ActivityEntityServiceTest {
     void getSubscribedActivitiesWithStreakByName() {
         String userId = "1L";
         String activityName = "activityName";
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setTimeRate("daily");
+
         when(activityEntityRepository.getSubscribedActivitiesWithStreak(userId, activityName))
-                .thenReturn(new ArrayList<>());
+                .thenReturn(List.of(activityEntity));
+        when(activityEntityRepository.getTimesRemaining(any(), any(), any(), any())).thenReturn(1);
+        when(activityEntityMapper.toDomain(activityEntity)).thenReturn(new Activity());
 
         List<Activity> list = activityEntityService.getSubscribedActivities(userId, activityName);
 

@@ -14,9 +14,9 @@ public interface IBadgeService {
 
     public List<Badge>findByUserEmail(String name);
 
-    public Boolean addBadgeToUser(String userEmail, String badgeId);
+    public Boolean addBadgeToUser(String userId, String badgeId);
 
-    public List<Boolean> addBadgeToUser(List<String> userEmail, String badgeId);
+    public List<Boolean> addBadgeToUser(List<String> userId, String badgeId);
 
     
 }

@@ -28,7 +28,8 @@ public class PostEntityService implements IPostRepository {
 
     @Override
     public Post save(Post post) {
-        return postEntityMapper.toDomain(postEntityRepository.save(postEntityMapper.toEntity(post)));
+        return postEntityMapper.toDomain(postEntityRepository.create(post.getImage(), post.getPointsToAdd(),
+                post.getCreatedAt(), post.getStreak(), post.getActivity().getId(), post.getUser().getId()));
     }
 
     @Override
@@ -74,6 +75,5 @@ public class PostEntityService implements IPostRepository {
     public Post findById(String id) {
         return postEntityMapper.toDomain(postEntityRepository.findById(id).orElse(null));
     }
-
 
 }

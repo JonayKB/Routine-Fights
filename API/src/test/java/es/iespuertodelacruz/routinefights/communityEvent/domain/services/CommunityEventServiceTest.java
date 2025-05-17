@@ -18,7 +18,6 @@ import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.domain.ports.secondary.IActivityRepository;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.secondary.ICommunityEventRepository;
-import es.iespuertodelacruz.routinefights.user.domain.User;
 
 class CommunityEventServiceTest {
     private static final String ID = "evt1";
@@ -74,8 +73,8 @@ class CommunityEventServiceTest {
 
     @Test
     void getUsersParticipatingInCommunityEvent() {
-        when(repository.getUsersParticipatingInCommunityEvent(ID)).thenReturn(List.of(new User()));
-        List<User> users = service.getUsersParticipatingInCommunityEvent(ID);
+        when(repository.getUsersParticipatingInCommunityEvent(ID)).thenReturn(List.of(new String()));
+        List<String> users = service.getUsersParticipatingInCommunityEvent(ID);
         assertNotNull(users);
     }
 
@@ -88,8 +87,8 @@ class CommunityEventServiceTest {
 
     @Test
     void getUsersParticipatingInCommunityEventEndsToday() {
-        when(repository.getUsersParticipatingInCommunityEventEndsToday()).thenReturn(List.of(new User()));
-        List<User> users = service.getUsersParticipatingInCommunityEventEndsToday();
+        when(repository.getUsersParticipatingInCommunityEventEndsToday()).thenReturn(List.of(new String()));
+        List<String> users = service.getUsersParticipatingInCommunityEventEndsToday();
         assertNotNull(users);
     }
 

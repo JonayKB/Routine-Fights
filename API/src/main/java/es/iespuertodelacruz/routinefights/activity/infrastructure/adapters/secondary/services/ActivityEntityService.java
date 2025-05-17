@@ -84,7 +84,7 @@ public class ActivityEntityService implements IActivityRepository {
             LocalDateTime[] dates = timeRatesDate.getActualIterationDates(activity.getTimeRate());
 
             activity.setTimesRemaining(
-                    activityEntityRepository.getTimesRemaining(activity.getId(), dates[0], dates[1]));
+                    activityEntityRepository.getTimesRemaining(activity.getId(), dates[0], dates[1], userID));
         });
         return activityEntityMapper.toDomain(subscribedActivities);
     }
