@@ -1,0 +1,77 @@
+{
+    "screens": {
+        "Activities": {
+            "name": "Name"
+        },
+        "ActivityDetails": {
+            "numOfTimes": "Number of times",
+            "frequency": "Frequency",
+            "add": "Add"
+        },
+        "ActivityForm": {
+            "title": "Title",
+            "description": "Description",
+            "timeRate": "Time rate",
+            "timesRequired": "Times required",
+            "post": "Post",
+            "timeRates": {
+                "daily": "daily",
+                "weekly": "weekly",
+                "monthly": "monthly",
+                "yearly": "yearly"
+            }
+        },
+        "Events": {
+        },
+        "FollowList": {
+        },
+
+        "Home": {
+            "search": "Search"
+        },
+        "Login": {
+            "email": "Email",
+            "password": "Password",
+            "login": "Login",
+            "register": "Register"
+        },
+        "Profile": {
+            "followers": "followers",
+            "following": "following",
+            "follow": "follow",
+            "unfollow": "unfollow"
+        },
+        "ProfileForm": {
+            "email": "Email",
+            "image": "Image",
+            "nationality": "Nationality",
+            "phoneNumber": "Phone number",
+            "username": "Username",
+            "password": "Password",
+            "update": "Update"
+        },
+        "Register": {
+            "username": "Username",
+            "confirmPassword": "Confirm password"
+        },
+        "Search": {
+        },
+        "Settings": {
+            "language": "Language",
+            "darkMode": "Dark Mode",
+            "lightMode": "Light Mode",
+            "logout": "Logout",
+            "settings": "Settings",
+            "editProfile": "Edit profile"
+        },
+        "Streaks": {
+        },
+        "UploadForm": {
+            "takeFromCamera": "Take from camera",
+            "selectFromLibrary": "Select from library",
+            "selectactivity": "Select a activity",
+            "changePicture": "Change picture",
+            "post": "Post"
+        }
+    }
+}

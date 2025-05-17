@@ -1,13 +1,21 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Profile from "../screens/Profile";
-import FollowList from "../screens/FollowList";
+import ProfileScreen from "../screens/ProfileScreen";
+import FollowListScreen from "../screens/FollowListScreen";
+import SettingsScreen from "../screens/SettingsScreen";
+import ProfileFormScreen from "../screens/ProfileFormScreen";
+import ProfilePictureScreen from "../screens/ProfilePictureScreen";
+import CommentsScreen from "../screens/CommentsScreen";
 
 type Props = {};
 
 export type ProfileStackProps = {
-  Profile: { id?: string };
-  FollowList: { type: "followers" | "following" };
+  Profile: { email?: string };
+  FollowList: { email: string; type: "followers" | "following" };
+  Settings: undefined;
+  ProfileForm: undefined;
+  ProfilePictureScreen: { email: string };
+  Comments: { postId: string };
 };
 
 const ProfileStackNavigation = (props: Props) => {
@@ -15,8 +23,15 @@ const ProfileStackNavigation = (props: Props) => {
 
   return (
     <Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="FollowList" component={FollowList} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="FollowList" component={FollowListScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="ProfileForm" component={ProfileFormScreen} />
+      <Stack.Screen
+        name="ProfilePictureScreen"
+        component={ProfilePictureScreen}
+      />
+      <Stack.Screen name="Comments" component={CommentsScreen} />
     </Stack.Navigator>
   );
 };

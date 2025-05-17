@@ -1,5 +1,4 @@
 export type UserIn = {
-  id: string;
   username: string;
   email: string;
   password: string;
@@ -18,14 +17,15 @@ export type UserOut = {
   createdAt: string;
   followers: number;
   following: number;
+  isFollowing: boolean;
 };
 
 export type Followers = {
   id: string;
   username: string;
-  nationality: string;
   image: string;
-  createdAt: string;
   followers: number;
   following: number;
+  isFollowing: boolean;
+  email: string;
 };

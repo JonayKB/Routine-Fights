@@ -1,0 +1,77 @@
+{
+    "screens": {
+        "Activities": {
+            "name": "Nombre"
+        },
+        "ActivityDetails": {
+            "numOfTimes": "Numero de veces",
+            "frequency": "Frecuencia",
+            "add": "Añadir"
+        },
+        "ActivityForm": {
+            "title": "Titulo",
+            "description": "Descripcion",
+            "timeRate": "Rango de tiempo",
+            "timesRequired": "Veces requeridas",
+            "post": "Subir",
+            "timeRates": {
+                "daily": "a diario",
+                "weekly": "semanal",
+                "monthly": "mensual",
+                "yearly": "anual"
+            }
+        },
+        "Events": {
+        },
+        "FollowList": {
+        },
+
+        "Home": {
+            "search": "Buscar"
+        },
+        "Login": {
+            "email": "Email",
+            "password": "Contraseña",
+            "login": "Iniciar sesion",
+            "register": "Registrarse"
+        },
+        "Profile": {
+            "followers": "seguidores",
+            "following": "siguiendo",
+            "follow": "seguir",
+            "unfollow": "siguiendo"
+        },
+        "ProfileForm": {
+            "email": "Email",
+            "image": "Imagen",
+            "nationality": "Nacionalidad",
+            "phoneNumber": "Telefono",
+            "username": "Nombre de usuario",
+            "password": "Contraseña",
+            "update": "Actualizar"
+        },
+        "Register": {
+            "username": "nombre de usuario",
+            "confirmPassword": "Confirmar contraseña"
+        },
+        "Search": {
+        },
+        "Settings": {
+            "language": "Idioma",
+            "darkMode": "Modo oscuro",
+            "lightMode": "Modo claro",
+            "logout": "Cerrar sesion",
+            "settings": "Ajustes",
+            "editProfile": "Editar perfil"
+        },
+        "Streaks": {
+        },
+        "UploadForm": {
+            "takeFromCamera": "Tomar de camara",
+            "selectFromLibrary": "Tomar de galeria",
+            "selectactivity": "Selecciona categoria",
+            "changePicture": "Cambiar imagen",
+            "post": "Subir"
+        }
+    }
+}
