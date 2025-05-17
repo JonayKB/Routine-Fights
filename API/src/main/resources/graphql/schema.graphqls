@@ -1,13 +1,49 @@
 type Query {
-  usersV3: [UserOutputV3]
-  userV3(id: ID!): UserOutputV3
+  getUserPaginationByName(
+    page: Int!
+    perPage: Int!
+    userName: String!
+  ): [UserOutputV2]
 
-  usersV2(regex: String!): [Followers]
-  userV2(id: ID!): UserOutputV2
+  getUserV2(email: String!): UserOutputV2
+  getUserV2IsFollowing(email: String!): UserOutputV2
 
-  followersByEmail(email: String!): [Followers]
-  followedByEmail(email: String!): [Followers]
+  followersByEmail(email: String!, usernameFilter: String!): [Followers]
+  followedByEmail(email: String!, usernameFilter: String!): [Followers]
   images: [String]
+
+  postsV2(lastDate: String!, limit: Int): [PostOutputV2]
+  postsByUserV2(userID: String!, lastDate: String!, limit: Int): [PostOutputV2]
+  postsByActivityV2(
+    activityID: String!
+    lastDate: String!
+    limit: Int
+  ): [PostOutputV2]
+  postsFollowingV2(lastDate: String!, limit: Int): [PostOutputV2]
+  postsSubscribedActivitiesV2(lastDate: String!, limit: Int): [PostOutputV2]
+
+  paginationActivitiesNotSubscribed(
+    page: Int!
+    perPage: Int
+    activityName: String
+  ): [ActivityOutputV2]
+  getOwnUser: UserOutputV2
+  getSubscribedActivitiesWithStreakByName(
+    activityName: String!
+  ): [ActivityOutputV2Streak]
+  getComments(postID: String!): [CommentOutputV2]
+
+  getCommunityEventById(id: String!): CommunityEventOutputV3
+  getUsersParticipatingInCommunityEvent(id: String!): [String]
+
+  getActiveCommunityEvents: [CommunityEventOutputV2]
+  getNearestCommunityEvent: CommunityEventOutputV2
+  getCommunityEventPointsById(id: String!): Int
+
+  getBadgesByEmail(email: String!): [BadgeOutputV2]
+  getOwnBadges: [BadgeOutputV2]
+  findBadgeById(id: String!): BadgeOutputV3
+  findBadgeByCommunityEvent(communityEventId: String!): [BadgeOutputV2]
 }
 
 type Mutation {
@@ -19,8 +55,128 @@ type Mutation {
   updateUserV2(user: UserInputV2): UserOutputV2
   deleteUserV2(id: ID!): Boolean
 
-  followUser(followerEmail: String!, followingEmail: String!): Boolean
-  unfollowUser(followerEmail: String!, followingEmail: String!): Boolean
+  likePost(postID: String!): Boolean
+  unLikePost(postID: String!): Boolean
+  followUser(followingEmail: String!): Boolean
+  unfollowUser(followingEmail: String!): Boolean
+  subscribeActivity(activityID: String!): Boolean
+  unSubscribeActivity(activityID: String!): Boolean
+
+  uploadPost(image: String!, activityID: String!): PostOutputV2
+
+  createActivity(activityInput: ActivityInputV2!): ActivityOutputV2
+
+  postComment(commentInput: CommentInputV2!): CommentOutputV2
+
+  createCommunityEvent(
+    name: String!
+    totalRequired: Int!
+    startDate: String!
+    finishDate: String!
+    image: String!
+    activitiesIDs: [String!]!
+  ): CommunityEventOutputV3
+
+  createBadge(
+    image: String!
+    level: Int!
+    communityEventId: String!
+  ): BadgeOutputV3
+
+  addBadgeToUser(userEmail: String!, badgeId: String!): Boolean
+  addBadgeToUsers(userEmail: [String!]!, badgeId: String!): [Boolean]
+}
+type BadgeOutputV3 {
+  id: ID
+  image: String
+  level: Int
+  communityEvent: CommunityEventOutputV3
+}
+type BadgeOutputV2 {
+  id:ID
+  image: String
+  level: Int
+  communityEvent: CommunityEventOutputV2
+}
+type CommunityEventOutputV3 {
+  id: ID
+  name: String
+  totalRequired: Int
+  image: String
+  startDate: String
+  finishDate: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+}
+
+type CommunityEventOutputV2 {
+  id: ID
+  name: String
+  totalRequired: Int
+  image: String
+  startDate: String
+  finishDate: String
+}
+
+input CommentInputV2 {
+  message: String!
+  postID: String!
+  replingID: String
+}
+
+type CommentOutputV2 {
+  id: ID
+  message: String
+  postID: String
+  user: UserOutputV2
+  createdAt: String
+}
+type ActivityOutputV2 {
+  id: ID
+  name: String
+  description: String
+  image: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  creator: UserOutputV2
+  timeRate: String
+  timesRequiered: String
+}
+type ActivityOutputV2Streak {
+  id: ID
+  name: String
+  description: String
+  image: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  timeRate: String
+  timesRequiered: String
+  streak: Int
+  creator: UserOutputV2
+  timesRemaining: Int
+}
+input ActivityInputV2 {
+  name: String!
+  description: String!
+  image: String!
+  timeRate: String!
+  timesRequiered: String!
+}
+type PostOutputV2 {
+  id: ID
+  image: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  user: UserOutputV2
+  streak: Int
+  activity: ActivityOutputV2
+  comments: Int
+  likes: Int
+  isLiked: Boolean
 }
 
 input UserInputV3 {
@@ -63,7 +219,7 @@ input UserInputV2 {
   password: String
   nationality: String!
   phoneNumber: String!
-  image: String
+  image: String!
 }
 
 type UserOutputV2 {
@@ -76,14 +232,17 @@ type UserOutputV2 {
   createdAt: String
   followers: Int
   following: Int
+  isFollowing: Boolean
 }
 
 type Followers {
   id: ID
+  email: String
   username: String
   nationality: String
   image: String
   createdAt: String
   followers: Int
   following: Int
+  isFollowing: Boolean
 }

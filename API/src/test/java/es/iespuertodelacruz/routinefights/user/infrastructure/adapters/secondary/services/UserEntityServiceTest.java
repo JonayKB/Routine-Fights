@@ -5,11 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -106,7 +108,7 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void findAllImagesTest() {
-        when(userEntityRepository.findAllImages()).thenReturn(new ArrayList<String>());
+        when(userEntityRepository.findAllImages()).thenReturn(new HashSet<String>());
         assertNotNull(userEntityService.findAllImages());
     }
 
@@ -156,34 +158,34 @@ class UserEntityServiceTest extends UserInitializer {
 
     @Test
     void findFollowedUsersByEmailTest() {
-        when(userEntityRepository.findFollowedUsersByEmail(anyString())).thenReturn(new ArrayList<UserEntity>());
-        assertNotNull(userEntityService.findFollowedUsersByEmail("email"));
+        when(userEntityRepository.findFollowedUsersByEmail(anyString(),anyString())).thenReturn(new ArrayList<UserEntity>());
+        assertNotNull(userEntityService.findFollowedUsersByEmail("email","name"));
     }
 
     @Test
     void findFollowedUsersByEmailExceptionTest() {
-        when(userEntityRepository.findFollowedUsersByEmail(anyString()))
+        when(userEntityRepository.findFollowedUsersByEmail(anyString(),anyString()))
                 .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userEntityService.findFollowedUsersByEmail("email");
+            userEntityService.findFollowedUsersByEmail("email","name");
         });
         assertEquals("Followed users not found", exception.getMessage());
     }
 
     @Test
     void findFollowersByEmailTest() {
-        when(userEntityRepository.findFollowersByEmail(anyString())).thenReturn(new ArrayList<UserEntity>());
-        assertNotNull(userEntityService.findFollowersByEmail("email"));
+        when(userEntityRepository.findFollowersByEmail(anyString(),anyString())).thenReturn(new ArrayList<UserEntity>());
+        assertNotNull(userEntityService.findFollowersByEmail("email","name"));
     }
 
     @Test
     void findFollowersByEmailExceptionTest() {
-        when(userEntityRepository.findFollowersByEmail(anyString()))
+        when(userEntityRepository.findFollowersByEmail(anyString(),anyString()))
                 .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userEntityService.findFollowersByEmail("email");
+            userEntityService.findFollowersByEmail("email","name");
         });
         assertEquals("Followers not found", exception.getMessage());
     }
@@ -456,4 +458,70 @@ class UserEntityServiceTest extends UserInitializer {
         });
         assertEquals("Error updating user", exception.getMessage());
     }
+
+    @Test
+    void findByEmailOnlyBaseTest() {
+        when(userEntityRepository.findByEmailOnlyBase(anyString())).thenReturn(new UserEntity());
+        when(userEntityMapper.toDomain(any(UserEntity.class))).thenReturn(user);
+        assertNotNull(userEntityService.findByEmailOnlyBase("email"));
+    }
+
+    @Test
+    void findByEmailOnlyBaseExceptionTest() {
+        when(userEntityRepository.findByEmailOnlyBase(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.findByEmailOnlyBase("email");
+        });
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void getPaginationByNameTest() {
+        when(userEntityRepository.getPaginationByName(anyInt(), anyInt(), anyString(),anyString())).thenReturn(new ArrayList<UserEntity>());
+        when(userEntityMapper.toDomain(anyList())).thenReturn(new ArrayList<User>());
+        assertNotNull(userEntityService.getPaginationByName(0, 10, "username", "id"));
+    }
+
+    @Test
+    void getPaginationByNameExceptionTest() {
+        when(userEntityRepository.getPaginationByName(anyInt(), anyInt(), anyString(), anyString()))
+                .thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.getPaginationByName(0, 10, "username", "id");
+        });
+        assertEquals(TEST_EXCEPTION, exception.getMessage());
+    }
+
+    @Test
+    void likePostTest() {
+        when(userEntityRepository.likePost(anyString(), anyString())).thenReturn(true);
+        assertTrue(userEntityService.likePost("id", "postId"));
+    }
+    @Test
+    void likePostExceptionTest() {
+        when(userEntityRepository.likePost(anyString(), anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.likePost("id", "postId");
+        });
+        assertEquals("Error liking post", exception.getMessage());
+    }
+    @Test
+    void unlikePostTest() {
+        when(userEntityRepository.unLikePost(anyString(), anyString())).thenReturn(true);
+        assertTrue(userEntityService.unLikePost("id", "postId"));
+    }
+
+    @Test
+    void unlikePostExceptionTest() {
+        when(userEntityRepository.unLikePost(anyString(), anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userEntityService.unLikePost("id", "postId");
+        });
+        assertEquals("Error unliking post", exception.getMessage());
+    }
+
 }

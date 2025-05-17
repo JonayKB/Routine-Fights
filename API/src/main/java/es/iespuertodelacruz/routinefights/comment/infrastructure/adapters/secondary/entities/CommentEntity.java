@@ -6,6 +6,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.TargetNode;
 
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
 import es.iespuertodelacruz.routinefights.shared.utils.EntitiesTimestamps;
@@ -29,7 +30,8 @@ public class CommentEntity extends EntitiesTimestamps {
     private UserEntity user;
 
     @Relationship(type = "Replied_To", direction = Relationship.Direction.OUTGOING)
-    private CommentEntity comment;
+    @TargetNode()
+    private CommentEntity replingComment;
 
     public CommentEntity() {
     }
@@ -41,7 +43,7 @@ public class CommentEntity extends EntitiesTimestamps {
         this.message = message;
         this.post = post;
         this.user = user;
-        this.comment = comment;
+        this.replingComment = comment;
     }
 
     public String getId() {
@@ -76,12 +78,12 @@ public class CommentEntity extends EntitiesTimestamps {
         this.user = user;
     }
 
-    public CommentEntity getComment() {
-        return this.comment;
+    public CommentEntity getReplingComment() {
+        return this.replingComment;
     }
 
-    public void setComment(CommentEntity comment) {
-        this.comment = comment;
+    public void setReplingComment(CommentEntity comment) {
+        this.replingComment = comment;
     }
 
     @Override
@@ -110,7 +112,7 @@ public class CommentEntity extends EntitiesTimestamps {
                 ", deletedAt='" + getDeletedAt() + "'" +
                 ", post='" + getPost() + "'" +
                 ", user='" + getUser() + "'" +
-                ", comment='" + getComment() + "'" +
+                ", comment='" + getReplingComment() + "'" +
                 "}";
     }
 

@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.user.domain.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,13 +81,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> findFollowedUsersByEmail(String email) {
-        return userRepository.findFollowedUsersByEmail(email);
+    public List<User> findFollowedUsersByEmail(String email, String usernameFilter) {
+        return userRepository.findFollowedUsersByEmail(email, usernameFilter);
     }
 
     @Override
-    public List<User> findFollowersByEmail(String email) {
-        return userRepository.findFollowersByEmail(email);
+    public List<User> findFollowersByEmail(String email, String usernameFilter) {
+        return userRepository.findFollowersByEmail(email, usernameFilter);
     }
 
     @Override
@@ -100,7 +101,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<String> findAllImages() {
+    public Set<String> findAllImages() {
         return userRepository.findAllImages();
     }
 
@@ -125,4 +126,36 @@ public class UserService implements IUserService {
     public List<User> findByUsername(String regex) {
         return userRepository.findByUsername(regex);
     }
+
+    @Override
+    public boolean subscribeActivity(String userEmail, String activityID) {
+        return userRepository.subscribeActivity(userEmail, activityID);
+    }
+
+    @Override
+    public boolean unSubscribeActivity(String userEmail, String activityID) {
+        return userRepository.unSubscribeActivity(userEmail, activityID);
+    }
+
+    @Override
+    public User findByEmailOnlyBase(String email) {
+        return userRepository.findByEmailOnlyBase(email);
+    }
+
+    @Override
+    public List<User> getPaginationByName(int page,int perPage, String userName, String userID) {
+        int offset = (page - 1) * perPage;
+        return userRepository.getPaginationByName(offset, perPage, userName, userID);
+    }
+
+    @Override
+    public Boolean likePost(String userId, String postId) {
+        return userRepository.likePost(userId, postId);
+    }
+
+    @Override
+    public Boolean unLikePost(String userId, String postId) {
+        return userRepository.unLikePost(userId, postId);
+    }
+    
 }

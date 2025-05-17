@@ -67,4 +67,6 @@ public interface IUserService extends IUserCommon<User> {
          */
         public User update(String id, String username, String email, String password, String nationality,
                         String phoneNumber, String image);
+
+
 }

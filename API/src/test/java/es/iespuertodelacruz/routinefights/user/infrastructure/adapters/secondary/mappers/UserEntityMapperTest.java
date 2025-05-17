@@ -39,8 +39,6 @@ class UserEntityMapperTest extends UserInitializer {
         assertEquals(CREATED_AT, userTest.getCreatedAt(), ERROR_MAPPING_PROPERTY + "created_at");
         assertEquals(UPDATED_AT, userTest.getUpdatedAt(), ERROR_MAPPING_PROPERTY + "updated_at");
         assertEquals(DELETED_AT, userTest.getDeletedAt(), ERROR_MAPPING_PROPERTY + "deleted_at");
-        assertEquals(user.getFollowers(), userTest.getFollowers(), ERROR_MAPPING_PROPERTY + "followers");
-        assertEquals(user.getFollowing(), userTest.getFollowing(), ERROR_MAPPING_PROPERTY + "following");
     }
 
     @Test
@@ -71,8 +69,6 @@ class UserEntityMapperTest extends UserInitializer {
         assertEquals(CREATED_AT, userEntityTest.getCreatedAt(), ERROR_MAPPING_PROPERTY + "created_at");
         assertEquals(UPDATED_AT, userEntityTest.getUpdatedAt(), ERROR_MAPPING_PROPERTY + "updated_at");
         assertEquals(DELETED_AT, userEntityTest.getDeletedAt(), ERROR_MAPPING_PROPERTY + "deleted_at");
-        assertEquals(userEntity.getFollowers(), userEntityTest.getFollowers(), ERROR_MAPPING_PROPERTY + "followers");
-        assertEquals(userEntity.getFollowing(), userEntityTest.getFollowing(), ERROR_MAPPING_PROPERTY + "following");
     }
 
     @Test

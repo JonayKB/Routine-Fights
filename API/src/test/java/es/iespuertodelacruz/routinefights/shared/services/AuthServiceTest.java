@@ -60,7 +60,7 @@ class AuthServiceTest {
         user.setVerified(VERIFIED);
         user.setRole(ROLE_USER);
 
-        when(userService.findByEmail(email)).thenReturn(user);
+        when(userService.findByEmailOnlyBase(email)).thenReturn(user);
         when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
         when(jwtService.generateToken(email, ROLE_USER)).thenReturn(generatedToken);
 
@@ -81,7 +81,7 @@ class AuthServiceTest {
         user.setVerified(false);
         user.setRole(ROLE_USER);
 
-        when(userService.findByEmail(email)).thenReturn(user);
+        when(userService.findByEmailOnlyBase(email)).thenReturn(user);
         when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
 
         AuthException exception = assertThrows(AuthException.class, () -> {
@@ -224,5 +224,20 @@ class AuthServiceTest {
 
         boolean verified = authService.verify(email, token);
         assertFalse(verified);
+    }
+
+    @Test
+    void testVerifySucces_AlreadyVerified(){
+        String email = EMAIL;
+
+        User user = new User();
+        user.setId("1");
+        user.setEmail(email);
+        user.setVerified(true);
+
+        when(userService.findByEmail(email)).thenReturn(user);
+
+        boolean verified = authService.verify(email, "");
+        assertTrue(verified);
     }
 }

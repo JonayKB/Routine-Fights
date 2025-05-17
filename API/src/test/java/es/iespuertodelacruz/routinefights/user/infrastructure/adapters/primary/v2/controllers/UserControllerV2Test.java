@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -14,6 +15,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import es.iespuertodelacruz.routinefights.shared.services.MailService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
@@ -45,6 +49,14 @@ class UserControllerV2Test extends UserInitializer {
     @Mock
     private MailService mailService;
 
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
+    private Authentication authentication;
+
+    
+
     private UserInputDTOV2 userInputDTOV2;
     private UserOutputDTOV2 userOutputDTOV2;
 
@@ -55,10 +67,11 @@ class UserControllerV2Test extends UserInitializer {
         userControllerV2.setUserOutputMapper(userOutputMapper);
         userControllerV2.setUserService(userService);
         userControllerV2.setMailService(mailService);
+        SecurityContextHolder.setContext(securityContext);
 
         userInputDTOV2 = new UserInputDTOV2("id", "username", "email", "password", "nationality", "phone_number",
                 "image");
-        userOutputDTOV2 = new UserOutputDTOV2(null, null, null, null, null, null, null, 0, 0);
+        userOutputDTOV2 = new UserOutputDTOV2(null, null, null, null, null, null, null, 0, 0,false);
     }
 
     @Test
@@ -83,32 +96,32 @@ class UserControllerV2Test extends UserInitializer {
 
     @Test
     void findFollowedUsersByEmailTest() {
-        when(userService.findFollowedUsersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userControllerV2.findFollowedUsersByEmail("email"));
+        when(userService.findFollowedUsersByEmail(anyString(),anyString())).thenReturn(new ArrayList<User>());
+        assertNotNull(userControllerV2.findFollowedUsersByEmail("email","name"));
     }
 
     @Test
     void findFollowedUsersByEmailExceptionTest() {
-        when(userService.findFollowedUsersByEmail(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        when(userService.findFollowedUsersByEmail(anyString(),anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV2.findFollowedUsersByEmail("email");
+            userControllerV2.findFollowedUsersByEmail("email","name");
         });
         assertEquals("Error finding followed users", exception.getMessage());
     }
 
     @Test
     void findFollowersByEmailTest() {
-        when(userService.findFollowersByEmail(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userControllerV2.findFollowersByEmail("email"));
+        when(userService.findFollowersByEmail(anyString(),anyString())).thenReturn(new ArrayList<User>());
+        assertNotNull(userControllerV2.findFollowersByEmail("email","name"));
     }
 
     @Test
     void findFollowersByEmailExceptionTest() {
-        when(userService.findFollowersByEmail(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        when(userService.findFollowersByEmail(anyString(),anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV2.findFollowersByEmail("email");
+            userControllerV2.findFollowersByEmail("email","name");
         });
         assertEquals("Error finding followers", exception.getMessage());
     }
@@ -116,15 +129,21 @@ class UserControllerV2Test extends UserInitializer {
     @Test
     void followUserTest() {
         when(userService.followUser(anyString(), anyString())).thenReturn(true);
-        assertTrue(userControllerV2.followUser("frEmail", "fdEmail"));
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        assertTrue(userControllerV2.followUser("fdEmail"));
     }
 
     @Test
     void followUserExceptionTest() {
         when(userService.followUser(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
+
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
-            userControllerV2.followUser("frEmail", "fdEmail");
+            userControllerV2.followUser("fdEmail");
         });
         assertEquals("Error following user", exception.getMessage());
     }
@@ -132,15 +151,20 @@ class UserControllerV2Test extends UserInitializer {
     @Test
     void unfollowUserTest() {
         when(userService.unfollowUser(anyString(), anyString())).thenReturn(true);
-        assertTrue(userControllerV2.unfollowUser("frEmail", "fdEmail"));
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        assertTrue(userControllerV2.unfollowUser( "fdEmail"));
     }
 
     @Test
     void unfollowUserExceptionTest() {
         when(userService.unfollowUser(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
 
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
-            userControllerV2.unfollowUser("frEmail", "fdEmail");
+            userControllerV2.unfollowUser( "fdEmail");
         });
         assertEquals("Error unfollowing user", exception.getMessage());
     }
@@ -161,50 +185,30 @@ class UserControllerV2Test extends UserInitializer {
     }
 
     @Test
-    void findByIdTest() {
-        when(userService.findById(anyString())).thenReturn(new User());
+    void findByEmailTest() {
+        when(userService.findByEmail(anyString())).thenReturn(new User());
         when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
-        assertNotNull(userControllerV2.findById("id"));
+        assertNotNull(userControllerV2.findByEmail("id"));
     }
 
     @Test
-    void findByIdExceptionTest() {
-        when(userService.findById(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+    void findByEmailExceptionTest() {
+        when(userService.findByEmail(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV2.findById("id");
+            userControllerV2.findByEmail("id");
         });
         assertEquals("Error finding user", exception.getMessage());
     }
 
-    @Test
-    void findUsersByUsernameTest() {
-        when(userService.findByUsername(anyString())).thenReturn(new ArrayList<User>());
-        assertNotNull(userControllerV2.findUsersByUsername("username"));
-    }
-
-    @Test
-    void findUsersByUsernameExceptionTest() {
-        when(userService.findByUsername(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userControllerV2.findUsersByUsername("username");
-        });
-        assertEquals("Error finding users", exception.getMessage());
-    }
 
     @Test
     void updateTest() {
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
         when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString()))
                 .thenReturn(new User());
-        when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
-        assertNotNull(userControllerV2.update(userInputDTOV2));
-    }
-
-    @Test
-    void updateWithMailTest() {
-        when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString()))
-                .thenReturn(user);
         when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
         assertNotNull(userControllerV2.update(userInputDTOV2));
     }
@@ -218,5 +222,133 @@ class UserControllerV2Test extends UserInitializer {
             userControllerV2.update(userInputDTOV2);
         });
         assertEquals("Unable to update the user", exception.getMessage());
+    }
+
+    @Test
+    void subscribeActivityTest() {
+
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        
+        when(userService.subscribeActivity(anyString(), anyString())).thenReturn(true);
+        assertTrue(userControllerV2.subscribeActivity("activityId"));
+    }
+
+    @Test
+    void subscribeActivityExceptionTest() {
+        when(userService.subscribeActivity(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV2.subscribeActivity("activityId");
+        });
+        assertEquals("Unable to subscribe the user to the activity", exception.getMessage());
+    }
+
+    @Test
+    void unsubscribeActivityTest() {
+
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        
+        when(userService.unSubscribeActivity(anyString(), anyString())).thenReturn(true);
+        assertTrue(userControllerV2.unSubscribeActivity("activityId"));
+    }
+
+    @Test
+    void unsubscribeActivityExceptionTest() {
+        when(userService.unSubscribeActivity(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV2.unSubscribeActivity("activityId");
+        });
+        assertEquals("Unable to unsubscribe the user to the activity", exception.getMessage());
+    }
+
+    @Test
+    void getOwnUserTest(){
+
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userService.findByEmail(anyString())).thenReturn(user);
+        when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
+        assertNotNull(userControllerV2.getOwnUser());
+    }
+
+    @Test
+    void getOwnUserExceptionTest(){
+
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userService.findByEmail(anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userControllerV2.getOwnUser();
+        });
+        assertEquals("Error finding user", exception.getMessage());
+    }
+
+    @Test
+    void getPaginationByNameTest() {
+        when(userService.getPaginationByName(anyInt(),anyInt(),anyString(),anyString())).thenReturn(new ArrayList<User>());
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+
+
+        assertNotNull(userControllerV2.getUserPaginationByName(1, 10, "username"));
+    }
+
+    @Test
+    void getPaginationByNameExceptionTest() {
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+        when(userService.getPaginationByName(anyInt(),anyInt(),anyString(),anyString())).thenThrow(new UserNotFoundException(TEST_EXCEPTION));
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userControllerV2.getUserPaginationByName(1, 10, "username");
+        });
+        assertEquals("Error finding users", exception.getMessage());
+    }
+
+    @Test
+    void likePostTest() {
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+
+        when(userService.likePost(anyString(), anyString())).thenReturn(true);
+        assertTrue(userControllerV2.likePost("postId"));
+    }
+    @Test
+    void likePostExceptionTest() {
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+        when(userService.likePost(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV2.likePost("postId");
+        });
+        assertEquals("Error liking post", exception.getMessage());
+    }
+    @Test
+    void unlikePostTest() {
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+        when(userService.unLikePost(anyString(), anyString())).thenReturn(true);
+        assertTrue(userControllerV2.unLikePost("postId"));
+    }
+    @Test
+    void unlikePostExceptionTest() {
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+        when(userService.unLikePost(anyString(), anyString())).thenThrow(new UserUpdateException(TEST_EXCEPTION));
+        UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
+            userControllerV2.unLikePost("postId");
+        });
+        assertEquals("Error unliking post", exception.getMessage());
     }
 }

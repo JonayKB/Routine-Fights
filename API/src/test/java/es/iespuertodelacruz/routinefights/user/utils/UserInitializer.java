@@ -15,10 +15,10 @@ public abstract class UserInitializer {
 
     protected static final String ID = "id";
     protected static final String USERNAME = "username";
-    protected static final String EMAIL = "email";
+    protected static final String EMAIL = "email@email.com";
     protected static final String PASSWORD = "password";
     protected static final String NATIONALITY = "nationality";
-    protected static final String PHONE_NUMBER = "phone_number";
+    protected static final String PHONE_NUMBER = "+34648742361";
     protected static final String IMAGE = "image";
     protected static final String ROLE = "role";
     protected static final boolean VERIFIED = false;
@@ -32,6 +32,7 @@ public abstract class UserInitializer {
     protected static final List<UserEntity> followingEntity = new ArrayList<>();
 
     protected User user;
+    protected User follower;
     protected UserEntity userEntity;
 
     @BeforeEach
@@ -39,7 +40,11 @@ public abstract class UserInitializer {
         user = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN,
                 CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);
-        followers.add(new User());
+        follower = new User("followerId", "followerUsername", "followerEmail", "followerPassword",
+                "followerNationality",
+                "followerPhoneNumber", "followerImage", "followerRole", true, "followerVerificationToken",
+                LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>(), new ArrayList<>());
+        followers.add(follower);
 
         userEntity = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);

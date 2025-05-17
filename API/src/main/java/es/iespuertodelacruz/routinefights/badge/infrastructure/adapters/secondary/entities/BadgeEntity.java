@@ -5,6 +5,7 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import es.iespuertodelacruz.routinefights.badge.commons.BadgeCommons;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.entities.CommunityEventEntity;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 
@@ -15,12 +16,10 @@ import java.util.Objects;
 /**
  * BadgeEntity
  */
-public class BadgeEntity {
+public class BadgeEntity extends BadgeCommons {
     @Id
     @GeneratedValue
     private String id;
-    private String image;
-    private String level;
     @Relationship(type = "Has_Badge", direction = Relationship.Direction.INCOMING)
     private List<UserEntity> users;
 
@@ -30,11 +29,10 @@ public class BadgeEntity {
     public BadgeEntity() {
     }
 
-    public BadgeEntity(String id, String image, String level, List<UserEntity> users,
+    public BadgeEntity(String id, String image, Integer level, List<UserEntity> users,
             CommunityEventEntity communityEvent) {
+        super(image, level);
         this.id = id;
-        this.image = image;
-        this.level = level;
         this.users = users;
         this.communityEvent = communityEvent;
     }
@@ -47,27 +45,11 @@ public class BadgeEntity {
         this.id = id;
     }
 
-    public String getImage() {
-        return this.image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getLevel() {
-        return this.level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-    public List<UserEntity> getUser() {
+    public List<UserEntity> getUsers() {
         return this.users;
     }
 
-    public void setUser(List<UserEntity> users) {
+    public void setUsers(List<UserEntity> users) {
         this.users = users;
     }
 
@@ -84,23 +66,22 @@ public class BadgeEntity {
         return this;
     }
 
-    public BadgeEntity image(String image) {
-        setImage(image);
-        return this;
-    }
 
-    public BadgeEntity level(String level) {
-        setLevel(level);
-        return this;
-    }
-
-    public BadgeEntity user(List<UserEntity> user) {
-        setUser(user);
+    public BadgeEntity users(List<UserEntity> user) {
+        setUsers(user);
         return this;
     }
 
     public BadgeEntity communityEvent(CommunityEventEntity communityEvent) {
         setCommunityEvent(communityEvent);
+        return this;
+    }
+    public BadgeEntity image(String image) {
+        setImage(image);
+        return this;
+    }
+    public BadgeEntity level(Integer level) {
+        setLevel(level);
         return this;
     }
 
@@ -126,7 +107,7 @@ public class BadgeEntity {
                 " id='" + getId() + "'" +
                 ", image='" + getImage() + "'" +
                 ", level='" + getLevel() + "'" +
-                ", user='" + getUser() + "'" +
+                ", user='" + getUsers() + "'" +
                 ", communityEvent='" + getCommunityEvent() + "'" +
                 "}";
     }

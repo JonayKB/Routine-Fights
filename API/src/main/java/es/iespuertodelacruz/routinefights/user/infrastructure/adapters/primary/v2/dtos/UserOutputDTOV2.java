@@ -3,5 +3,5 @@ package es.iespuertodelacruz.routinefights.user.infrastructure.adapters.primary.
 import java.time.LocalDateTime;
 
 public record UserOutputDTOV2(String id, String username, String email, String nationality, String phoneNumber,
-                String image, LocalDateTime createdAt, int followers, int following) {
+                String image, LocalDateTime createdAt, int followers, int following, boolean isFollowing) {
 }
