@@ -90,4 +90,15 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                         RETURN a.image
                         """)
         Set<String> findAllImages();
+
+
+        @Query("""
+                        MATCH (u:User)
+                        WHERE elementId(u) = $userID
+                        CREATE (a:Activity {name: $name, description: $description, image: $image, timeRate: $timeRate, timesRequiered: $timesRequiered, createdAt: $createdAt})
+                        CREATE (u)-[c:Created]->(a)
+                        RETURN a,u,c
+                        """)
+        ActivityEntity create(@Param("name") String name, @Param("description") String description, @Param("image") String image, @Param("timeRate") String timeRate, @Param("timesRequiered") Integer timesRequiered,
+                              @Param("userID") String userID, @Param("createdAt") LocalDateTime createdAt);
 }
