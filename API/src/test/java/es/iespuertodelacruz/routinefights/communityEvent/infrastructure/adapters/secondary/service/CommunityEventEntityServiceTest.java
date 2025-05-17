@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import es.iespuertodelacruz.routinefights.activity.domain.Activity;
+import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.entities.CommunityEventEntity;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.mappers.CommunityEventEntityMapper;
@@ -42,13 +44,23 @@ class CommunityEventEntityServiceTest {
 
         communityEvent = new CommunityEvent();
         communityEvent.setId("evt1");
+        communityEvent.setName("Community Event");
+        communityEvent.setCreatedAt(LocalDateTime.now());
+        Activity activity = new Activity();
+        activity.setId("activity1");
+
+        communityEvent.setActivities(List.of(activity));
     }
 
     @Test
     void saveTest() {
-        when(communityEventEntityMapper.toEntity(any(CommunityEvent.class))).thenReturn(new CommunityEventEntity());
+        CommunityEventEntity communityEventEntity2 = new CommunityEventEntity();
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setId("activity1");
+        communityEventEntity.setActivities(List.of(activityEntity));
+        when(communityEventEntityMapper.toEntity(any(CommunityEvent.class))).thenReturn(communityEventEntity2);
         when(communityEventEntityRepository.create(any(), any(), any(), any(), any(), any(), anyList()))
-                .thenReturn(new CommunityEventEntity());
+                .thenReturn(communityEventEntity2);
         when(communityEventEntityMapper.toDomain(any(CommunityEventEntity.class))).thenReturn(new CommunityEvent());
 
         CommunityEvent savedCommunityEvent = communityEventEntityService.save(communityEvent);
