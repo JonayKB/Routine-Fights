@@ -1,7 +1,6 @@
 import {
   Text,
   View,
-  ScrollView,
   TouchableOpacity,
   FlatList,
   RefreshControl,
@@ -40,25 +39,21 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [following, setFollowing] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
-  const [profileLoad, setProfileLoad] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
   const { language, darkmode } = useSettingsContext();
   const { email } = useTokenContext();
   const [posts, setPosts] = useState<PostDomain[]>([]);
-  const lastDate = useRef<string>("");
+  const lastDate = useRef<string>(new Date().toISOString().slice(0, 19));
   const { uri } = useImageContext();
 
   useEffect(() => {
     fetchUser();
     fetchPosts();
-  }, [route.params?.email]);
-
-  useEffect(() => {
-    fetchUser();
-  }, [profileLoad === true, uri]);
+  }, [route.params?.email, uri]);
 
   useEffect(() => {
     if (load || isLoadingMore) {
+      fetchUser();
       fetchPosts();
     }
   }, [load, isLoadingMore]);
@@ -79,7 +74,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       console.error("Error fetching user:", error);
       Alert.alert("Error", error.response.data);
     } finally {
-      setProfileLoad(false);
+      setLoad(false);
     }
   };
 
@@ -145,37 +140,27 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       {!!route.params?.email && (
         <ProfileNavigation navigation={navigation} message={user.username} />
       )}
-
-      <ScrollView
-        className="flex-1"
-        refreshControl={
-          <RefreshControl
-            refreshing={profileLoad}
-            onRefresh={() => setProfileLoad(true)}
-          />
-        }
-      >
-        <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
-          {!route.params?.email && (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Settings")}
-              className="absolute top-5 right-5 z-10"
-            >
-              <Icon name="settings" size={28} color="black" />
-            </TouchableOpacity>
-          )}
+      <View className="bg-[#E4D8E9] flex-row border-b-2 border-[#4B0082]">
+        {!route.params?.email && (
           <TouchableOpacity
-            className="m-5 items-center"
-            onPress={() =>
-              navigation.navigate("ProfilePictureScreen", { email: user.email })
-            }
+            onPress={() => navigation.navigate("Settings")}
+            className="absolute top-5 right-5 z-10"
           >
-            <Picture
-              image={user?.image}
-              size={103}
-              style="rounded-full border-2 border-[#4B0082]"
-            />
-            {/* <View
+            <Icon name="settings" size={28} color="black" />
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity
+          className="m-5 items-center"
+          onPress={() =>
+            navigation.navigate("ProfilePictureScreen", { email: user.email })
+          }
+        >
+          <Picture
+            image={user?.image}
+            size={103}
+            style="rounded-full border-2 border-[#4B0082]"
+          />
+          {/* <View
             style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
             className="-mt-4 w-10 rounded-xl justify-center items-center border-2 border-white"
           >
@@ -183,36 +168,35 @@ const ProfileScreen = ({ navigation, route }: Props) => {
               {Math.floor(Math.random() * 300)}
             </Text>
           </View> */}
-          </TouchableOpacity>
-          <View className="mt-5">
-            <Text className="text-black text-4xl font-bold">
-              {user?.username}
-            </Text>
-            <FollowCount
-              followers={followers}
-              following={following}
-              email={user.email}
-              navigation={navigation}
-            />
-            {user.email !== email && (
-              <TouchableOpacity
-                className="fImagelex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
-                onPress={handleFollow}
-              >
-                <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
-                  {user.isFollowing
-                    ? translations[language || "en-EN"].screens.Profile.unfollow
-                    : translations[language || "en-EN"].screens.Profile.follow}
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
+        </TouchableOpacity>
+        <View className="mt-5">
+          <Text className="text-black text-4xl font-bold">
+            {user?.username}
+          </Text>
+          <FollowCount
+            followers={followers}
+            following={following}
+            email={user.email}
+            navigation={navigation}
+          />
+          {user.email !== email && (
+            <TouchableOpacity
+              className="fImagelex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
+              onPress={handleFollow}
+            >
+              <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
+                {user.isFollowing
+                  ? translations[language || "en-EN"].screens.Profile.unfollow
+                  : translations[language || "en-EN"].screens.Profile.follow}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
-      </ScrollView>
+      </View>
 
       <FlatList
         refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
-        style={{ width: "100%", flex: 1, backgroundColor: "black" }}
+        style={{ width: "100%" }}
         data={posts}
         renderItem={({ item }) => {
           return (

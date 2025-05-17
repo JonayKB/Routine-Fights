@@ -5,6 +5,7 @@ import FollowListScreen from "../screens/FollowListScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import ProfileFormScreen from "../screens/ProfileFormScreen";
 import ProfilePictureScreen from "../screens/ProfilePictureScreen";
+import CommentsScreen from "../screens/CommentsScreen";
 
 type Props = {};
 
@@ -14,6 +15,7 @@ export type ProfileStackProps = {
   Settings: undefined;
   ProfileForm: undefined;
   ProfilePictureScreen: { email: string };
+  Comments: { postId: string };
 };
 
 const ProfileStackNavigation = (props: Props) => {
@@ -29,6 +31,7 @@ const ProfileStackNavigation = (props: Props) => {
         name="ProfilePictureScreen"
         component={ProfilePictureScreen}
       />
+      <Stack.Screen name="Comments" component={CommentsScreen} />
     </Stack.Navigator>
   );
 };

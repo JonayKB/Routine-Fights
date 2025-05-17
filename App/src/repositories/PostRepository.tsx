@@ -27,6 +27,9 @@ export const getPostsFollowing = async (
                       email
                       image
                     }
+                    activity {
+                      name
+                    }
                   }
                 }`,
       },
@@ -68,6 +71,9 @@ export const getPosts = async (
                       email
                       image
                     }
+                    activity {
+                      name
+                    }
                   }
                 }`,
       },
@@ -108,6 +114,9 @@ export const getUserPosts = async (
                   user {
                     email
                     image
+                  }
+                  activity {
+                    name
                   }
                 }
               }`,

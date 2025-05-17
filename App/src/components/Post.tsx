@@ -41,20 +41,25 @@ const Post = (props: Props) => {
 
   return (
     <View className="bg-[#E4D8E9] flex-row rounded-xl m-5">
-      <TouchableWithoutFeedback>
+      <View>
         <Picture
           image={post.image}
           size={281}
-          height={500}
+          height={485}
           style="rounded-xl"
         />
-      </TouchableWithoutFeedback>
+        <View className="z-index-10 -mt-16 bg-[#00000095] rounded-b-xl py-5">
+          <Text className="text-white text-xl font-bold text-center">
+            {post.activity?.name}
+          </Text>
+        </View>
+      </View>
       <View className="flex-col m-3">
         <TouchableOpacity
           onPress={() =>
             props.navigation.navigate("ProfileStackNavigation", {
               screen: "Profile",
-              params: { email: post.user.email },
+              params: { email: post.user?.email },
             })
           }
         >
@@ -73,7 +78,11 @@ const Post = (props: Props) => {
           />
           <Text className="text-black text-center text-lg">{post.likes}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => props.navigation.navigate("Comments", { postID: post.id })}>
+        <TouchableOpacity
+          onPress={() =>
+            props.navigation.navigate("Comments", { postID: post.id })
+          }
+        >
           <Icon name="chatbox" size={53} color="#7B5BF2" className="mt-10" />
           <Text className="text-black text-center text-lg">
             {post.comments}

@@ -53,6 +53,7 @@ const HomeScreen = ({ navigation }: Props) => {
         case "category":
           break;
       }
+      console.log("Posts fetched:", lastDate.current);
       setPosts(isLoadingMore ? [...posts, ...response] : response);
     } catch (error) {
       console.error("Error fetching posts:", error);
