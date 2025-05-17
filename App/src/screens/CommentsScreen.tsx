@@ -73,6 +73,7 @@ const CommentsScreen = (props: Props) => {
       />
       <View className="flex-row justify-center items-center w-full">
         <TextInput
+          value={text}
           placeholder={translations[language || "en-EN"].screens.Home.search}
           placeholderTextColor="#4B0082"
           className="border-[#4B0082] border-2 bg-white text-2xl w-10/12 my-5 pl-3 text-black"
