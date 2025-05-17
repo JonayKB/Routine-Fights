@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "../screens/Home";
-import Events from "../screens/Events";
+import EventsScreen from "../screens/EventsScreen";
 import ActivitiesStackNavigation from "./ActivitiesStackNavigation";
 import Icon from "react-native-vector-icons/Ionicons";
 import ProfileStackNavigation from "./ProfileStackNavigation";
-import UploadForm from "../screens/UploadForm";
-import ImageContextProvider from "../contexts/ImageContextProvider";
+import UploadFormScreen from "../screens/UploadFormScreen";
+import ImageContextProvider, { useImageContext } from "../contexts/ImageContextProvider";
+import { UserOut } from "../utils/User";
+import { getOwnUserImageAndEmail } from "../repositories/UserRepository";
+import HomeStackNavigation from "./HomeStackNavigation";
+import Picture from "../components/Picture";
+import { useTokenContext } from "../contexts/TokenContextProvider";
 
 type Props = {};
 
@@ -20,8 +24,20 @@ type MainTabProps = {
 
 const MainTabNavigation = (props: Props) => {
   const Tab = createBottomTabNavigator<MainTabProps>();
+  const [image, setImage] = useState<string>(null);
+  const { setEmail } = useTokenContext();
+  const { uri } = useImageContext();
+
+  useEffect(() => {
+    const fetchImageAndEmail = async () => {
+      const user: UserOut = await getOwnUserImageAndEmail();
+      setImage(user.image);
+      setEmail(user.email);
+    };
+    fetchImageAndEmail();
+  }, [uri]);
+
   return (
-    <ImageContextProvider>
       <Tab.Navigator
         id={undefined}
         screenOptions={{
@@ -35,7 +51,7 @@ const MainTabNavigation = (props: Props) => {
       >
         <Tab.Screen
           name="Home"
-          component={Home}
+          component={HomeStackNavigation}
           options={{
             tabBarIcon: ({ focused }) => (
               <Icon
@@ -61,7 +77,7 @@ const MainTabNavigation = (props: Props) => {
         />
         <Tab.Screen
           name="UploadForm"
-          component={UploadForm}
+          component={UploadFormScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Icon
@@ -74,7 +90,7 @@ const MainTabNavigation = (props: Props) => {
         />
         <Tab.Screen
           name="Events"
-          component={Events}
+          component={EventsScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Icon
@@ -90,16 +106,17 @@ const MainTabNavigation = (props: Props) => {
           component={ProfileStackNavigation}
           options={{
             tabBarIcon: ({ focused }) => (
-              <Icon
-                name={focused ? "person-circle" : "person-circle-outline"}
-                size={30}
-                color="#7B5BF2"
+              <Picture
+                image={image}
+                size={32}
+                style={`rounded-full ${
+                  focused && "border-2 border-[#7B5BF2]"
+                } filter invert`}
               />
             ),
           }}
         />
       </Tab.Navigator>
-    </ImageContextProvider>
   );
 };
 

@@ -9,7 +9,7 @@ import { useImageContext } from "../contexts/ImageContextProvider";
 type Props = NativeStackScreenProps<ImageStackProps, "ImageCrop">;
 
 const ImageCrop = ({ navigation, route }: Props) => {
-  const { setUri } = useImageContext();
+  const { setUri, width, height } = useImageContext();
   const cropViewRef = useRef<CropView>(null);
 
   return (
@@ -23,7 +23,7 @@ const ImageCrop = ({ navigation, route }: Props) => {
           navigation.goBack();
         }}
         keepAspectRatio
-        aspectRatio={{ width: 9, height: 16 }}
+        aspectRatio={{ width: width, height: height }}
       />
       <View className="flex-1 flex-row justify-around items-center">
         <TouchableOpacity onPress={() => navigation.goBack()}>

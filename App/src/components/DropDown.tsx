@@ -2,26 +2,19 @@ import React, { useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { styles } from "../styles/DropDownStyles";
 
-type Props = {};
+type Props = {
+  message: string;
+  data: {
+    label: string;
+    value: string;
+  }[];
+  value: string;
+  setValue: (value: string) => void;
+  onFocus?: () => void;
+};
 
 const DropDown = (props: Props) => {
-  const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
-
-  const categories = [
-    {
-      label: "Category 1",
-      value: "1",
-    },
-    {
-      label: "Category 2",
-      value: "2",
-    },
-    {
-      label: "Category 3",
-      value: "3",
-    },
-  ];
 
   return (
     <Dropdown
@@ -30,18 +23,18 @@ const DropDown = (props: Props) => {
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
       itemTextStyle={{ color: "black" }}
-      
-      data={categories}
+      data={props.data}
       search
       mode="modal"
-      value={value}
+      value={props.value}
       labelField="label"
       valueField="value"
-      placeholder={!isFocus ? "Select category" : "..."}
+      placeholder={!isFocus ? props.message : "..."}
       searchPlaceholder="Search"
       onChange={(item) => {
-        setValue(item.value);
+        props.setValue(item.value);
       }}
+      onFocus={props.onFocus}
     />
   );
 };

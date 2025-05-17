@@ -1,8 +1,17 @@
 export type Post = {
   id: string;
   streak: number;
-  points: number;
-  createdAt: string;
+  comments: number;
   image: string;
   likes: number;
+  isLiked: boolean;
+  updatedAt: string;
+  createdAt: string;
+  user: {
+    email: string;
+    image: string;
+  };
+  activity: {
+    name: string;
+  };
 };
