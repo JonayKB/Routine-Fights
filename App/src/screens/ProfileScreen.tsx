@@ -186,7 +186,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           </View> */}
         </TouchableOpacity>
         <View className="mt-5">
-          <Text className="text-black text-4xl font-bold">
+          <Text className="text-[#333333] text-4xl font-bold">
             {user?.username}
           </Text>
           <FollowCount

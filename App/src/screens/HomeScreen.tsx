@@ -74,9 +74,9 @@ const HomeScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
+    <View className={`flex-1 ${darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"}`}>
       <TouchableWithoutFeedback
-        className="absolute z-10 right-5 top-5"
+        className="absolute z-10 left-5 top-5"
         onPress={() => navigation.navigate("Search")}
       >
         <Icon name="search" size={35} color="#7C5AF1" />
