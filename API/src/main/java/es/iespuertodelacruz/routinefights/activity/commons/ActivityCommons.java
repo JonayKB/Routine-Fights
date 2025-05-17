@@ -12,7 +12,6 @@ public abstract class ActivityCommons extends EntitiesTimestamps {
     private String image;
     private String timeRate;
     private Integer timesRequiered;
-    @Transient
     private Integer streak;
     @Transient
     private Integer timesRemaining;
