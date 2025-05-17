@@ -6,7 +6,7 @@ import DropDown from "../components/DropDown";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { getSubscribedActivities } from "../repositories/ActivityRepository";
-import { Activity } from "../utils/Activity";
+import { ActivityWithStreak } from "../utils/Activity";
 import { uploadPost } from "../repositories/PostRepository";
 import { uploadImage } from "../repositories/ImageRepository";
 
@@ -15,12 +15,14 @@ type Props = {};
 type Categories = {
   label: string;
   value: string;
+  timesRemaining: number;
 };
 
 const UploadFormScreen = (props: Props) => {
   const { uri, setUri, setWidth, setHeight } = useImageContext();
   const [categories, setCategories] = useState<Categories[]>([]);
-  const [category, setCategory] = useState<string>(null);
+  const [activityName, setActivityName] = useState<string>(null);
+  const [activity, setActivity] = useState<Categories>({} as Categories);
   const { language, darkmode } = useSettingsContext();
 
   useEffect(() => {
@@ -29,13 +31,22 @@ const UploadFormScreen = (props: Props) => {
     setHeight(16);
   }, []);
 
+  useEffect(() => {
+    setActivity(
+      categories.filter((c: Categories) => c.value === activityName)[0]
+    ); 
+  }, [activityName]);
+
   const fetchCategories = async () => {
     try {
       const response = await getSubscribedActivities();
-      const categories: Categories[] = response.map((category: Activity) => ({
-        label: category.name,
-        value: category.id,
-      }));
+      const categories: Categories[] = response.map(
+        (activity: ActivityWithStreak) => ({
+          label: activity.name,
+          value: activity.id,
+          timesRemaining: activity.timesRemaining,
+        })
+      );
       setCategories(categories);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -47,13 +58,14 @@ const UploadFormScreen = (props: Props) => {
       const imageName = await uploadImage(uri);
       console.log(imageName); // Debugging line
       const response = await uploadPost(
-        categories.filter((c: Categories) => c.value === category)[0]?.value,
+        categories.filter((c: Categories) => c.label === activityName)[0]
+          ?.value,
         imageName
       );
       if (response) {
         Alert.alert("Post created");
         setUri(null);
-        setCategory(null);
+        setActivityName(null);
       }
     } catch (error) {
       console.log("Error creating post:", error);
@@ -96,21 +108,23 @@ const UploadFormScreen = (props: Props) => {
         <View className="m-10">
           <DropDown
             data={categories}
-            value={category}
-            setValue={setCategory}
+            value={activityName}
+            setValue={setActivityName}
             message={
               translations[language || "en-EN"].screens.UploadForm
-                .selectCategory
+                .selectactivity
             }
             onFocus={fetchCategories}
           />
         </View>
         <TouchableOpacity
-          className="bg-[#E4007C] rounded-lg py-3 m-5 w-10/12"
+          className={`bg-[${(!activityName || !uri || activity?.timesRemaining === 0) ? "#CCCCCC" : "#E4007C"}] rounded-lg py-3 m-5 w-10/12`}
           onPress={createPost}
+          disabled={!activityName || !uri || activity?.timesRemaining === 0}
         >
           <Text className="text-white font-bold text-xl text-center">Post</Text>
         </TouchableOpacity>
+        <Text className="m-auto text-black">Times Remaining: {activity?.timesRemaining}</Text>
       </View>
     </View>
   );

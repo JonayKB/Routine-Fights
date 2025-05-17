@@ -17,7 +17,7 @@ import { getPosts, getPostsFollowing } from "../repositories/PostRepository";
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
 const HomeScreen = ({ navigation }: Props) => {
-  const [type, setType] = useState<"following" | "home" | "category">(
+  const [type, setType] = useState<"following" | "home" | "activity">(
     "following"
   );
   const [load, setLoad] = useState<boolean>(false);
@@ -50,10 +50,9 @@ const HomeScreen = ({ navigation }: Props) => {
         case "home":
           response = await getPosts(lastDate.current);
           break;
-        case "category":
+        case "activity":
           break;
       }
-      console.log("Posts fetched:", lastDate.current);
       setPosts(isLoadingMore ? [...posts, ...response] : response);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -85,7 +84,7 @@ const HomeScreen = ({ navigation }: Props) => {
       <View className="flex-row justify-evenly items-center absolute z-10 top-8 w-full">
         <Button title="Following" onPress={() => setType("following")} />
         <Button title="Home" onPress={() => setType("home")} />
-        <Button title="Category" onPress={() => setType("category")} />
+        <Button title="activity" onPress={() => setType("activity")} />
       </View>
       <View className="items-center">
         <FlatList

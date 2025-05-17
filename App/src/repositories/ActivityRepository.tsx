@@ -1,7 +1,7 @@
 import axios from "axios";
 import { limit, neo4jUri } from "../utils/Utils";
 import RNSecureKeyStore from "react-native-secure-key-store";
-import { Activity } from "../utils/Activity";
+import { Activity, ActivityWithStreak } from "../utils/Activity";
 
 export const getActivitiesNotSubscribed = async (
   page: number,
@@ -39,7 +39,7 @@ export const getActivitiesNotSubscribed = async (
   }
 };
 
-export const getSubscribedActivities = async () => {
+export const getSubscribedActivities = async (): Promise<ActivityWithStreak[]> => {
   try {
     const token = await RNSecureKeyStore.get("token");
 
@@ -55,6 +55,7 @@ export const getSubscribedActivities = async () => {
                         image,
                         timeRate,
                         timesRequiered,
+                        timesRemaining,
                         streak
                     }
                 }`,
@@ -128,7 +129,7 @@ export const createActivity = async (
   timeRate: string,
   timesRequiered: string,
   image: string,
-) => {
+): Promise<string> => {
   try {
     const token = await RNSecureKeyStore.get("token");
 

@@ -6,6 +6,7 @@ type Props = {
   name: string;
   description: string;
   streak: number;
+  timesRemaining: number;
   unsubscribeFunction: () => void;
 };
 
@@ -18,6 +19,7 @@ const Streak = (props: Props) => {
       <View>
         <Text className="text-black text-3xl">{props.name}</Text>
         <Text className="text-black text-xl">{props.description}</Text>
+        <Text className="text-black text-2xl mt-4">Times remaining: {props.timesRemaining}</Text>
       </View>
       <TouchableOpacity
         onPress={props.unsubscribeFunction}
