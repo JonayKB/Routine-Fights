@@ -53,7 +53,7 @@ const SearchScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
       <SearchBarHeader
         navigation={navigation}
         searchFunction={(text) => changeText(text)}

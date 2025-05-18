@@ -17,7 +17,7 @@ const Upload = ({ navigation }: Props) => {
     <View className={`flex-1 ${baseBg} justify-center items-center px-4`}>
       <Text
         className={`text-2xl font-bold mb-8 ${
-          darkmode ? "text-white" : "text-[#333333]"
+          darkmode ? "text-white" : "text-[#1C1C1E]"
         }`}
       >
         {translations[language || "en-EN"].screens.UploadForm.title ||

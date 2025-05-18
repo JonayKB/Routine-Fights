@@ -78,12 +78,12 @@ const StreaksScreen = ({ navigation, route }: Props) => {
   return (
     <View
       className={`flex-1 ${
-        darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"
+        darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"
       } items-center pt-8`}
     >
       <Text
         className={`text-4xl font-bold mb-2 ${
-          darkmode ? "text-white" : "text-[#333333]"
+          darkmode ? "text-white" : "text-[#1C1C1E]"
         }`}
       >
         Mis Streaks
@@ -100,9 +100,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
             return (
               <TouchableOpacity
                 onPress={() => navigation.navigate("Activities")}
-                className={`w-11/12 mx-auto mt-8 py-4 rounded-3xl ${
-                  darkmode ? "bg-[#5A2978]" : "bg-[#F65261]"
-                }`}
+                className="w-11/12 mx-auto mt-8 py-4 rounded-3xl bg-[#F65261]"
               >
                 <Text className="text-8xl font-bold text-white text-center">
                   +

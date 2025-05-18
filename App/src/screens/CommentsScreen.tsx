@@ -58,7 +58,7 @@ const CommentsScreen = (props: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
       <ProfileNavigation navigation={props.navigation} />
 
       <FlatList
