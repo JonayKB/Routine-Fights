@@ -10,40 +10,48 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 type Props = NativeStackScreenProps<ImageStackProps, "Upload">;
 
 const Upload = ({ navigation }: Props) => {
-  const { language } = useSettingsContext();
+  const { language, darkmode } = useSettingsContext();
+  const baseBg = darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]";
 
   return (
-    <View className="flex-1 bg-[#E4D8E9] justify-center items-center rounded-t-lg">
-      <TouchableOpacity
-        className="flex-row justify-center items-center bg-white p-5 rounded-lg m-5"
-        onPress={() => {
-          launchCamera({ mediaType: "photo" }, ({ assets }) => {
-            if (assets) {
-              navigation.navigate("ImageCrop", { uri: assets[0]?.uri });
-            }
-          });
-        }}
+    <View className={`flex-1 ${baseBg} justify-center items-center px-4`}>
+      <Text
+        className={`text-2xl font-bold mb-8 ${
+          darkmode ? "text-white" : "text-[#333333]"
+        }`}
       >
-        <Icon name="camera" size={50} color="#4B0082" />
-        <Text className="text-black font-bold text-xl ml-3">
+        {translations[language || "en-EN"].screens.UploadForm.title ||
+          "Subir Foto"}
+      </Text>
+
+      <TouchableOpacity
+        className="flex-row items-center bg-white rounded-2xl p-6 mb-6 w-full"
+        onPress={() =>
+          launchCamera(
+            { mediaType: "photo" },
+            ({ assets }) =>
+              assets && navigation.navigate("ImageCrop", { uri: assets[0].uri })
+          )
+        }
+      >
+        <Icon name="camera-outline" size={36} color="#4B0082" />
+        <Text className="ml-4 text-lg font-semibold text-[#4B0082]">
           {translations[language || "en-EN"].screens.UploadForm.takeFromCamera}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        className="flex-row justify-center items-center bg-white p-5 rounded-lg m-5 w-8/12"
-        onPress={() => {
-          launchImageLibrary({ mediaType: "photo" }, ({ assets }) => {
-            if (assets) {
-              navigation.navigate("ImageCrop", {
-                uri: assets[0]?.uri,
-              });
-            }
-          });
-        }}
+        className="flex-row items-center bg-white rounded-2xl p-6 w-full"
+        onPress={() =>
+          launchImageLibrary(
+            { mediaType: "photo" },
+            ({ assets }) =>
+              assets && navigation.navigate("ImageCrop", { uri: assets[0].uri })
+          )
+        }
       >
-        <Icon name="image" size={50} color="#4B0082" />
-        <Text className="text-black font-bold text-xl ml-3">
+        <Icon name="image-outline" size={36} color="#4B0082" />
+        <Text className="ml-4 text-lg font-semibold text-[#4B0082]">
           {
             translations[language || "en-EN"].screens.UploadForm
               .selectFromLibrary
