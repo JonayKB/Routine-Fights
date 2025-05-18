@@ -3,7 +3,7 @@ import React from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 
 type Props = {
-  message: string;
+  message?: string;
   navigation: any;
 };
 
