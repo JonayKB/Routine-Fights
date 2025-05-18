@@ -86,7 +86,7 @@ const Post = (props: Props) => {
           />
           <Text
             className={`${
-              darkmode ? "text-white" : "text-[#333333]"
+              darkmode ? "text-white" : "text-[#1C1C1E]"
             } text-center text-lg`}
           >
             {post.likes}
@@ -107,7 +107,7 @@ const Post = (props: Props) => {
           />
           <Text
             className={`${
-              darkmode ? "text-white" : "text-[#333333]"
+              darkmode ? "text-white" : "text-[#1C1C1E]"
             } text-center text-lg`}
           >
             {post.comments}
@@ -118,7 +118,7 @@ const Post = (props: Props) => {
           <Icon name="flame" size={53} color="#F65261" />
           <Text
             className={`${
-              darkmode ? "text-white" : "text-[#333333]"
+              darkmode ? "text-white" : "text-[#1C1C1E]"
             } text-center text-lg`}
           >
             {post.streak}

@@ -33,14 +33,14 @@ const Streak = (props: Props) => {
       <View>
         <Text
           className={`text-3xl font-bold ${
-            darkmode ? "text-white" : "text-[#333333]"
+            darkmode ? "text-white" : "text-[#1C1C1E]"
           }`}
         >
           {props.streak?.name}
         </Text>
         <Text
           className={`text-2xl mt-4 ${
-            darkmode ? "text-white" : "text-[#333333]"
+            darkmode ? "text-white" : "text-[#1C1C1E]"
           }`}
         >
           Times remaining:{" "}

@@ -136,7 +136,7 @@ const UploadFormScreen = (props: Props) => {
 
         <Text
           className={`pb-6 text-center ${
-            darkmode ? "text-white" : "text-[#333333]"
+            darkmode ? "text-white" : "text-[#1C1C1E]"
           }`}
         >
           {`Times Remaining: ${

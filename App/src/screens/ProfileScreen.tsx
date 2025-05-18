@@ -143,7 +143,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
       {selectedPost && (
         <View className="absolute w-full h-full z-10">
           <TouchableWithoutFeedback onPress={() => setSelectedPost(null)}>
@@ -182,6 +182,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           onPress={() =>
             navigation.navigate("ProfilePictureScreen", { email: user.email })
           }
+          disabled={!!route.params?.email}
         >
           <Picture
             image={user?.image}
@@ -198,7 +199,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           </View> */}
         </TouchableOpacity>
         <View className="mt-5">
-          <Text className="text-[#333333] text-4xl font-bold">
+          <Text className="text-[#1C1C1E] text-4xl font-bold">
             {user?.username}
           </Text>
           <FollowCount
