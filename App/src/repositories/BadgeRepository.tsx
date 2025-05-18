@@ -19,6 +19,10 @@ export const getBadgesByEmail = async (userEmail: string): Promise<Badge[]> => {
                     communityEvent {
                         id
                         name
+                        totalRequired
+                        finishDate
+                        image
+                        startDate
                     }
                 }
             }`,

@@ -32,6 +32,7 @@ import { useTokenContext } from "../contexts/TokenContextProvider";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import { Badge } from "../utils/Badge";
 import { getBadgesByEmail } from "../repositories/BadgeRepository";
+import BadgeInfo from "../components/BadgeInfo";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -42,6 +43,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
+  const [selectedBadge, setSelectedBadge] = useState<Badge>(null);
   const { language, darkmode } = useSettingsContext();
   const { email } = useTokenContext();
   const [posts, setPosts] = useState<PostDomain[]>([]);
@@ -59,6 +61,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
     if (load || isLoadingMore) {
       fetchUser();
       fetchPosts();
+      fetchBadges();
     }
   }, [load, isLoadingMore]);
 
@@ -97,7 +100,6 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const fetchBadges = async () => {
     try {
       const response = await getBadgesByEmail(user.email);
-      console.log(JSON.stringify(response));
       setBadges(response);
     } catch (error) {
       console.error("Error fetching badges:", error);
@@ -149,6 +151,16 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           </TouchableWithoutFeedback>
           <View className="absolute justify-center h-full">
             <Post post={selectedPost} navigation={navigation} />
+          </View>
+        </View>
+      )}
+      {selectedBadge && (
+        <View className="absolute w-full h-full z-10">
+          <TouchableWithoutFeedback onPress={() => setSelectedBadge(null)}>
+            <View className="flex-1 bg-black opacity-80 w-full h-full absolute"></View>
+          </TouchableWithoutFeedback>
+          <View className="absolute justify-center h-full">
+            <BadgeInfo item={selectedBadge} />
           </View>
         </View>
       )}
@@ -216,7 +228,13 @@ const ProfileScreen = ({ navigation, route }: Props) => {
         data={badges}
         renderItem={({ item }) => {
           return (
-            <Picture image={item.image} size={72} style="rounded-full mt-4 ml-5" />
+            <TouchableOpacity onPress={() => setSelectedBadge(item)}>
+              <Picture
+                image={item.image}
+                size={72}
+                style="rounded-full mt-4 ml-5"
+              />
+            </TouchableOpacity>
           );
         }}
       />
