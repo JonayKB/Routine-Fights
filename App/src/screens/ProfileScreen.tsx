@@ -141,7 +141,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
+    <View className={`flex-1 ${darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"}`}>
       {selectedPost && (
         <View className="absolute w-full h-full z-10">
           <TouchableWithoutFeedback onPress={() => setSelectedPost(null)}>

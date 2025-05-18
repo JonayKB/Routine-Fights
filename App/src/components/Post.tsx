@@ -4,6 +4,7 @@ import { Post as PostDomain } from "../utils/Post";
 import Icon from "react-native-vector-icons/Ionicons";
 import Picture from "./Picture";
 import { likePost, unLikePost } from "../repositories/PostRepository";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = {
   post: PostDomain;
@@ -12,6 +13,7 @@ type Props = {
 
 const Post = (props: Props) => {
   const [post, setPost] = useState<PostDomain>({} as PostDomain);
+  const { darkmode } = useSettingsContext();
 
   useEffect(() => {
     setPost({ ...props.post });
@@ -35,7 +37,11 @@ const Post = (props: Props) => {
   };
 
   return (
-    <View className="bg-[#E8E2F0] flex-row rounded-xl m-5">
+    <View
+      className={`${
+        darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]"
+      } flex-row rounded-xl m-5`}
+    >
       <View>
         <Picture
           image={post.image}
@@ -51,7 +57,6 @@ const Post = (props: Props) => {
       </View>
 
       <View className="flex-col m-3">
-        {/* Avatar con borde “Deep Purple” */}
         <TouchableOpacity
           onPress={() =>
             props.navigation.navigate("ProfileStackNavigation", {
@@ -63,7 +68,9 @@ const Post = (props: Props) => {
           <Picture
             image={post.user?.image}
             size={53}
-            style="rounded-full border-2 border-[#7D3C98]"
+            style={`rounded-full border-2 ${
+              darkmode ? "border-[#B28DFF]" : "border-[#7D3C98]"
+            }`}
           />
         </TouchableOpacity>
 
@@ -72,9 +79,16 @@ const Post = (props: Props) => {
           <Icon
             name={post.isLiked ? "heart" : "heart-outline"}
             size={53}
-            color={post.isLiked ? "#F65261" : "#7D3C98"}
+            color={(() => {
+              if (post.isLiked) return "#F65261";
+              return darkmode ? "#B28DFF" : "#7D3C98";
+            })()}
           />
-          <Text className="text-[#333333] text-center text-lg">
+          <Text
+            className={`${
+              darkmode ? "text-white" : "text-[#333333]"
+            } text-center text-lg`}
+          >
             {post.likes}
           </Text>
         </TouchableOpacity>
@@ -86,16 +100,27 @@ const Post = (props: Props) => {
           }
           className="mt-10 items-center"
         >
-          <Icon name="chatbox-outline" size={53} color="#7D3C98" />
-          <Text className="text-[#333333] text-center text-lg">
+          <Icon
+            name="chatbox-outline"
+            size={53}
+            color={darkmode ? "#B28DFF" : "#7D3C98"}
+          />
+          <Text
+            className={`${
+              darkmode ? "text-white" : "text-[#333333]"
+            } text-center text-lg`}
+          >
             {post.comments}
           </Text>
         </TouchableOpacity>
 
-        {/* Streak / Fire */}
         <View className="mt-32 items-center">
           <Icon name="flame" size={53} color="#F65261" />
-          <Text className="text-[#333333] text-center text-lg">
+          <Text
+            className={`${
+              darkmode ? "text-white" : "text-[#333333]"
+            } text-center text-lg`}
+          >
             {post.streak}
           </Text>
         </View>

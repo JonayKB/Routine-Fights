@@ -59,7 +59,7 @@ const EventsScreen = (props: Props) => {
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
+    <View className={`flex-1 ${darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"}`}>
       <Text className="text-3xl text-black text-center mb-2 mt-4">
         {event?.name}
       </Text>

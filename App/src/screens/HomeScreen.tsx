@@ -75,7 +75,7 @@ const HomeScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
       <TouchableWithoutFeedback
         className="absolute z-10 right-5 top-5"
         onPress={() => navigation.navigate("Search")}
@@ -83,12 +83,14 @@ const HomeScreen = ({ navigation }: Props) => {
         <Icon name="search" size={35} color="#7D3C98" />
       </TouchableWithoutFeedback>
       <View className="flex-row justify-evenly items-center px-4 mt-2">
-        {["following", "home", "activity"].map((t) => {
-          const isActive = type === t;
+        {["following", "home", "activity"].map((selectedType) => {
+          const isActive = type === selectedType;
           return (
             <TouchableOpacity
-              key={t}
-              onPress={() => setType(t as "following" | "home" | "activity")}
+              key={selectedType}
+              onPress={() =>
+                setType(selectedType as "following" | "home" | "activity")
+              }
               className={`
               px-4 py-2 rounded-full
               ${isActive ? "bg-[#F65261]" : "bg-[#E8E2F0]"}
@@ -100,7 +102,7 @@ const HomeScreen = ({ navigation }: Props) => {
                 ${isActive ? "text-white" : "text-[#7D3C98]"}
               `}
               >
-                {t.charAt(0).toUpperCase() + t.slice(1)}
+                {selectedType}
               </Text>
             </TouchableOpacity>
           );

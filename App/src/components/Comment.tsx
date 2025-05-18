@@ -26,12 +26,15 @@ const Comment = ({ navigation, comment }: Props) => {
           style="rounded-full border-2 border-[#4B0082]"
         />
       </TouchableOpacity>
-      <View className="ml-4">
+
+      <View className="ml-4 flex-1">
         <Text className="text-black text-2xl font-bold">
           {comment.user?.username}
         </Text>
         <Text className="text-black text-lg mt-2">{comment.message}</Text>
-        <DateFormatString date={comment.createdAt} />
+        <View className="mt-2">
+          <DateFormatString date={comment.createdAt} />
+        </View>
       </View>
     </View>
   );
