@@ -70,39 +70,50 @@ const StreaksScreen = ({ navigation, route }: Props) => {
 
   return (
     <View
-      className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}] items-center`}
+      className={`flex-1 ${
+        darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"
+      } items-center pt-8`}
     >
-      <View className="items-center w-full">
-        <FlatList
-          refreshControl={
-            <RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />
-          }
-          style={{ width: "100%" }}
-          data={activities}
-          renderItem={({ item }) => {
+      <Text
+        className={`text-4xl font-bold mb-2 ${
+          darkmode ? "text-white" : "text-[#333333]"
+        }`}
+      >
+        Mis Streaks
+      </Text>
+
+      <FlatList
+        refreshControl={
+          <RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />
+        }
+        style={{ width: "100%" }}
+        data={activities}
+        renderItem={({ item }) => {
+          if (item.id === "true") {
             return (
-              <View>
-                {item.id === "true" ? (
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate("Activities")}
-                    className="items-center w-11/12 rounded-3xl mx-auto bg-[#4B0082] mt-5"
-                  >
-                    <Text className="text-8xl font-bold text-center text-white">
-                      +
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <Streak
-                    streak={item}
-                    unsubscribeFunction={() => deleteActivity(item.id)}
-                  />
-                )}
-              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Activities")}
+                className={`w-11/12 mx-auto mt-8 py-4 rounded-3xl ${
+                  darkmode ? "bg-[#5A2978]" : "bg-[#F65261]"
+                }`}
+              >
+                <Text className="text-8xl font-bold text-white text-center">
+                  +
+                </Text>
+              </TouchableOpacity>
             );
-          }}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
+          }
+          return (
+            <View>
+              <Streak
+                streak={item}
+                unsubscribeFunction={() => deleteActivity(item.id)}
+              />
+            </View>
+          );
+        }}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 };

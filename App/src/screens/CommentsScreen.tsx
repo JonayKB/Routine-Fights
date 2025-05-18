@@ -58,8 +58,9 @@ const CommentsScreen = (props: Props) => {
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
+    <View className={`flex-1 ${darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"}`}>
       <ProfileNavigation message="" navigation={props.navigation} />
+
       <FlatList
         refreshControl={
           <RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />
@@ -67,19 +68,33 @@ const CommentsScreen = (props: Props) => {
         style={{ width: "100%" }}
         data={comments}
         renderItem={({ item }) => (
-          <Comment navigation={props.navigation} comment={item} />
+          <Comment
+            navigation={props.navigation}
+            comment={item}
+            darkmode={darkmode}
+          />
         )}
         keyExtractor={(item) => item.id}
       />
-      <View className="flex-row justify-center items-center w-full">
+
+      <View className="flex-row justify-center items-center w-full px-4 pb-4">
         <TextInput
           value={text}
           placeholder={translations[language || "en-EN"].screens.Home.search}
-          placeholderTextColor="#4B0082"
-          className="border-[#4B0082] border-2 bg-white text-2xl w-10/12 my-5 pl-3 text-black"
+          placeholderTextColor={darkmode ? "#D8BFFF" : "#4B0082"}
+          className={`text-2xl w-10/12 pl-4 py-3 rounded-xl ${
+            darkmode
+              ? "bg-[#4B294F] text-white border border-[#B28DFF]"
+              : "bg-white text-black border-2 border-[#4B0082]"
+          }`}
           onChangeText={(text) => setText(text)}
         />
-        <TouchableOpacity className="p-3 bg-[#4B0082]" onPress={sendMessage}>
+        <TouchableOpacity
+          className={`ml-2 p-3 rounded-xl ${
+            darkmode ? "bg-[#B28DFF]" : "bg-[#4B0082]"
+          }`}
+          onPress={sendMessage}
+        >
           <Icon name="send" size={30} color="white" />
         </TouchableOpacity>
       </View>
