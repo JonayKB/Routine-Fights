@@ -21,7 +21,7 @@ const ActivitiesScreen = ({ navigation }: Props) => {
   const { darkmode } = useSettingsContext();
 
   useEffect(() => {
-      fetchActivities();
+    fetchActivities();
   }, []);
 
   useEffect(() => {
@@ -73,7 +73,10 @@ const ActivitiesScreen = ({ navigation }: Props) => {
           <ActivityCard
             item={item}
             navigateFunction={() =>
-              navigation.navigate("ActivityDetails", { activity: item })
+              navigation.navigate("ActivityDetails", {
+                activity: item,
+                suscribed: false,
+              })
             }
           />
         )}

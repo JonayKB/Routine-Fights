@@ -59,7 +59,7 @@ const CommentsScreen = (props: Props) => {
 
   return (
     <View className={`flex-1 ${darkmode ? "bg-[#333333]" : "bg-[#FCFCFC]"}`}>
-      <ProfileNavigation message="" navigation={props.navigation} />
+      <ProfileNavigation navigation={props.navigation} />
 
       <FlatList
         refreshControl={
@@ -71,7 +71,6 @@ const CommentsScreen = (props: Props) => {
           <Comment
             navigation={props.navigation}
             comment={item}
-            darkmode={darkmode}
           />
         )}
         keyExtractor={(item) => item.id}

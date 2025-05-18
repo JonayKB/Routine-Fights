@@ -68,6 +68,13 @@ const StreaksScreen = ({ navigation, route }: Props) => {
     }
   };
 
+  const streakDetails = (activity: ActivityWithStreak) => {
+    navigation.navigate("ActivityDetails", {
+      activity: activity,
+      suscribed: true,
+    });
+  };
+
   return (
     <View
       className={`flex-1 ${
@@ -108,6 +115,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
               <Streak
                 streak={item}
                 unsubscribeFunction={() => deleteActivity(item.id)}
+                selectFunction={() => streakDetails(item)}
               />
             </View>
           );

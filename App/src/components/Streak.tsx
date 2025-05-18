@@ -7,13 +7,15 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 type Props = {
   streak: ActivityWithStreak;
   unsubscribeFunction: () => void;
+  selectFunction: () => void;
 };
 
 const Streak = (props: Props) => {
   const { darkmode } = useSettingsContext();
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={props.selectFunction}
       className={`flex-row items-center w-11/12 h-36 rounded-3xl mt-8 mx-auto ${
         darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]"
       }`}
@@ -37,15 +39,8 @@ const Streak = (props: Props) => {
           {props.streak?.name}
         </Text>
         <Text
-          className={`text-xl ${
-            darkmode ? "text-[#B0A1C1]" : "text-[#8F7B9E]"
-          }`}
-        >
-          {props.streak?.description}
-        </Text>
-        <Text
           className={`text-2xl mt-4 ${
-            darkmode ? "text-white" : "text-[#333333]" /* Charcoal */
+            darkmode ? "text-white" : "text-[#333333]"
           }`}
         >
           Times remaining:{" "}
@@ -59,9 +54,9 @@ const Streak = (props: Props) => {
         onPress={props.unsubscribeFunction}
         className="ml-auto mr-5"
       >
-        <Icon name="trash" size={30} color={darkmode ? "#8F7B9E" : "#7D3C98"} />
+        <Icon name="trash" size={35} color={darkmode ? "#8F7B9E" : "#7D3C98"} />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 
