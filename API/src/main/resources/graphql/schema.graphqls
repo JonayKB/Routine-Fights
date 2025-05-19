@@ -13,7 +13,7 @@ type Query {
   images: [String]
 
   postsV2(lastDate: String!, limit: Int): [PostOutputV2]
-  postsByUserV2(userID: String!, lastDate: String!, limit: Int): [PostOutputV2]
+  postsByUserV2(userEmail: String!, lastDate: String!, limit: Int): [PostOutputV2]
   postsByActivityV2(
     activityID: String!
     lastDate: String!

@@ -59,9 +59,9 @@ public class PostControllerV2 {
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @QueryMapping("postsByUserV2")
     public List<PostOutputDTOV2> getPaginationByUser(@Argument String lastDate, @Argument int limit,
-            @Argument String userID) {
+            @Argument String userEmail) {
         LocalDateTime date = LocalDateTime.parse(lastDate);
-        List<Post> posts = postService.getPaginationByUser(date, limit, userID);
+        List<Post> posts = postService.getPaginationByUser(date, limit, userEmail);
         User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
         return postOutputV2Mapper.toDto(posts, user);
     }

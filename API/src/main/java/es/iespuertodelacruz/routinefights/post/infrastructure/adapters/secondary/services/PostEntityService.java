@@ -46,8 +46,8 @@ public class PostEntityService implements IPostRepository {
     }
 
     @Override
-    public List<Post> getPaginationByUser(LocalDateTime lastDate, int limit, String userID) {
-        return postEntityMapper.toDomain(postEntityRepository.getPaginationByUser(lastDate, limit, userID));
+    public List<Post> getPaginationByUser(LocalDateTime lastDate, int limit, String userEmail) {
+        return postEntityMapper.toDomain(postEntityRepository.getPaginationByUser(lastDate, limit, userEmail));
     }
 
     @Override

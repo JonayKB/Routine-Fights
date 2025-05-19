@@ -103,8 +103,8 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public List<Post> getPaginationByUser(LocalDateTime lastDate, int limit, String userID) {
-        return postRepository.getPaginationByUser(lastDate, limit, userID);
+    public List<Post> getPaginationByUser(LocalDateTime lastDate, int limit, String userEmail) {
+        return postRepository.getPaginationByUser(lastDate, limit, userEmail);
     }
 
     @Override
