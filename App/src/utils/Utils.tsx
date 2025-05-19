@@ -12,19 +12,15 @@ export const resetNavigation = (navigation: any, path: string) => {
   });
 };
 
-const numberToString = (number: number) => {
-  return new Intl.NumberFormat("en-EN").format(number);
-};
-
-export const convertQuantityToString = (quantity: number) => {
-  if (quantity?.toString().length > 5) {
-    if (quantity > 999999) {
-      return numberToString(quantity).slice(0, 5) + "M";
-    }
-    return numberToString(quantity).slice(0, 5) + "K";
-  } else {
-    return numberToString(quantity);
+export const convertQuantityToString = (quantity: number): string => {
+  if (quantity >= 1000000) {
+    const num = quantity / 1000000;
+    return parseFloat(num.toFixed(2)).toString() + "M";
+  } else if (quantity >= 1000) {
+    const num = quantity / 1000;
+    return parseFloat(num.toFixed(2)).toString() + "K";
   }
+  return quantity.toString();
 };
 
 export const languages = (language: string) => [

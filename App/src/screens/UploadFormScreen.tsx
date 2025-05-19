@@ -130,7 +130,7 @@ const UploadFormScreen = (props: Props) => {
         <Text className={`pb-6 text-center ${textColor(darkmode)}`}>
           {translations[language || "en-EN"].screens.UploadForm.timesRemaining}
           {": "}
-          {`${activity?.timesRemaining}`}
+          {`${activity?.timesRemaining || 0}`}
         </Text>
       </View>
     </View>

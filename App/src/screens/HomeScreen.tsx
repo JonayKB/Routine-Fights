@@ -78,7 +78,6 @@ const HomeScreen = ({ navigation }: Props) => {
 
   const reload = () => {
     lastDate.current = new Date().toISOString().slice(0, 19);
-    setPosts([]);
     setLoad(true);
   };
 
