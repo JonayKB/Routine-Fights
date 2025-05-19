@@ -9,7 +9,7 @@ import {
 } from "../repositories/ActivityRepository";
 import { ActivityWithStreak } from "../utils/Activity";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { bgColor, languages, textColor } from "../utils/Utils";
+import { bgColor, textColor } from "../utils/Utils";
 import AddButton from "../components/AddButton";
 import { translations } from "../../translations/translation";
 
