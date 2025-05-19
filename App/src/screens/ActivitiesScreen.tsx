@@ -36,7 +36,13 @@ const ActivitiesScreen = ({ navigation }: Props) => {
         pageNum.current,
         searchText
       );
-      setActivities(isLoadingMore ? [...activities, ...response] : response);
+      if (isLoadingMore) {
+        setActivities(() => {
+          const existingActivities = new Set(activities);
+          return [...existingActivities, ...response];
+        });
+      }
+      setActivities(response);
     } catch (error) {
       console.error("Error fetching activities:", error);
     } finally {

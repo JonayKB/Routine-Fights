@@ -93,7 +93,7 @@ export const getPosts = async (
 
 export const getUserPosts = async (
   lastDate: string,
-  userID: string,
+  email: string,
   perPage: number = limit
 ) => {
   try {
@@ -102,7 +102,7 @@ export const getUserPosts = async (
       neo4jUri,
       {
         query: `query {
-                postsByUserV2(lastDate: "${lastDate}", userID: "${userID}", limit: ${perPage}) {
+                postsByUserV2(lastDate: "${lastDate}", userEmail: "${email}", limit: ${perPage}) {
                   id
                   streak
                   comments

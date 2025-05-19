@@ -18,7 +18,7 @@ import {
   followUser,
   unfollowUser,
 } from "../repositories/UserRepository";
-import { bgColor, convertQuantityToString, textColor } from "../utils/Utils";
+import { bgColor, convertQuantityToString } from "../utils/Utils";
 import ProfilePost from "../components/ProfilePost";
 import FollowCount from "../components/FollowCount";
 import Picture from "../components/Picture";
@@ -87,8 +87,14 @@ const ProfileScreen = ({ navigation, route }: Props) => {
 
   const fetchPosts = async () => {
     try {
-      const response = await getUserPosts(lastDate.current, user.id);
-      setPosts(isLoadingMore ? [...posts, ...response] : response);
+      const response = await getUserPosts(lastDate.current, user.email);
+      if (isLoadingMore) {
+        setPosts(() => {
+          const existingPosts = new Set(posts);
+          return [...existingPosts, ...response];
+        });
+      }
+      setPosts(response);
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
@@ -227,7 +233,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
         </View>
       </View>
       <FlatList
-        style={{ height: 100, width: "100%", flexGrow: 0 }}
+        style={{ minHeight: 100, width: "100%", flexGrow: 0 }}
         className={`border-b-2 border-[#4B0082] ${bgColor(darkmode)}`}
         horizontal
         data={badges}
@@ -246,7 +252,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
 
       <FlatList
         refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
-        style={{ width: "100%" }}
+        style={{ width: "100%", marginTop: 10 }}
         data={posts}
         renderItem={({ item }) => {
           return (
