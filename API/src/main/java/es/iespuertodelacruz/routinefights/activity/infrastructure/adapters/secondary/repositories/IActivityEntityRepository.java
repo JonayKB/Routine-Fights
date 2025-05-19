@@ -75,14 +75,15 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                         @Param("activityName") String activityName);
 
         @Query("""
-                        MATCH (u:User)-[:Posted]->(p:Post)-[:`Related-To`]->(a:Activity)
-                         WHERE elementId(a) = $activityID
-                         AND p.createdAt >= $startDate
-                         AND p.createdAt <= $endDate
-                         AND elementId(u) = $userID
-                         WITH a, COUNT(p) AS postCount
-                         RETURN a.timesRequiered - postCount AS remainingPosts
-                         """)
+                        MATCH (a:Activity)
+                        WHERE elementId(a) = $activityID
+                        OPTIONAL MATCH (u:User)-[:Posted]->(p:Post)-[:`Related-To`]->(a)
+                        WHERE p.createdAt >= $startDate
+                        AND p.createdAt <= $endDate
+                        AND elementId(u) = $userID
+                        WITH a, COUNT(p) AS postCount
+                        RETURN a.timesRequiered - postCount AS remainingPosts
+                        """)
         Integer getTimesRemaining(@Param("activityID") String activityID,
                         @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate,
                         @Param("userID") String userID);

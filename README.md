@@ -4,7 +4,7 @@
     <img src="./img/logoRoutineFights.png" alt="routine-fights logo" width="400px">
 </div>
 
-## Index
+# Index
 
 - [Index](#index)
 - [Introduction](#introduction)
@@ -24,25 +24,53 @@
     - [IMAGES](#images)
     - [GRAPH](#graph)
   - [SOAP](#soap)
+    - [AuthService](#authservice)
+    - [GraphService](#graphservice)
+    - [ImageService](#imageservice)
+- [Marketing Plan](#marketing-plan)
+  - [Market Analysis](#market-analysis)
+    - [Ideal Customer Profile](#ideal-customer-profile)
+    - [Competitor Analysis](#competitor-analysis)
+    - [Market Trends](#market-trends)
+  - [Value Proposition](#value-proposition)
+  - [Promotion and Advertising Strategies](#promotion-and-advertising-strategies)
+    - [Digital Marketing](#digital-marketing)
+    - [Paid Advertising](#paid-advertising)
+    - [Partnerships and Networking](#partnerships-and-networking)
+  - [Sales and Pricing Strategy](#sales-and-pricing-strategy)
+  - [Metrics and KPIs](#metrics-and-kpis)
+- [Sustainability Plan](#sustainability-plan)
+  - [Economic Sustainability](#economic-sustainability)
+    - [Stable and Profitable Business Model](#stable-and-profitable-business-model)
+    - [Efficient Financial Management](#efficient-financial-management)
+  - [Social Sustainability](#social-sustainability)
+    - [Digital Accessibility](#digital-accessibility)
+    - [Business Ethics](#business-ethics)
+    - [Education and Training](#education-and-training)
+  - [Environmental Sustainability](#environmental-sustainability)
+    - [Server Optimization](#server-optimization)
+    - [Eco-friendly Web Design](#eco-friendly-web-design)
+    - [Paperless Operations](#paperless-operations)
 - [Diagrams](#diagrams)
 - [Design](#design)
+- [Sonarqube](#sonarqube)
 
-## Introduction
+# Introduction
 
 **Routine Fights** is a productivity-focused social media platform designed to help users enhance their habits, acquire new skills, and engage more consistently in doing routines.
 
-## Tools
+# Tools
 
 | **Database**                                                                            | **API**                                                              | **CI/CD**                                                                   | **FrontEnd APP**                                                                                          | **FrontEnd Administration**                                                                                                                                                                   |
 | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Neo4J                                                                                   | Spring                                                               | Github Actions                                                              | React Native                                                                                              | React                                                                                                                                                                                         |
 | ![Neo4j logo](https://upload.wikimedia.org/wikipedia/commons/e/e5/Neo4j-logo_color.png) | ![Spring logo](https://img.icons8.com/?size=512&id=90519&format=png) | ![Github Actions logo](https://cdn-icons-png.flaticon.com/512/25/25231.png) | ![React Native logo](https://static-00.iconduck.com/assets.00/sdk-react-native-icon-512x490-ynyk8t4w.png) | ![React logo](https://cdn.iconscout.com/icon/free/png-256/free-react-logo-icon-download-in-svg-png-gif-file-formats--technology-social-media-vol-5-pack-logos-icons-2945110.png?f=webp&w=256) |
 
-## Usage
+# Usage
 
-### Using Docker
+## Using Docker
 
-### Without Docker
+## Without Docker
 
 Execute this docker-compose
 
@@ -90,29 +118,29 @@ networks:
   apiNetwork:
 ```
 
-#### Clone Repository
+### Clone Repository
 
 ```bash
 git clone https://github.com/JonayKB/Routine-Fights/
 ```
 
-#### Setup your Neo4j
+### Setup your Neo4j
 
 Setup your Neo4J or by the client.
 
 Then add the username, url and password on application.properties
 
-#### Start App
+### Start App
 
 ```bash
 mvn clean spring-boot:run
 ```
 
-## Endpoints Usage
+# Endpoints Usage
 
-### GraphQL
+## GraphQL
 
-#### Queries
+### Queries
 
 | Query                                                            | Description                                                                             |
 | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
@@ -141,7 +169,7 @@ mvn clean spring-boot:run
 | `findBadgeById(id)`                                              | Fetches a badge by its ID (v3), including event details.                                |
 | `findBadgeByCommunityEvent(communityEventId)`                    | Lists all badges associated with a given community event.                               |
 
-#### Mutations
+### Mutations
 
 | Mutation                                      | Description                                                                                               |
 | --------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -165,9 +193,9 @@ mvn clean spring-boot:run
 | `addBadgeToUser(userEmail, badgeId)`          | Awards a badge to a single user.                                                                          |
 | `addBadgeToUsers(userEmail[], badgeId)`       | Awards a badge to multiple users, returning an array of success flags.                                    |
 
-### REST
+## REST
 
-#### AUTH
+### AUTH
 
 | Method | Path                           | Parameters                                                                    | Request Body (JSON)                                                                                                                          | Description                                 |
 | ------ | ------------------------------ | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
@@ -175,10 +203,9 @@ mvn clean spring-boot:run
 | POST   | `/auth/login`                  | **email** (query, string, required)<br>**password** (query, string, required) | —                                                                                                                                            | Authenticate a user and return a JWT token. |
 | GET    | `/auth/verify/{email}/{token}` | **email** (path, string, required)<br>**token** (path, string, required)      | —                                                                                                                                            | Verify user’s email with a token.           |
 
-
 ---
 
-#### IMAGES
+### IMAGES
 
 | Method | Path                  | Parameters                             | Request Body (multipart/form-data) | Description                    |
 | ------ | --------------------- | -------------------------------------- | ---------------------------------- | ------------------------------ |
@@ -187,7 +214,7 @@ mvn clean spring-boot:run
 
 ---
 
-#### GRAPH
+### GRAPH
 
 *All `/graphs` endpoints return JSON chart‑data objects.*
 
@@ -201,10 +228,177 @@ mvn clean spring-boot:run
 
 ---
 
+## SOAP
 
-### SOAP
+### AuthService
 
-## Diagrams
+| Operation  | SOAP Action | Input                 | Output                        | Description                                     |
+| ---------- | ----------- | --------------------- | ----------------------------- | ----------------------------------------------- |
+| `login`    | (none)      | `<login>` XML body    | `<loginResponse>` XML body    | Authenticate user and return token or response. |
+| `register` | (none)      | `<register>` XML body | `<registerResponse>` XML body | Register a new user.                            |
+| `verify`   | (none)      | `<verify>` XML body   | `<verifyResponse>` XML body   | Verify user’s email and token.                  |
+
+### GraphService
+
+| Operation              | SOAP Action | Input                             | Output                           | Description                            |
+| ---------------------- | ----------- | --------------------------------- | -------------------------------- | -------------------------------------- |
+| `getPostPointsChart`   | (none)      | `<getPostPointsChart>` XML body   | `<getPostPointsChartResponse>`   | Get chart data for post points.        |
+| `getPostCreationChart` | (none)      | `<getPostCreationChart>` XML body | `<getPostCreationChartResponse>` | Get chart data for post creation.      |
+| `getUserCreationChart` | (none)      | `<getUserCreationChart>` XML body | `<getUserCreationChartResponse>` | Get chart data for user registrations. |
+| `getUserPointsChart`   | (none)      | `<getUserPointsChart>` XML body   | `<getUserPointsChartResponse>`   | Get chart data for user points.        |
+
+### ImageService
+
+| Operation    | SOAP Action | Input                   | Output                          | Description                   |
+| ------------ | ----------- | ----------------------- | ------------------------------- | ----------------------------- |
+| `getImage`   | (none)      | `<getImage>` XML body   | `<getImageResponse>` XML body   | Retrieve image by name or ID. |
+| `uploadFile` | (none)      | `<uploadFile>` XML body | `<uploadFileResponse>` XML body | Upload an image file.         |
+
+# Marketing Plan
+
+## Market Analysis
+
+### Ideal Customer Profile
+
+The ideal customer for **Routine Fights** is someone committed to personal growth and constantly looking for ways to optimize their time and productivity.
+
+With Routine Fights, these users can:
+
+- Create personalized challenges and routines.
+- Be part of a collaborative and motivational community.
+
+This customer sees the app as a tool to transform their daily life and achieve a balance between personal discipline and community support.
+
+---
+
+### Competitor Analysis
+
+Routine Fights competes with well-established applications that have large user bases, which can make it challenging to attract new users. However:
+
+- Many apps focus on very specific niches (languages, workout routines, etc.).
+- Routine Fights offers a **broader range of activities and customization**.
+- It stands out for being **free**, with an optional premium plan.
+- It promotes community engagement and exploration of new hobbies.
+
+---
+
+### Market Trends
+
+- **Gamification** is booming (e.g., Duolingo).
+- Mobile apps are increasingly popular due to their **convenience and accessibility**.
+
+---
+
+## Value Proposition
+
+- Interface adapted for **left-handed and right-handed** users.
+- **Free**, with optional subscription (cosmetics and temporary boosts).
+- **Fast and intuitive** interface from the very first use.
+
+---
+
+## Promotion and Advertising Strategies
+
+### Digital Marketing
+
+Social media campaign featuring promotional videos that highlight:
+
+- The app's flexibility.
+- The importance of teamwork.
+
+### Paid Advertising
+
+- Initial investment in **Google Ads** to boost visibility and build a solid user base.
+
+### Partnerships and Networking
+
+- Collaborations with **influencers and content creators** to reach a minimum active community.
+
+---
+
+## Sales and Pricing Strategy
+
+- **100% free** app.
+
+- **Premium plan**: €5/month
+
+  - No ads.
+  - Extended streaks.
+  - Access to global leaderboard with rewards.
+
+- **Microtransactions**:
+
+  - Remove individual ads.
+  - Buy cosmetic items (do not affect scoring).
+
+---
+
+## Metrics and KPIs
+
+- **Conversions (visits to customers)**: Measures how many users perform key actions (e.g., sign up, subscribe, purchase).
+- **Social media engagement**: Likes, comments, shares, and views.
+- **Advertising ROI**: Compares revenue against advertising spend.
+- **Customer and sales growth**: Tracks growth in user base and revenue over time.
+
+---
+
+# Sustainability Plan
+
+## Economic Sustainability
+
+### Stable and Profitable Business Model
+
+- Revenue from: web maintenance, hosting, and custom development.
+
+### Efficient Financial Management
+
+- Use of **Dolibarr** and financial specialists.
+- All profits reinvested in the team and platform.
+
+---
+
+## Social Sustainability
+
+### Digital Accessibility
+
+- **Dark mode**.
+- Interface for left-handed/right-handed users.
+- Inclusive and varied activities.
+
+### Business Ethics
+
+- Fair and inclusive treatment.
+- Efficient customer support.
+- Community building and collaboration.
+
+### Education and Training
+
+- Initial training programs for new employees.
+- Benefits:
+
+  - Increased productivity.
+  - Skill development.
+  - Talent retention.
+
+> Companies that train staff achieve up to 50% higher retention and 200% more revenue per employee compared to those that don't.
+
+---
+
+## Environmental Sustainability
+
+### Server Optimization
+
+- Use of **shared vCPUs** to optimize resources and reduce energy consumption.
+
+### Eco-friendly Web Design
+
+- **GraphQL** implementation to reduce unnecessary data and improve performance.
+
+### Paperless Operations
+
+- **100% digital operations**, minimizing waste and long-term costs.
+
+# Diagrams
 
 - **Case-Use Diagram**
 
@@ -222,6 +416,11 @@ mvn clean spring-boot:run
 
 <img src="./documentation/DatabaseDiagram.png" alt="database image">
 
-## Design
+# Design
 
 <img src="#" alt="design images">
+
+# Sonarqube
+
+[Look the quality of code and how it upgraded](http://zombiesurvive.ddns.net:9000)
+> Ask to us to get the credentials
