@@ -27,4 +27,6 @@ public interface ICommunityEventService {
 
     CommunityEvent getCommunityEventEndsToday();
 
+    List<CommunityEvent> findAll();
+
 }

@@ -59,4 +59,10 @@ public class CommunityEventV3Controller {
         return communityEventService.getUsersParticipatingInCommunityEvent(id);
     }
 
+    @Secured("ROLE_ADMIN")
+    @QueryMapping("getAllCommunityEvents")
+    public List<CommunityEventOutputV3> getAllCommunityEvents(){
+        return communityEventOutputV3Mapper.toDto(communityEventService.findAll());
+    }
+
 }

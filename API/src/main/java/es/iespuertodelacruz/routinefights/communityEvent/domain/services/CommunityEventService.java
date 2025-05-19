@@ -77,4 +77,9 @@ public class CommunityEventService implements ICommunityEventService {
         return communityEventRepository.getCommunityEventEndsToday();
     }
 
+    @Override
+    public List<CommunityEvent> findAll() {
+        return communityEventRepository.findAll();
+    }
+
 }
