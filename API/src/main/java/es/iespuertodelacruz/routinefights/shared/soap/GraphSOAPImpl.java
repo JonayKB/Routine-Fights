@@ -14,25 +14,25 @@ public class GraphSOAPImpl implements GraphSOAPInterface {
         this.graphService = graphService;
     }
 
-    @Cacheable("userCreationChart")
+    @Cacheable("userCreationChartSOAP")
     @Override
     public ChartData getUserCreationChart() {
         return graphService.findUserRegistrationsByDate();
     }
 
-    @Cacheable("postCreationChart")
+    @Cacheable("postCreationChartSOAP")
     @Override
     public ChartData getPostCreationChart() {
         return graphService.findPostsCreatedByDate();
     }
 
-    @Cacheable("postPointsChart")
+    @Cacheable("postPointsChartSOAP")
     @Override
     public ChartData getPostPointsChart() {
         return graphService.findPointsAddedSumByDate();
     }
 
-    @Cacheable("userPointsChart")
+    @Cacheable("userPointsChartSOAP")
     @Override
     public ChartData getUserPointsChart() {
         return graphService.findTotalPointsByUser();
