@@ -13,7 +13,14 @@ import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 type Props = NativeStackScreenProps<ProfileStackProps, "Settings">;
 
 const SettingsScreen = ({ navigation }: Props) => {
-  const { language, setLanguage, darkmode, setDarkmode, lefthand, setLefthand } = useSettingsContext();
+  const {
+    language,
+    setLanguage,
+    darkmode,
+    setDarkmode,
+    lefthand,
+    setLefthand,
+  } = useSettingsContext();
 
   const changeLanguage = async (language: string) => {
     try {
@@ -57,12 +64,21 @@ const SettingsScreen = ({ navigation }: Props) => {
         navigation={navigation}
         message={translations[language || "en-EN"].screens.Settings.settings}
       />
-      <View className="p-5 gap-5">
+      <View
+        className={`p-5 gap-5 m-4 ${
+          darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]"
+        } rounded-2xl`}
+      >
         <Button
           title={translations[language || "en-EN"].screens.Settings.editProfile}
           onPress={() => navigation.navigate("ProfileForm")}
+          color={darkmode ? "#B28DFF" : "#7D3C98"}
         />
-        <TouchableOpacity>
+        <View
+          className={`rounded-xl px-4 py-2 ${
+            darkmode ? "bg-[#3A1D3C]" : "bg-white"
+          }`}
+        >
           <DropDown
             data={languages}
             message={
@@ -71,7 +87,7 @@ const SettingsScreen = ({ navigation }: Props) => {
             value={language}
             setValue={changeLanguage}
           />
-        </TouchableOpacity>
+        </View>
         <Button
           title={
             darkmode
@@ -79,12 +95,14 @@ const SettingsScreen = ({ navigation }: Props) => {
               : translations[language || "en-EN"].screens.Settings.darkMode
           }
           onPress={changeMode}
+          color={darkmode ? "#B28DFF" : "#7D3C98"}
         />
         <Button
           title={lefthand ? "Left side" : "Right side"}
           onPress={changeSide}
+          color={darkmode ? "#B28DFF" : "#7D3C98"}
         />
-        <Button title="Logout" onPress={closeSession} />
+        <Button title="Logout" onPress={closeSession} color="#F65261" />
       </View>
     </View>
   );

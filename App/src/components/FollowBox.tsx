@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Picture from "./Picture";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { convertQuantityToString } from "../utils/Utils";
+import { cardBgColor, convertQuantityToString } from "../utils/Utils";
 import { Followers } from "../utils/User";
 import { followUser, unfollowUser } from "../repositories/UserRepository";
 import { useTokenContext } from "../contexts/TokenContextProvider";
@@ -15,7 +15,7 @@ type Props = {
 
 const FollowBox = (props: Props) => {
   const [follower, setFollower] = useState<Followers>({} as Followers);
-  const { language } = useSettingsContext();
+  const { language, darkmode } = useSettingsContext();
   const { email } = useTokenContext();
 
   useEffect(() => {
@@ -44,35 +44,47 @@ const FollowBox = (props: Props) => {
   };
 
   return (
-    <View>
+    <View className="w-11/12 mx-auto my-3">
       <TouchableOpacity
         onPress={props.navigateFunction}
-        className="items-center bg-[#F1FEFC] flex-row mt-5 w-11/12 mx-auto rounded-xl p-2"
+        className={`flex-row items-center rounded-2xl p-4 ${cardBgColor(
+          darkmode
+        )}`}
       >
         <Picture
           image={follower.image}
           size={80}
-          style="rounded-full border-2 border-[#4B0082]"
+          style={`rounded-full border-2 ${
+            darkmode ? "border-[#B28DFF]" : "border-[#4B0082]"
+          }`}
         />
-        <View className="ml-5">
-          <Text className="text-black font-bold text-2xl">
+        <View className="ml-5 flex-1">
+          <Text
+            className={`font-bold text-2xl mb-1 ${
+              darkmode ? "text-[#B28DFF]" : "text-[#4B0082]"
+            }`}
+          >
             {follower.username}
           </Text>
-          <Text className="text-black">
+          <Text className={`${darkmode ? "text-white" : "text-[#333333]"}`}>
             {translations[language || "en-EN"].screens.Profile.followers}:{" "}
             {convertQuantityToString(follower.followers)}
           </Text>
-          <Text className="text-black">
+          <Text className={`${darkmode ? "text-white" : "text-[#333333]"}`}>
             {translations[language || "en-EN"].screens.Profile.following}:{" "}
             {convertQuantityToString(follower.following)}
           </Text>
         </View>
-        {(follower.email !== email) && (
+        {follower.email !== email && (
           <TouchableOpacity
-            className="border-[#E4007C] border-2 rounded-lg ml-5"
+            className="border-2 border-[#F65261] rounded-lg px-4 py-2 ml-3"
             onPress={handleFollow}
           >
-            <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
+            <Text
+              className={`font-bold text-base text-center ${
+                darkmode ? "text-[#B28DFF]" : "text-[#4B0082]"
+              }`}
+            >
               {follower.isFollowing
                 ? translations[language || "en-EN"].screens.Profile.unfollow
                 : translations[language || "en-EN"].screens.Profile.follow}

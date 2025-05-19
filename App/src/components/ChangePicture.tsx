@@ -15,7 +15,7 @@ const ChangePicture = ({ uri, setUri }: Props) => {
 
   return (
     <View className="items-center">
-      <View className="rounded-lg w-full bg-black items-center">
+      <View className="w-full bg-black items-center">
         <Image
           className="justify-center my-5"
           source={{ uri: `file://${uri}` }}

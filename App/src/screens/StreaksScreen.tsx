@@ -16,6 +16,7 @@ import {
 import { ActivityWithStreak } from "../utils/Activity";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { bgColor, textColor } from "../utils/Utils";
+import AddButton from "../components/AddButton";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
@@ -77,12 +78,8 @@ const StreaksScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <View
-      className={`flex-1 ${bgColor(darkmode)} items-center pt-8`}
-    >
-      <Text
-        className={`text-4xl font-bold mb-2 ${textColor(darkmode)}`}
-      >
+    <View className={`flex-1 ${bgColor(darkmode)} items-center pt-8`}>
+      <Text className={`text-4xl font-bold mb-2 ${textColor(darkmode)}`}>
         Mis Streaks
       </Text>
 
@@ -95,14 +92,9 @@ const StreaksScreen = ({ navigation, route }: Props) => {
         renderItem={({ item }) => {
           if (item.id === "true") {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Activities")}
-                className="w-11/12 mx-auto mt-8 py-4 rounded-3xl bg-[#F65261]"
-              >
-                <Text className="text-8xl font-bold text-white text-center">
-                  +
-                </Text>
-              </TouchableOpacity>
+              <AddButton
+                navigateFunction={() => navigation.navigate("Activities")}
+              />
             );
           }
           return (
