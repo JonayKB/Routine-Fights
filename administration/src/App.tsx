@@ -4,7 +4,7 @@ import LoginScreen from "./screens/LoginScreen";
 import Navbar from "./components/Navbar";
 import MainContextProvider from "./components/MainContext";
 import HomeScreen from "./screens/HomeScreen";
-import UsersScreen from "./screens/UsersScreen";
+import UsersScreen from "./screens/CommunityScreen";
 
 function App() {
   return (

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../styles/Styles';
 import { MainContext } from './MainContext';
@@ -37,14 +37,15 @@ const Navbar = () => {
         </button>
 
         <div style={styles.sidebarContent}>
+          <Link to="/" style={styles.link} onClick={closeMenu}>
+            Home
+          </Link>
           {!token && (
             <Link to="/login" style={styles.link} onClick={closeMenu} >
               Login
             </Link>
           )}
-          <Link to="/" style={styles.link} onClick={closeMenu}>
-            Home
-          </Link>
+          
           <Link to="/users" style={styles.link} onClick={closeMenu}>
             Users
           </Link>

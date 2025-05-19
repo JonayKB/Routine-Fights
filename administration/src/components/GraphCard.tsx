@@ -1,5 +1,4 @@
 import { BarChart } from '@mui/x-charts/BarChart';
-import React from "react";
 import GraphData from "../models/GraphData";
 import styles from "../styles/Styles";
 
@@ -11,7 +10,6 @@ type GraphCardProps = {
 const GraphCard = ({ title, data }: GraphCardProps) => (
     <div style={styles.graphCard}>
         <h2>{title}</h2>
-        {/* @ts-ignore */}
         <BarChart
             series={[{ data: data?.data ?? [] }]}
             xAxis={[{
@@ -20,6 +18,7 @@ const GraphCard = ({ title, data }: GraphCardProps) => (
                     colors: ['#B39DDB', '#FF7043']
                 }
             }]}
+
             height={300}
         />
     </div>
