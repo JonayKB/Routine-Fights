@@ -1,10 +1,13 @@
-import { View, Text, StyleSheet, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import { Alert, RefreshControl, ScrollView, Text, View } from "react-native";
+import { useEffect, useState } from "react";
 import { Event } from "../utils/Event";
-import { getNearestEvent } from "../repositories/EventRepository";
+import {
+  getCurrentPoints,
+  getNearestEvent,
+} from "../repositories/EventRepository";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import DateFormatString from "../components/DateFormatString";
 import { bgColor, borderColor, cardBgColor, textColor } from "../utils/Utils";
+import DateFormatString from "../components/DateFormatString";
 import { translations } from "../../translations/translation";
 
 type Props = {};
@@ -13,7 +16,12 @@ const EventsScreen = (props: Props) => {
   const { darkmode, language } = useSettingsContext();
   const [event, setEvent] = useState<Event>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  const secsToMillis = 1000;
+  const [currentPoints, setCurrentPoints] = useState(0);
+  const [barHeight, setBarHeight] = useState(0);
+  const [load, setLoad] = useState(false);
+  const secToMillis = 1000;
+  const totalHight = 550;
+  const [milestones, setMilestones] = useState<number[]>([]);
 
   const formatTime = (millis: number): string => {
     const totalSeconds = Math.floor(millis / 1000);
@@ -28,9 +36,29 @@ const EventsScreen = (props: Props) => {
     )}s`;
   };
 
+  const getBarHeight = () => {
+    const height = (currentPoints * totalHight) / event.totalRequired;
+    setBarHeight(height);
+  };
+
+  const getMilestones = () => {
+    const milestones = [];
+    const milestoneCount = event.totalRequired / 3;
+    for (let i = 1; i <= 3; i++) {
+      milestones.push(Math.floor(i * milestoneCount));
+    }
+    setMilestones(milestones);
+  };
+
   useEffect(() => {
-    fetchNearestEvent();
-  }, []);
+    const init = async () => {
+      await fetchNearestEvent();
+      await fetchEventPoints();
+      getBarHeight();
+      getMilestones();
+    };
+    init();
+  }, [load === true]);
 
   useEffect(() => {
     if (!event?.finishDate) return;
@@ -46,7 +74,7 @@ const EventsScreen = (props: Props) => {
       } else {
         setTimeLeft(timeRemaining);
       }
-    }, secsToMillis);
+    }, secToMillis);
 
     return () => clearInterval(interval);
   }, [event?.finishDate]);
@@ -57,11 +85,28 @@ const EventsScreen = (props: Props) => {
       setEvent(response);
     } catch (error) {
       Alert.alert("Error", error.response.data);
+    } finally {
+      setLoad(false);
+    }
+  };
+
+  const fetchEventPoints = async () => {
+    try {
+      setCurrentPoints(await getCurrentPoints(event.id));
+    } catch (error) {
+      Alert.alert("Error", error.response.data);
+    } finally {
+      setLoad(false);
     }
   };
 
   return (
-    <View className={`flex-1 ${bgColor(darkmode)}`}>
+    <ScrollView
+      className={`flex-1 ${bgColor(darkmode)}`}
+      refreshControl={
+        <RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />
+      }
+    >
       <View className={`p-4 ${cardBgColor(darkmode)}`}>
         <Text
           className={`text-3xl font-bold ${textColor(
@@ -75,7 +120,8 @@ const EventsScreen = (props: Props) => {
           <DateFormatString date={event?.finishDate} />
         </View>
         <Text className={`text-2xl ${textColor(darkmode)} text-center mt-2`}>
-          {translations[language || "en-EN"].screens.Events.timeLeft}{": "}
+          {translations[language || "en-EN"].screens.Events.timeLeft}
+          {": "}
           {formatTime(timeLeft)}
         </Text>
       </View>
@@ -85,20 +131,32 @@ const EventsScreen = (props: Props) => {
         )} border-2 w-10/12 mt-5 m-auto rounded-3xl`}
         style={{ height: 590 }}
       >
-        <View style={{ height: 550 }} className="w-8 pos-relative overflow-hidden rounded-xl m-auto border-2 border-black">
-          <View style={styles.barBackground} />
-          <View className="bg-red-700 h-16" />
+        <View
+          style={{ height: totalHight }}
+          className="w-8 overflow-hidden rounded-xl m-auto border-2 border-black flex-col-reverse"
+        >
+          <View className="bg-red-700" style={{ height: barHeight }} />
+          <View className="bg-black" style={{ height: totalHight }} />
+          {milestones.map((ms) => {
+            const y = (ms * totalHight) / event.totalRequired;
+            return (
+              <View
+                key={ms}
+                style={{
+                  position: "absolute",
+                  bottom: y - 1,
+                  left: 0,
+                  right: 0,
+                  height: 2,
+                  backgroundColor: "#fff",
+                }}
+              />
+            );
+          })}
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default EventsScreen;
-
-const styles = StyleSheet.create({
-  barBackground: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor:'#EEEEEE'
-  },
-});

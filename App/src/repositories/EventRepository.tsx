@@ -33,3 +33,27 @@ export const getNearestEvent = async (): Promise<Event> => {
     throw error;
   }
 };
+
+export const getCurrentPoints = async (eventId: string): Promise<number> => {
+  try {
+    const token = await RNSecureKeyStore.get("token");
+    const response = await axios.post(
+      neo4jUri,
+      {
+        query: `query {
+                    getCommunityEventPointsById(id: "${eventId}")
+                }`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data.data.getCommunityEventPointsById;
+  } catch (error) {
+    console.error("Error:", error.response.data);
+    throw error;
+  }
+};

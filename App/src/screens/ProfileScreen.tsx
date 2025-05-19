@@ -51,17 +51,19 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const { uri } = useImageContext();
   const [badges, setBadges] = useState<Badge[]>([]);
 
+  const init = async () => {
+    await fetchUser();
+    await fetchPosts();
+    await fetchBadges();
+  };
+
   useEffect(() => {
-    fetchUser();
-    fetchPosts();
-    fetchBadges();
+    init();
   }, [route.params?.email, uri]);
 
   useEffect(() => {
     if (load || isLoadingMore) {
-      fetchUser();
-      fetchPosts();
-      fetchBadges();
+      init();
     }
   }, [load, isLoadingMore]);
 

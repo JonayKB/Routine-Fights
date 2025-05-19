@@ -20,7 +20,7 @@ const LoginScreen = ({ navigation }: Props) => {
   const [password, setPassword] = useState<string>("");
   const { setToken } = useTokenContext();
   const { language, setLanguage, darkmode, setDarkmode, setLefthand } =
-   useSettingsContext();
+    useSettingsContext();
 
   useEffect(() => {
     fetchMode();

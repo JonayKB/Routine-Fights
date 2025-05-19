@@ -6,7 +6,6 @@ import Picture from "./Picture";
 import { likePost, unLikePost } from "../repositories/PostRepository";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { borderColor, cardBgColor, iconColor, textColor } from "../utils/Utils";
-import DateFormatString from "./DateFormatString";
 
 type Props = {
   post: PostDomain;
