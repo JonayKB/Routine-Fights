@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Event } from "../utils/Event";
 import { getNearestEvent } from "../repositories/EventRepository";
@@ -55,7 +55,7 @@ const EventsScreen = (props: Props) => {
       const response = await getNearestEvent();
       setEvent(response);
     } catch (error) {
-      console.error("Error fetching nearest event:", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -63,7 +63,9 @@ const EventsScreen = (props: Props) => {
     <View className={`flex-1 ${bgColor(darkmode)}`}>
       <View className={`p-4 ${cardBgColor(darkmode)}`}>
         <Text
-          className={`text-3xl font-bold ${textColor(darkmode)} text-center mb-2 mt-4`}
+          className={`text-3xl font-bold ${textColor(
+            darkmode
+          )} text-center mb-2 mt-4`}
         >
           {event?.name}
         </Text>
@@ -80,9 +82,21 @@ const EventsScreen = (props: Props) => {
           darkmode
         )} border-2 w-10/12 mt-5 m-auto rounded-3xl`}
         style={{ height: 590 }}
-      ></View>
+      >
+        <View style={{ height: 550 }} className="w-8 pos-relative overflow-hidden rounded-xl m-auto border-2 border-black">
+          <View style={styles.barBackground} />
+          <View className="bg-red-700 h-16" />
+        </View>
+      </View>
     </View>
   );
 };
 
 export default EventsScreen;
+
+const styles = StyleSheet.create({
+  barBackground: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor:'#EEEEEE'
+  },
+});

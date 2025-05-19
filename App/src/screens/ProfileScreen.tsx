@@ -78,7 +78,6 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       setFollowers(convertQuantityToString(user.followers));
       setFollowing(convertQuantityToString(user.following));
     } catch (error) {
-      console.error("Error fetching user:", error);
       Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
@@ -96,7 +95,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       }
       setPosts(response);
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
       setIsLoadingMore(false);
@@ -143,7 +142,6 @@ const ProfileScreen = ({ navigation, route }: Props) => {
         : user.followers + 1;
       setFollowers(convertQuantityToString(updatedFollowers));
     } catch (error) {
-      console.error("Error following user:", error);
       Alert.alert("Error", error.response.data);
     }
   };

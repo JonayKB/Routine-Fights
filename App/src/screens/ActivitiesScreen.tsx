@@ -1,4 +1,4 @@
-import { View, FlatList, RefreshControl } from "react-native";
+import { View, FlatList, RefreshControl, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
@@ -44,7 +44,7 @@ const ActivitiesScreen = ({ navigation }: Props) => {
       }
       setActivities(response);
     } catch (error) {
-      console.error("Error fetching activities:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
       setIsLoadingMore(false);

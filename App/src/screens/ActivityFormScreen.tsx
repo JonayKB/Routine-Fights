@@ -54,9 +54,8 @@ const ActivityFormScreen = (props: Props) => {
   const addActivity = async () => {
     try {
       const imageName = await uploadImage(uri);
-      console.log(imageName); // Debugging line
 
-      const id = await createActivity(
+      await createActivity(
         activity.name,
         activity.description,
         timeRate,
@@ -64,18 +63,13 @@ const ActivityFormScreen = (props: Props) => {
         imageName
       );
 
-      if (id) {
-        Alert.alert(
-          translations[language || "en-EN"].screens.ActivityForm.success
-        );
-        setUri(null);
-        props.navigation.goBack();
-      } else {
-        throw new Error("Failed to create activity");
-      }
+      Alert.alert(
+        translations[language || "en-EN"].screens.ActivityForm.success
+      );
+      setUri(null);
+      props.navigation.goBack();
     } catch (error) {
-      console.error(error);
-      Alert.alert(translations[language || "en-EN"].screens.ActivityForm.error);
+      Alert.alert("Error", error.response.data);
     }
   };
 

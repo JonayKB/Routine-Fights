@@ -42,7 +42,7 @@ const LoginScreen = ({ navigation }: Props) => {
       const darkMode = await AsyncStorage.getItem("darkMode");
       setDarkmode(darkMode === "true");
     } catch (error) {
-      console.log(error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -51,7 +51,7 @@ const LoginScreen = ({ navigation }: Props) => {
       const language = await AsyncStorage.getItem("language");
       setLanguage(language);
     } catch (error) {
-      console.log(error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -60,7 +60,7 @@ const LoginScreen = ({ navigation }: Props) => {
       const lefthand = await AsyncStorage.getItem("lefthand");
       setLefthand(lefthand === "true");
     } catch (error) {
-      console.log(error);
+      Alert.alert("Error", error.response.data);
     }
   };
 

@@ -36,7 +36,7 @@ export const getBadgesByEmail = async (userEmail: string): Promise<Badge[]> => {
 
     return response.data.data.getBadgesByEmail;
   } catch (error) {
-    console.error("Error fetching badges:", error);
+    console.error("Error:", error.response.data);
     throw error;
   }
 };

@@ -29,7 +29,7 @@ export const getNearestEvent = async (): Promise<Event> => {
 
     return response.data.data.getNearestCommunityEvent;
   } catch (error) {
-    console.error("Error fetching nearest event:", error);
+    console.error("Error:", error.response.data);
     throw error;
   }
 };

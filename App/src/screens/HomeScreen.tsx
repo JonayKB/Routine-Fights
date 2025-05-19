@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Text,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
@@ -67,7 +68,7 @@ const HomeScreen = ({ navigation }: Props) => {
       }
       setPosts(response);
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
       setIsLoadingMore(false);

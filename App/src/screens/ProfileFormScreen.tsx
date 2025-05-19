@@ -34,21 +34,17 @@ const ProfileFormScreen = ({ navigation }: Props) => {
       console.log("ownUser", ownUser);
       setUser(ownUser);
     } catch (error) {
-      console.log(error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
   const updateProfile = async () => {
     try {
-      const response = await updateUser(user);
-      if (response) {
-        Alert.alert("Profile updated");
-        navigation.navigate("Profile");
-      } else {
-        throw new Error("Error updating profile");
-      }
+      await updateUser(user);
+      Alert.alert("Profile updated");
+      navigation.navigate("Profile");
     } catch (error) {
-      console.log("Error updating profile", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 

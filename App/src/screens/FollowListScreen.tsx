@@ -1,4 +1,4 @@
-import { View, FlatList, RefreshControl } from "react-native";
+import { View, FlatList, RefreshControl, Alert } from "react-native";
 import { Followers } from "../utils/User";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
@@ -39,7 +39,7 @@ const FollowListScreen = ({ navigation, route }: Props) => {
         setUsers(followedByEmail);
       }
     } catch (error) {
-      console.error("Error fetching follows:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
     }
