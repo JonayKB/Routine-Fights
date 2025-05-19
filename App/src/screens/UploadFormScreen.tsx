@@ -5,20 +5,13 @@ import DropDown from "../components/DropDown";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { getSubscribedActivities } from "../repositories/ActivityRepository";
-import { ActivityWithStreak } from "../utils/Activity";
+import { ActivityWithStreak, Categories } from "../utils/Activity";
 import { uploadPost } from "../repositories/PostRepository";
 import { uploadImage } from "../repositories/ImageRepository";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
 import { bgColor, cardBgColor, textColor } from "../utils/Utils";
 
 type Props = {};
-
-type Categories = {
-  label: string;
-  value: string;
-  timesRemaining: number;
-  timesRequiered: string;
-};
 
 const UploadFormScreen = (props: Props) => {
   const { uri, setUri, setWidth, setHeight } = useImageContext();
@@ -61,7 +54,7 @@ const UploadFormScreen = (props: Props) => {
       const imageName = await uploadImage(uri);
       console.log(imageName); // Debugging line
       const response = await uploadPost(
-        categories.filter((c: Categories) => c.label === activityName)[0]
+        categories.filter((c: Categories) => c.value === activityName)[0]
           ?.value,
         imageName
       );

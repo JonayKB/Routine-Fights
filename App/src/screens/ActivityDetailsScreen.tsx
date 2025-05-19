@@ -7,7 +7,7 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { subscribeActivity } from "../repositories/ActivityRepository";
 import ActivityDetailsBox from "../components/ActivityDetailsBox";
-import { bgColor, cardBgColor, resetNavigation } from "../utils/Utils";
+import { resetNavigation } from "../utils/Utils";
 import Picture from "../components/Picture";
 import ProfileNavigation from "../components/ProfileNavigation";
 
@@ -22,26 +22,34 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
   }, [route.params.activity]);
 
   return (
-    <View className={`flex-1 ${cardBgColor(darkmode)}`}>
+    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
       <ProfileNavigation
         navigation={navigation}
         message={route.params.activity?.name}
       />
-      <View className="flex-1">
-        <Picture image={activity.image} size={440} height={550} style="" />
+
+      <View className="flex-1 items-center justify-center mt-4">
+        <Picture
+          image={activity.image}
+          size={440}
+          height={550}
+          style="rounded-3xl border-4 border-[#F65261]"
+        />
       </View>
-      <View className="flex-1 justify-center items-center">
+
+      <View className="flex-1 items-center w-full mt-2">
         <ActivityDetailsBox activity={activity} />
+
         {!route.params.suscribed && (
           <TouchableOpacity
             onPress={async () => {
               await subscribeActivity(activity.id);
               resetNavigation(navigation, "Streaks");
             }}
-            className="bg-[#E4007C] rounded-lg py-3 m-5 w-11/12 -mt-10"
+            className="bg-[#F65261] rounded-2xl py-4 px-6 mt-6 w-11/12 shadow-md shadow-black items-center"
           >
             <Text
-              className="text-white font-bold text-2xl text-center"
+              className="text-white font-bold text-2xl"
               style={{ fontFamily: "Roboto-Regular" }}
             >
               {translations[language || "en-EN"].screens.ActivityDetails.add}

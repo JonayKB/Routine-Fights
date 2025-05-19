@@ -20,4 +20,11 @@ export type ActivityWithStreak = {
     // category: string;
 }
 
+export type Categories = {
+  label: string;
+  value: string;
+  timesRemaining: number;
+  timesRequiered: string;
+};
+
 type timeRate = "daily" | "weekly" | "monthly" | "yearly";

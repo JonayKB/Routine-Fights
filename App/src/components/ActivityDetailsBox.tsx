@@ -9,19 +9,44 @@ type Props = {
 };
 
 const ActivityDetailsBox = ({ activity }: Props) => {
-  const { language } = useSettingsContext();
-  
+  const { language, darkmode } = useSettingsContext();
+
   return (
-    <View className="bg-[#E4D8E9] rounded-2xl w-80 h-72 m-12 border-2 border-[#4B0082] justify-evenly items-center">
-      <Text className="text-[#4B0082] text-4xl">{activity.name}</Text>
-      <Text className="text-[#4B0082] text-lg mb-10">
+    <View
+      className={`rounded-2xl w-11/12 px-6 py-5 mt-6 items-center border-2 ${
+        darkmode
+          ? "bg-[#4B294F] border-[#B28DFF]"
+          : "bg-[#E8E2F0] border-[#4B0082]"
+      }`}
+    >
+      <Text
+        className={`text-3xl font-bold mb-2 ${
+          darkmode ? "text-white" : "text-[#4B0082]"
+        }`}
+      >
+        {activity.name}
+      </Text>
+
+      <Text
+        className={`text-lg text-center mb-6 ${
+          darkmode ? "text-[#E0D3F5]" : "text-[#4B0082]"
+        }`}
+      >
         {activity.description}
       </Text>
-      <Text className="text-[#4B0082] text-xl">
+
+      <Text
+        className={`text-xl mb-1 ${
+          darkmode ? "text-[#B0A1C1]" : "text-[#4B0082]"
+        }`}
+      >
         {translations[language || "en-EN"].screens.ActivityDetails.numOfTimes}:{" "}
         {activity.timesRequiered}
       </Text>
-      <Text className="text-[#4B0082] text-xl">
+
+      <Text
+        className={`text-xl ${darkmode ? "text-[#B0A1C1]" : "text-[#4B0082]"}`}
+      >
         {translations[language || "en-EN"].screens.ActivityDetails.frequency}:{" "}
         {activity.timeRate}
       </Text>
