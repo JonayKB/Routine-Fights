@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.never;
+import es.iespuertodelacruz.routinefights.shared.utils.JwtAuthenticationHelper;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -47,7 +48,9 @@ class JwtFilterTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        jwtFilter = new JwtFilter(jwtService);
+        JwtAuthenticationHelper jwtAuthenticationHelper = new JwtAuthenticationHelper();
+        jwtFilter = new JwtFilter(jwtService, jwtAuthenticationHelper);
+
         SecurityContextHolder.clearContext();
     }
 
