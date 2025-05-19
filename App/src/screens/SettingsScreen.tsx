@@ -1,4 +1,4 @@
-import { View, Button, TouchableOpacity } from "react-native";
+import { View, Button, Alert } from "react-native";
 import React from "react";
 import { logout } from "../repositories/SettingsRepository";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -27,7 +27,7 @@ const SettingsScreen = ({ navigation }: Props) => {
       await AsyncStorage.setItem("language", language);
       setLanguage(language);
     } catch (error) {
-      console.error(error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -36,7 +36,7 @@ const SettingsScreen = ({ navigation }: Props) => {
       await AsyncStorage.setItem("darkMode", darkmode ? "false" : "true");
       setDarkmode(!darkmode);
     } catch (error) {
-      console.error(error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -45,7 +45,7 @@ const SettingsScreen = ({ navigation }: Props) => {
       await AsyncStorage.setItem("lefthand", lefthand ? "false" : "true");
       setLefthand(!lefthand);
     } catch (error) {
-      console.error(error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -54,7 +54,7 @@ const SettingsScreen = ({ navigation }: Props) => {
       await logout();
       resetNavigation(navigation, "Login");
     } catch (error) {
-      console.error(error);
+      Alert.alert("Error", error.response.data);
     }
   };
 

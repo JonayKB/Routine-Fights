@@ -32,7 +32,7 @@ export const getComments = async (postID: string) => {
 
     return response.data.data.getComments;
   } catch (error) {
-    console.error("Error fetching comments:", error);
+    console.error("Error:", error.response.data);
     throw error;
   }
 };
@@ -62,7 +62,7 @@ export const postComment = async (message: string, postID: string) => {
 
     return response.data.data.postComment;
   } catch (error) {
-    console.error("Error posting comment:", error);
+    console.error("Error:", error.response.data);
     throw error;
   }
 };

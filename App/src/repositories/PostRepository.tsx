@@ -130,8 +130,8 @@ export const getUserPosts = async (
 
     return response.data.data.postsByUserV2;
   } catch (error) {
-    console.error("Error fetching user posts:", error);
-    throw new Error("Error fetching user posts");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -174,8 +174,8 @@ export const getPostBySuscribedActivities = async (
 
     return response.data.data.postsSubscribedActivitiesV2;
   } catch (error) {
-    console.error("Error fetching posts by activity:", error);
-    throw new Error("Error fetching posts by activity");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -201,8 +201,8 @@ export const uploadPost = async (activityID: string, image: string) => {
 
     return response.data.data.uploadPost;
   } catch (error) {
-    console.error("Error uploading post:", error);
-    throw new Error("Error uploading post");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -226,8 +226,8 @@ export const likePost = async (postID: string) => {
 
     return response.data.data.likePost;
   } catch (error) {
-    console.error("Error liking post:", error);
-    throw new Error("Error liking post");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -251,7 +251,7 @@ export const unLikePost = async (postID: string) => {
 
     return response.data.data.unLikePost;
   } catch (error) {
-    console.error("Error unliking post:", error);
-    throw new Error("Error unliking post");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };

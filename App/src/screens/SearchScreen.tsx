@@ -1,4 +1,4 @@
-import { View, FlatList, RefreshControl } from "react-native";
+import { View, FlatList, RefreshControl, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Followers } from "../utils/User";
 import { fetchUsersByName } from "../repositories/SearchRepository";
@@ -30,7 +30,7 @@ const SearchScreen = ({ navigation }: Props) => {
       const response = await fetchUsersByName(pageNum.current, searchText);
       setUsers(isLoadingMore ? [...users, ...response] : response);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
       setIsLoadingMore(false);

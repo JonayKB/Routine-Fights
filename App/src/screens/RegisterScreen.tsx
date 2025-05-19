@@ -37,7 +37,7 @@ const RegisterScreen = ({ navigation, route }: Props) => {
     try {
       await register({ ...userIn, image: "null.jpg" });
     } catch (error) {
-      return Alert.alert("Error", error.response.data);
+      Alert.alert("Error", error.response.data);
     }
   };
 

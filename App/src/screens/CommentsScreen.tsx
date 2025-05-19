@@ -4,6 +4,7 @@ import {
   RefreshControl,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -40,7 +41,7 @@ const CommentsScreen = (props: Props) => {
       const response = await getComments(props.route.params.postID);
       setComments(response);
     } catch (error) {
-      console.error("Error fetching comments:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
     }
@@ -54,7 +55,7 @@ const CommentsScreen = (props: Props) => {
         setLoad(true);
       }
     } catch (error) {
-      console.error("Error sending message:", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 

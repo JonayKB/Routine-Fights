@@ -1,9 +1,9 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   FlatList,
   RefreshControl,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -55,7 +55,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
       list.push(addActivity);
       setActivities(list);
     } catch (error) {
-      console.error("Error fetching activities:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
     }
@@ -66,7 +66,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
       await unsubscribeActivity(id);
       setLoad(true);
     } catch (error) {
-      console.error("Error unsubscribing activity:", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -80,6 +80,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
   return (
     <View className={`flex-1 ${bgColor(darkmode)} items-center pt-8`}>
       <Text className={`text-4xl font-bold mb-2 ${textColor(darkmode)}`}>
+        {/** TODO: idioma */}
         Mis Streaks
       </Text>
 

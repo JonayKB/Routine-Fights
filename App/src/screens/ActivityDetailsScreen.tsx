@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
@@ -20,6 +20,15 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
   useEffect(() => {
     setActivity(route.params.activity);
   }, [route.params.activity]);
+
+  const suscribe = async () => {
+    try {
+      await subscribeActivity(activity.id);
+      resetNavigation(navigation, "Streaks");
+    } catch (error) {
+      Alert.alert("Error", error.response.data);
+    }
+  }
 
   return (
     <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
@@ -46,10 +55,7 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
 
         {!route.params.suscribed && (
           <TouchableOpacity
-            onPress={async () => {
-              await subscribeActivity(activity.id);
-              resetNavigation(navigation, "Streaks");
-            }}
+            onPress={suscribe}
             className="bg-[#F65261] rounded-2xl py-4 px-6 mt-6 w-11/12 shadow-md shadow-black items-center"
           >
             <Text

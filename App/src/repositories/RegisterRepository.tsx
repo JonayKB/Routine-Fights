@@ -6,7 +6,7 @@ export const register = async (userIn: UserIn): Promise<number> => {
   try {
     return (await axios.post(uri+"/auth/register", userIn)).status;
   } catch (error) {
-    console.log("Error registering user:", error);
-    throw new Error("Error registering user");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };

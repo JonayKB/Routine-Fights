@@ -35,11 +35,14 @@ export const getActivitiesNotSubscribed = async (
 
     return response.data.data.paginationActivitiesNotSubscribed;
   } catch (error) {
-    throw new Error(error.response.data);
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
-export const getSubscribedActivities = async (): Promise<ActivityWithStreak[]> => {
+export const getSubscribedActivities = async (): Promise<
+  ActivityWithStreak[]
+> => {
   try {
     const token = await RNSecureKeyStore.get("token");
 
@@ -69,7 +72,8 @@ export const getSubscribedActivities = async (): Promise<ActivityWithStreak[]> =
 
     return response.data.data.getSubscribedActivitiesWithStreakByName;
   } catch (error) {
-    throw new Error(error.response.data);
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -94,7 +98,8 @@ export const subscribeActivity = async (activityId: string) => {
 
     return response.data.data.subscribeActivity;
   } catch (error) {
-    throw new Error(error.response.data);
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -119,7 +124,8 @@ export const unsubscribeActivity = async (activityId: string) => {
 
     return response.data.data.unSubscribeActivity;
   } catch (error) {
-    throw new Error(error.response.data);
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -128,7 +134,7 @@ export const createActivity = async (
   description: string,
   timeRate: string,
   timesRequiered: string,
-  image: string,
+  image: string
 ): Promise<string> => {
   try {
     const token = await RNSecureKeyStore.get("token");
@@ -160,6 +166,7 @@ export const createActivity = async (
 
     return response.data.data.createActivity;
   } catch (error) {
-    throw new Error(error.response.data);
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };

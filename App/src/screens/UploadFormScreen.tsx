@@ -45,14 +45,13 @@ const UploadFormScreen = (props: Props) => {
       );
       setCategories(categories);
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
   const createPost = async () => {
     try {
       const imageName = await uploadImage(uri);
-      console.log(imageName); // Debugging line
       const response = await uploadPost(
         categories.filter((c: Categories) => c.value === activityName)[0]
           ?.value,
@@ -64,14 +63,18 @@ const UploadFormScreen = (props: Props) => {
         setActivityName(null);
       }
     } catch (error) {
-      console.log("Error creating post:", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
   return (
-    <View className={`flex-1 ${bgColor(darkmode)} justify-center items-center px-4`}>
+    <View
+      className={`flex-1 ${bgColor(darkmode)} justify-center items-center px-4`}
+    >
       <View
-        className={`w-full ${cardBgColor(darkmode)} rounded-2xl overflow-hidden`}
+        className={`w-full ${cardBgColor(
+          darkmode
+        )} rounded-2xl overflow-hidden`}
       >
         {uri ? (
           <View className="items-center p-6 bg-black">
@@ -120,14 +123,13 @@ const UploadFormScreen = (props: Props) => {
           }`}
         >
           <Text className="text-white font-bold text-xl text-center">
-            {translations[language || "en-EN"].screens.UploadForm.postButton ||
-              "Post"}
+            {/** TODO: idioma */}
+            {translations[language || "en-EN"].screens.UploadForm.postButton}
           </Text>
         </TouchableOpacity>
 
-        <Text
-          className={`pb-6 text-center ${textColor(darkmode)}`}
-        >
+        <Text className={`pb-6 text-center ${textColor(darkmode)}`}>
+          {/** TODO: idioma */}
           {`Times Remaining: ${
             activity?.timesRemaining == null
               ? activity?.timesRequiered
