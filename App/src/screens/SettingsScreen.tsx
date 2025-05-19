@@ -13,7 +13,7 @@ import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 type Props = NativeStackScreenProps<ProfileStackProps, "Settings">;
 
 const SettingsScreen = ({ navigation }: Props) => {
-  const { language, setLanguage, darkmode, setDarkmode } = useSettingsContext();
+  const { language, setLanguage, darkmode, setDarkmode, lefthand, setLefthand } = useSettingsContext();
 
   const changeLanguage = async (language: string) => {
     try {
@@ -28,6 +28,15 @@ const SettingsScreen = ({ navigation }: Props) => {
     try {
       await AsyncStorage.setItem("darkMode", darkmode ? "false" : "true");
       setDarkmode(!darkmode);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const changeSide = async () => {
+    try {
+      await AsyncStorage.setItem("lefthand", lefthand ? "false" : "true");
+      setLefthand(!lefthand);
     } catch (error) {
       console.error(error);
     }
@@ -70,6 +79,10 @@ const SettingsScreen = ({ navigation }: Props) => {
               : translations[language || "en-EN"].screens.Settings.darkMode
           }
           onPress={changeMode}
+        />
+        <Button
+          title={lefthand ? "Left side" : "Right side"}
+          onPress={changeSide}
         />
         <Button title="Logout" onPress={closeSession} />
       </View>
