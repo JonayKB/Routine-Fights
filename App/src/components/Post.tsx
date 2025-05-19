@@ -14,7 +14,7 @@ type Props = {
 
 const Post = (props: Props) => {
   const [post, setPost] = useState<PostDomain>({} as PostDomain);
-  const { darkmode } = useSettingsContext();
+  const { darkmode, lefthand } = useSettingsContext();
 
   useEffect(() => {
     setPost({ ...props.post });
@@ -38,22 +38,22 @@ const Post = (props: Props) => {
   };
 
   return (
-    <View
-      className={`${cardBgColor(darkmode)} flex-row rounded-xl m-5`}
-    >
-      <View>
-        <Picture
-          image={post.image}
-          size={281}
-          height={485}
-          style="rounded-l-xl"
-        />
-        <View className="z-10 -mt-16 bg-[#33333395] rounded-bl-xl py-5">
-          <Text className="text-white text-xl font-bold text-center">
-            {post.activity?.name}
-          </Text>
+    <View className={`${cardBgColor(darkmode)} flex-row rounded-xl m-5`}>
+      {lefthand && (
+        <View>
+          <Picture
+            image={post.image}
+            size={281}
+            height={485}
+            style="rounded-l-xl"
+          />
+          <View className="z-10 -mt-16 bg-[#33333395] rounded-bl-xl py-5">
+            <Text className="text-white text-xl font-bold text-center">
+              {post.activity?.name}
+            </Text>
+          </View>
         </View>
-      </View>
+      )}
 
       <View className="flex-col m-3">
         <TouchableOpacity
@@ -80,9 +80,7 @@ const Post = (props: Props) => {
               return `${iconColor(darkmode)}`;
             })()}
           />
-          <Text
-            className={`${textColor(darkmode)} text-center text-lg`}
-          >
+          <Text className={`${textColor(darkmode)} text-center text-lg`}>
             {post.likes}
           </Text>
         </TouchableOpacity>
@@ -93,27 +91,35 @@ const Post = (props: Props) => {
           }
           className="mt-10 items-center"
         >
-          <Icon
-            name="chatbox-outline"
-            size={53}
-            color={iconColor(darkmode)}
-          />
-          <Text
-            className={`${textColor(darkmode)} text-center text-lg`}
-          >
+          <Icon name="chatbox-outline" size={53} color={iconColor(darkmode)} />
+          <Text className={`${textColor(darkmode)} text-center text-lg`}>
             {post.comments}
           </Text>
         </TouchableOpacity>
 
         <View className="mt-32 items-center">
           <Icon name="flame" size={53} color="#F65261" />
-          <Text
-            className={`${textColor(darkmode)} text-center text-lg`}
-          >
+          <Text className={`${textColor(darkmode)} text-center text-lg`}>
             {post.streak}
           </Text>
         </View>
       </View>
+
+      {!lefthand && (
+        <View>
+          <Picture
+            image={post.image}
+            size={281}
+            height={485}
+            style="rounded-r-xl"
+          />
+          <View className="z-10 -mt-16 bg-[#33333395] rounded-br-xl py-5">
+            <Text className="text-white text-xl font-bold text-center">
+              {post.activity?.name}
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
