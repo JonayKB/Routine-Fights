@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../components/MainContext";
-import axios from "axios";
-import { CommonData } from "../utils/CommonData";
 import GraphData from "../models/GraphData";
 import styles from "../styles/Styles";
 import GraphCard from "../components/GraphCard";
