@@ -135,6 +135,50 @@ export const getUserPosts = async (
   }
 };
 
+export const getPostBySuscribedActivities = async (
+  lastDate: string,
+  perPage: number = limit
+) => {
+  try {
+    const token = await RNSecureKeyStore.get("token");
+
+    const response = await axios.post(
+      neo4jUri,
+      {
+        query: `query {
+                  postsSubscribedActivitiesV2(lastDate: "${lastDate}", limit: ${perPage}) {
+                    id
+                    image
+                    updatedAt
+                    createdAt
+                    streak
+                    comments
+                    likes
+                    isLiked
+                    user {
+                      email
+                      image
+                    }
+                    activity {
+                      name
+                    }
+                  }
+                }`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data.data.postsSubscribedActivitiesV2;
+  } catch (error) {
+    console.error("Error fetching posts by activity:", error);
+    throw new Error("Error fetching posts by activity");
+  }
+};
+
 export const uploadPost = async (activityID: string, image: string) => {
   try {
     const token = await RNSecureKeyStore.get("token");

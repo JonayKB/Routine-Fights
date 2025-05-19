@@ -13,7 +13,11 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { getPosts, getPostsFollowing } from "../repositories/PostRepository";
+import {
+  getPostBySuscribedActivities,
+  getPosts,
+  getPostsFollowing,
+} from "../repositories/PostRepository";
 import { bgColor, cardBgColor, iconColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
@@ -53,7 +57,7 @@ const HomeScreen = ({ navigation }: Props) => {
           response = await getPosts(lastDate.current);
           break;
         case "activity":
-          break;
+          response = await getPostBySuscribedActivities(lastDate.current);
       }
       setPosts(isLoadingMore ? [...posts, ...response] : response);
     } catch (error) {
@@ -89,9 +93,7 @@ const HomeScreen = ({ navigation }: Props) => {
           return (
             <TouchableOpacity
               key={selectedType}
-              onPress={() =>
-                setType(selectedType as "following" | "home" | "activity")
-              }
+              onPress={() => setType(selectedType as "following" | "home")}
               className={`
               px-4 py-2 rounded-full
               ${isActive ? "bg-[#F65261]" : `${cardBgColor(darkmode)}`}
