@@ -57,9 +57,10 @@ const LoginScreen = (props: Props) => {
               required
             />
           </div>
+          {error && <p style={styles.errorText}>{error}</p>}
           <button type="submit" style={styles.button}>Login</button>
         </form>
-        {error && <p style={styles.errorText}>{error}</p>}
+        
       </div>
     </div>
   );
