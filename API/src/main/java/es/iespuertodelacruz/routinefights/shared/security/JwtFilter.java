@@ -1,21 +1,16 @@
 package es.iespuertodelacruz.routinefights.shared.security;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
 import java.util.Map;
 import org.springframework.lang.NonNull;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import es.iespuertodelacruz.routinefights.shared.utils.JwtAuthenticationHelper;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,12 +25,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtTokenManager;
 
-    public JwtFilter(JwtService jwtTokenManager) {
+    private final JwtAuthenticationHelper jwtAuthenticationHelper;
+
+    public JwtFilter(JwtService jwtTokenManager, JwtAuthenticationHelper jwtAuthenticationHelper) {
         this.jwtTokenManager = jwtTokenManager;
+        this.jwtAuthenticationHelper = jwtAuthenticationHelper;
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
         String header = request.getHeader(AUTH_HEADER);
@@ -47,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 "/webjars/", "/auth/",
                 "/api/register", "/v3/",
                 "/graphiql", "/graphql/schema",
-                "/websocket", "/index.html", "/h2-console"
+                "/websocket", "/index.html", "/h2-console", "/services"
         };
         String path = request.getRequestURI();
 
@@ -64,45 +63,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (header != null && header.startsWith(AUTH_PREFIX)) {
 
-            String token = header.substring(AUTH_PREFIX.length());
+            String token = jwtAuthenticationHelper.extractTokenFromHeader(header, AUTH_PREFIX);
             try {
                 Map<String, String> mapInfoToken = jwtTokenManager.validateAndGetClaims(token);
                 final String correo = mapInfoToken.get("mail");
                 final String rol = mapInfoToken.get("role");
-                UserDetails userDetails = new UserDetails() {
 
-                    String username = correo;
+                UserDetails userDetails = jwtAuthenticationHelper.buildUserDetails(correo, rol);
 
-                    @Override
-                    public Collection<? extends GrantedAuthority> getAuthorities() {
-                        List<GrantedAuthority> authorities = new ArrayList<>();
-
-                        authorities.add(new SimpleGrantedAuthority(rol));
-                        return authorities;
-                    }
-
-                    @Override
-                    public String getPassword() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getUsername() {
-                        return username;
-                    }
-
-                };
-
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities());
-
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-
-                filterChain.doFilter(request, response);
-
+                jwtAuthenticationHelper.setAuthentication(userDetails, request, filterChain, response);
             } catch (JWTVerificationException e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
