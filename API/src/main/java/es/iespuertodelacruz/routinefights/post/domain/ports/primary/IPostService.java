@@ -13,7 +13,7 @@ public interface IPostService {
 
     Post uploadPost(String image, User user, String activityID);
 
-    List<Post> getPaginationByUser(LocalDateTime lastDate, int limit, String userID);
+    List<Post> getPaginationByUser(LocalDateTime lastDate, int limit, String userEmail);
 
     List<Post> getPaginationByActivity(LocalDateTime lastDate, int limit, String activityID);
 

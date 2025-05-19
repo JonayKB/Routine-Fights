@@ -39,19 +39,18 @@ public interface IPostEntityRepository extends Neo4jRepository<PostEntity, Strin
     List<PostEntity> getPagination(@Param("lastDate") LocalDateTime lastDate, @Param("limit") int limit);
 
     @Query("""
-            MATCH (u:User)-[pp:`Posted`]->(p:Post)
+            MATCH (u:User {email:$userEmail})-[pp:`Posted`]->(p:Post)
             OPTIONAL MATCH (p)-[r1:`Related-To`]->(a:Activity)
             OPTIONAL MATCH (p)<-[r2:`To_Report`]-(rep:Report)
             OPTIONAL MATCH (p)<-[r3:`Liked`]-(u2:User)
             OPTIONAL MATCH (p)<-[r4:`On`]-(c:Comment)
-            WHERE elementId(u) = $userID
-              AND p.createdAt < $lastDate
+            WHERE p.createdAt < $lastDate
             RETURN p, collect(r1), collect(a), collect(r2), collect(rep), collect(r3), collect(u2), collect(r4), collect(c), u, pp
             ORDER BY p.createdAt DESC
             LIMIT $limit
             """)
     List<PostEntity> getPaginationByUser(@Param("lastDate") LocalDateTime lastDate, @Param("limit") int limit,
-            @Param("userID") String userID);
+            @Param("userEmail") String userEmail);
 
     List<PostEntity> getPaginationByActivity(@Param("lastDate") LocalDateTime lastDate, @Param("limit") int limit,
             @Param("activityID") String activityID);

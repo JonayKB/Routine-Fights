@@ -36,6 +36,7 @@ public interface PostOutputV2Mapper {
     @Mapping(target = "image", source = "post.image")
     @Mapping(target = "createdAt", source = "post.createdAt")
     @Mapping(target = "activity", source = "post.activity")
+    @Mapping(target = "streak", source = "post.streak")
     PostOutputDTOV2 toDto(Post post, User user);
 
     List<PostOutputDTOV2> toDto(List<Post> posts);

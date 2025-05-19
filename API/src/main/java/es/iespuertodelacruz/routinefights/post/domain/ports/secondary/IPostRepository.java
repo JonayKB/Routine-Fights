@@ -11,7 +11,7 @@ public interface IPostRepository {
     Post save(Post post);
     List<Post> getRangeByActivity(String activityID, String userID, LocalDateTime startDate, LocalDateTime endDate);
     Integer getRangeCountByActivity(String activityID, String userID, LocalDateTime startDate, LocalDateTime endDate);
-    List<Post> getPaginationByUser(LocalDateTime lastDate, int limit, String userID);
+    List<Post> getPaginationByUser(LocalDateTime lastDate, int limit, String userEmail);
     List<Post> getPaginationByActivity(LocalDateTime lastDate, int limit, String activityID);
     List<Post> getPaginationFollowing(LocalDateTime lastDate, int limit, String userID);
     List<Post> getPaginationSubscribedActivities(LocalDateTime lastDate, int limit, String userID);
