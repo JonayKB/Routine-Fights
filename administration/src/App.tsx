@@ -4,7 +4,7 @@ import LoginScreen from "./screens/LoginScreen";
 import Navbar from "./components/Navbar";
 import MainContextProvider from "./components/MainContext";
 import HomeScreen from "./screens/HomeScreen";
-import UsersScreen from "./screens/CommunityScreen";
+import CommunityScreen from "./screens/CommunityScreen";
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomeScreen />} />
           <Route path="/login" element={<LoginScreen />} />
-          <Route path="/users" element={<UsersScreen />} />
+          <Route path="/communityEvents" element={<CommunityScreen />} />
           <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
       </MainContextProvider>

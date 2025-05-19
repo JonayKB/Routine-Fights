@@ -46,8 +46,8 @@ const Navbar = () => {
             </Link>
           )}
           
-          <Link to="/users" style={styles.link} onClick={closeMenu}>
-            Users
+          <Link to="/communityEvents" style={styles.link} onClick={closeMenu}>
+            Community Events
           </Link>
           {token && (
             <Link to="/login" style={{ ...styles.link, background: "#FF5C5C" }} onClick={handleLogout}>

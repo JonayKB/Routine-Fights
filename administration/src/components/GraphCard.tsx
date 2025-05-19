@@ -10,14 +10,18 @@ type GraphCardProps = {
 const GraphCard = ({ title, data }: GraphCardProps) => (
     <div style={styles.graphCard}>
         <h2>{title}</h2>
+
         <BarChart
-            series={[{ data: data?.data ?? [] }]}
+            // @ts-ignore
             xAxis={[{
                 scaleType: "band", data: data?.labels ?? [], colorMap: {
                     type: 'ordinal',
                     colors: ['#B39DDB', '#FF7043']
                 }
-            }]}
+            },
+            ]}
+            series={[{ data: data?.data ?? [] }]}
+
 
             height={300}
         />
