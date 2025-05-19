@@ -17,6 +17,7 @@ public interface ICommunityEventRepository {
     Set<String> getAllImages();
     List<String> getUsersParticipatingInCommunityEventEndsToday();
     CommunityEvent getCommunityEventEndsToday();
+    List<CommunityEvent> findAll();
 
     
 }

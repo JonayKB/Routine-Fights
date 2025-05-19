@@ -39,6 +39,8 @@ type Query {
   getActiveCommunityEvents: [CommunityEventOutputV2]
   getNearestCommunityEvent: CommunityEventOutputV2
   getCommunityEventPointsById(id: String!): Int
+  getAllCommunityEvents:[CommunityEventOutputV3]
+
 
   getBadgesByEmail(email: String!): [BadgeOutputV2]
   getOwnBadges: [BadgeOutputV2]

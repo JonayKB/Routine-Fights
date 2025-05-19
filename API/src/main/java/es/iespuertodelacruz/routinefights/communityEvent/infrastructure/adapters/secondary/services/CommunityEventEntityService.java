@@ -71,14 +71,19 @@ public class CommunityEventEntityService implements ICommunityEventRepository {
 
     @Override
     public List<String> getUsersParticipatingInCommunityEventEndsToday() {
-        return 
-                communityEventEntityRepository.getUsersParticipatingInCommunityEventEndsToday(LocalDateTime.now());
+        return communityEventEntityRepository.getUsersParticipatingInCommunityEventEndsToday(LocalDateTime.now());
     }
 
     @Override
     public CommunityEvent getCommunityEventEndsToday() {
         return communityEventEntityMapper
                 .toDomain(communityEventEntityRepository.getCommunityEventEndsToday(LocalDateTime.now()));
+    }
+
+    @Override
+    public List<CommunityEvent> findAll() {
+        return communityEventEntityMapper
+                .toDomain(communityEventEntityRepository.findAll());
     }
 
 }
