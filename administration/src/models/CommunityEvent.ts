@@ -6,3 +6,5 @@ type CommunityEvent = {
   startDate: Date;
   totalRequired: number;
 };
+
+export default CommunityEvent

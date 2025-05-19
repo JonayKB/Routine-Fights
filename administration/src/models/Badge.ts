@@ -3,3 +3,4 @@ type Badge = {
   image: string;
   level: number;
 };
+export default Badge
