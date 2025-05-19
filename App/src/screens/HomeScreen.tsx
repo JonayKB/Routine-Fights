@@ -59,7 +59,13 @@ const HomeScreen = ({ navigation }: Props) => {
         case "activity":
           response = await getPostBySuscribedActivities(lastDate.current);
       }
-      setPosts(isLoadingMore ? [...posts, ...response] : response);
+      if (isLoadingMore) {
+        setPosts(() => {
+          const existingPosts = new Set(posts);
+          return [...existingPosts, ...response];
+        });
+      }
+      setPosts(response);
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
@@ -70,6 +76,7 @@ const HomeScreen = ({ navigation }: Props) => {
 
   const reload = () => {
     lastDate.current = new Date().toISOString().slice(0, 19);
+    setPosts([]);
     setLoad(true);
   };
 
