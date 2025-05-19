@@ -6,7 +6,13 @@
         "ActivityDetails": {
             "numOfTimes": "Number of times",
             "frequency": "Frequency",
-            "add": "Add"
+            "add": "Add",
+            "timeRates": {
+                "daily": "daily",
+                "weekly": "weekly",
+                "monthly": "monthly",
+                "yearly": "yearly"
+            }
         },
         "ActivityForm": {
             "title": "Title",
@@ -21,13 +27,13 @@
                 "yearly": "yearly"
             }
         },
-        "Events": {
-        },
-        "FollowList": {
-        },
-
         "Home": {
-            "search": "Search"
+            "search": "Search",
+            "type": {
+                "following": "following", 
+                "home": "home", 
+                "activity": "activity"
+            }
         },
         "Login": {
             "email": "Email",
@@ -54,24 +60,39 @@
             "username": "Username",
             "confirmPassword": "Confirm password"
         },
-        "Search": {
-        },
         "Settings": {
             "language": "Language",
             "darkMode": "Dark Mode",
             "lightMode": "Light Mode",
             "logout": "Logout",
             "settings": "Settings",
-            "editProfile": "Edit profile"
+            "editProfile": "Edit profile",
+            "leftHand": {
+                "left": "Left hand",
+                "right": "Right hand"
+            },
+            "languages": {
+                "english": "English",
+                "spanish": "Spanish",
+                "french": "French",
+                "german": "German"
+            }
         },
         "Streaks": {
+            "myStreaks": "My streaks",
+            "timesRemaining": "Times remaining"
         },
         "UploadForm": {
+            "title": "Upload post",
             "takeFromCamera": "Take from camera",
             "selectFromLibrary": "Select from library",
             "selectactivity": "Select a activity",
             "changePicture": "Change picture",
-            "post": "Post"
+            "postButton": "Post",
+            "timesRemaining": "Times remaining"
+        },
+        "Events": {
+            "timeLeft": "Time left"
         }
     }
 }

@@ -1,77 +1,98 @@
 {
     "screens": {
-        "Activities": {
-            "name": "Nombre"
-        },
-        "ActivityDetails": {
-            "numOfTimes": "Numero de veces",
-            "frequency": "Frecuencia",
-            "add": "Añadir"
-        },
-        "ActivityForm": {
-            "title": "Titulo",
-            "description": "Descripcion",
-            "timeRate": "Rango de tiempo",
-            "timesRequired": "Veces requeridas",
-            "post": "Subir",
-            "timeRates": {
-                "daily": "a diario",
-                "weekly": "semanal",
-                "monthly": "mensual",
-                "yearly": "anual"
-            }
-        },
-        "Events": {
-        },
-        "FollowList": {
-        },
-
-        "Home": {
-            "search": "Buscar"
-        },
-        "Login": {
-            "email": "Email",
-            "password": "Contraseña",
-            "login": "Iniciar sesion",
-            "register": "Registrarse"
-        },
-        "Profile": {
-            "followers": "seguidores",
-            "following": "siguiendo",
-            "follow": "seguir",
-            "unfollow": "siguiendo"
-        },
-        "ProfileForm": {
-            "email": "Email",
-            "image": "Imagen",
-            "nationality": "Nacionalidad",
-            "phoneNumber": "Telefono",
-            "username": "Nombre de usuario",
-            "password": "Contraseña",
-            "update": "Actualizar"
-        },
-        "Register": {
-            "username": "nombre de usuario",
-            "confirmPassword": "Confirmar contraseña"
-        },
-        "Search": {
-        },
-        "Settings": {
-            "language": "Idioma",
-            "darkMode": "Modo oscuro",
-            "lightMode": "Modo claro",
-            "logout": "Cerrar sesion",
-            "settings": "Ajustes",
-            "editProfile": "Editar perfil"
-        },
-        "Streaks": {
-        },
-        "UploadForm": {
-            "takeFromCamera": "Tomar de camara",
-            "selectFromLibrary": "Tomar de galeria",
-            "selectactivity": "Selecciona categoria",
-            "changePicture": "Cambiar imagen",
-            "post": "Subir"
+      "Activities": {
+        "name": "Nombre"
+      },
+      "ActivityDetails": {
+        "numOfTimes": "Número de veces",
+        "frequency": "Frecuencia",
+        "add": "Agregar",
+        "timeRates": {
+          "daily": "diario",
+          "weekly": "semanal",
+          "monthly": "mensual",
+          "yearly": "anual"
         }
+      },
+      "ActivityForm": {
+        "title": "Título",
+        "description": "Descripción",
+        "timeRate": "Frecuencia de tiempo",
+        "timesRequired": "Veces requeridas",
+        "post": "Publicar",
+        "timeRates": {
+          "daily": "diario",
+          "weekly": "semanal",
+          "monthly": "mensual",
+          "yearly": "anual"
+        }
+      },
+      "Home": {
+        "search": "Buscar",
+        "type": {
+          "following": "siguiendo",
+          "home": "inicio",
+          "activity": "actividad"
+        }
+      },
+      "Login": {
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "login": "Iniciar sesión",
+        "register": "Registrarse"
+      },
+      "Profile": {
+        "followers": "seguidores",
+        "following": "siguiendo",
+        "follow": "seguir",
+        "unfollow": "dejar de seguir"
+      },
+      "ProfileForm": {
+        "email": "Correo electrónico",
+        "image": "Imagen",
+        "nationality": "Nacionalidad",
+        "phoneNumber": "Número de teléfono",
+        "username": "Nombre de usuario",
+        "password": "Contraseña",
+        "update": "Actualizar"
+      },
+      "Register": {
+        "username": "Nombre de usuario",
+        "confirmPassword": "Confirmar contraseña"
+      },
+      "Settings": {
+        "language": "Idioma",
+        "darkMode": "Modo oscuro",
+        "lightMode": "Modo claro",
+        "logout": "Cerrar sesión",
+        "settings": "Configuración",
+        "editProfile": "Editar perfil",
+        "leftHand": {
+          "left": "Mano izquierda",
+          "right": "Mano derecha"
+        },
+        "languages": {
+          "english": "Inglés",
+          "spanish": "Español",
+          "french": "Francés",
+          "german": "Alemán"
+        }
+      },
+      "Streaks": {
+        "myStreaks": "Mis rachas",
+        "timesRemaining": "Veces restantes"
+      },
+      "UploadForm": {
+        "title": "Subir publicación",
+        "takeFromCamera": "Tomar con cámara",
+        "selectFromLibrary": "Seleccionar de la galería",
+        "selectactivity": "Seleccionar una actividad",
+        "changePicture": "Cambiar imagen",
+        "postButton": "Publicar",
+        "timesRemaining": "Veces restantes"
+      },
+      "Events": {
+        "timeLeft": "Tiempo restante"
+      }
     }
-}
+  }

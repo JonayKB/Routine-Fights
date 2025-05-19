@@ -36,6 +36,10 @@ const RegisterScreen = ({ navigation, route }: Props) => {
 
     try {
       await register({ ...userIn, image: "null.jpg" });
+      Alert.alert(
+        translations[language || "en-EN"].screens.Register.success,
+        translations[language || "en-EN"].screens.Register.successMessage
+      );
     } catch (error) {
       Alert.alert("Error", error.response.data);
     }

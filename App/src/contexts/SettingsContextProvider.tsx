@@ -18,7 +18,7 @@ export interface AppContextType {
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 
 const SettingsContextProvider = (props: any) => {
-  const [language, setLanguage] = useState<string>("");
+  const [language, setLanguage] = useState<string>("en-EN");
   const [darkmode, setDarkmode] = useState<boolean>(true);
   const [lefthand, setLefthand] = useState<boolean>(false);
 

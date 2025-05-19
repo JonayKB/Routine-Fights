@@ -48,7 +48,7 @@ const ActivityDetailsBox = ({ activity }: Props) => {
         className={`text-xl ${darkmode ? "text-[#B0A1C1]" : "text-[#4B0082]"}`}
       >
         {translations[language || "en-EN"].screens.ActivityDetails.frequency}:{" "}
-        {activity.timeRate}
+        {translations[language || "en-EN"].screens.ActivityDetails.timeRates[activity.timeRate]}
       </Text>
     </View>
   );

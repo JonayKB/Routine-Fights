@@ -18,8 +18,7 @@ const Upload = ({ navigation }: Props) => {
       <Text
         className={`text-2xl font-bold mb-8 ${textColor(darkmode)}`}
       >
-        {translations[language || "en-EN"].screens.UploadForm.title ||
-          "Subir Foto"}
+        {translations[language || "en-EN"].screens.UploadForm.title}
       </Text>
 
       <TouchableOpacity
