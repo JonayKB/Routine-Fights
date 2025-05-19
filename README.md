@@ -203,7 +203,6 @@ mvn clean spring-boot:run
 | POST   | `/auth/login`                  | **email** (query, string, required)<br>**password** (query, string, required) | —                                                                                                                                            | Authenticate a user and return a JWT token. |
 | GET    | `/auth/verify/{email}/{token}` | **email** (path, string, required)<br>**token** (path, string, required)      | —                                                                                                                                            | Verify user’s email with a token.           |
 
-
 ---
 
 ### IMAGES
@@ -228,7 +227,6 @@ mvn clean spring-boot:run
 | GET    | `/graphs/activities/timerate` | —          | —            | Activity duration/frequency statistics.         |
 
 ---
-
 
 ## SOAP
 
@@ -256,7 +254,6 @@ mvn clean spring-boot:run
 | `getImage`   | (none)      | `<getImage>` XML body   | `<getImageResponse>` XML body   | Retrieve image by name or ID. |
 | `uploadFile` | (none)      | `<uploadFile>` XML body | `<uploadFileResponse>` XML body | Upload an image file.         |
 
-
 # Marketing Plan
 
 ## Market Analysis
@@ -267,8 +264,8 @@ The ideal customer for **Routine Fights** is someone committed to personal growt
 
 With Routine Fights, these users can:
 
-* Create personalized challenges and routines.
-* Be part of a collaborative and motivational community.
+- Create personalized challenges and routines.
+- Be part of a collaborative and motivational community.
 
 This customer sees the app as a tool to transform their daily life and achieve a balance between personal discipline and community support.
 
@@ -278,25 +275,25 @@ This customer sees the app as a tool to transform their daily life and achieve a
 
 Routine Fights competes with well-established applications that have large user bases, which can make it challenging to attract new users. However:
 
-* Many apps focus on very specific niches (languages, workout routines, etc.).
-* Routine Fights offers a **broader range of activities and customization**.
-* It stands out for being **free**, with an optional premium plan.
-* It promotes community engagement and exploration of new hobbies.
+- Many apps focus on very specific niches (languages, workout routines, etc.).
+- Routine Fights offers a **broader range of activities and customization**.
+- It stands out for being **free**, with an optional premium plan.
+- It promotes community engagement and exploration of new hobbies.
 
 ---
 
 ### Market Trends
 
-* **Gamification** is booming (e.g., Duolingo).
-* Mobile apps are increasingly popular due to their **convenience and accessibility**.
+- **Gamification** is booming (e.g., Duolingo).
+- Mobile apps are increasingly popular due to their **convenience and accessibility**.
 
 ---
 
 ## Value Proposition
 
-* Interface adapted for **left-handed and right-handed** users.
-* **Free**, with optional subscription (cosmetics and temporary boosts).
-* **Fast and intuitive** interface from the very first use.
+- Interface adapted for **left-handed and right-handed** users.
+- **Free**, with optional subscription (cosmetics and temporary boosts).
+- **Fast and intuitive** interface from the very first use.
 
 ---
 
@@ -306,42 +303,42 @@ Routine Fights competes with well-established applications that have large user 
 
 Social media campaign featuring promotional videos that highlight:
 
-* The app's flexibility.
-* The importance of teamwork.
+- The app's flexibility.
+- The importance of teamwork.
 
 ### Paid Advertising
 
-* Initial investment in **Google Ads** to boost visibility and build a solid user base.
+- Initial investment in **Google Ads** to boost visibility and build a solid user base.
 
 ### Partnerships and Networking
 
-* Collaborations with **influencers and content creators** to reach a minimum active community.
+- Collaborations with **influencers and content creators** to reach a minimum active community.
 
 ---
 
 ## Sales and Pricing Strategy
 
-* **100% free** app.
+- **100% free** app.
 
-* **Premium plan**: €5/month
+- **Premium plan**: €5/month
 
-  * No ads.
-  * Extended streaks.
-  * Access to global leaderboard with rewards.
+  - No ads.
+  - Extended streaks.
+  - Access to global leaderboard with rewards.
 
-* **Microtransactions**:
+- **Microtransactions**:
 
-  * Remove individual ads.
-  * Buy cosmetic items (do not affect scoring).
+  - Remove individual ads.
+  - Buy cosmetic items (do not affect scoring).
 
 ---
 
 ## Metrics and KPIs
 
-* **Conversions (visits to customers)**: Measures how many users perform key actions (e.g., sign up, subscribe, purchase).
-* **Social media engagement**: Likes, comments, shares, and views.
-* **Advertising ROI**: Compares revenue against advertising spend.
-* **Customer and sales growth**: Tracks growth in user base and revenue over time.
+- **Conversions (visits to customers)**: Measures how many users perform key actions (e.g., sign up, subscribe, purchase).
+- **Social media engagement**: Likes, comments, shares, and views.
+- **Advertising ROI**: Compares revenue against advertising spend.
+- **Customer and sales growth**: Tracks growth in user base and revenue over time.
 
 ---
 
@@ -351,12 +348,12 @@ Social media campaign featuring promotional videos that highlight:
 
 ### Stable and Profitable Business Model
 
-* Revenue from: web maintenance, hosting, and custom development.
+- Revenue from: web maintenance, hosting, and custom development.
 
 ### Efficient Financial Management
 
-* Use of **Dolibarr** and financial specialists.
-* All profits reinvested in the team and platform.
+- Use of **Dolibarr** and financial specialists.
+- All profits reinvested in the team and platform.
 
 ---
 
@@ -364,24 +361,24 @@ Social media campaign featuring promotional videos that highlight:
 
 ### Digital Accessibility
 
-* **Dark mode**.
-* Interface for left-handed/right-handed users.
-* Inclusive and varied activities.
+- **Dark mode**.
+- Interface for left-handed/right-handed users.
+- Inclusive and varied activities.
 
 ### Business Ethics
 
-* Fair and inclusive treatment.
-* Efficient customer support.
-* Community building and collaboration.
+- Fair and inclusive treatment.
+- Efficient customer support.
+- Community building and collaboration.
 
 ### Education and Training
 
-* Initial training programs for new employees.
-* Benefits:
+- Initial training programs for new employees.
+- Benefits:
 
-  * Increased productivity.
-  * Skill development.
-  * Talent retention.
+  - Increased productivity.
+  - Skill development.
+  - Talent retention.
 
 > Companies that train staff achieve up to 50% higher retention and 200% more revenue per employee compared to those that don't.
 
@@ -391,17 +388,15 @@ Social media campaign featuring promotional videos that highlight:
 
 ### Server Optimization
 
-* Use of **shared vCPUs** to optimize resources and reduce energy consumption.
+- Use of **shared vCPUs** to optimize resources and reduce energy consumption.
 
 ### Eco-friendly Web Design
 
-* **GraphQL** implementation to reduce unnecessary data and improve performance.
+- **GraphQL** implementation to reduce unnecessary data and improve performance.
 
 ### Paperless Operations
 
-* **100% digital operations**, minimizing waste and long-term costs.
-
-
+- **100% digital operations**, minimizing waste and long-term costs.
 
 # Diagrams
 
