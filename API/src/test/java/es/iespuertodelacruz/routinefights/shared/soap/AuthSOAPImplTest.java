@@ -14,7 +14,7 @@ import es.iespuertodelacruz.routinefights.shared.dto.UserDTOAuth;
 import es.iespuertodelacruz.routinefights.shared.utils.HTMLTemplates;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 
-public class AuthSOAPImplTest {
+class AuthSOAPImplTest {
     private AuthSOAPImpl authSOAPImpl;
 
     @Mock
@@ -32,13 +32,13 @@ public class AuthSOAPImplTest {
     private static final String VERIFICATION_ERROR = "Verification error";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         authSOAPImpl = new AuthSOAPImpl(mailService, authService, userDTOAuthMapper);
     }
 
     @Test
-    public void testLogin() {
+    void testLogin() {
         when(authService.login(EMAIL, PASSWORD)).thenReturn(MOCK_TOKEN);
 
         String result = authSOAPImpl.login(EMAIL, PASSWORD);
@@ -48,7 +48,7 @@ public class AuthSOAPImplTest {
     }
 
     @Test
-    public void testVerifySuccess() {
+    void testVerifySuccess() {
         when(authService.verify(EMAIL, VALID_TOKEN)).thenReturn(true);
 
         String result = authSOAPImpl.verify(EMAIL, VALID_TOKEN);
@@ -58,7 +58,7 @@ public class AuthSOAPImplTest {
     }
 
     @Test
-    public void testVerifyFailure() {
+    void testVerifyFailure() {
         when(authService.verify(EMAIL, INVALID_TOKEN)).thenReturn(false);
 
         String result = authSOAPImpl.verify(EMAIL, INVALID_TOKEN);
@@ -68,7 +68,7 @@ public class AuthSOAPImplTest {
     }
 
     @Test
-    public void testVerifyWithNullInputs() {
+    void testVerifyWithNullInputs() {
         String result = authSOAPImpl.verify(null, null);
 
         assertEquals(HTMLTemplates.NEED_EMAIL_TOKEN, result);
@@ -76,7 +76,7 @@ public class AuthSOAPImplTest {
     }
 
     @Test
-    public void testVerifyWithException() {
+    void testVerifyWithException() {
         when(authService.verify(EMAIL, VALID_TOKEN)).thenThrow(new RuntimeException(VERIFICATION_ERROR));
 
         String result = authSOAPImpl.verify(EMAIL, VALID_TOKEN);
@@ -86,7 +86,7 @@ public class AuthSOAPImplTest {
     }
 
     @Test
-    public void testRegister() {
+    void testRegister() {
         UserDTOAuth userDTOAuth = new UserDTOAuth("username", EMAIL, PASSWORD, "nationality", "123456789", "image");
         User user = new User();
         user.setEmail(userDTOAuth.email());

@@ -14,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 import es.iespuertodelacruz.routinefights.shared.dto.ChartData;
 import es.iespuertodelacruz.routinefights.shared.services.GraphService;
 
-public class GraphSOAPImplTest {
+class GraphSOAPImplTest {
 
     private static final ChartData MOCK_CHART_DATA = new ChartData();
     private GraphSOAPImpl graphSOAPImpl;
@@ -23,15 +23,14 @@ public class GraphSOAPImplTest {
     private GraphService graphService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         graphSOAPImpl = new GraphSOAPImpl(graphService);
-        
-        
+
     }
 
     @Test
-    public void testGetUserCreationChart() {
+    void testGetUserCreationChart() {
         when(graphService.findUserRegistrationsByDate()).thenReturn(MOCK_CHART_DATA);
 
         ChartData result = graphSOAPImpl.getUserCreationChart();
@@ -41,7 +40,7 @@ public class GraphSOAPImplTest {
     }
 
     @Test
-    public void testGetPostCreationChart() {
+    void testGetPostCreationChart() {
         when(graphService.findPostsCreatedByDate()).thenReturn(MOCK_CHART_DATA);
 
         ChartData result = graphSOAPImpl.getPostCreationChart();
@@ -51,7 +50,7 @@ public class GraphSOAPImplTest {
     }
 
     @Test
-    public void testGetPostPointsChart() {
+    void testGetPostPointsChart() {
         when(graphService.findPointsAddedSumByDate()).thenReturn(MOCK_CHART_DATA);
 
         ChartData result = graphSOAPImpl.getPostPointsChart();
@@ -61,7 +60,7 @@ public class GraphSOAPImplTest {
     }
 
     @Test
-    public void testGetUserPointsChart() {
+    void testGetUserPointsChart() {
         when(graphService.findTotalPointsByUser()).thenReturn(MOCK_CHART_DATA);
 
         ChartData result = graphSOAPImpl.getUserPointsChart();
