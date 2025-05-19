@@ -123,18 +123,14 @@ const UploadFormScreen = (props: Props) => {
           }`}
         >
           <Text className="text-white font-bold text-xl text-center">
-            {/** TODO: idioma */}
             {translations[language || "en-EN"].screens.UploadForm.postButton}
           </Text>
         </TouchableOpacity>
 
         <Text className={`pb-6 text-center ${textColor(darkmode)}`}>
-          {/** TODO: idioma */}
-          {`Times Remaining: ${
-            activity?.timesRemaining == null
-              ? activity?.timesRequiered
-              : activity?.timesRemaining
-          }`}
+          {translations[language || "en-EN"].screens.UploadForm.timesRemaining}
+          {": "}
+          {`${activity?.timesRemaining}`}
         </Text>
       </View>
     </View>

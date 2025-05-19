@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { ActivityWithStreak } from "../utils/Activity";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { cardBgColor, iconColor, textColor } from "../utils/Utils";
+import { translations } from "../../translations/translation";
 
 type Props = {
   streak: ActivityWithStreak;
@@ -12,7 +13,7 @@ type Props = {
 };
 
 const Streak = (props: Props) => {
-  const { darkmode } = useSettingsContext();
+  const { darkmode, language } = useSettingsContext();
 
   return (
     <TouchableOpacity
@@ -34,7 +35,8 @@ const Streak = (props: Props) => {
           {props.streak?.name}
         </Text>
         <Text className={`text-2xl mt-4 ${textColor(darkmode)}`}>
-          Times remaining:{" "}
+          {translations[language || "en-EN"].screens.Streaks.timesRemaining}
+          {": "}
           {props.streak?.timesRemaining == null
             ? props.streak?.timesRequiered
             : props.streak?.timesRemaining}

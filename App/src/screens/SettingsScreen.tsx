@@ -80,7 +80,7 @@ const SettingsScreen = ({ navigation }: Props) => {
           }`}
         >
           <DropDown
-            data={languages}
+            data={languages(language)}
             message={
               translations[language || "en-EN"].screens.Settings.language
             }
@@ -98,11 +98,11 @@ const SettingsScreen = ({ navigation }: Props) => {
           color={darkmode ? "#B28DFF" : "#7D3C98"}
         />
         <Button
-          title={lefthand ? "Left side" : "Right side"}
+          title={translations[language || "en-EN"].screens.Settings.leftHand[lefthand ? "left" : "right"]}
           onPress={changeSide}
           color={darkmode ? "#B28DFF" : "#7D3C98"}
         />
-        <Button title="Logout" onPress={closeSession} color="#F65261" />
+        <Button title={translations[language || "en-EN"].screens.Settings.logout} onPress={closeSession} color="#F65261" />
       </View>
     </View>
   );

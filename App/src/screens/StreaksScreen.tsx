@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  FlatList,
-  RefreshControl,
-  Alert,
-} from "react-native";
+import { View, Text, FlatList, RefreshControl, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
@@ -15,14 +9,15 @@ import {
 } from "../repositories/ActivityRepository";
 import { ActivityWithStreak } from "../utils/Activity";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { bgColor, textColor } from "../utils/Utils";
+import { bgColor, languages, textColor } from "../utils/Utils";
 import AddButton from "../components/AddButton";
+import { translations } from "../../translations/translation";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
 const StreaksScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
-  const { darkmode } = useSettingsContext();
+  const { darkmode, language } = useSettingsContext();
 
   const addActivity: ActivityWithStreak = {
     id: "true",
@@ -80,8 +75,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
   return (
     <View className={`flex-1 ${bgColor(darkmode)} items-center pt-8`}>
       <Text className={`text-4xl font-bold mb-2 ${textColor(darkmode)}`}>
-        {/** TODO: idioma */}
-        Mis Streaks
+        {translations[language || "en-EN"].screens.Streaks.myStreaks}
       </Text>
 
       <FlatList

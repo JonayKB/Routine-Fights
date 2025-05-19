@@ -5,11 +5,12 @@ import { getNearestEvent } from "../repositories/EventRepository";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import DateFormatString from "../components/DateFormatString";
 import { bgColor, borderColor, cardBgColor, textColor } from "../utils/Utils";
+import { translations } from "../../translations/translation";
 
 type Props = {};
 
 const EventsScreen = (props: Props) => {
-  const { darkmode } = useSettingsContext();
+  const { darkmode, language } = useSettingsContext();
   const [event, setEvent] = useState<Event>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const secsToMillis = 1000;
@@ -74,7 +75,8 @@ const EventsScreen = (props: Props) => {
           <DateFormatString date={event?.finishDate} />
         </View>
         <Text className={`text-2xl ${textColor(darkmode)} text-center mt-2`}>
-          {"Ends in: " + formatTime(timeLeft)}
+          {translations[language || "en-EN"].screens.Events.timeLeft}{": "}
+          {formatTime(timeLeft)}
         </Text>
       </View>
       <View

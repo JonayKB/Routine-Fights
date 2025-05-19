@@ -20,6 +20,7 @@ import {
   getPostsFollowing,
 } from "../repositories/PostRepository";
 import { bgColor, cardBgColor, iconColor } from "../utils/Utils";
+import { translations } from '../../translations/translation';
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
@@ -30,7 +31,7 @@ const HomeScreen = ({ navigation }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [posts, setPosts] = useState<PostDomain[]>([]);
-  const { darkmode } = useSettingsContext();
+  const { darkmode, language } = useSettingsContext();
   const lastDate = useRef(new Date().toISOString().slice(0, 19));
 
   useEffect(() => {
@@ -101,7 +102,7 @@ const HomeScreen = ({ navigation }: Props) => {
           return (
             <TouchableOpacity
               key={selectedType}
-              onPress={() => setType(selectedType as "following" | "home")}
+              onPress={() => setType(selectedType as "following" | "home" | "activity")}
               className={`
               px-4 py-2 rounded-full
               ${isActive ? "bg-[#F65261]" : `${cardBgColor(darkmode)}`}
@@ -113,7 +114,7 @@ const HomeScreen = ({ navigation }: Props) => {
                 ${isActive ? "text-white" : `text-[${iconColor(darkmode)}]`}
               `}
               >
-                {selectedType}
+                {translations[language || "en-EN"].screens.Home.type[selectedType]}
               </Text>
             </TouchableOpacity>
           );
