@@ -18,7 +18,7 @@ import {
   followUser,
   unfollowUser,
 } from "../repositories/UserRepository";
-import { bgColor, convertQuantityToString } from "../utils/Utils";
+import { bgColor, convertQuantityToString, textColor } from "../utils/Utils";
 import ProfilePost from "../components/ProfilePost";
 import FollowCount from "../components/FollowCount";
 import Picture from "../components/Picture";
@@ -157,9 +157,9 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       {selectedBadge && (
         <View className="absolute w-full h-full z-10">
           <TouchableWithoutFeedback onPress={() => setSelectedBadge(null)}>
-            <View className="flex-1 bg-black opacity-80 w-full h-full absolute"></View>
+            <View className="absolute w-full h-full bg-black opacity-80" />
           </TouchableWithoutFeedback>
-          <View className="absolute justify-center h-full">
+          <View className="flex-1 justify-center items-center">
             <BadgeInfo item={selectedBadge} />
           </View>
         </View>
@@ -199,7 +199,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           </View> */}
         </TouchableOpacity>
         <View className="mt-5">
-          <Text className="text-[#1C1C1E] text-4xl font-bold">
+          <Text className="text-black text-4xl font-bold">
             {user?.username}
           </Text>
           <FollowCount
@@ -210,10 +210,14 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           />
           {user.email !== email && (
             <TouchableOpacity
-              className="fImagelex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
+              className="border-2 rounded-lg px-4 py-2 border-[#F65261]"
               onPress={handleFollow}
             >
-              <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
+              <Text
+                className={`font-bold text-base text-center ${
+                  darkmode ? "text-[#B28DFF]" : "text-[#4B0082]"
+                }`}
+              >
                 {user.isFollowing
                   ? translations[language || "en-EN"].screens.Profile.unfollow
                   : translations[language || "en-EN"].screens.Profile.follow}
@@ -224,7 +228,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       </View>
       <FlatList
         style={{ height: 100, width: "100%", flexGrow: 0 }}
-        className="border-b-2 border-[#4B0082] bg-white"
+        className={`border-b-2 border-[#4B0082] ${bgColor(darkmode)}`}
         horizontal
         data={badges}
         renderItem={({ item }) => {

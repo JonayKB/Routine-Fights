@@ -28,16 +28,20 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
         message={route.params.activity?.name}
       />
 
-      <View className="flex-1 items-center justify-center mt-4">
+      <View className="items-center justify-center border-b-8 border-[#F65261]">
         <Picture
           image={activity.image}
           size={440}
           height={550}
-          style="rounded-3xl border-4 border-[#F65261]"
+          style="rounded-3xl"
         />
       </View>
 
-      <View className="flex-1 items-center w-full mt-2">
+      <View
+        className={`flex-1 items-center w-full ${
+          !route.params.suscribed ? "-mt-40" : "-mt-24"
+        }`}
+      >
         <ActivityDetailsBox activity={activity} />
 
         {!route.params.suscribed && (

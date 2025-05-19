@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { styles } from "../styles/DropDownStyles";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 
 type Props = {
   message: string;
@@ -15,13 +16,14 @@ type Props = {
 
 const DropDown = (props: Props) => {
   const [isFocus, setIsFocus] = useState(false);
+  const { darkmode } = useSettingsContext();
 
   return (
     <Dropdown
-      style={styles.dropdown}
-      placeholderStyle={styles.placeholderStyle}
-      selectedTextStyle={styles.selectedTextStyle}
-      inputSearchStyle={styles.inputSearchStyle}
+      style={styles(darkmode).dropdown}
+      placeholderStyle={styles(darkmode).placeholderStyle}
+      selectedTextStyle={styles(darkmode).selectedTextStyle}
+      inputSearchStyle={styles(darkmode).inputSearchStyle}
       itemTextStyle={{ color: "black" }}
       data={props.data}
       search
