@@ -15,6 +15,7 @@ import {
 } from "../repositories/ActivityRepository";
 import { ActivityWithStreak } from "../utils/Activity";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { bgColor, textColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
@@ -77,14 +78,10 @@ const StreaksScreen = ({ navigation, route }: Props) => {
 
   return (
     <View
-      className={`flex-1 ${
-        darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"
-      } items-center pt-8`}
+      className={`flex-1 ${bgColor(darkmode)} items-center pt-8`}
     >
       <Text
-        className={`text-4xl font-bold mb-2 ${
-          darkmode ? "text-white" : "text-[#1C1C1E]"
-        }`}
+        className={`text-4xl font-bold mb-2 ${textColor(darkmode)}`}
       >
         Mis Streaks
       </Text>

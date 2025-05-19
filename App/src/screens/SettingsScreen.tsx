@@ -2,7 +2,7 @@ import { View, Button, TouchableOpacity } from "react-native";
 import React from "react";
 import { logout } from "../repositories/SettingsRepository";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { languages, resetNavigation } from "../utils/Utils";
+import { bgColor, languages, resetNavigation } from "../utils/Utils";
 import DropDown from "../components/DropDown";
 import { translations } from "../../translations/translation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -43,7 +43,7 @@ const SettingsScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#2C2C2C]" : "bg-[#CCCCCC]"}`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <ProfileNavigation
         navigation={navigation}
         message={translations[language || "en-EN"].screens.Settings.settings}

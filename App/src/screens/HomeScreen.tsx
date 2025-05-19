@@ -14,6 +14,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { getPosts, getPostsFollowing } from "../repositories/PostRepository";
+import { bgColor, cardBgColor, iconColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
@@ -75,12 +76,12 @@ const HomeScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <TouchableWithoutFeedback
         className="absolute z-10 right-5 top-5"
         onPress={() => navigation.navigate("Search")}
       >
-        <Icon name="search" size={35} color="#7D3C98" />
+        <Icon name="search" size={40} color={`${iconColor(darkmode)}`} />
       </TouchableWithoutFeedback>
       <View className="flex-row justify-evenly items-center px-4 mt-2">
         {["following", "home", "activity"].map((selectedType) => {
@@ -93,13 +94,13 @@ const HomeScreen = ({ navigation }: Props) => {
               }
               className={`
               px-4 py-2 rounded-full
-              ${isActive ? "bg-[#F65261]" : "bg-[#E8E2F0]"}
+              ${isActive ? "bg-[#F65261]" : `${cardBgColor(darkmode)}`}
             `}
             >
               <Text
                 className={`
                 font-bold text-lg
-                ${isActive ? "text-white" : "text-[#7D3C98]"}
+                ${isActive ? "text-white" : `text-[${iconColor(darkmode)}]`}
               `}
               >
                 {selectedType}

@@ -29,3 +29,9 @@ export const languages = [
   { label: "English", value: "en-EN" },
   { label: "Spanish", value: "es-ES" },
 ];
+
+export const borderColor = (darkmode: boolean) => darkmode ? "border-[#B28DFF]" : "border-[#7D3C98]";
+export const bgColor = (darkmode: boolean) => darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]";
+export const cardBgColor = (darkmode: boolean) => darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]";
+export const iconColor = (darkmode: boolean) => darkmode ? "#B28DFF" : "#7D3C98";
+export const textColor = (darkmode: boolean) => darkmode ? "text-white" : "text-[#1C1C1E]";

@@ -8,7 +8,7 @@ import ActivityCard from "../components/ActivityCard";
 import AddButton from "../components/AddButton";
 import SearchBar from "../components/SearchBar";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { limit } from "../utils/Utils";
+import { bgColor, limit } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
@@ -63,7 +63,7 @@ const ActivitiesScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <SearchBar searchFunction={changeText} />
       <FlatList
         refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
