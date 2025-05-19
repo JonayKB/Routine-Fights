@@ -9,6 +9,7 @@ import ProfileNavigation from "../components/ProfileNavigation";
 import FollowBox from "../components/FollowBox";
 import SearchBar from "../components/SearchBar";
 import { getFollows } from "../repositories/UserRepository";
+import { bgColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 
@@ -45,7 +46,7 @@ const FollowListScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <ProfileNavigation
         navigation={navigation}
         message={`${

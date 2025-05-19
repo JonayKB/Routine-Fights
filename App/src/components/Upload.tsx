@@ -6,19 +6,17 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ImageStackProps } from "../navigation/ImageStackNavigation";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { cardBgColor, textColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ImageStackProps, "Upload">;
 
 const Upload = ({ navigation }: Props) => {
   const { language, darkmode } = useSettingsContext();
-  const baseBg = darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]";
 
   return (
-    <View className={`flex-1 ${baseBg} justify-center items-center px-4`}>
+    <View className={`flex-1 ${cardBgColor(darkmode)} justify-center items-center px-4`}>
       <Text
-        className={`text-2xl font-bold mb-8 ${
-          darkmode ? "text-white" : "text-[#1C1C1E]"
-        }`}
+        className={`text-2xl font-bold mb-8 ${textColor(darkmode)}`}
       >
         {translations[language || "en-EN"].screens.UploadForm.title ||
           "Subir Foto"}

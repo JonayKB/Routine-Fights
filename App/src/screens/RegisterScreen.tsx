@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import PhoneInput from "react-native-phone-number-input";
 import { UserIn } from "../utils/User";
-import { resetNavigation } from "../utils/Utils";
+import { cardBgColor, resetNavigation } from "../utils/Utils";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { register } from "../repositories/RegisterRepository";
@@ -43,9 +43,7 @@ const RegisterScreen = ({ navigation, route }: Props) => {
 
   return (
     <View
-      className={`flex-1 bg-[#${
-        darkmode ? "4B294F" : "E8E2F0"
-      }] justify-center items-center`}
+      className={`flex-1 ${cardBgColor(darkmode)} justify-center items-center`}
     >
       <View
         className={`justify-evenly bg-white rounded-2xl w-96`}

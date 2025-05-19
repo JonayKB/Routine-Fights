@@ -7,6 +7,7 @@ import { UserIn, UserOut } from "../utils/User";
 import { getOwnUser, updateUser } from "../repositories/UserRepository";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
+import { cardBgColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "ProfileForm">;
 
@@ -53,9 +54,7 @@ const ProfileFormScreen = ({ navigation }: Props) => {
 
   return (
     <View
-      className={`flex-1 ${
-        darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]"
-      } items-center justify-center`}
+      className={`flex-1 ${cardBgColor(darkmode)} items-center justify-center`}
     >
       <View
         className={`${

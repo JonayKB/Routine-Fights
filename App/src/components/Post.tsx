@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Picture from "./Picture";
 import { likePost, unLikePost } from "../repositories/PostRepository";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { borderColor, cardBgColor, iconColor, textColor } from "../utils/Utils";
 
 type Props = {
   post: PostDomain;
@@ -38,9 +39,7 @@ const Post = (props: Props) => {
 
   return (
     <View
-      className={`${
-        darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]"
-      } flex-row rounded-xl m-5`}
+      className={`${cardBgColor(darkmode)} flex-row rounded-xl m-5`}
     >
       <View>
         <Picture
@@ -68,32 +67,26 @@ const Post = (props: Props) => {
           <Picture
             image={post.user?.image}
             size={53}
-            style={`rounded-full border-2 ${
-              darkmode ? "border-[#B28DFF]" : "border-[#7D3C98]"
-            }`}
+            style={`rounded-full border-2 ${borderColor(darkmode)}`}
           />
         </TouchableOpacity>
 
-        {/* Like */}
         <TouchableOpacity onPress={handleLike} className="mt-10 items-center">
           <Icon
             name={post.isLiked ? "heart" : "heart-outline"}
             size={53}
             color={(() => {
               if (post.isLiked) return "#F65261";
-              return darkmode ? "#B28DFF" : "#7D3C98";
+              return `${iconColor(darkmode)}`;
             })()}
           />
           <Text
-            className={`${
-              darkmode ? "text-white" : "text-[#1C1C1E]"
-            } text-center text-lg`}
+            className={`${textColor(darkmode)} text-center text-lg`}
           >
             {post.likes}
           </Text>
         </TouchableOpacity>
 
-        {/* Comment */}
         <TouchableOpacity
           onPress={() =>
             props.navigation.navigate("Comments", { postID: post.id })
@@ -103,12 +96,10 @@ const Post = (props: Props) => {
           <Icon
             name="chatbox-outline"
             size={53}
-            color={darkmode ? "#B28DFF" : "#7D3C98"}
+            color={iconColor(darkmode)}
           />
           <Text
-            className={`${
-              darkmode ? "text-white" : "text-[#1C1C1E]"
-            } text-center text-lg`}
+            className={`${textColor(darkmode)} text-center text-lg`}
           >
             {post.comments}
           </Text>
@@ -117,9 +108,7 @@ const Post = (props: Props) => {
         <View className="mt-32 items-center">
           <Icon name="flame" size={53} color="#F65261" />
           <Text
-            className={`${
-              darkmode ? "text-white" : "text-[#1C1C1E]"
-            } text-center text-lg`}
+            className={`${textColor(darkmode)} text-center text-lg`}
           >
             {post.streak}
           </Text>

@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import SearchBarHeader from "../components/SearchBarHeader";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { bgColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Search">;
 
@@ -53,7 +54,7 @@ const SearchScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <SearchBarHeader
         navigation={navigation}
         searchFunction={(text) => changeText(text)}

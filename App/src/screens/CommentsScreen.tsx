@@ -15,6 +15,7 @@ import Comment from "../components/Comment";
 import { Comment as CommentDomain } from "../utils/Comment";
 import { translations } from "../../translations/translation";
 import Icon from "react-native-vector-icons/Ionicons";
+import { bgColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Comments">;
 
@@ -58,7 +59,7 @@ const CommentsScreen = (props: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <ProfileNavigation navigation={props.navigation} />
 
       <FlatList

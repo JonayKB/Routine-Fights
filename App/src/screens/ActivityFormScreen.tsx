@@ -12,6 +12,7 @@ import DropDown from "../components/DropDown";
 import ChangePicture from "../components/ChangePicture";
 import FormInput from "../components/FormInput";
 import { uploadImage } from "../repositories/ImageRepository";
+import { bgColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityForm">;
 
@@ -80,9 +81,7 @@ const ActivityFormScreen = (props: Props) => {
 
   return (
     <View
-      className={`flex-1 bg-[#${
-        darkmode ? "2C2C2C" : "CCCCCC"
-      }] items-center`}
+      className={`flex-1 items-center ${bgColor(darkmode)}`}
     >
       <ScrollView className="bg-[#E4D8E9] rounded-lg w-10/12">
         {uri ? (

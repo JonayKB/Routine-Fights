@@ -4,6 +4,7 @@ import { Event } from "../utils/Event";
 import { getNearestEvent } from "../repositories/EventRepository";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import DateFormatString from "../components/DateFormatString";
+import { bgColor, borderColor, cardBgColor, textColor } from "../utils/Utils";
 
 type Props = {};
 
@@ -59,20 +60,26 @@ const EventsScreen = (props: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
-      <Text className="text-3xl text-black text-center mb-2 mt-4">
-        {event?.name}
-      </Text>
-      <View className="flex-row justify-evenly">
-        <DateFormatString date={event?.startDate} />
-        <DateFormatString date={event?.finishDate} />
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
+      <View className={`p-4 ${cardBgColor(darkmode)}`}>
+        <Text
+          className={`text-3xl font-bold ${textColor(darkmode)} text-center mb-2 mt-4`}
+        >
+          {event?.name}
+        </Text>
+        <View className="flex-row justify-evenly">
+          <DateFormatString date={event?.startDate} />
+          <DateFormatString date={event?.finishDate} />
+        </View>
+        <Text className={`text-2xl ${textColor(darkmode)} text-center mt-2`}>
+          {"Ends in: " + formatTime(timeLeft)}
+        </Text>
       </View>
-      <Text className="text-3xl text-black text-center mt-2">
-        {"Ends in: " + formatTime(timeLeft)}
-      </Text>
       <View
-        className="bg-red-700 w-10/12 mt-5 m-auto rounded-3xl"
-        style={{ height: 600 }}
+        className={`${cardBgColor(darkmode)} ${borderColor(
+          darkmode
+        )} border-2 w-10/12 mt-5 m-auto rounded-3xl`}
+        style={{ height: 590 }}
       ></View>
     </View>
   );

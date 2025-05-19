@@ -18,7 +18,7 @@ import {
   followUser,
   unfollowUser,
 } from "../repositories/UserRepository";
-import { convertQuantityToString } from "../utils/Utils";
+import { bgColor, convertQuantityToString } from "../utils/Utils";
 import ProfilePost from "../components/ProfilePost";
 import FollowCount from "../components/FollowCount";
 import Picture from "../components/Picture";
@@ -143,7 +143,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       {selectedPost && (
         <View className="absolute w-full h-full z-10">
           <TouchableWithoutFeedback onPress={() => setSelectedPost(null)}>

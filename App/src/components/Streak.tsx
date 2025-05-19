@@ -3,6 +3,7 @@ import React from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { ActivityWithStreak } from "../utils/Activity";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { cardBgColor, iconColor, textColor } from "../utils/Utils";
 
 type Props = {
   streak: ActivityWithStreak;
@@ -16,14 +17,12 @@ const Streak = (props: Props) => {
   return (
     <TouchableOpacity
       onPress={props.selectFunction}
-      className={`flex-row items-center w-11/12 h-36 rounded-3xl mt-8 mx-auto ${
-        darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]"
-      }`}
+      className={`flex-row items-center w-11/12 h-36 rounded-3xl mt-8 mx-auto ${cardBgColor(
+        darkmode
+      )}`}
     >
       <View
-        className={`w-20 h-20 rounded-full m-5 items-center justify-center ${
-          darkmode ? "bg-[#5A2978]" : "bg-[#F65261]"
-        }`}
+        className={`w-20 h-20 rounded-full m-5 items-center justify-center bg-[#F65261]`}
       >
         <Text className="text-3xl font-bold text-white">
           {props.streak?.streak}
@@ -31,18 +30,10 @@ const Streak = (props: Props) => {
       </View>
 
       <View>
-        <Text
-          className={`text-3xl font-bold ${
-            darkmode ? "text-white" : "text-[#1C1C1E]"
-          }`}
-        >
+        <Text className={`text-3xl font-bold ${textColor(darkmode)}`}>
           {props.streak?.name}
         </Text>
-        <Text
-          className={`text-2xl mt-4 ${
-            darkmode ? "text-white" : "text-[#1C1C1E]"
-          }`}
-        >
+        <Text className={`text-2xl mt-4 ${textColor(darkmode)}`}>
           Times remaining:{" "}
           {props.streak?.timesRemaining == null
             ? props.streak?.timesRequiered
@@ -54,7 +45,7 @@ const Streak = (props: Props) => {
         onPress={props.unsubscribeFunction}
         className="ml-auto mr-5"
       >
-        <Icon name="trash" size={35} color={darkmode ? "#8F7B9E" : "#7D3C98"} />
+        <Icon name="trash" size={35} color={iconColor(darkmode)} />
       </TouchableOpacity>
     </TouchableOpacity>
   );

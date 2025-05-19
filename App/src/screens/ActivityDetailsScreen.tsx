@@ -7,7 +7,7 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { subscribeActivity } from "../repositories/ActivityRepository";
 import ActivityDetailsBox from "../components/ActivityDetailsBox";
-import { resetNavigation } from "../utils/Utils";
+import { bgColor, cardBgColor, resetNavigation } from "../utils/Utils";
 import Picture from "../components/Picture";
 import ProfileNavigation from "../components/ProfileNavigation";
 
@@ -22,7 +22,7 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
   }, [route.params.activity]);
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
+    <View className={`flex-1 ${cardBgColor(darkmode)}`}>
       <ProfileNavigation
         navigation={navigation}
         message={route.params.activity?.name}

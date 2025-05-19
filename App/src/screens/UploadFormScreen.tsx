@@ -9,6 +9,7 @@ import { ActivityWithStreak } from "../utils/Activity";
 import { uploadPost } from "../repositories/PostRepository";
 import { uploadImage } from "../repositories/ImageRepository";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
+import { bgColor, cardBgColor, textColor } from "../utils/Utils";
 
 type Props = {};
 
@@ -25,7 +26,6 @@ const UploadFormScreen = (props: Props) => {
   const [activityName, setActivityName] = useState<string>(null);
   const [activity, setActivity] = useState<Categories>({} as Categories);
   const { language, darkmode } = useSettingsContext();
-  const baseBg = darkmode ? "#1C1C1E" : "white";
 
   useEffect(() => {
     fetchCategories();
@@ -76,11 +76,9 @@ const UploadFormScreen = (props: Props) => {
   };
 
   return (
-    <View className={`flex-1 bg-[${baseBg}] justify-center items-center px-4`}>
+    <View className={`flex-1 ${bgColor(darkmode)} justify-center items-center px-4`}>
       <View
-        className={`w-full bg-[${
-          darkmode ? "#4B294F" : "#E8E2F0"
-        }] rounded-2xl overflow-hidden`}
+        className={`w-full ${cardBgColor(darkmode)} rounded-2xl overflow-hidden`}
       >
         {uri ? (
           <View className="items-center p-6 bg-black">
@@ -135,9 +133,7 @@ const UploadFormScreen = (props: Props) => {
         </TouchableOpacity>
 
         <Text
-          className={`pb-6 text-center ${
-            darkmode ? "text-white" : "text-[#1C1C1E]"
-          }`}
+          className={`pb-6 text-center ${textColor(darkmode)}`}
         >
           {`Times Remaining: ${
             activity?.timesRemaining == null

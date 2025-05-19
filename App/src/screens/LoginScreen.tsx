@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import { login } from "../repositories/LoginRepository";
-import { resetNavigation } from "../utils/Utils";
+import { cardBgColor, resetNavigation } from "../utils/Utils";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
@@ -65,9 +65,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
   return (
     <View
-      className={`flex-1 ${
-        darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]"
-      } justify-center items-center`}
+      className={`flex-1 ${cardBgColor(darkmode)} justify-center items-center`}
     >
       <View
         className={`justify-evenly ${
