@@ -44,6 +44,7 @@ const CommunityScreen = (props: Props) => {
     const totalRequired = parseInt(formData.get("totalRequired") as string);
     const image = formData.get("image") as File;
     const activities = formData.getAll("activities") as string[];
+
     const imageName = await ImageRepository.uploadImage(
       token,
       image
@@ -142,7 +143,7 @@ const CommunityScreen = (props: Props) => {
             </div>
             <div style={styles.formGroup}>
               <label htmlFor="activities" style={styles.label}>Activities</label>
-              <select id="activities" name="activities" multiple style={styles.input}>
+              <select id="activities" name="activities" style={styles.input} required>
                 {activities?.map((activity) => (
                   <option key={activity.id} value={activity.id}>
                     {activity.name}
