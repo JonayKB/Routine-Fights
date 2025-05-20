@@ -90,12 +90,10 @@ const ProfileScreen = ({ navigation, route }: Props) => {
     try {
       const response = await getUserPosts(lastDate.current, user.email);
       if (isLoadingMore) {
-        setPosts(() => {
-          const existingPosts = new Set(posts);
-          return [...existingPosts, ...response];
-        });
+        setPosts([...posts, ...response]);
+      } else {
+        setPosts(response);
       }
-      setPosts(response);
     } catch (error) {
       Alert.alert("Error", error.response.data);
     } finally {

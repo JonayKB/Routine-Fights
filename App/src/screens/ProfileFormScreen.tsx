@@ -31,7 +31,6 @@ const ProfileFormScreen = ({ navigation }: Props) => {
         image: response.image,
       };
 
-      console.log("ownUser", ownUser);
       setUser(ownUser);
     } catch (error) {
       Alert.alert("Error", error.response.data);

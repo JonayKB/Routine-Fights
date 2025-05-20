@@ -92,7 +92,9 @@
         "timesRemaining": "Verbleibende Male"
       },
       "Events": {
-        "timeLeft": "Verbleibende Zeit"
+        "timeLeft": "Verbleibende Zeit",
+        "progress": "Fortschritt der Veranstaltung",
+        "finalMessage": "Leiste weiterhin Beiträge, um die Medaillen zu erhalten!"
       }
     }
   }
