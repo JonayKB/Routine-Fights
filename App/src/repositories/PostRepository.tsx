@@ -93,7 +93,7 @@ export const getPosts = async (
 
 export const getUserPosts = async (
   lastDate: string,
-  userID: string,
+  email: string,
   perPage: number = limit
 ) => {
   try {
@@ -102,7 +102,7 @@ export const getUserPosts = async (
       neo4jUri,
       {
         query: `query {
-                postsByUserV2(lastDate: "${lastDate}", userID: "${userID}", limit: ${perPage}) {
+                postsByUserV2(lastDate: "${lastDate}", userEmail: "${email}", limit: ${perPage}) {
                   id
                   streak
                   comments
@@ -130,8 +130,52 @@ export const getUserPosts = async (
 
     return response.data.data.postsByUserV2;
   } catch (error) {
-    console.error("Error fetching user posts:", error);
-    throw new Error("Error fetching user posts");
+    console.error("Error:", error.response.data);
+    throw error;
+  }
+};
+
+export const getPostBySuscribedActivities = async (
+  lastDate: string,
+  perPage: number = limit
+) => {
+  try {
+    const token = await RNSecureKeyStore.get("token");
+
+    const response = await axios.post(
+      neo4jUri,
+      {
+        query: `query {
+                  postsSubscribedActivitiesV2(lastDate: "${lastDate}", limit: ${perPage}) {
+                    id
+                    image
+                    updatedAt
+                    createdAt
+                    streak
+                    comments
+                    likes
+                    isLiked
+                    user {
+                      email
+                      image
+                    }
+                    activity {
+                      name
+                    }
+                  }
+                }`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data.data.postsSubscribedActivitiesV2;
+  } catch (error) {
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -157,8 +201,8 @@ export const uploadPost = async (activityID: string, image: string) => {
 
     return response.data.data.uploadPost;
   } catch (error) {
-    console.error("Error uploading post:", error);
-    throw new Error("Error uploading post");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -182,8 +226,8 @@ export const likePost = async (postID: string) => {
 
     return response.data.data.likePost;
   } catch (error) {
-    console.error("Error liking post:", error);
-    throw new Error("Error liking post");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -207,7 +251,7 @@ export const unLikePost = async (postID: string) => {
 
     return response.data.data.unLikePost;
   } catch (error) {
-    console.error("Error unliking post:", error);
-    throw new Error("Error unliking post");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };

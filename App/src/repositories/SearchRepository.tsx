@@ -36,6 +36,7 @@ export const fetchUsersByName = async (pageNum: number, text: string, perPage: n
 
     return response.data.data.getUserPaginationByName;
   } catch (error) {
-    throw new Error(error.response.data);
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };

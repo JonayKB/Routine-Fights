@@ -1,0 +1,99 @@
+{
+    "screens": {
+      "Activities": {
+        "name": "Name"
+      },
+      "ActivityDetails": {
+        "numOfTimes": "Anzahl der Male",
+        "frequency": "Häufigkeit",
+        "add": "Hinzufügen",
+        "timeRates": {
+          "daily": "täglich",
+          "weekly": "wöchentlich",
+          "monthly": "monatlich",
+          "yearly": "jährlich"
+        }
+      },
+      "ActivityForm": {
+        "title": "Titel",
+        "description": "Beschreibung",
+        "timeRate": "Zeitintervall",
+        "timesRequired": "Benötigte Anzahl",
+        "post": "Veröffentlichen",
+        "timeRates": {
+          "daily": "täglich",
+          "weekly": "wöchentlich",
+          "monthly": "monatlich",
+          "yearly": "jährlich"
+        }
+      },
+      "Home": {
+        "search": "Suche",
+        "type": {
+          "following": "folgend",
+          "home": "Startseite",
+          "activity": "Aktivität"
+        }
+      },
+      "Login": {
+        "email": "E-Mail",
+        "password": "Passwort",
+        "login": "Anmelden",
+        "register": "Registrieren"
+      },
+      "Profile": {
+        "followers": "Follower",
+        "following": "folgend",
+        "follow": "folgen",
+        "unfollow": "nicht mehr folgen"
+      },
+      "ProfileForm": {
+        "email": "E-Mail",
+        "image": "Bild",
+        "nationality": "Nationalität",
+        "phoneNumber": "Telefonnummer",
+        "username": "Benutzername",
+        "password": "Passwort",
+        "update": "Aktualisieren"
+      },
+      "Register": {
+        "username": "Benutzername",
+        "confirmPassword": "Passwort bestätigen"
+      },
+      "Settings": {
+        "language": "Sprache",
+        "darkMode": "Dunkelmodus",
+        "lightMode": "Hellmodus",
+        "logout": "Abmelden",
+        "settings": "Einstellungen",
+        "editProfile": "Profil bearbeiten",
+        "leftHand": {
+          "left": "Linke Hand",
+          "right": "Rechte Hand"
+        },
+        "languages": {
+          "english": "Englisch",
+          "spanish": "Spanisch",
+          "french": "Französisch",
+          "german": "Deutsch"
+        }
+      },
+      "Streaks": {
+        "myStreaks": "Meine Serien",
+        "timesRemaining": "Verbleibende Male"
+      },
+      "UploadForm": {
+        "title": "Beitrag hochladen",
+        "takeFromCamera": "Mit Kamera aufnehmen",
+        "selectFromLibrary": "Aus Bibliothek auswählen",
+        "selectactivity": "Aktivität auswählen",
+        "changePicture": "Bild ändern",
+        "postButton": "Veröffentlichen",
+        "timesRemaining": "Verbleibende Male"
+      },
+      "Events": {
+        "timeLeft": "Verbleibende Zeit"
+      }
+    }
+  }
+  

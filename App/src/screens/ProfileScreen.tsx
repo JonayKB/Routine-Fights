@@ -18,7 +18,7 @@ import {
   followUser,
   unfollowUser,
 } from "../repositories/UserRepository";
-import { convertQuantityToString } from "../utils/Utils";
+import { bgColor, convertQuantityToString } from "../utils/Utils";
 import ProfilePost from "../components/ProfilePost";
 import FollowCount from "../components/FollowCount";
 import Picture from "../components/Picture";
@@ -32,6 +32,7 @@ import { useTokenContext } from "../contexts/TokenContextProvider";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import { Badge } from "../utils/Badge";
 import { getBadgesByEmail } from "../repositories/BadgeRepository";
+import BadgeInfo from "../components/BadgeInfo";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -42,6 +43,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostDomain>(null);
+  const [selectedBadge, setSelectedBadge] = useState<Badge>(null);
   const { language, darkmode } = useSettingsContext();
   const { email } = useTokenContext();
   const [posts, setPosts] = useState<PostDomain[]>([]);
@@ -49,16 +51,19 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const { uri } = useImageContext();
   const [badges, setBadges] = useState<Badge[]>([]);
 
+  const init = async () => {
+    await fetchUser();
+    await fetchPosts();
+    await fetchBadges();
+  };
+
   useEffect(() => {
-    fetchUser();
-    fetchPosts();
-    fetchBadges();
+    init();
   }, [route.params?.email, uri]);
 
   useEffect(() => {
     if (load || isLoadingMore) {
-      fetchUser();
-      fetchPosts();
+      init();
     }
   }, [load, isLoadingMore]);
 
@@ -75,7 +80,6 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       setFollowers(convertQuantityToString(user.followers));
       setFollowing(convertQuantityToString(user.following));
     } catch (error) {
-      console.error("Error fetching user:", error);
       Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
@@ -84,10 +88,16 @@ const ProfileScreen = ({ navigation, route }: Props) => {
 
   const fetchPosts = async () => {
     try {
-      const response = await getUserPosts(lastDate.current, user.id);
-      setPosts(isLoadingMore ? [...posts, ...response] : response);
+      const response = await getUserPosts(lastDate.current, user.email);
+      if (isLoadingMore) {
+        setPosts(() => {
+          const existingPosts = new Set(posts);
+          return [...existingPosts, ...response];
+        });
+      }
+      setPosts(response);
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
       setIsLoadingMore(false);
@@ -97,7 +107,6 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const fetchBadges = async () => {
     try {
       const response = await getBadgesByEmail(user.email);
-      console.log(JSON.stringify(response));
       setBadges(response);
     } catch (error) {
       console.error("Error fetching badges:", error);
@@ -135,13 +144,12 @@ const ProfileScreen = ({ navigation, route }: Props) => {
         : user.followers + 1;
       setFollowers(convertQuantityToString(updatedFollowers));
     } catch (error) {
-      console.error("Error following user:", error);
       Alert.alert("Error", error.response.data);
     }
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       {selectedPost && (
         <View className="absolute w-full h-full z-10">
           <TouchableWithoutFeedback onPress={() => setSelectedPost(null)}>
@@ -149,6 +157,16 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           </TouchableWithoutFeedback>
           <View className="absolute justify-center h-full">
             <Post post={selectedPost} navigation={navigation} />
+          </View>
+        </View>
+      )}
+      {selectedBadge && (
+        <View className="absolute w-full h-full z-10">
+          <TouchableWithoutFeedback onPress={() => setSelectedBadge(null)}>
+            <View className="absolute w-full h-full bg-black opacity-80" />
+          </TouchableWithoutFeedback>
+          <View className="flex-1 justify-center items-center">
+            <BadgeInfo item={selectedBadge} />
           </View>
         </View>
       )}
@@ -170,6 +188,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           onPress={() =>
             navigation.navigate("ProfilePictureScreen", { email: user.email })
           }
+          disabled={!!route.params?.email}
         >
           <Picture
             image={user?.image}
@@ -197,10 +216,14 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           />
           {user.email !== email && (
             <TouchableOpacity
-              className="fImagelex-1 border-[#E4007C] border-2 rounded-lg mt-4 mb-2"
+              className="border-2 rounded-lg px-4 py-2 border-[#F65261]"
               onPress={handleFollow}
             >
-              <Text className="text-[#4B0082] font-bold text-xl text-center px-6 py-2">
+              <Text
+                className={`font-bold text-base text-center ${
+                  darkmode ? "text-[#B28DFF]" : "text-[#4B0082]"
+                }`}
+              >
                 {user.isFollowing
                   ? translations[language || "en-EN"].screens.Profile.unfollow
                   : translations[language || "en-EN"].screens.Profile.follow}
@@ -210,20 +233,26 @@ const ProfileScreen = ({ navigation, route }: Props) => {
         </View>
       </View>
       <FlatList
-        style={{ height: 100, width: "100%", flexGrow: 0 }}
-        className="border-b-2 border-[#4B0082] bg-white"
+        style={{ minHeight: 100, width: "100%", flexGrow: 0 }}
+        className={`border-b-2 border-[#4B0082] ${bgColor(darkmode)}`}
         horizontal
         data={badges}
         renderItem={({ item }) => {
           return (
-            <Picture image={item.image} size={72} style="rounded-full mt-4 ml-5" />
+            <TouchableOpacity onPress={() => setSelectedBadge(item)}>
+              <Picture
+                image={item.image}
+                size={72}
+                style="rounded-full mt-4 ml-5"
+              />
+            </TouchableOpacity>
           );
         }}
       />
 
       <FlatList
         refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
-        style={{ width: "100%" }}
+        style={{ width: "100%", marginTop: 10 }}
         data={posts}
         renderItem={({ item }) => {
           return (

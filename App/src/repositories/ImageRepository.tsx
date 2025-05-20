@@ -1,5 +1,4 @@
 import axios from "axios";
-import RNFS from "react-native-fs";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import { uri } from "../utils/Utils";
 
@@ -34,7 +33,7 @@ export const uploadImage = async (imageUri: string): Promise<string> => {
 
     return response.data;
   } catch (error) {
-    console.log("Error uploading image:", error);
-    throw new Error("Error uploading image");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };

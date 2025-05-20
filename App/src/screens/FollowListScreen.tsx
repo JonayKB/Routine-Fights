@@ -1,4 +1,4 @@
-import { View, FlatList, RefreshControl } from "react-native";
+import { View, FlatList, RefreshControl, Alert } from "react-native";
 import { Followers } from "../utils/User";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
@@ -9,6 +9,7 @@ import ProfileNavigation from "../components/ProfileNavigation";
 import FollowBox from "../components/FollowBox";
 import SearchBar from "../components/SearchBar";
 import { getFollows } from "../repositories/UserRepository";
+import { bgColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 
@@ -38,14 +39,14 @@ const FollowListScreen = ({ navigation, route }: Props) => {
         setUsers(followedByEmail);
       }
     } catch (error) {
-      console.error("Error fetching follows:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
     }
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <ProfileNavigation
         navigation={navigation}
         message={`${

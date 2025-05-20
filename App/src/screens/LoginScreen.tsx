@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import { login } from "../repositories/LoginRepository";
-import { resetNavigation } from "../utils/Utils";
+import { cardBgColor, resetNavigation } from "../utils/Utils";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
@@ -19,12 +19,14 @@ const LoginScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setToken } = useTokenContext();
-  const { language, setLanguage, darkmode, setDarkmode } = useSettingsContext();
+  const { language, setLanguage, darkmode, setDarkmode, setLefthand } =
+    useSettingsContext();
 
   useEffect(() => {
     fetchMode();
     fetchLanguage();
     fetchToken();
+    fetchLefthand();
   }, []);
 
   const fetchToken = async () => {
@@ -40,7 +42,7 @@ const LoginScreen = ({ navigation }: Props) => {
       const darkMode = await AsyncStorage.getItem("darkMode");
       setDarkmode(darkMode === "true");
     } catch (error) {
-      console.log(error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -49,7 +51,16 @@ const LoginScreen = ({ navigation }: Props) => {
       const language = await AsyncStorage.getItem("language");
       setLanguage(language);
     } catch (error) {
-      console.log(error);
+      Alert.alert("Error", error.response.data);
+    }
+  };
+
+  const fetchLefthand = async () => {
+    try {
+      const lefthand = await AsyncStorage.getItem("lefthand");
+      setLefthand(lefthand === "true");
+    } catch (error) {
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -65,12 +76,12 @@ const LoginScreen = ({ navigation }: Props) => {
 
   return (
     <View
-      className={`flex-1 bg-[#${
-        darkmode ? "CCCCCC" : "F5F5F7"
-      }] justify-center items-center`}
+      className={`flex-1 ${cardBgColor(darkmode)} justify-center items-center`}
     >
       <View
-        className="justify-evenly bg-white rounded-2xl w-96"
+        className={`justify-evenly ${
+          darkmode ? "bg-[#E8E2F0]" : "bg-white"
+        } rounded-2xl w-96`}
         style={{ height: 400 }}
       >
         <View className="m-10 mb-5">
@@ -84,9 +95,13 @@ const LoginScreen = ({ navigation }: Props) => {
             placeholder={
               translations[language || "en-EN"].screens.Login.password
             }
-            placeholderTextColor="#4B0082"
+            placeholderTextColor={`${darkmode ? "#E0D3F5" : "#4B0082"}`}
             secureTextEntry={!passwordShown}
-            className="border-[#4B0082] border-2 rounded-lg bg-[#F8F7FE] pl-3 text-black"
+            className={`text-lg mb-5 pl-3 rounded-lg border-2 ${
+              darkmode
+                ? "bg-[#4B294F] text-white border-[#B28DFF]"
+                : "bg-[#F8F7FE] text-black border-[#4B0082]"
+            }`}
             onChangeText={(text) => setPassword(text)}
           />
           <TouchableOpacity onPress={() => setPasswordShown(!passwordShown)}>
@@ -101,7 +116,7 @@ const LoginScreen = ({ navigation }: Props) => {
         <View className="m-10 mt-5">
           <TouchableOpacity
             onPress={log}
-            className="bg-[#E4007C] rounded-lg py-3 mb-5"
+            className="bg-[#F65261] rounded-lg py-3 mb-5"
           >
             <Text
               className={style.utils.button}
@@ -112,9 +127,9 @@ const LoginScreen = ({ navigation }: Props) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => resetNavigation(navigation, "Register")}
-            className="border-[#E4007C] border-2 rounded-lg py-1"
+            className="border-[#F65261] border-2 rounded-lg py-1"
           >
-            <Text className="text-[#4B0082] font-bold text-2xl text-center">
+            <Text className="text-[#7D3C98] font-bold text-2xl text-center">
               {translations[language || "en-EN"].screens.Login.register}
             </Text>
           </TouchableOpacity>
