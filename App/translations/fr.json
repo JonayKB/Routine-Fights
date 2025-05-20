@@ -58,7 +58,9 @@
       },
       "Register": {
         "username": "Nom d'utilisateur",
-        "confirmPassword": "Confirmer le mot de passe"
+        "confirmPassword": "Confirmer le mot de passe",
+        "success": "Inscription réussie",
+        "successMessage": "Vérifiez votre courrier dans le dossier spam"
       },
       "Settings": {
         "language": "Langue",
