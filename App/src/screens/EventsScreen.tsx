@@ -1,5 +1,5 @@
 import { Alert, RefreshControl, ScrollView, Text, View } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Event } from "../utils/Event";
 import {
   getCurrentPoints,
@@ -9,6 +9,8 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { bgColor, borderColor, cardBgColor, textColor } from "../utils/Utils";
 import DateFormatString from "../components/DateFormatString";
 import { translations } from "../../translations/translation";
+import { getBadgesByEvent } from "../repositories/BadgeRepository";
+import Picture from "../components/Picture";
 
 type Props = {};
 
@@ -17,11 +19,12 @@ const EventsScreen = (props: Props) => {
   const [event, setEvent] = useState<Event>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [currentPoints, setCurrentPoints] = useState(0);
-  const [barHeight, setBarHeight] = useState(0);
+  const barHeight = useRef(0);
   const [load, setLoad] = useState(false);
   const secToMillis = 1000;
   const totalHight = 550;
-  const [milestones, setMilestones] = useState<number[]>([]);
+  const [milestones, setMilestones] = useState<number[]>([250, 500]);
+  const [badges, setBadges] = useState([]);
 
   const formatTime = (millis: number): string => {
     const totalSeconds = Math.floor(millis / 1000);
@@ -37,25 +40,23 @@ const EventsScreen = (props: Props) => {
   };
 
   const getBarHeight = () => {
-    const height = (currentPoints * totalHight) / event.totalRequired;
-    setBarHeight(height);
+    barHeight.current = (currentPoints * totalHight) / event.totalRequired;
   };
 
   const getMilestones = () => {
-    const milestones = [];
-    const milestoneCount = event.totalRequired / 3;
-    for (let i = 1; i <= 3; i++) {
-      milestones.push(Math.floor(i * milestoneCount));
+    const milestonePoints = [];
+    const milestoneCount = event.totalRequired / badges.length;
+    for (let i = 1; i <= badges.length; i++) {
+      milestonePoints.push(Math.floor(i * milestoneCount));
     }
-    setMilestones(milestones);
+    setMilestones([...milestonePoints]);
   };
 
   useEffect(() => {
     const init = async () => {
       await fetchNearestEvent();
       await fetchEventPoints();
-      getBarHeight();
-      getMilestones();
+      await fetchBadges();
     };
     init();
   }, [load === true]);
@@ -83,6 +84,7 @@ const EventsScreen = (props: Props) => {
     try {
       const response = await getNearestEvent();
       setEvent(response);
+      getMilestones();
     } catch (error) {
       Alert.alert("Error", error.response.data);
     } finally {
@@ -92,7 +94,20 @@ const EventsScreen = (props: Props) => {
 
   const fetchEventPoints = async () => {
     try {
-      setCurrentPoints(await getCurrentPoints(event.id));
+      const response = await getCurrentPoints(event.id);
+      setCurrentPoints(response);
+      getBarHeight();
+    } catch (error) {
+      Alert.alert("Error", error.response.data);
+    } finally {
+      setLoad(false);
+    }
+  };
+
+  const fetchBadges = async () => {
+    try {
+      const response = await getBadgesByEvent(event.id);
+      setBadges(response);
     } catch (error) {
       Alert.alert("Error", error.response.data);
     } finally {
@@ -128,32 +143,69 @@ const EventsScreen = (props: Props) => {
       <View
         className={`${cardBgColor(darkmode)} ${borderColor(
           darkmode
-        )} border-2 w-10/12 mt-5 m-auto rounded-3xl`}
-        style={{ height: 590 }}
+        )} border-2 w-10/12 mt-2 m-auto rounded-3xl relative overflow-hidden`}
+        style={{ height: 600 }}
       >
         <View
           style={{ height: totalHight }}
-          className="w-8 overflow-hidden rounded-xl m-auto border-2 border-black flex-col-reverse"
+          className={`w-10 overflow-hidden rounded-xl m-auto border-2 ${borderColor(
+            darkmode
+          )} flex-col-reverse`}
         >
-          <View className="bg-red-700" style={{ height: barHeight }} />
-          <View className="bg-black" style={{ height: totalHight }} />
-          {milestones.map((ms) => {
-            const y = (ms * totalHight) / event.totalRequired;
+          <View
+            className="bg-[#F65261]"
+            style={{ height: barHeight.current }}
+          />
+
+          <View
+            className={`${darkmode ? "bg-[#E8E2F0]" : "bg-[#4B294F]"}`}
+            style={{ height: totalHight }}
+          />
+
+          {milestones.map((ms, i) => {
+            const y = (ms * totalHight) / (event?.totalRequired ?? 1);
             return (
               <View
-                key={ms}
+                key={`line-${ms}`}
                 style={{
                   position: "absolute",
                   bottom: y - 1,
                   left: 0,
                   right: 0,
                   height: 2,
-                  backgroundColor: "#fff",
                 }}
-              />
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: darkmode ? "#4B294F" : "#E8E2F0",
+                    height: 2,
+                  }}
+                />
+              </View>
             );
           })}
         </View>
+
+        {milestones.map((ms, i) => {
+          const y = (ms * totalHight) / (event?.totalRequired ?? 1);
+          return (
+            <View
+              key={`badge-${ms}`}
+              style={{
+                position: "absolute",
+                bottom: y - 4,
+                left: i % 2 ? 60 : 200,
+              }}
+            >
+              <Picture
+                image={badges[(badges.length - 1) - i]?.image}
+                size={60}
+                style={`rounded-full ${barHeight.current < y ? "opacity-100" : "opacity-40"}`}
+              />
+            </View>
+          );
+        })}
       </View>
     </ScrollView>
   );
