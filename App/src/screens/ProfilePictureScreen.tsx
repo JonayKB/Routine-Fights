@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import ChangePicture from "../components/ChangePicture";
-import { Button, View } from "react-native";
+import { Alert, Button, View } from "react-native";
 import { uploadImage } from "../repositories/ImageRepository";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
@@ -29,7 +29,7 @@ const ProfilePictureScreen = (props: Props) => {
       const response = await getUser(props.route.params.email);
       setUser(response);
     } catch (error) {
-      console.error("Error fetching user:", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
@@ -50,7 +50,7 @@ const ProfilePictureScreen = (props: Props) => {
         props.navigation.goBack();
       }
     } catch (error) {
-      console.error("Error uploading image:", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 

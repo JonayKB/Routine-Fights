@@ -12,6 +12,7 @@ import DropDown from "../components/DropDown";
 import ChangePicture from "../components/ChangePicture";
 import FormInput from "../components/FormInput";
 import { uploadImage } from "../repositories/ImageRepository";
+import { bgColor, cardBgColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityForm">;
 
@@ -53,9 +54,8 @@ const ActivityFormScreen = (props: Props) => {
   const addActivity = async () => {
     try {
       const imageName = await uploadImage(uri);
-      console.log(imageName); // Debugging line
 
-      const id = await createActivity(
+      await createActivity(
         activity.name,
         activity.description,
         timeRate,
@@ -63,50 +63,46 @@ const ActivityFormScreen = (props: Props) => {
         imageName
       );
 
-      if (id) {
-        Alert.alert(
-          translations[language || "en-EN"].screens.ActivityForm.success
-        );
-        setUri(null);
-        props.navigation.goBack();
-      } else {
-        throw new Error("Failed to create activity");
-      }
+      Alert.alert(
+        translations[language || "en-EN"].screens.ActivityForm.success
+      );
+      setUri(null);
+      props.navigation.goBack();
     } catch (error) {
-      console.error(error);
-      Alert.alert(translations[language || "en-EN"].screens.ActivityForm.error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
   return (
-    <View
-      className={`flex-1 bg-[#${
-        darkmode ? "2C2C2C" : "CCCCCC"
-      }] items-center`}
-    >
-      <ScrollView className="bg-[#E4D8E9] rounded-lg w-10/12">
-        {uri ? (
-          <ChangePicture uri={uri} setUri={setUri} />
-        ) : (
-          <View className="w-full h-3/5">
-            <ImageStackNavigation />
-          </View>
-        )}
-        <View className="m-10">
+    <View className={`flex-1 ${bgColor(darkmode)} items-center justify-center`}>
+      <View className={`rounded-lg w-10/12 ${cardBgColor(darkmode)}`}>
+        <ScrollView
+          contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 16 }}
+        >
+          {uri ? (
+            <ChangePicture uri={uri} setUri={setUri} />
+          ) : (
+            <View className="w-full h-72 mb-6">
+              <ImageStackNavigation />
+            </View>
+          )}
+
           <FormInput
-            name={activity.name}
             label={translations[language || "en-EN"].screens.ActivityForm.title}
-            mode="text"
+            name={activity.name}
             setText={(text) => setActivity({ ...activity, name: text })}
+            mode="text"
           />
+
           <FormInput
-            name={activity.description}
             label={
               translations[language || "en-EN"].screens.ActivityForm.description
             }
-            mode="text"
+            name={activity.description}
             setText={(text) => setActivity({ ...activity, description: text })}
+            mode="text"
           />
+
           <View className="mb-5">
             <DropDown
               data={timeRates}
@@ -117,27 +113,29 @@ const ActivityFormScreen = (props: Props) => {
               }
             />
           </View>
+
           <FormInput
-            name={activity.timesRequiered}
             label={
               translations[language || "en-EN"].screens.ActivityForm
                 .timesRequired
             }
-            mode="numeric"
+            name={activity.timesRequiered}
             setText={(text) =>
               setActivity({ ...activity, timesRequiered: text })
             }
+            mode="numeric"
           />
+
           <TouchableOpacity
-            className="bg-[#E4007C] rounded-lg py-3 w-full"
+            className="bg-[#F65261] rounded-lg py-3 w-full mt-4"
             onPress={addActivity}
           >
             <Text className="text-white font-bold text-xl text-center">
               {translations[language || "en-EN"].screens.ActivityForm.post}
             </Text>
           </TouchableOpacity>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </View>
   );
 };

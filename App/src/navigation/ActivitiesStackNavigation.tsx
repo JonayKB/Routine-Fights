@@ -11,7 +11,7 @@ type Props = {};
 export type ActivitiesStackProps = {
   Streaks: undefined;
   Activities: undefined;
-  ActivityDetails: { activity: Activity };
+  ActivityDetails: { activity: Activity, suscribed: boolean };
   ActivityForm: undefined;
 };
 

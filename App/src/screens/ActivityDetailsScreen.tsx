@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
@@ -9,6 +9,7 @@ import { subscribeActivity } from "../repositories/ActivityRepository";
 import ActivityDetailsBox from "../components/ActivityDetailsBox";
 import { resetNavigation } from "../utils/Utils";
 import Picture from "../components/Picture";
+import ProfileNavigation from "../components/ProfileNavigation";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 
@@ -20,31 +21,52 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
     setActivity(route.params.activity);
   }, [route.params.activity]);
 
+  const suscribe = async () => {
+    try {
+      await subscribeActivity(activity.id);
+      resetNavigation(navigation, "Streaks");
+    } catch (error) {
+      Alert.alert("Error", error.response.data);
+    }
+  }
+
   return (
-    <View
-      className={`flex-1 bg-[#${
-        darkmode ? "2C2C2C" : "CCCCCC"
-      }] justify-center items-center`}
-    >
-      <View className="flex-1">
-        <Picture image={activity.image} size={440} height={550} style="" />
+    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
+      <ProfileNavigation
+        navigation={navigation}
+        message={route.params.activity?.name}
+      />
+
+      <View className="items-center justify-center border-b-8 border-[#F65261]">
+        <Picture
+          image={activity.image}
+          size={440}
+          height={550}
+          style="rounded-3xl"
+        />
       </View>
-      <ActivityDetailsBox activity={activity} />
-      {/** TODO: check if is subscribed or not */}
-      <TouchableOpacity
-        onPress={async () => {
-          await subscribeActivity(activity.id);
-          resetNavigation(navigation, "Streaks");
-        }}
-        className="bg-[#E4007C] rounded-lg py-3 m-5 w-11/12 mb-10"
+
+      <View
+        className={`flex-1 items-center w-full ${
+          !route.params.suscribed ? "-mt-40" : "-mt-24"
+        }`}
       >
-        <Text
-          className="text-white font-bold text-2xl text-center"
-          style={{ fontFamily: "Roboto-Regular" }}
-        >
-          {translations[language || "en-EN"].screens.ActivityDetails.add}
-        </Text>
-      </TouchableOpacity>
+        <ActivityDetailsBox activity={activity} />
+
+        {!route.params.suscribed && (
+          <TouchableOpacity
+            onPress={suscribe}
+            className="bg-[#F65261] rounded-2xl py-4 px-6 mt-6 w-11/12 shadow-md shadow-black items-center"
+          >
+            <Text
+              className="text-white font-bold text-2xl"
+              style={{ fontFamily: "Roboto-Regular" }}
+            >
+              {translations[language || "en-EN"].screens.ActivityDetails.add}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };

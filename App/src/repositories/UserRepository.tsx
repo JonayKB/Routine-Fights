@@ -96,51 +96,58 @@ export const getUser = async (email: string): Promise<UserOut> => {
     );
     return response.data.data.getUserV2IsFollowing;
   } catch (error) {
-    console.error("Error fetching user:", error);
-    throw new Error("Error fetching user");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
 export const getFollows = async (email: string, name?: string) => {
-  const response = await axios.post(
-    neo4jUri,
-    {
-      query: `
-            query {
-                followersByEmail(email: "${email}", usernameFilter: "${name}") {
-                    id
-                    username
-                    nationality
-                    image
-                    createdAt
-                    followers
-                    following
-                    isFollowing
-                    email
-                }
-                    
-                followedByEmail(email: "${email}", usernameFilter: "${name}") {
-                    id
-                    username
-                    nationality
-                    image
-                    createdAt
-                    followers
-                    following
-                    isFollowing
-                    email
-                }
-            }
-        `,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${await RNSecureKeyStore.get("token")}`,
-      },
-    }
-  );
+  try {
+    const token = await RNSecureKeyStore.get("token");
 
-  return response.data.data;
+    const response = await axios.post(
+      neo4jUri,
+      {
+        query: `
+              query {
+                  followersByEmail(email: "${email}", usernameFilter: "${name}") {
+                      id
+                      username
+                      nationality
+                      image
+                      createdAt
+                      followers
+                      following
+                      isFollowing
+                      email
+                  }
+                      
+                  followedByEmail(email: "${email}", usernameFilter: "${name}") {
+                      id
+                      username
+                      nationality
+                      image
+                      createdAt
+                      followers
+                      following
+                      isFollowing
+                      email
+                  }
+              }
+          `,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data.data;
+  } catch (error) {
+    console.error("Error:", error.response.data);
+    throw error;
+  }
 };
 
 export const followUser = async (email: string) => {
@@ -163,8 +170,8 @@ export const followUser = async (email: string) => {
     );
     return response.data.data.followUser;
   } catch (error) {
-    console.error("Error following user:", error);
-    throw new Error("Error following user");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -188,8 +195,8 @@ export const unfollowUser = async (email: string) => {
     );
     return response.data.data.unfollowUser;
   } catch (error) {
-    console.error("Error unfollowing user:", error);
-    throw new Error("Error unfollowing user");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -226,7 +233,7 @@ export const updateUser = async (user: UserIn): Promise<UserOut> => {
     );
     return response.data.data.updateUserV2;
   } catch (error) {
-    console.error("Error updating user:", error);
-    throw new Error("Error updating user");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };

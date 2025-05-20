@@ -1,4 +1,4 @@
-import { View, FlatList, RefreshControl } from "react-native";
+import { View, FlatList, RefreshControl, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Followers } from "../utils/User";
 import { fetchUsersByName } from "../repositories/SearchRepository";
@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import SearchBarHeader from "../components/SearchBarHeader";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { bgColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Search">;
 
@@ -29,7 +30,7 @@ const SearchScreen = ({ navigation }: Props) => {
       const response = await fetchUsersByName(pageNum.current, searchText);
       setUsers(isLoadingMore ? [...users, ...response] : response);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
       setIsLoadingMore(false);
@@ -53,7 +54,7 @@ const SearchScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <SearchBarHeader
         navigation={navigation}
         searchFunction={(text) => changeText(text)}

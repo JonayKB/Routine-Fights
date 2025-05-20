@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  RefreshControl,
-} from "react-native";
+import { View, Text, FlatList, RefreshControl, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
@@ -15,12 +9,15 @@ import {
 } from "../repositories/ActivityRepository";
 import { ActivityWithStreak } from "../utils/Activity";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { bgColor, textColor } from "../utils/Utils";
+import AddButton from "../components/AddButton";
+import { translations } from "../../translations/translation";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Streaks">;
 
 const StreaksScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
-  const { darkmode } = useSettingsContext();
+  const { darkmode, language } = useSettingsContext();
 
   const addActivity: ActivityWithStreak = {
     id: "true",
@@ -53,7 +50,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
       list.push(addActivity);
       setActivities(list);
     } catch (error) {
-      console.error("Error fetching activities:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
     }
@@ -64,45 +61,49 @@ const StreaksScreen = ({ navigation, route }: Props) => {
       await unsubscribeActivity(id);
       setLoad(true);
     } catch (error) {
-      console.error("Error unsubscribing activity:", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
+  const streakDetails = (activity: ActivityWithStreak) => {
+    navigation.navigate("ActivityDetails", {
+      activity: activity,
+      suscribed: true,
+    });
+  };
+
   return (
-    <View
-      className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}] items-center`}
-    >
-      <View className="items-center w-full">
-        <FlatList
-          refreshControl={
-            <RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />
-          }
-          style={{ width: "100%" }}
-          data={activities}
-          renderItem={({ item }) => {
+    <View className={`flex-1 ${bgColor(darkmode)} items-center pt-8`}>
+      <Text className={`text-4xl font-bold mb-2 ${textColor(darkmode)}`}>
+        {translations[language || "en-EN"].screens.Streaks.myStreaks}
+      </Text>
+
+      <FlatList
+        refreshControl={
+          <RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />
+        }
+        style={{ width: "100%" }}
+        data={activities}
+        renderItem={({ item }) => {
+          if (item.id === "true") {
             return (
-              <View>
-                {item.id === "true" ? (
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate("Activities")}
-                    className="items-center w-11/12 rounded-3xl mx-auto bg-[#4B0082] mt-5"
-                  >
-                    <Text className="text-8xl font-bold text-center text-white">
-                      +
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <Streak
-                    streak={item}
-                    unsubscribeFunction={() => deleteActivity(item.id)}
-                  />
-                )}
-              </View>
+              <AddButton
+                navigateFunction={() => navigation.navigate("Activities")}
+              />
             );
-          }}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
+          }
+          return (
+            <View>
+              <Streak
+                streak={item}
+                unsubscribeFunction={() => deleteActivity(item.id)}
+                selectFunction={() => streakDetails(item)}
+              />
+            </View>
+          );
+        }}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 };

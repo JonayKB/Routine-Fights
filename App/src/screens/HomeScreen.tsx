@@ -3,7 +3,9 @@ import {
   FlatList,
   RefreshControl,
   TouchableWithoutFeedback,
-  Button,
+  TouchableOpacity,
+  Text,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
@@ -12,7 +14,13 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { getPosts, getPostsFollowing } from "../repositories/PostRepository";
+import {
+  getPostBySuscribedActivities,
+  getPosts,
+  getPostsFollowing,
+} from "../repositories/PostRepository";
+import { bgColor, cardBgColor, iconColor } from "../utils/Utils";
+import { translations } from '../../translations/translation';
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
@@ -23,7 +31,7 @@ const HomeScreen = ({ navigation }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [posts, setPosts] = useState<PostDomain[]>([]);
-  const { darkmode } = useSettingsContext();
+  const { darkmode, language } = useSettingsContext();
   const lastDate = useRef(new Date().toISOString().slice(0, 19));
 
   useEffect(() => {
@@ -51,11 +59,17 @@ const HomeScreen = ({ navigation }: Props) => {
           response = await getPosts(lastDate.current);
           break;
         case "activity":
-          break;
+          response = await getPostBySuscribedActivities(lastDate.current);
       }
-      setPosts(isLoadingMore ? [...posts, ...response] : response);
+      if (isLoadingMore) {
+        setPosts(() => {
+          const existingPosts = new Set(posts);
+          return [...existingPosts, ...response];
+        });
+      }
+      setPosts(response);
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
       setIsLoadingMore(false);
@@ -68,25 +82,44 @@ const HomeScreen = ({ navigation }: Props) => {
   };
 
   const loadMore = () => {
-    if (isLoadingMore || posts.length === 0) return;
-    lastDate.current = posts[posts.length - 1].createdAt;
+    if (isLoadingMore || posts?.length === 0) return;
+    lastDate.current = posts[posts?.length - 1]?.createdAt;
     setIsLoadingMore(true);
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <TouchableWithoutFeedback
         className="absolute z-10 right-5 top-5"
         onPress={() => navigation.navigate("Search")}
       >
-        <Icon name="search" size={35} color="#7C5AF1" />
+        <Icon name="search" size={40} color={`${iconColor(darkmode)}`} />
       </TouchableWithoutFeedback>
-      <View className="flex-row justify-evenly items-center absolute z-10 top-8 w-full">
-        <Button title="Following" onPress={() => setType("following")} />
-        <Button title="Home" onPress={() => setType("home")} />
-        <Button title="activity" onPress={() => setType("activity")} />
+      <View className="flex-row justify-evenly items-center px-4 mt-2">
+        {["following", "home", "activity"].map((selectedType) => {
+          const isActive = type === selectedType;
+          return (
+            <TouchableOpacity
+              key={selectedType}
+              onPress={() => setType(selectedType as "following" | "home" | "activity")}
+              className={`
+              px-4 py-2 rounded-full
+              ${isActive ? "bg-[#F65261]" : `${cardBgColor(darkmode)}`}
+            `}
+            >
+              <Text
+                className={`
+                font-bold text-lg
+                ${isActive ? "text-white" : `text-[${iconColor(darkmode)}]`}
+              `}
+              >
+                {translations[language || "en-EN"].screens.Home.type[selectedType]}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
-      <View className="items-center">
+      <View className="flex-1 pt-6">
         <FlatList
           refreshControl={
             <RefreshControl refreshing={load} onRefresh={reload} />

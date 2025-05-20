@@ -1,14 +1,11 @@
-import {
-  View,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Text,
-} from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
 import Icon from "react-native-vector-icons/Ionicons";
 import Picture from "./Picture";
 import { likePost, unLikePost } from "../repositories/PostRepository";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { borderColor, cardBgColor, iconColor, textColor } from "../utils/Utils";
 
 type Props = {
   post: PostDomain;
@@ -17,6 +14,7 @@ type Props = {
 
 const Post = (props: Props) => {
   const [post, setPost] = useState<PostDomain>({} as PostDomain);
+  const { darkmode, lefthand } = useSettingsContext();
 
   useEffect(() => {
     setPost({ ...props.post });
@@ -40,20 +38,23 @@ const Post = (props: Props) => {
   };
 
   return (
-    <View className="bg-[#E4D8E9] flex-row rounded-xl m-5">
-      <View>
-        <Picture
-          image={post.image}
-          size={281}
-          height={485}
-          style="rounded-xl"
-        />
-        <View className="z-index-10 -mt-16 bg-[#00000095] rounded-b-xl py-5">
-          <Text className="text-white text-xl font-bold text-center">
-            {post.activity?.name}
-          </Text>
+    <View className={`${cardBgColor(darkmode)} flex-row rounded-xl m-5`}>
+      {lefthand && (
+        <View>
+          <Picture
+            image={post.image}
+            size={281}
+            height={485}
+            style="rounded-l-xl"
+          />
+          <View className="z-10 -mt-16 bg-[#33333395] rounded-bl-xl py-5">
+            <Text className="text-white text-xl font-bold text-center">
+              {post.activity?.name}
+            </Text>
+          </View>
         </View>
-      </View>
+      )}
+
       <View className="flex-col m-3">
         <TouchableOpacity
           onPress={() =>
@@ -66,31 +67,59 @@ const Post = (props: Props) => {
           <Picture
             image={post.user?.image}
             size={53}
-            style="rounded-full border-2 border-[#7B5BF2]"
+            style={`rounded-full border-2 ${borderColor(darkmode)}`}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleLike}>
+
+        <TouchableOpacity onPress={handleLike} className="mt-10 items-center">
           <Icon
             name={post.isLiked ? "heart" : "heart-outline"}
             size={53}
-            color="#7B5BF2"
-            className="mt-10"
+            color={(() => {
+              if (post.isLiked) return "#F65261";
+              return `${iconColor(darkmode)}`;
+            })()}
           />
-          <Text className="text-black text-center text-lg">{post.likes}</Text>
+          <Text className={`${textColor(darkmode)} text-center text-lg`}>
+            {post.likes}
+          </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() =>
             props.navigation.navigate("Comments", { postID: post.id })
           }
+          className="mt-10 items-center"
         >
-          <Icon name="chatbox" size={53} color="#7B5BF2" className="mt-10" />
-          <Text className="text-black text-center text-lg">
+          <Icon name="chatbox-outline" size={53} color={iconColor(darkmode)} />
+          <Text className={`${textColor(darkmode)} text-center text-lg`}>
             {post.comments}
           </Text>
         </TouchableOpacity>
-        <Icon name="flame" size={53} color="#E4007C" className="mt-32" />
-        <Text className="text-black text-center text-lg">{post.streak}</Text>
+
+        <View className="mt-32 items-center">
+          <Icon name="flame" size={53} color="#F65261" />
+          <Text className={`${textColor(darkmode)} text-center text-lg`}>
+            {post.streak}
+          </Text>
+        </View>
       </View>
+
+      {!lefthand && (
+        <View>
+          <Picture
+            image={post.image}
+            size={281}
+            height={485}
+            style="rounded-r-xl"
+          />
+          <View className="z-10 -mt-16 bg-[#33333395] rounded-br-xl py-5">
+            <Text className="text-white text-xl font-bold text-center">
+              {post.activity?.name}
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };

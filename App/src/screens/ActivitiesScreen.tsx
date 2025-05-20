@@ -1,4 +1,4 @@
-import { View, FlatList, RefreshControl } from "react-native";
+import { View, FlatList, RefreshControl, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
@@ -8,7 +8,7 @@ import ActivityCard from "../components/ActivityCard";
 import AddButton from "../components/AddButton";
 import SearchBar from "../components/SearchBar";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { limit } from "../utils/Utils";
+import { bgColor, limit } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
@@ -21,7 +21,7 @@ const ActivitiesScreen = ({ navigation }: Props) => {
   const { darkmode } = useSettingsContext();
 
   useEffect(() => {
-      fetchActivities();
+    fetchActivities();
   }, []);
 
   useEffect(() => {
@@ -36,9 +36,15 @@ const ActivitiesScreen = ({ navigation }: Props) => {
         pageNum.current,
         searchText
       );
-      setActivities(isLoadingMore ? [...activities, ...response] : response);
+      if (isLoadingMore) {
+        setActivities(() => {
+          const existingActivities = new Set(activities);
+          return [...existingActivities, ...response];
+        });
+      }
+      setActivities(response);
     } catch (error) {
-      console.error("Error fetching activities:", error);
+      Alert.alert("Error", error.response.data);
     } finally {
       setLoad(false);
       setIsLoadingMore(false);
@@ -63,7 +69,7 @@ const ActivitiesScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View className={`flex-1 bg-[#${darkmode ? "2C2C2C" : "CCCCCC"}]`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <SearchBar searchFunction={changeText} />
       <FlatList
         refreshControl={<RefreshControl refreshing={load} onRefresh={reload} />}
@@ -73,7 +79,10 @@ const ActivitiesScreen = ({ navigation }: Props) => {
           <ActivityCard
             item={item}
             navigateFunction={() =>
-              navigation.navigate("ActivityDetails", { activity: item })
+              navigation.navigate("ActivityDetails", {
+                activity: item,
+                suscribed: false,
+              })
             }
           />
         )}

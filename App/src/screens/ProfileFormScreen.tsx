@@ -1,5 +1,5 @@
 import { Alert, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormInput from "../components/FormInput";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
@@ -7,14 +7,13 @@ import { UserIn, UserOut } from "../utils/User";
 import { getOwnUser, updateUser } from "../repositories/UserRepository";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
-import PhoneInput from "react-native-phone-number-input";
+import { cardBgColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "ProfileForm">;
 
 const ProfileFormScreen = ({ navigation }: Props) => {
   const { language, darkmode } = useSettingsContext();
   const [user, setUser] = useState<UserIn>({} as UserIn);
-  const phoneInput = useRef<PhoneInput>(null);
 
   useEffect(() => {
     fetchOwnUser();
@@ -35,31 +34,29 @@ const ProfileFormScreen = ({ navigation }: Props) => {
       console.log("ownUser", ownUser);
       setUser(ownUser);
     } catch (error) {
-      console.log(error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
   const updateProfile = async () => {
     try {
-      const response = await updateUser(user);
-      if (response) {
-        Alert.alert("Profile updated");
-        navigation.navigate("Profile");
-      } else {
-        throw new Error("Error updating profile");
-      }
+      await updateUser(user);
+      Alert.alert("Profile updated");
+      navigation.navigate("Profile");
     } catch (error) {
-      console.log("Error updating profile", error);
+      Alert.alert("Error", error.response.data);
     }
   };
 
   return (
     <View
-      className={`flex-1 bg-[#${
-        darkmode ? "2C2C2C" : "CCCCCC"
-      }] items-center justify-center`}
+      className={`flex-1 ${cardBgColor(darkmode)} items-center justify-center`}
     >
-      <View className="bg-[#E4D8E9] rounded-lg w-10/12">
+      <View
+        className={`${
+          darkmode ? "bg-[#E8E2F0]" : "bg-white"
+        } rounded-lg w-10/12`}
+      >
         <View className="m-10">
           <FormInput
             label={translations[language || "en-EN"].screens.ProfileForm.email}
@@ -100,7 +97,7 @@ const ProfileFormScreen = ({ navigation }: Props) => {
             mode="text"
           />
           <TouchableOpacity
-            className="bg-[#E4007C] rounded-lg py-3 w-full"
+            className="bg-[#F65261] rounded-lg py-3 w-full"
             onPress={updateProfile}
           >
             <Text className="text-white font-bold text-xl text-center">
