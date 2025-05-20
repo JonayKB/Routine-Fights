@@ -40,10 +40,10 @@ export const getPostsFollowing = async (
       }
     );
 
-    return response.data.data.getPostsFollowing;
+    return response.data.data.postsFollowingV2;
   } catch (error) {
-    console.error("Error fetching posts:", error);
-    throw new Error("Error fetching posts");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 
@@ -86,8 +86,8 @@ export const getPosts = async (
 
     return response.data.data.postsV2;
   } catch (error) {
-    console.error("Error fetching posts:", error);
-    throw new Error("Error fetching posts");
+    console.error("Error:", error.response.data);
+    throw error;
   }
 };
 

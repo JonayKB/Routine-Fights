@@ -8,7 +8,7 @@ import ActivityCard from "../components/ActivityCard";
 import AddButton from "../components/AddButton";
 import SearchBar from "../components/SearchBar";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { bgColor, limit } from "../utils/Utils";
+import { bgColor } from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
@@ -37,12 +37,10 @@ const ActivitiesScreen = ({ navigation }: Props) => {
         searchText
       );
       if (isLoadingMore) {
-        setActivities(() => {
-          const existingActivities = new Set(activities);
-          return [...existingActivities, ...response];
-        });
+        setActivities([...activities, ...response]);
+      } else {
+        setActivities(response);
       }
-      setActivities(response);
     } catch (error) {
       Alert.alert("Error", error.response.data);
     } finally {
@@ -63,7 +61,7 @@ const ActivitiesScreen = ({ navigation }: Props) => {
   };
 
   const loadMore = () => {
-    if (isLoadingMore || activities.length < pageNum.current * limit) return;
+    if (isLoadingMore || activities.length === 0) return;
     pageNum.current += 1;
     setIsLoadingMore(true);
   };
