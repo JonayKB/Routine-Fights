@@ -94,4 +94,9 @@ public class ActivityEntityService implements IActivityRepository {
         return activityEntityRepository.findAllImages();
     }
 
+    @Override
+    public List<Activity> findAll() {
+        return activityEntityMapper.toDomain(activityEntityRepository.findAll());
+    }
+
 }
