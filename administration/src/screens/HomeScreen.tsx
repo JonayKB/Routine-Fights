@@ -34,6 +34,7 @@ const HomeScreen = (props: Props) => {
 
   return (
     <div style={styles.page}>
+      <img src="/Logo.png" alt="Logo" style={{ width: "30rem", margin: "auto" ,marginBottom:"1rem",borderRadius:"20%"}} />
       <div style={styles.container}>
         <div style={styles.header}>
           <h1>Graphs of {lastGraphDate.toDateString()} at 00:00</h1>
