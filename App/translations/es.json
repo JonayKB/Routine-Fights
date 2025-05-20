@@ -92,7 +92,9 @@
         "timesRemaining": "Veces restantes"
       },
       "Events": {
-        "timeLeft": "Tiempo restante"
+        "timeLeft": "Tiempo restante",
+        "progress": "Progreso del evento",
+        "finalMessage": "¡Sigue contribuyendo para alcanzar las medallas!"
       }
     }
   }
