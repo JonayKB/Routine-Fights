@@ -20,7 +20,7 @@ import {
   getPostsFollowing,
 } from "../repositories/PostRepository";
 import { bgColor, cardBgColor, iconColor } from "../utils/Utils";
-import { translations } from '../../translations/translation';
+import { translations } from "../../translations/translation";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
@@ -60,14 +60,13 @@ const HomeScreen = ({ navigation }: Props) => {
           break;
         case "activity":
           response = await getPostBySuscribedActivities(lastDate.current);
+          break;
       }
       if (isLoadingMore) {
-        setPosts(() => {
-          const existingPosts = new Set(posts);
-          return [...existingPosts, ...response];
-        });
+        setPosts([...posts, ...response]);
+      } else {
+        setPosts(response);
       }
-      setPosts(response);
     } catch (error) {
       Alert.alert("Error", error.response.data);
     } finally {
@@ -82,8 +81,8 @@ const HomeScreen = ({ navigation }: Props) => {
   };
 
   const loadMore = () => {
-    if (isLoadingMore || posts?.length === 0) return;
-    lastDate.current = posts[posts?.length - 1]?.createdAt;
+    if (isLoadingMore || posts.length === 0) return;
+    lastDate.current = posts[posts.length - 1].createdAt.slice(0, 19);
     setIsLoadingMore(true);
   };
 
@@ -101,7 +100,9 @@ const HomeScreen = ({ navigation }: Props) => {
           return (
             <TouchableOpacity
               key={selectedType}
-              onPress={() => setType(selectedType as "following" | "home" | "activity")}
+              onPress={() =>
+                setType(selectedType as "following" | "home" | "activity")
+              }
               className={`
               px-4 py-2 rounded-full
               ${isActive ? "bg-[#F65261]" : `${cardBgColor(darkmode)}`}
@@ -113,7 +114,11 @@ const HomeScreen = ({ navigation }: Props) => {
                 ${isActive ? "text-white" : `text-[${iconColor(darkmode)}]`}
               `}
               >
-                {translations[language || "en-EN"].screens.Home.type[selectedType]}
+                {
+                  translations[language || "en-EN"].screens.Home.type[
+                    selectedType
+                  ]
+                }
               </Text>
             </TouchableOpacity>
           );
