@@ -53,6 +53,8 @@
     - [Paperless Operations](#paperless-operations)
 - [Diagrams](#diagrams)
 - [Design](#design)
+  - [Mockup](#mockup)
+  - [Prototipe/Design](#prototipedesign)
 - [Sonarqube](#sonarqube)
 
 # Introduction
@@ -418,7 +420,11 @@ Social media campaign featuring promotional videos that highlight:
 
 # Design
 
-<img src="#" alt="design images">
+## Mockup
+
+## Prototipe/Design
+
+[View the prototipe](https://www.figma.com/design/BVJR5gDZpDNDa25OzD5j3a/RoutineFights-DEMO?node-id=0-1&p=f)
 
 # Sonarqube
 
