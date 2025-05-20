@@ -17,10 +17,6 @@ export class CommunityEventRepository {
       throw new Error("Image upload failed");
     }
     try {
-      console.log("Image response:", imageResponse);
-      console.log("Token:", token);
-      console.log("ID:", id);
-      console.log("Level:", level);
       const response = await axios.post(
         CommonData.BASE_URL + "graphql",
         {
@@ -73,14 +69,14 @@ export class CommunityEventRepository {
     event: CommunityEvent,
     activitiesIDs: string[]
   ) {
-    const response = await axios.post(
-      CommonData.BASE_URL + "graphql",
-      {
-        query: `mutation{
+    try {
+      const response = await axios.post(
+        CommonData.BASE_URL + "graphql",
+        {
+          query: `mutation {
       createCommunityEvent(
-       activitiesIDs: [${activitiesIDs.map((id) => `"${id}"`).join(",")}],
+        activitiesIDs: [${activitiesIDs.map((id) => `"${id}"`).join(",")}],
         finishDate: "${event.finishDate.toISOString().slice(0, -1)}",
-        id: "${event.id}",
         image: "${event.image}",
         name: "${event.name}",
         startDate: "${event.startDate.toISOString().slice(0, -1)}",
@@ -92,16 +88,21 @@ export class CommunityEventRepository {
         name
         startDate
         totalRequired
-          }
-    }`,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       }
-    );
-    return response.data.data.createCommunityEvent as CommunityEvent;
+    }`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data.data.createCommunityEvent as CommunityEvent;
+    } catch (error) {
+      console.error("Error creating community event:", error);
+      throw new Error("Community event creation failed");
+    }
   }
 
   static async getActivities(token: string) {
@@ -109,7 +110,7 @@ export class CommunityEventRepository {
       CommonData.BASE_URL + "graphql",
       {
         query: `query{
-  getAllActivities {
+  findAllActivities {
     id
     name
       }
@@ -121,7 +122,8 @@ export class CommunityEventRepository {
         },
       }
     );
-    return response.data.data.getAllActivities as [Activity];
+
+    return response.data.data.findAllActivities as [Activity];
   }
 
   static async getBadges(token: string, eventId: string) {

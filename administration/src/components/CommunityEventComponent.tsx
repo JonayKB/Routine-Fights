@@ -33,7 +33,6 @@ const CommunityEventComponent = ({ communityEvent }: Props) => {
                 const badgesNew = await Promise.all(
                     b.map(async (badge) => {
                         const img = await getImageBadge(badge)
-                        console.log("Badge image:", img)
                         return {
                             ...badge,
                             image: img,
@@ -100,7 +99,6 @@ const CommunityEventComponent = ({ communityEvent }: Props) => {
             const badgesNew = await Promise.all(
                 updated.map(async (badge) => {
                     const img = await getImageBadge(badge)
-                    console.log("Badge image:", img)
                     return {
                         ...badge,
                         image: img,
