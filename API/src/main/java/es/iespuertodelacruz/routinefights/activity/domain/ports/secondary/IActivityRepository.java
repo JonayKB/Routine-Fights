@@ -22,4 +22,6 @@ public interface IActivityRepository {
     List<Activity> getSubscribedActivities(String userID, String activityName);
 
     Set<String> findAllImages();
+
+    List<Activity> findAll();
 }

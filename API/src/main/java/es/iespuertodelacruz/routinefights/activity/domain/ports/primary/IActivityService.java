@@ -19,5 +19,7 @@ public interface IActivityService {
 
     Set<String> findAllImages();
 
+    List<Activity> findAll();
+
 
 }
