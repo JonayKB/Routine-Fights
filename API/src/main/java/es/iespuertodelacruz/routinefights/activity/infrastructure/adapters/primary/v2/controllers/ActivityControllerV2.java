@@ -88,4 +88,11 @@ public class ActivityControllerV2 {
         return activityOutputV2StreakMapper.toDTO(activities);
     }
 
+    @Secured({"ROLE_ADMIN" })
+    @QueryMapping("findAllActivities")
+    public List<ActivityOutputV2> findAllActivities() {
+        List<Activity> activities = activityService.findAll();
+        return activityOutputV2Mapper.toDTO(activities);
+    }
+
 }

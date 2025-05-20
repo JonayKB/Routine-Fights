@@ -219,4 +219,16 @@ class ActivityControllerV2Test {
         List<ActivityOutputV2Streak> result = activityControllerV2.getSubscribedActivitiesWithStreak(activityName);
         assertEquals(outputList, result);
     }
+
+    @Test
+    void findAllActivitiesTest() {
+        List<Activity> activityList = Arrays.asList(testActivity);
+        List<ActivityOutputV2> outputList = Arrays.asList(activityOutputV2);
+
+        when(activityService.findAll()).thenReturn(activityList);
+        when(activityOutputV2Mapper.toDTO(activityList)).thenReturn(outputList);
+
+        List<ActivityOutputV2> result = activityControllerV2.findAllActivities();
+        assertEquals(outputList, result);
+    }
 }
