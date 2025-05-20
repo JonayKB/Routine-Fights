@@ -33,7 +33,16 @@ const CommunityScreen = (props: Props) => {
         console.error("Error fetching events:", error);
       }
     }
+    async function getActivities() {
+      try {
+        const activitiesData = await CommunityEventRepository.getActivities(token);
+        setActivities(activitiesData);
+      } catch (error) {
+        console.error("Error fetching activities:", error);
+      }
+    }
     getEvents();
+    getActivities();
   }, [])
   async function onSubmitEvent(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,6 +53,19 @@ const CommunityScreen = (props: Props) => {
     const totalRequired = parseInt(formData.get("totalRequired") as string);
     const image = formData.get("image") as File;
     const activities = formData.getAll("activities") as string[];
+    if (new Date(startDate) > new Date(finishDate)) {
+      alert("Start date must be before finish date")
+      return
+    }
+    if (totalRequired <= 0) {
+      alert("Total required must be greater than 0")
+      return
+    }
+    if (activities.length === 0) {
+      alert("You must select at least one activity")
+      return
+    }
+
     const imageName = await ImageRepository.uploadImage(
       token,
       image
@@ -82,7 +104,7 @@ const CommunityScreen = (props: Props) => {
             />
           ))
         ) : (
-          <p>No events available</p>
+          <p>LOADING...</p>
         )}
         <div style={{ ...styles.container, padding: 20, backgroundColor: "#f9f9f9", borderRadius: 8 }}>
           <h2 style={{ ...styles.header, marginBottom: 16 }}>Create Community Event</h2>
@@ -142,7 +164,7 @@ const CommunityScreen = (props: Props) => {
             </div>
             <div style={styles.formGroup}>
               <label htmlFor="activities" style={styles.label}>Activities</label>
-              <select id="activities" name="activities" multiple style={styles.input}>
+              <select id="activities" name="activities" style={styles.input} required>
                 {activities?.map((activity) => (
                   <option key={activity.id} value={activity.id}>
                     {activity.name}
