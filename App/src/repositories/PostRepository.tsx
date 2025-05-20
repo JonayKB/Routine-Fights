@@ -49,7 +49,7 @@ export const getPostsFollowing = async (
 
 export const getPosts = async (
   lastDate: string,
-  perPage: number = limit
+  perPage: number = 3
 ): Promise<Post[]> => {
   try {
     const token = await RNSecureKeyStore.get("token");
