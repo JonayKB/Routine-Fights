@@ -58,7 +58,9 @@
         },
         "Register": {
             "username": "Username",
-            "confirmPassword": "Confirm password"
+            "confirmPassword": "Confirm password",
+            "success": "Successfully registered",
+            "successMessage": "Verify your email in the spam folder"
         },
         "Settings": {
             "language": "Language",

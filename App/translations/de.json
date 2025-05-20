@@ -58,7 +58,9 @@
       },
       "Register": {
         "username": "Benutzername",
-        "confirmPassword": "Passwort bestätigen"
+        "confirmPassword": "Passwort bestätigen",
+        "success": "Erfolgreich registriert",
+        "successMessage": "Überprüfen Sie Ihre E-Mails im Spam-Ordner"
       },
       "Settings": {
         "language": "Sprache",
