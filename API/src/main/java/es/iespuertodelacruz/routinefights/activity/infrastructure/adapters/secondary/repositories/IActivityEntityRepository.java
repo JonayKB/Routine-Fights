@@ -53,12 +53,15 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
         List<ActivityEntity> getSubscribedActivities(@Param("userID") String userID);
 
         @Query("""
-                        MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u2:User)
+                        MATCH (u:User)-[:Participated]->(a:Activity)<-[:Created]-(u2:User)
                         WHERE elementId(u) = $userID
                         OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
-                        WITH a, p, c, u
-                        SET a.streak = coalesce(p.streak, 0)
-                        RETURN DISTINCT a,c,u;
+                        WITH u, a, u2, p
+                        ORDER BY p.createdAt DESC
+                        WITH u, a, u2, collect(p)[0] AS latestPost
+                        SET a.streak = coalesce(latestPost.streak, 0)
+                        RETURN DISTINCT a, u2 AS c, u;
+
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID);
 
