@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { FormEvent, useContext, useEffect, useState } from 'react'
 import { CommunityEventRepository } from '../repositories/CommunityEventRepository'
 import { MainContext } from '../components/MainContext'
 import CommunityEvent from '../models/CommunityEvent'
 import CommunityEventComponent from '../components/CommunityEventComponent'
 import styles from '../styles/Styles'
 import Activity from '../models/Activity'
+import { ImageRepository } from '../repositories/ImageRepository'
 
 type Props = {}
 
@@ -33,10 +34,42 @@ const CommunityScreen = (props: Props) => {
       }
     }
     getEvents();
-
-
-
   }, [])
+  async function onSubmitEvent(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const name = formData.get("name") as string;
+    const startDate = formData.get("startDate") as string;
+    const finishDate = formData.get("finishDate") as string;
+    const totalRequired = parseInt(formData.get("totalRequired") as string);
+    const image = formData.get("image") as File;
+    const activities = formData.getAll("activities") as string[];
+    const imageName = await ImageRepository.uploadImage(
+      token,
+      image
+    )
+
+    CommunityEventRepository.createEvent(
+      token,
+      {
+        id: "",
+        name,
+        startDate: new Date(startDate),
+        finishDate: new Date(finishDate),
+        totalRequired,
+        image: imageName,
+      },
+      activities
+    )
+      .then(() => {
+        alert("Event created successfully");
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Error creating event:", error);
+        alert("Error creating event");
+      });
+  }
 
   return (
     <div style={styles.page}>
@@ -52,8 +85,8 @@ const CommunityScreen = (props: Props) => {
           <p>No events available</p>
         )}
         <div style={{ ...styles.container, padding: 20, backgroundColor: "#f9f9f9", borderRadius: 8 }}>
-            <h2 style={{ ...styles.header, marginBottom: 16 }}>Create Community Event</h2>
-          <form>
+          <h2 style={{ ...styles.header, marginBottom: 16 }}>Create Community Event</h2>
+          <form onSubmit={onSubmitEvent}>
             <div style={styles.formGroup}>
               <label htmlFor="name" style={styles.label}>Name</label>
               <input
