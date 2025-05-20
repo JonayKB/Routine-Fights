@@ -79,11 +79,11 @@ export class CommunityEventRepository {
         query: `mutation{
   createCommunityEvent(
    activitiesIDs: [${activitiesIDs.map((id) => `"${id}"`).join(",")}],
-    finishDate: "${event.finishDate}",
+    finishDate: "${event.finishDate.toISOString()}",
     id: "${event.id}",
     image: "${event.image}",
     name: "${event.name}",
-    startDate: "${event.startDate}",
+    startDate: "${event.startDate.toISOString()}",
     totalRequired: ${event.totalRequired}
   ) {
     finishDate
