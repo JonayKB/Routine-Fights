@@ -46,6 +46,8 @@ type Query {
   getOwnBadges: [BadgeOutputV2]
   findBadgeById(id: String!): BadgeOutputV3
   findBadgeByCommunityEvent(communityEventId: String!): [BadgeOutputV2]
+
+  findAllActivities:[ActivityOutputV2]
 }
 
 type Mutation {

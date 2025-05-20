@@ -77,4 +77,10 @@ public class ActivityService implements IActivityService {
     }
 
 
+    @Override
+    public List<Activity> findAll() {
+        return activityRepository.findAll();
+    }
+
+
 }

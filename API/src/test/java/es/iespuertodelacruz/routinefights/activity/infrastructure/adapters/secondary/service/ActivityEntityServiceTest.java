@@ -149,4 +149,17 @@ class ActivityEntityServiceTest {
         assertNotNull(list);
     }
 
+    @Test
+    void findAllActivities() {
+        ActivityEntity activityEntity = new ActivityEntity();
+        List<ActivityEntity> activityEntities = new ArrayList<>();
+        activityEntities.add(activityEntity);
+        when(activityEntityRepository.findAll()).thenReturn(activityEntities);
+        when(activityEntityMapper.toDomain(activityEntity)).thenReturn(new Activity());
+
+        List<Activity> list = activityEntityService.findAll();
+
+        assertNotNull(list);
+    }
+
 }
