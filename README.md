@@ -15,6 +15,7 @@
     - [Clone Repository](#clone-repository)
     - [Setup your Neo4j](#setup-your-neo4j)
     - [Start App](#start-app)
+    - [Start Administration Page](#start-administration-page)
 - [Endpoints Usage](#endpoints-usage)
   - [GraphQL](#graphql)
     - [Queries](#queries)
@@ -54,8 +55,9 @@
 - [Diagrams](#diagrams)
 - [Design](#design)
   - [Mockup](#mockup)
-  - [Prototipe/Design](#prototipedesign)
+  - [Prototipe](#prototipe)
 - [Sonarqube](#sonarqube)
+- [Download The App](#download-the-app)
 
 # Introduction
 
@@ -136,6 +138,14 @@ Then add the username, url and password on application.properties
 
 ```bash
 mvn clean spring-boot:run
+```
+
+### Start Administration Page
+
+```bash
+npm i
+npm build
+serve build/
 ```
 
 # Endpoints Usage
@@ -402,27 +412,34 @@ Social media campaign featuring promotional videos that highlight:
 
 # Diagrams
 
-- **Case-Use Diagram**
-
-<img src="#" alt="case-use diagram image">
-
----
-
 - **Entity-Relation Diagram**
 
+<div align="center">
 <img src="./documentation/Entity–Relationship Diagram.drawio.png" alt="entity-relation diagram image">
+</div>
 
 ---
 
 - **Database Diagram**
 
+<div align="center">
 <img src="./documentation/DatabaseDiagram.png" alt="database image">
+</div>
+
+- **Structure Diagram**
+<div align="center">
+<img src="./documentation/RoutineFightsStructureService.drawio.png" alt="structure image">
+</div>
 
 # Design
 
 ## Mockup
 
-## Prototipe/Design
+<div align="center">
+<img src="./documentation/mockup.png" alt="mockup">
+</div>
+
+## Prototipe
 
 [View the prototipe](https://www.figma.com/design/BVJR5gDZpDNDa25OzD5j3a/RoutineFights-DEMO?node-id=0-1&p=f)
 
@@ -430,3 +447,9 @@ Social media campaign featuring promotional videos that highlight:
 
 [Look the quality of code and how it upgraded](http://zombiesurvive.ddns.net:9000)
 > Ask to us to get the credentials
+
+# Download The App
+
+<div align="center">
+<img src="./img/routineFightsApk.png" alt="apk qr">
+</div>
