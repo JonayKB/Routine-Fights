@@ -77,23 +77,23 @@ export class CommunityEventRepository {
       CommonData.BASE_URL + "graphql",
       {
         query: `mutation{
-  createCommunityEvent(
-   activitiesIDs: [${activitiesIDs.map((id) => `"${id}"`).join(",")}],
-    finishDate: "${event.finishDate.toISOString()}",
-    id: "${event.id}",
-    image: "${event.image}",
-    name: "${event.name}",
-    startDate: "${event.startDate.toISOString()}",
-    totalRequired: ${event.totalRequired}
-  ) {
-    finishDate
-    id
-    image
-    name
-    startDate
-    totalRequired
-      }
-}`,
+      createCommunityEvent(
+       activitiesIDs: [${activitiesIDs.map((id) => `"${id}"`).join(",")}],
+        finishDate: "${event.finishDate.toISOString().slice(0, -1)}",
+        id: "${event.id}",
+        image: "${event.image}",
+        name: "${event.name}",
+        startDate: "${event.startDate.toISOString().slice(0, -1)}",
+        totalRequired: ${event.totalRequired}
+      ) {
+        finishDate
+        id
+        image
+        name
+        startDate
+        totalRequired
+          }
+    }`,
       },
       {
         headers: {
