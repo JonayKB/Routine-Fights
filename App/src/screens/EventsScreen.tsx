@@ -140,6 +140,16 @@ const EventsScreen = (props: Props) => {
           {formatTime(timeLeft)}
         </Text>
       </View>
+
+      <Text
+        className={`text-lg font-semibold ${textColor(
+          darkmode
+        )} text-center mt-4`}
+      >
+        {translations[language || "en-EN"].screens.Events.progress}
+        {": "}
+        {currentPoints + "pts / " + event?.totalRequired + "pts"}
+      </Text>
       <View
         className={`${cardBgColor(darkmode)} ${borderColor(
           darkmode
@@ -196,17 +206,26 @@ const EventsScreen = (props: Props) => {
                 position: "absolute",
                 bottom: y - 4,
                 left: i % 2 ? 60 : 200,
+                alignItems: "center",
               }}
             >
               <Picture
-                image={badges[(badges.length - 1) - i]?.image}
+                image={badges[badges.length - 1 - i]?.image}
                 size={60}
-                style={`rounded-full ${barHeight.current < y ? "opacity-100" : "opacity-40"}`}
+                style={`rounded-full ${
+                  barHeight.current < y ? "opacity-100" : "opacity-40"
+                }`}
               />
+              <Text className={`text-sm ${textColor(darkmode)} mt-1`}>
+                {`${ms} pts`}
+              </Text>
             </View>
           );
         })}
       </View>
+      <Text className={`text-md ${textColor(darkmode)} text-center mt-4 mb-6`}>
+        {translations[language || "en-EN"].screens.Events.finalMessage}
+      </Text>
     </ScrollView>
   );
 };

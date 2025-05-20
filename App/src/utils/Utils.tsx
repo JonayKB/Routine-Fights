@@ -20,7 +20,7 @@ export const convertQuantityToString = (quantity: number): string => {
     const num = quantity / 1000;
     return parseFloat(num.toFixed(2)).toString() + "K";
   }
-  return quantity.toString();
+  return quantity?.toString();
 };
 
 export const languages = (language: string) => [
