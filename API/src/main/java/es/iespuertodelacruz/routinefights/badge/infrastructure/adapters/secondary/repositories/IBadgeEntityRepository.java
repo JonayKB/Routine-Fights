@@ -21,7 +21,7 @@ public interface IBadgeEntityRepository extends Neo4jRepository<BadgeEntity, Str
     @Query("MATCH (u:User {email:$userEmail}) MATCH (b:Badge) WHERE elementId(b) = $badgeId MERGE (u)-[r:Has_Badge]->(b) RETURN exists((u)-[:Has_Badge]->(b))")
     Boolean addBadgeToUser(@Param("userEmail") String userEmail, @Param("badgeId") String badgeId);
 
-    @Query("UNWIND $userIds AS userEmail MATCH (u:User{email:userEmail}) MATCH (b:Badge) WHERE elementId(b) = $badgeId MERGE (u)-[r:Has_Badge]->(b) RETURN exists((u)-[:Has_Badge]->(b))")
+    @Query("UNWIND $userEmails AS userEmail MATCH (u:User{email:userEmail}) MATCH (b:Badge) WHERE elementId(b) = $badgeId MERGE (u)-[r:Has_Badge]->(b) RETURN exists((u)-[:Has_Badge]->(b))")
     List<Boolean> addBadgeToUser(@Param("userEmails") List<String> userEmail, @Param("badgeId") String badgeId);
 
     @Query("MATCH (c:CommunityEvent) WHERE elementId(c) = $communityEventId CREATE (b:Badge {image: $image, level: $level})-[r:Associated_With]->(c) RETURN b,r,c")
