@@ -114,7 +114,7 @@ class ActivityServiceTest {
     }
 
     @Test
-    void testGetSubscribedActivities(){
+    void testGetSubscribedActivities() {
         String userId = "user123";
         List<Activity> activities = new ArrayList<>();
         activities.add(new Activity());
@@ -130,7 +130,7 @@ class ActivityServiceTest {
     }
 
     @Test
-    void testGetSubscribedActivitiesWithStreak(){
+    void testGetSubscribedActivitiesWithStreak() {
         String userId = "user123";
         List<Activity> activities = new ArrayList<>();
         activities.add(new Activity());
@@ -143,5 +143,20 @@ class ActivityServiceTest {
         assertNotNull(result);
         assertEquals(2, result.size());
         verify(activityRepository, times(1)).getSubscribedActivitiesWithStreak(userId);
+    }
+
+    @Test
+    void findAllActivities() {
+        List<Activity> activities = new ArrayList<>();
+        activities.add(new Activity());
+        activities.add(new Activity());
+
+        when(activityRepository.findAll()).thenReturn(activities);
+
+        List<Activity> result = activityService.findAll();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(activityRepository, times(1)).findAll();
     }
 }
