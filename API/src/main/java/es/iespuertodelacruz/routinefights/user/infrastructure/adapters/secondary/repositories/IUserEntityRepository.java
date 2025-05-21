@@ -19,11 +19,11 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
 
     public boolean existsByEmail(String email);
 
-    @Query("MATCH (fr:User {email: $email})-[:FOLLOWS]->(fd: User) WHERE lower(fd.username) CONTAINS lower($usernameFilter) RETURN fd")
+    @Query("MATCH (fr:User {email: $email})-[:FOLLOWS]->(fd: User) WHERE lower(fd.username) CONTAINS lower($usernameFilter) RETURN DISTINCT fd")
     public List<UserEntity> findFollowedUsersByEmail(@Param("email") String email,
             @Param("usernameFilter") String usernameFilter);
 
-    @Query("MATCH (fr:User)-[:FOLLOWS]->(fd: User {email: $email}) WHERE lower(fr.username) CONTAINS lower($usernameFilter) RETURN fr")
+    @Query("MATCH (fr:User)-[:FOLLOWS]->(fd: User {email: $email}) WHERE lower(fr.username) CONTAINS lower($usernameFilter) RETURN DISTINCT fr")
     public List<UserEntity> findFollowersByEmail(@Param("email") String email,
             @Param("usernameFilter") String usernameFilter);
 
@@ -47,7 +47,7 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
 
     @Query("""
             MATCH (u: User)
-            WHERE u.username CONTAINS $userName AND elementId(u) <> $userID
+            WHERE lower(u.username) CONTAINS lower($userName) AND elementId(u) <> $userID
             OPTIONAL MATCH (follower:User)-[ff:FOLLOWS]->(u)
             OPTIONAL MATCH (u)-[f:FOLLOWS]->(following:User)
             RETURN u AS user,collect(DISTINCT follower) AS followers,
