@@ -70,9 +70,10 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
                         WHERE elementId(u) = $userID
                         AND lower(a.name) CONTAINS lower($activityName)
                         OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
-                        WITH a, p, c, u
-                        SET a.streak = coalesce(p.streak, 0)
-                        RETURN DISTINCT a,c,u;
+                        WITH a, c, u, max(coalesce(p.streak, 0)) AS maxStreak
+                        SET a.streak = maxStreak
+                        RETURN DISTINCT a, c, u;
+
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID,
                         @Param("activityName") String activityName);
