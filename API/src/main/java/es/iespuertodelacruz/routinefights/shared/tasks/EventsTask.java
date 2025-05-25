@@ -25,6 +25,10 @@ public class EventsTask {
     @Scheduled(cron = "0 0 3 * * *")
     protected List<String> giveTodayBadges() {
         CommunityEvent communityEvent = communityEventService.getCommunityEventEndsToday();
+        if (communityEvent == null) {
+            logger.info("No community event ends today");
+            return List.of();
+        }
         List<String> usersParticipated = communityEventService.getUsersParticipatingInCommunityEventEndsToday();
 
         List<Badge> badges = badgeService.findByCommunityEvent(communityEvent.getId())

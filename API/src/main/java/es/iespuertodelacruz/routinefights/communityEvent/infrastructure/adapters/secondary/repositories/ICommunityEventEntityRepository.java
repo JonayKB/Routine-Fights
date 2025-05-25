@@ -32,7 +32,7 @@ public interface ICommunityEventEntityRepository extends Neo4jRepository<Communi
     @Query("MATCH (ce:CommunityEvent) RETURN ce.image")
     Set<String> getAllImages();
 
-    @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post)<-[:`Posted`]-(u:User) WHERE p.createdAt >= ce.startDate AND p.createdAt <= ce.finishDate AND date(ce.finishDate)=date($currentDay) RETURN DISTINCT elementId(u)")
+    @Query("MATCH (ce:CommunityEvent)-[:Related]->(a:Activity)<-[:`Related-To`]-(p:Post)<-[:`Posted`]-(u:User) WHERE p.createdAt >= ce.startDate AND p.createdAt <= ce.finishDate AND date(ce.finishDate)=date($currentDay) RETURN DISTINCT u.email")
     List<String> getUsersParticipatingInCommunityEventEndsToday(@Param("currentDay") LocalDateTime currentDate);
 
     @Query("MATCH (ce:CommunityEvent) WHERE date(ce.finishDate)=date($currentDay) RETURN ce")
