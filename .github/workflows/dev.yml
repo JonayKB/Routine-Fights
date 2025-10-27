@@ -28,7 +28,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
           BRANCH_NAME: ${{ github.ref_name }}
-          HOSTNAME: ${{ vars.HOSTING_USERNAME }}
+          HOSTNAME: ${{ vars.HOSTING_PC }}
         run: |
           mvn sonar:sonar \
             -Dsonar.projectKey=RoutineFights \
