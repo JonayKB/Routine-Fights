@@ -71,7 +71,7 @@ jobs:
         context: administration
         file: administration/Dockerfile
         push: true
-        tags: ${{ vars.DOCKERHUB_USERNAME }}/administrationroutinefights:latest , ${{ vars.DOCKERHUB_USERNAME }}/administrationroutinefights:$TIMESTAM
+        tags: ${{ vars.DOCKERHUB_USERNAME }}/administrationroutinefights:latest , ${{ vars.DOCKERHUB_USERNAME }}/administrationroutinefights:$TIMESTAMP
   deploy:
     needs: build
     runs-on: ubuntu-latest
