@@ -78,7 +78,7 @@
 
 Execute this docker-compose
 
-```dockerfile
+```Dockerfile
 version: '3.3'
 
 services:
