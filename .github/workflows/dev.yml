@@ -78,11 +78,11 @@ jobs:
     if: ${{ github.ref_name == 'main' }}
     steps:
     - name: Deploy to digitalocean
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v0.1.7
       with:
         username: ${{ vars.HOSTING_USERNAME }}
         host: ${{ vars.HOSTING_PC }}
-        key: ${{ secrets.HOSTING_KEY }}
+        password: ${{ secrets.HOSTING_PASSWORD }}
         script: |
             docker compose down;
             docker compose pull
