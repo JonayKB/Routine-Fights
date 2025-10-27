@@ -55,7 +55,7 @@ jobs:
     - name: Create Maven Package
       run: mvn -f API/pom.xml clean package -DskipTests
     - name: Create TIMESTAMP
-      run: TIMESTAMP=$(date +%s)
+      run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
     ## CHECK THISSSS
     - name: Build and push java image
       uses: docker/build-push-action@v6
