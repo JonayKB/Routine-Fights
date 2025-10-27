@@ -28,10 +28,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
           BRANCH_NAME: ${{ github.ref_name }}
+          HOSTNAME: ${{ vars.HOSTING_USERNAME }}
         run: |
           mvn sonar:sonar \
             -Dsonar.projectKey=RoutineFights \
-            -Dsonar.host.url=http://zombiesurvive.ddns.net:9000 \
+            -Dsonar.host.url=http://$HOSTNAME:9000 \
             -Dsonar.login=$SONAR_TOKEN \
             -Dsonar.qualitygate.wait=true  \
             -Dsonar.branch.name=$BRANCH_NAME
@@ -54,26 +55,23 @@ jobs:
 
     - name: Create Maven Package
       run: mvn -f API/pom.xml clean package -DskipTests
-    
+    - name: Create TIMESTAMP
+      run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
     - name: Build and push java image
       uses: docker/build-push-action@v6
       with:
         context: API
         file: API/Dockerfile
         push: true
-        tags: ${{ vars.DOCKERHUB_USERNAME }}/apiroutinefights:latest
-
-    - name: Debug
-      run: |
-          ls
-          ls administration
+        tags: ${{ vars.DOCKERHUB_USERNAME }}/apiroutinefights:latest,${{ vars.DOCKERHUB_USERNAME }}/apiroutinefights:${{ env.TIMESTAMP }}
+        
     - name: Build and push admin image
       uses: docker/build-push-action@v6
       with:
         context: administration
         file: administration/Dockerfile
         push: true
-        tags: ${{ vars.DOCKERHUB_USERNAME }}/administrationroutinefights:latest
+        tags: ${{ vars.DOCKERHUB_USERNAME }}/administrationroutinefights:latest,${{ vars.DOCKERHUB_USERNAME }}/administrationroutinefights:${{ env.TIMESTAMP }}
   deploy:
     needs: build
     runs-on: ubuntu-latest
