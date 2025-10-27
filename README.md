@@ -78,7 +78,7 @@
 
 Execute this docker-compose
 
-```yaml
+```dockerfile
 version: '3.3'
 
 services:
@@ -92,16 +92,16 @@ services:
       - SPRING_NEO4J_URI=bolt://db:7687
       - SPRING_AUTHENTICATION_NEO4J_USER=neo4j
       - SPRING_AUTHENTICATION_NEO4J_PASSWORD=1q2w3e4r
-      - MAIL_FROM=CHANGE_THIS@EMAIL.com
-      - MAIL_PASSWORD=YOUR_TOKEN
+      - MAIL_FROM=routinefights@gmail.com
+      - MAIL_PASSWORD=yhah camn tnmx uzgn
       - SERVER_SSL_ENABLED=false
-      - JWT_SECRET=SECRET
+      - JWT_SECRET=secret
     depends_on:
       - db
     networks:
       - apiNetwork
     volumes:
-      - app_uploads:/uploads
+      - app_uploads:/$HOME/uploads
   db:
     image: neo4j:latest
     volumes:
@@ -114,7 +114,13 @@ services:
     restart: always
     networks:
       - apiNetwork
-
+  admin:
+    image: jonaykb/administrationroutinefights:latest
+    restart: always
+    ports:
+     - "8023:80"
+    networks:
+     - apiNetwork
 volumes:
   db_data:
   app_uploads:
