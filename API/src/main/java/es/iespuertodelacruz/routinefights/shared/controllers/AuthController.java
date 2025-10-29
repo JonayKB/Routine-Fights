@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+
 import es.iespuertodelacruz.routinefights.shared.dto.UserDTOAuth;
 import es.iespuertodelacruz.routinefights.shared.mappers.UserDTOAuthMapper;
 import es.iespuertodelacruz.routinefights.shared.services.AuthService;
@@ -36,6 +40,8 @@ public class AuthController {
         this.authService = authService;
         this.userDTOAuthMapper = userDTOAuthMapper;
     }
+
+    private FirebaseMessaging fcm;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTOAuth userDTOAuth) {
@@ -81,5 +87,6 @@ public class AuthController {
 
         return HTMLTemplates.BAD_REQUEST;
     }
+
 
 }
