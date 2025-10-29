@@ -26,3 +26,7 @@ replay_pid*
 # Generated directories
 /target/
 
+# Ides
+.vscode/
+.idea/
+
