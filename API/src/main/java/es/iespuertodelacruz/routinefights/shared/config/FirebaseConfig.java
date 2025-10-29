@@ -24,12 +24,16 @@ public class FirebaseConfig {
 
     @Bean
     FirebaseApp firebaseApp(GoogleCredentials credentials) {
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(credentials)
-                .build();
+      FirebaseOptions options = FirebaseOptions.builder()
+              .setCredentials(credentials)
+              .build();
+      List<FirebaseApp> firebaseApps = FirebaseApp.getApps();
+      if (firebaseApps != null && !firebaseApps.isEmpty()) {
+          return firebaseApps.get(0);
+      }
 
-        return FirebaseApp.initializeApp(options);
-    }
+      return FirebaseApp.initializeApp(options);
+}
 
     @Bean
     GoogleCredentials googleCredentials() throws IOException {
