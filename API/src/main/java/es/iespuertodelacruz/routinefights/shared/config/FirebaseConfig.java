@@ -16,8 +16,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 @Configuration
 public class FirebaseConfig {
-    @Autowired
-    private FirebaseCredentialsConfig firebaseProperties;
 
     @Bean
     FirebaseMessaging firebaseMessaging(FirebaseApp firebaseApp) {
@@ -38,7 +36,7 @@ public class FirebaseConfig {
 }
 
     @Bean
-    GoogleCredentials googleCredentials() throws IOException {
+    GoogleCredentials googleCredentials(FirebaseCredentialsConfig firebaseProperties) throws IOException {
         if (firebaseProperties.getServiceAccount() != null) {
             try (InputStream is = firebaseProperties.getServiceAccount().getInputStream()) {
                 return GoogleCredentials.fromStream(is);
