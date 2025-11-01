@@ -7,13 +7,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import es.iespuertodelacruz.routinefights.deviceToken.infrastructure.adapters.secondary.mappers.IDeviceTokenEntityMapper;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 
 /**
  * IUserEntityMapper interface for UserEntityMapper
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { IDeviceTokenEntityMapper.class })
 public interface IUserEntityMapper {
 
     /**
@@ -57,7 +58,7 @@ public interface IUserEntityMapper {
         if (users == null) {
             return userList;
         }
-        
+
         for (UserEntity userEntity : users) {
             User user = new User();
             user.setCreatedAt(userEntity.getCreatedAt());

@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.iespuertodelacruz.routinefights.deviceToken.domain.ports.primary.IDeviceTokenService;
 import es.iespuertodelacruz.routinefights.shared.dto.UserDTOAuth;
 import es.iespuertodelacruz.routinefights.shared.mappers.UserDTOAuthMapper;
 import es.iespuertodelacruz.routinefights.shared.services.AuthService;
 import es.iespuertodelacruz.routinefights.shared.services.MailService;
+import es.iespuertodelacruz.routinefights.shared.services.NotificationsService;
 import es.iespuertodelacruz.routinefights.shared.utils.HTMLTemplates;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,13 +32,17 @@ public class AuthController {
     private final AuthService authService;
     private final UserDTOAuthMapper userDTOAuthMapper;
     Logger logger = Logger.getLogger(AuthController.class.getName());
+    private final NotificationsService notificationsService;
+    private final IDeviceTokenService deviceTokenService;
 
-    public AuthController(MailService mailService, AuthService authService, UserDTOAuthMapper userDTOAuthMapper) {
+    public AuthController(MailService mailService, AuthService authService, UserDTOAuthMapper userDTOAuthMapper,
+            NotificationsService notificationsService, IDeviceTokenService deviceTokenService) {
         this.mailService = mailService;
         this.authService = authService;
         this.userDTOAuthMapper = userDTOAuthMapper;
+        this.notificationsService = notificationsService;
+        this.deviceTokenService = deviceTokenService;
     }
-
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTOAuth userDTOAuth) {
@@ -53,9 +59,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,@RequestParam(required = false) String deviceToken, @RequestParam(required = false) String language) {
         try {
             String token = authService.login(email, password);
+            if (deviceToken != null && language != null) {
+                deviceTokenService.save(email, deviceToken, language);
+            }
             return ResponseEntity.ok(token);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

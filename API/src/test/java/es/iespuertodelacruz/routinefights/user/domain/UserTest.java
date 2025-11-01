@@ -94,7 +94,7 @@ class UserTest extends UserInitializer {
     @Test
     void constructorWithAllFieldsTest() {
         User userTest = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
-                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);
+                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followers, following, null);
         assertNotNull(userTest, ERROR_CREATING_USER);
         assertEquals(USERNAME, userTest.getUsername(), ERROR_CREATING_USER);
         assertEquals(EMAIL, userTest.getEmail(), ERROR_CREATING_USER);
@@ -139,14 +139,14 @@ class UserTest extends UserInitializer {
     @Test
     void toStringTest() {
         User userTest = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, EMAIL, IMAGE, ROLE, VERIFIED,
-                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);
+                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followers, following, null);
         assertEquals(user.toString(), userTest.toString(), "Error in toString method");
     }
 
     @Test
     void hashCodeTest() {
         User userTest = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, EMAIL, IMAGE, ROLE, VERIFIED,
-                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);
+                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followers, following, null);
         assertEquals(user.hashCode(), userTest.hashCode(), "Error in hashCode method");
     }
 }

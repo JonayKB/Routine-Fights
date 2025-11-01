@@ -63,7 +63,7 @@ class UserEntityTest extends UserInitializer {
     void constructorWithAllFieldsTest() {
         UserEntity userEntityTest = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE,
                 ROLE,
-                VERIFIED, VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);
+                VERIFIED, VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity, null);
         assertNotNull(userEntityTest, ERROR_CREATING_USER);
         assertEquals(USERNAME, userEntityTest.getUsername(), ERROR_CREATING_USER);
         assertEquals(EMAIL, userEntityTest.getEmail(), ERROR_CREATING_USER);
@@ -109,7 +109,7 @@ class UserEntityTest extends UserInitializer {
     void toStringTest() {
         UserEntity userEntityTest = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, EMAIL, IMAGE, ROLE,
                 VERIFIED,
-                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);
+                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity, null);
         assertEquals(userEntity.toString(), userEntityTest.toString(), "Error in toString method");
     }
 
@@ -117,7 +117,7 @@ class UserEntityTest extends UserInitializer {
     void hashCodeTest() {
         UserEntity userEntityTest = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, EMAIL, IMAGE, ROLE,
                 VERIFIED,
-                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);
+                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity, null);
         assertEquals(userEntity.hashCode(), userEntityTest.hashCode(), "Error in hashCode method");
     }
 }
