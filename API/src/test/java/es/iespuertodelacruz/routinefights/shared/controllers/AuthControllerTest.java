@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.shared.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -12,11 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import es.iespuertodelacruz.routinefights.deviceToken.domain.DeviceToken;
+import es.iespuertodelacruz.routinefights.deviceToken.domain.ports.primary.IDeviceTokenService;
 import es.iespuertodelacruz.routinefights.shared.dto.UserDTOAuth;
 import es.iespuertodelacruz.routinefights.shared.exceptions.MailException;
 import es.iespuertodelacruz.routinefights.shared.mappers.UserDTOAuthMapper;
 import es.iespuertodelacruz.routinefights.shared.services.AuthService;
 import es.iespuertodelacruz.routinefights.shared.services.MailService;
+import es.iespuertodelacruz.routinefights.shared.services.NotificationsService;
 import es.iespuertodelacruz.routinefights.shared.utils.HTMLTemplates;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 
@@ -32,16 +36,24 @@ class AuthControllerTest {
     private static final String EMAIL = "email";
     private static final String USERNAME = "username";
     private static final String TOKEN = "token";
+    private static final String LANGUAGE = "language";
+    private static final String DEVICE_TOKEN_STRING = "deviceToken";
 
     private static final User USER = new User(USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE,
             VERIFIED,
             VERIFICATION_TOKEN, null, null, null);
+    private static final DeviceToken DEVICE_TOKEN = new DeviceToken(DEVICE_TOKEN_STRING, USER, "language");
+
     @MockitoBean
     private MailService mailService;
     @MockitoBean
     private AuthService authService;
     @MockitoBean
     private UserDTOAuthMapper userDTOAuthMapper;
+    @MockitoBean
+    private NotificationsService notificationsService;
+    @MockitoBean
+    private IDeviceTokenService deviceTokenService;
 
     @Autowired
     private AuthController authController;
@@ -77,7 +89,9 @@ class AuthControllerTest {
     @Test
     void loginTestOK() {
         when(authService.login(EMAIL, PASSWORD)).thenReturn(TOKEN);
-        ResponseEntity<String> response = authController.login(EMAIL, PASSWORD);
+        when(deviceTokenService.save(anyString(), anyString(), anyString())).thenReturn(DEVICE_TOKEN);
+
+        ResponseEntity<String> response = authController.login(EMAIL, PASSWORD, DEVICE_TOKEN_STRING, LANGUAGE);
         assertEquals(HttpStatus.valueOf(200), response.getStatusCode());
         assertEquals(TOKEN, response.getBody());
     }
@@ -85,7 +99,8 @@ class AuthControllerTest {
     @Test
     void loginTestException() {
         when(authService.login(EMAIL, PASSWORD)).thenThrow(new RuntimeException("Error"));
-        ResponseEntity<String> response = authController.login(EMAIL, PASSWORD);
+        when(deviceTokenService.save(anyString(), anyString(), anyString())).thenThrow(new RuntimeException("Error"));
+        ResponseEntity<String> response = authController.login(EMAIL, PASSWORD, DEVICE_TOKEN_STRING, LANGUAGE);
         assertEquals(HttpStatus.valueOf(400), response.getStatusCode());
         assertEquals("Error", response.getBody());
     }
@@ -112,8 +127,9 @@ class AuthControllerTest {
         assertEquals(HTMLTemplates.NEED_EMAIL_TOKEN, response);
 
     }
+
     @Test
-    void verifyTestNotVerified(){
+    void verifyTestNotVerified() {
         when(authService.verify(EMAIL, TOKEN)).thenReturn(false);
         String response = authController.verify(EMAIL, TOKEN);
         assertEquals(HTMLTemplates.BAD_REQUEST, response);

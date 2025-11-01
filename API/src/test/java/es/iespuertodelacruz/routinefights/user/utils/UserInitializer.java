@@ -39,15 +39,15 @@ public abstract class UserInitializer {
     void setUp() {
         user = new User(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
                 VERIFICATION_TOKEN,
-                CREATED_AT, UPDATED_AT, DELETED_AT, followers, following);
+                CREATED_AT, UPDATED_AT, DELETED_AT, followers, following, null);
         follower = new User("followerId", "followerUsername", "followerEmail", "followerPassword",
                 "followerNationality",
                 "followerPhoneNumber", "followerImage", "followerRole", true, "followerVerificationToken",
-                LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>(), new ArrayList<>());
+                LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>(), new ArrayList<>(), null);
         followers.add(follower);
 
         userEntity = new UserEntity(ID, USERNAME, EMAIL, PASSWORD, NATIONALITY, PHONE_NUMBER, IMAGE, ROLE, VERIFIED,
-                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity);
+                VERIFICATION_TOKEN, CREATED_AT, UPDATED_AT, DELETED_AT, followersEntity, followingEntity, null);
         followersEntity.add(new UserEntity());
     }
 }

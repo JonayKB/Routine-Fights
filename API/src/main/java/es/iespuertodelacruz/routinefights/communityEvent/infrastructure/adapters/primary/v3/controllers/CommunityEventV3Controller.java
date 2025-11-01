@@ -13,17 +13,21 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.primary.ICommunityEventService;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.primary.v3.dtos.CommunityEventOutputV3;
 import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.primary.v3.mappers.ICommunityEventOutputV3Mapper;
+import es.iespuertodelacruz.routinefights.shared.services.NotificationsService;
 
 @Controller
 @CrossOrigin
 public class CommunityEventV3Controller {
     private ICommunityEventService communityEventService;
     private ICommunityEventOutputV3Mapper communityEventOutputV3Mapper;
+    private NotificationsService notificationsService;
 
     public CommunityEventV3Controller(ICommunityEventService communityEventService,
-            ICommunityEventOutputV3Mapper communityEventOutputV3Mapper) {
+            ICommunityEventOutputV3Mapper communityEventOutputV3Mapper,
+            NotificationsService notificationsService) {
         this.communityEventService = communityEventService;
         this.communityEventOutputV3Mapper = communityEventOutputV3Mapper;
+        this.notificationsService = notificationsService;
     }
 
     @Secured("ROLE_ADMIN")
@@ -36,13 +40,19 @@ public class CommunityEventV3Controller {
             @Argument String image,
             @Argument("activitiesIDs") List<String> activitiesIDs) {
 
-        return communityEventOutputV3Mapper.toDto(communityEventService.createCommunityEvent(
-                name,
-                totalRequired,
-                LocalDateTime.parse(startDate),
-                LocalDateTime.parse(finishDate),
-                image,
-                activitiesIDs));
+        CommunityEventOutputV3 communityEventOutputV3 = communityEventOutputV3Mapper
+                .toDto(communityEventService.createCommunityEvent(
+                        name,
+                        totalRequired,
+                        LocalDateTime.parse(startDate),
+                        LocalDateTime.parse(finishDate),
+                        image,
+                        activitiesIDs));
+        notificationsService.sendToAllUsers(
+                "New Community Event!",
+                "A new community event has been created: " + name + ". Join now and participate!");
+
+        return communityEventOutputV3;
     }
 
     @Secured("ROLE_ADMIN")
@@ -61,7 +71,7 @@ public class CommunityEventV3Controller {
 
     @Secured("ROLE_ADMIN")
     @QueryMapping("getAllCommunityEvents")
-    public List<CommunityEventOutputV3> getAllCommunityEvents(){
+    public List<CommunityEventOutputV3> getAllCommunityEvents() {
         return communityEventOutputV3Mapper.toDto(communityEventService.findAll());
     }
 
