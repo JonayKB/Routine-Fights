@@ -2,7 +2,7 @@ import axios from "axios";
 import RNSecureKeyStore, { ACCESSIBLE } from "react-native-secure-key-store";
 import { uri } from "../utils/Utils";
 
-export const login = async (email: string, password: string) => {
+export const login = async (email: string, password: string, deviceToken: string, language: string) => {
   try {
     const { status, data } = await axios.post(
       uri + "/auth/login?email=" + email + "&password=" + password

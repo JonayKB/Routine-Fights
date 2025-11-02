@@ -11,7 +11,7 @@ import { translations } from "../../translations/translation";
 import style from "../styles/Styles.json";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import FormInput from "../components/FormInput";
-
+import { getMessaging, requestPermission, getToken, onMessage, subscribeToTopic } from '@react-native-firebase/messaging';
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
 const LoginScreen = ({ navigation }: Props) => {
@@ -19,6 +19,7 @@ const LoginScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setToken } = useTokenContext();
+  const [deviceToken, setDeviceToken] = useState<string>("");
   const { language, setLanguage, darkmode, setDarkmode, setLefthand } =
     useSettingsContext();
 
@@ -27,6 +28,7 @@ const LoginScreen = ({ navigation }: Props) => {
     fetchLanguage();
     fetchToken();
     fetchLefthand();
+    useFirebaseMessaging();
   }, []);
 
   const fetchToken = async () => {
@@ -45,6 +47,35 @@ const LoginScreen = ({ navigation }: Props) => {
       Alert.alert("Error", error.response.data);
     }
   };
+  async function requestUserPermission() {
+        const authStatus = await requestPermission();
+        console.log('Auth status:', authStatus);
+      }
+
+      function useFirebaseMessaging() {
+          const messaging = getMessaging();
+
+          requestUserPermission();
+
+          getToken(messaging)
+            .then(token => {
+              console.log('FCM Token:', token);
+              setDeviceToken(token)
+              return subscribeToTopic(messaging,'general');
+            })
+            .then(() => {
+              console.log('Subscribed to general topic');
+            })
+            .catch(err => {
+              console.error('Error subscribing to general topic:', err);
+            });
+
+          const unsubscribe = onMessage(messaging, async remoteMessage => {
+            console.log('Foregorund message:', remoteMessage);
+          });
+
+          return unsubscribe;
+      }
 
   const fetchLanguage = async () => {
     try {
@@ -66,7 +97,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
   const log = async () => {
     try {
-      const token = await login(email, password);
+      const token = await login(email, password,deviceToken,language);
       setToken(token);
       resetNavigation(navigation, "MainTabNavigation");
     } catch (error) {
