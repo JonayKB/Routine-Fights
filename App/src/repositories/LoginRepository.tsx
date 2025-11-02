@@ -4,9 +4,11 @@ import { uri } from "../utils/Utils";
 
 export const login = async (email: string, password: string) => {
   try {
+      console.log( uri + "/auth/login?email=" + email + "&password=" + password)
     const { status, data } = await axios.post(
       uri + "/auth/login?email=" + email + "&password=" + password
     );
+
 
     if (status === 200) {
       await RNSecureKeyStore.set("token", data, {

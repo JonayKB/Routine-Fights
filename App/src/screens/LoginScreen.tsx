@@ -65,6 +65,7 @@ const LoginScreen = ({ navigation }: Props) => {
   };
 
   const log = async () => {
+      console.log("aaaaa")
     try {
       const token = await login(email, password);
       setToken(token);
