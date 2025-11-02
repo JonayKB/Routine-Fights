@@ -6,28 +6,6 @@ import './global.css';
 import { getMessaging, requestPermission, getToken, onMessage, subscribeToTopic } from '@react-native-firebase/messaging';
 import { useEffect } from 'react';
 
-function useFirebaseMessaging() {
-  useEffect(() => {
-    const messaging = getMessaging();
-
-    async function init() {
-      await requestPermission();
-      const token = await getToken(messaging);
-      console.log('FCM Token:', token);
-
-      // 👇 Suscripción al topic
-      await subscribeToTopic(messaging, 'general');
-      console.log('📬 Suscrito al topic "general"');
-
-      // Escuchar notificaciones
-      onMessage(messaging, async remoteMessage => {
-        console.log('📨 Mensaje en primer plano:', remoteMessage);
-      });
-    }
-
-    init();
-  }, []);
-}
 
 function App(): React.JSX.Element {
     async function requestUserPermission() {
@@ -52,8 +30,6 @@ function App(): React.JSX.Element {
           .catch(err => {
             console.error('Error subscribing to general topic:', err);
           });
-
-
 
         const unsubscribe = onMessage(messaging, async remoteMessage => {
           console.log('Foregorund message:', remoteMessage);

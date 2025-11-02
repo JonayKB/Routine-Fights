@@ -5,6 +5,7 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">localhost</domain>
         <domain includeSubdomains="true">64.226.71.234</domain>
+        <domain includeSubdomains="true">routinefights.ddns.net</domain>
 
         <trust-anchors>
             <certificates src="system" />
