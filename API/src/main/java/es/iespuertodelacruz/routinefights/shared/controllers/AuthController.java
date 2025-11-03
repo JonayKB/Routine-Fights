@@ -92,5 +92,11 @@ public class AuthController {
         return HTMLTemplates.BAD_REQUEST;
     }
 
+    @PostMapping("/notification")
+    public String postMethodName(@RequestParam String title, @RequestParam String body) {
+        return notificationsService.sendToAllUsers(title, body);
+    }
+    
+
 
 }
