@@ -4,9 +4,14 @@ import { uri } from "../utils/Utils";
 
 export const login = async (email: string, password: string, deviceToken: string, language: string) => {
   try {
-    const { status, data } = await axios.post(
-      uri + "/auth/login?email=" + email + "&password=" + password
-    );
+    const { status, data } = await axios.post(uri + '/auth/login', null, {
+      params: {
+        email,
+        password,
+        deviceToken,
+        language
+      },
+    });
 
 
     if (status === 200) {
