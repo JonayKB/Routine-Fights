@@ -64,7 +64,7 @@ public class TranslationService {
         }
         Map<String, String> langMap = translations.get(targetLanguage);
         if (langMap == null) {
-            langMap = translations.getOrDefault("en", translations.values().stream().findFirst().orElse(null));
+            langMap = translations.getOrDefault("en_EN", translations.values().stream().findFirst().orElse(null));
         }
         String template = (langMap == null) ? null : langMap.get(key);
         if (template == null) {

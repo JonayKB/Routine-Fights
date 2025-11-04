@@ -41,6 +41,12 @@
 			<artifactId>firebase-admin</artifactId>
 			<version>9.1.1</version>
 		</dependency>
+		<!-- DEEPL -->
+		<dependency>
+			<groupId>com.deepl.api</groupId>
+			<artifactId>deepl-java</artifactId>
+			<version>1.10.3</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
