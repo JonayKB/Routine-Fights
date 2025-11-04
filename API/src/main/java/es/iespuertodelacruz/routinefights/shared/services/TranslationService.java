@@ -22,7 +22,6 @@ public class TranslationService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ResourceLoader resourceLoader;
     private File translationsDirectory;
-    // Map<langCode, Map<key, template>>
     private final Map<String, Map<String, String>> translations = new ConcurrentHashMap<>();
     private static final Pattern PLACEHOLDER = Pattern.compile("\\{([^}]+)\\}");
 
