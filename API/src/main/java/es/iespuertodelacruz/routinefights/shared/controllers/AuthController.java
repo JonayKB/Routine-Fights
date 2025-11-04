@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.routinefights.shared.controllers;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.springframework.http.ResponseEntity;
@@ -93,8 +94,8 @@ public class AuthController {
     }
 
     @PostMapping("/notification")
-    public String postMethodName(@RequestParam String title, @RequestParam String body) {
-        return notificationsService.sendToAllUsers(title, body);
+    public String postMethodName(@RequestParam String titleKey, @RequestParam String bodyKey, @RequestBody Map<String, Object> args) {
+        return notificationsService.sendToAllUsers(titleKey, bodyKey, args);
     }
     
 
