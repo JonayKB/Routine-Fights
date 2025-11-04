@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapter
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -49,8 +50,9 @@ public class CommunityEventV3Controller {
                         image,
                         activitiesIDs));
         notificationsService.sendToAllUsers(
-                "New Community Event!",
-                "A new community event has been created: " + name + ". Join now and participate!");
+                "newEventTitle",
+                "newEventBody",
+                Map.of("eventName", name));
 
         return communityEventOutputV3;
     }

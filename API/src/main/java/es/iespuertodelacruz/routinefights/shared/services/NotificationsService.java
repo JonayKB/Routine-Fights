@@ -1,6 +1,9 @@
 package es.iespuertodelacruz.routinefights.shared.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -11,36 +14,56 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
 
+import es.iespuertodelacruz.routinefights.deviceToken.domain.DeviceToken;
 import lombok.extern.java.Log;
 
 @Service
 @Log
 public class NotificationsService {
     private FirebaseMessaging fcm;
+    private TranslationService translationService;
 
-    public NotificationsService(FirebaseMessaging fcm) {
+    public NotificationsService(FirebaseMessaging fcm, TranslationService translationService) {
         this.fcm = fcm;
+        this.translationService = translationService;
     }
 
-    public String sendToAllUsers(String title, String body) {
-        Message message = Message.builder()
-                .setTopic("general")
-                .setNotification(Notification.builder().setTitle(title).setBody(body).build())
-                .build();
+    public String sendToAllUsers(String titleKey, String bodyKey, Map<String, ?> args) {
+        List<String> languages = translationService.getSupportedLanguages();
+        StringBuilder results = new StringBuilder();
 
-        try {
-            String sent = fcm.send(message);
-            log.info("Sent message to all users: " + sent);
-            return sent;
-        } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
+        for (String lang : languages) {
+            String title = translationService.translate(titleKey, lang, args);
+            String body = translationService.translate(bodyKey, lang, args);
+
+            Message message = Message.builder()
+                    .setTopic("general-" + lang)
+                    .setNotification(Notification.builder().setTitle(title).setBody(body).build())
+                    .build();
+
+            try {
+                String sent = fcm.send(message);
+                log.info("Sent message to all " + lang + " users: " + sent);
+                log.info("Notification Title: " + title);
+                log.info("Notification Body: " + body);
+                if (results.length() > 0) {
+                    results.append("; ");
+                }
+                results.append(lang).append("=").append(sent);
+            } catch (FirebaseMessagingException e) {
+                log.severe("Failed to send message to " + lang + " users: " + e.getMessage());
+            }
         }
-        return null;
+
+        return results.length() > 0 ? results.toString() : null;
     }
 
-    public String sendTo(String title, String body, String userToken) {
+    public String sendTo(String titleKey, String bodyKey, DeviceToken userToken, Map<String, ?> args) {
+        String title = translationService.translate(titleKey, userToken.getLanguage(), args);
+        String body = translationService.translate(bodyKey, userToken.getLanguage(), args);
+
         Message message = Message.builder()
-                .setToken(userToken)
+                .setToken(userToken.getToken())
                 .setNotification(Notification.builder().setTitle(title).setBody(body).build())
                 .build();
 
@@ -53,17 +76,47 @@ public class NotificationsService {
         return null;
     }
 
-    public String sendTo(String title, String body, List<String> usersTokens) {
-        MulticastMessage message = MulticastMessage.builder()
-                .setNotification(Notification.builder().setTitle(title).setBody(body).build())
-                .addAllTokens(usersTokens)
-                .build();
-        try {
-            BatchResponse sent = fcm.sendMulticast(message);
-            log.info("Sent message to some users: Success:" + sent.getSuccessCount() + " Failures: "
-                    + sent.getFailureCount());
-        } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
+
+
+    public String sendTo(String titleKey, String bodyKey, List<DeviceToken> usersTokens, Map<String, ?> args) {
+        if (usersTokens == null || usersTokens.isEmpty()) {
+            log.info("No user tokens provided for multicast message.");
+            return null;
+        }
+        String title = null;
+        String body = null;
+
+        Map<String, List<DeviceToken>> grouped = usersTokens.stream()
+                .collect(Collectors.groupingBy(DeviceToken::getLanguage));
+
+        if (grouped.size() > 1) {
+            for (Entry<String, List<DeviceToken>> entry : grouped.entrySet()) {
+                String lang = entry.getKey();
+                List<DeviceToken> tokensForLang = entry.getValue();
+                if (tokensForLang == null || tokensForLang.isEmpty()) {
+                    continue;
+                }
+
+                title = translationService.translate(titleKey, lang, args);
+                body = translationService.translate(bodyKey, lang, args);
+
+                MulticastMessage messageLang = MulticastMessage.builder()
+                        .setNotification(Notification.builder().setTitle(title).setBody(body).build())
+                        .addAllTokens(tokensForLang.stream().map(DeviceToken::getToken).collect(Collectors.toList()))
+                        .build();
+                try {
+                    BatchResponse sent = fcm.sendMulticast(messageLang);
+                    log.info("Sent message to " + lang + " users: Success:" + sent.getSuccessCount() + " Failures:"
+                            + sent.getFailureCount());
+                } catch (FirebaseMessagingException e) {
+                    log.severe("Failed to send multicast to " + lang + " users: " + e.getMessage());
+                }
+            }
+            return null;
+        } else {
+            String lang = grouped.keySet().iterator().next();
+            title = translationService.translate(titleKey, lang, args);
+            body = translationService.translate(bodyKey, lang, args);
         }
         return null;
     }
