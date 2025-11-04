@@ -1,6 +1,5 @@
 package es.iespuertodelacruz.routinefights.shared.controllers;
 
-import org.springframework.stereotype.Controller;
 
 import es.iespuertodelacruz.routinefights.shared.services.DeeplService;
 import io.swagger.v3.oas.annotations.tags.Tag;
