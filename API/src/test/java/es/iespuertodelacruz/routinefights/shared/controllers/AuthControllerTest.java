@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import es.iespuertodelacruz.routinefights.deviceToken.domain.DeviceToken;
-import es.iespuertodelacruz.routinefights.deviceToken.domain.ports.primary.IDeviceTokenService;
+import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
+import es.iespuertodelacruz.routinefights.device_token.domain.ports.primary.IDeviceTokenService;
 import es.iespuertodelacruz.routinefights.shared.dto.UserDTOAuth;
 import es.iespuertodelacruz.routinefights.shared.exceptions.MailException;
 import es.iespuertodelacruz.routinefights.shared.mappers.UserDTOAuthMapper;

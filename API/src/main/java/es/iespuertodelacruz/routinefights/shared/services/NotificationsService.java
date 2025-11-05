@@ -14,7 +14,7 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
 
-import es.iespuertodelacruz.routinefights.deviceToken.domain.DeviceToken;
+import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
 import lombok.extern.java.Log;
 
 @Service

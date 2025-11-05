@@ -15,8 +15,8 @@ import org.mockito.MockitoAnnotations;
 
 import es.iespuertodelacruz.routinefights.badge.domain.Badge;
 import es.iespuertodelacruz.routinefights.badge.domain.ports.secondary.IBadgeRepository;
-import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
-import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.secondary.ICommunityEventRepository;
+import es.iespuertodelacruz.routinefights.community_event.domain.CommunityEvent;
+import es.iespuertodelacruz.routinefights.community_event.domain.ports.secondary.ICommunityEventRepository;
 
 class BadgeServiceTest {
     private static final String USER_MAIL = "user@example.com";

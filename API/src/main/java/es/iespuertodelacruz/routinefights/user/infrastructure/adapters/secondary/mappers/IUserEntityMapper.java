@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import es.iespuertodelacruz.routinefights.deviceToken.infrastructure.adapters.secondary.mappers.IDeviceTokenEntityMapper;
+import es.iespuertodelacruz.routinefights.device_token.infrastructure.adapters.secondary.mappers.IDeviceTokenEntityMapper;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary.entities.UserEntity;
 
