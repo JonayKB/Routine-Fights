@@ -35,9 +35,11 @@ public class DeeplService {
     public String translateText(String text, String targetLang) {
         try {
             return deeplClient.translateText(text, null, targetLang).getText();
-        } catch (DeepLException | InterruptedException e) {
+        } catch (DeepLException e) {
             log.severe("Translation failed: " + e.getMessage());
-
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.severe("Translation interrupted: " + e.getMessage());
         }
         return null;
     }
