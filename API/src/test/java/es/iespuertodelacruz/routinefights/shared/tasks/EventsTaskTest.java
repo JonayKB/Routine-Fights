@@ -12,8 +12,8 @@ import org.mockito.MockitoAnnotations;
 
 import es.iespuertodelacruz.routinefights.badge.domain.Badge;
 import es.iespuertodelacruz.routinefights.badge.domain.ports.primary.IBadgeService;
-import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
-import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.primary.ICommunityEventService;
+import es.iespuertodelacruz.routinefights.community_event.domain.CommunityEvent;
+import es.iespuertodelacruz.routinefights.community_event.domain.ports.primary.ICommunityEventService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 
 class EventsTaskTest {

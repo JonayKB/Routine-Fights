@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
 import es.iespuertodelacruz.routinefights.badge.infrastructure.adapters.secondary.entities.BadgeEntity;
+import es.iespuertodelacruz.routinefights.community_event.infrastructure.adapters.secondary.entities.CommunityEventEntity;
 import es.iespuertodelacruz.routinefights.meeting.infrastructure.adapters.secondary.entities.MeetingEntity;
 
 import java.time.LocalDateTime;

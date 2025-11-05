@@ -11,7 +11,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
 import es.iespuertodelacruz.routinefights.badge.infrastructure.adapters.secondary.entities.BadgeEntity;
 import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.secondary.entities.CommentEntity;
-import es.iespuertodelacruz.routinefights.deviceToken.infrastructure.adapters.secondary.entities.DeviceTokenEntity;
+import es.iespuertodelacruz.routinefights.device_token.infrastructure.adapters.secondary.entities.DeviceTokenEntity;
 import es.iespuertodelacruz.routinefights.meeting.infrastructure.adapters.secondary.entities.MeetingEntity;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
 import es.iespuertodelacruz.routinefights.report.infrastructure.adapters.secondary.entities.ReportEntity;

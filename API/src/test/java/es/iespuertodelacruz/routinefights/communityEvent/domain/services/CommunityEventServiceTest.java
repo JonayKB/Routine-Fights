@@ -16,8 +16,9 @@ import org.mockito.MockitoAnnotations;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.domain.ports.secondary.IActivityRepository;
-import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
-import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.secondary.ICommunityEventRepository;
+import es.iespuertodelacruz.routinefights.community_event.domain.CommunityEvent;
+import es.iespuertodelacruz.routinefights.community_event.domain.ports.secondary.ICommunityEventRepository;
+import es.iespuertodelacruz.routinefights.community_event.domain.services.CommunityEventService;
 
 class CommunityEventServiceTest {
     private static final String ID = "evt1";

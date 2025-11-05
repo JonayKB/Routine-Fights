@@ -10,7 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
-import es.iespuertodelacruz.routinefights.communityEvent.commons.CommunityEventCommons;
+import es.iespuertodelacruz.routinefights.community_event.commons.CommunityEventCommons;
+import es.iespuertodelacruz.routinefights.community_event.domain.CommunityEvent;
 
 class CommunityEventTests {
 

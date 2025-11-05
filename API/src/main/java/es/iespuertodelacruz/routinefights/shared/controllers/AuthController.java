@@ -1,6 +1,5 @@
 package es.iespuertodelacruz.routinefights.shared.controllers;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.springframework.http.ResponseEntity;
@@ -13,12 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.iespuertodelacruz.routinefights.deviceToken.domain.ports.primary.IDeviceTokenService;
+import es.iespuertodelacruz.routinefights.device_token.domain.ports.primary.IDeviceTokenService;
 import es.iespuertodelacruz.routinefights.shared.dto.UserDTOAuth;
 import es.iespuertodelacruz.routinefights.shared.mappers.UserDTOAuthMapper;
 import es.iespuertodelacruz.routinefights.shared.services.AuthService;
 import es.iespuertodelacruz.routinefights.shared.services.MailService;
-import es.iespuertodelacruz.routinefights.shared.services.NotificationsService;
 import es.iespuertodelacruz.routinefights.shared.utils.HTMLTemplates;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import io.swagger.v3.oas.annotations.tags.Tag;

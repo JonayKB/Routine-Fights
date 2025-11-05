@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import es.iespuertodelacruz.routinefights.deviceToken.domain.DeviceToken;
+import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
 import es.iespuertodelacruz.routinefights.user.common.UserCommon;
 
 /**
