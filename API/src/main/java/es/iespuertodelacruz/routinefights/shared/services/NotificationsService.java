@@ -103,7 +103,7 @@ public class NotificationsService {
 
                 MulticastMessage messageLang = MulticastMessage.builder()
                         .setNotification(Notification.builder().setTitle(title).setBody(body).build())
-                        .addAllTokens(tokensForLang.stream().map(DeviceToken::getToken).collect(Collectors.toList()))
+                        .addAllTokens(tokensForLang.stream().map(DeviceToken::getToken).toList())
                         .build();
                 try {
                     BatchResponse sent = fcm.sendMulticast(messageLang);

@@ -20,13 +20,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class TranslationService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final ResourceLoader resourceLoader;
     private File translationsDirectory;
     private final Map<String, Map<String, String>> translations = new ConcurrentHashMap<>();
     private static final Pattern PLACEHOLDER = Pattern.compile("\\{([^}]+)\\}");
 
     public TranslationService(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
         try {
             Resource resource = resourceLoader.getResource("classpath:translations");
             if (resource.exists() && resource.getFile().isDirectory()) {
