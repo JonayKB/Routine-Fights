@@ -33,15 +33,12 @@ public class AuthController {
     private final AuthService authService;
     private final UserDTOAuthMapper userDTOAuthMapper;
     Logger logger = Logger.getLogger(AuthController.class.getName());
-    private final NotificationsService notificationsService;
     private final IDeviceTokenService deviceTokenService;
 
-    public AuthController(MailService mailService, AuthService authService, UserDTOAuthMapper userDTOAuthMapper,
-            NotificationsService notificationsService, IDeviceTokenService deviceTokenService) {
+    public AuthController(MailService mailService, AuthService authService, UserDTOAuthMapper userDTOAuthMapper, IDeviceTokenService deviceTokenService) {
         this.mailService = mailService;
         this.authService = authService;
         this.userDTOAuthMapper = userDTOAuthMapper;
-        this.notificationsService = notificationsService;
         this.deviceTokenService = deviceTokenService;
     }
 
@@ -93,10 +90,6 @@ public class AuthController {
         return HTMLTemplates.BAD_REQUEST;
     }
 
-    @PostMapping("/notification")
-    public String postMethodName(@RequestParam String titleKey, @RequestParam String bodyKey, @RequestBody Map<String, Object> args) {
-        return notificationsService.sendToAllUsers(titleKey, bodyKey, args);
-    }
     
 
 
