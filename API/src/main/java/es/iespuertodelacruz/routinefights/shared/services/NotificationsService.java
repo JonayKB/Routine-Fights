@@ -20,6 +20,7 @@ import lombok.extern.java.Log;
 @Service
 @Log
 public class NotificationsService {
+    private static final String USERS = " users: ";
     private FirebaseMessaging fcm;
     private TranslationService translationService;
 
@@ -43,19 +44,19 @@ public class NotificationsService {
 
             try {
                 String sent = fcm.send(message);
-                log.info("Sent message to all " + lang + " users: " + sent);
+                log.info("Sent message to all " + lang + USERS + sent);
                 log.info("Notification Title: " + title);
                 log.info("Notification Body: " + body);
-                if (results.length() > 0) {
+                if (!results.isEmpty()) {
                     results.append("; ");
                 }
                 results.append(lang).append("=").append(sent);
             } catch (FirebaseMessagingException e) {
-                log.severe("Failed to send message to " + lang + " users: " + e.getMessage());
+                log.severe("Failed to send message to " + lang + USERS + e.getMessage());
             }
         }
 
-        return results.length() > 0 ? results.toString() : null;
+        return !results.isEmpty() ? results.toString() : null;
     }
 
     public String sendTo(String titleKey, String bodyKey, DeviceToken userToken, Map<String, ?> args) {
@@ -109,15 +110,11 @@ public class NotificationsService {
                     log.info("Sent message to " + lang + " users: Success:" + sent.getSuccessCount() + " Failures:"
                             + sent.getFailureCount());
                 } catch (FirebaseMessagingException e) {
-                    log.severe("Failed to send multicast to " + lang + " users: " + e.getMessage());
+                    log.severe("Failed to send multicast to " + lang + USERS + e.getMessage());
                 }
             }
             return null;
-        } else {
-            String lang = grouped.keySet().iterator().next();
-            title = translationService.translate(titleKey, lang, args);
-            body = translationService.translate(bodyKey, lang, args);
-        }
+        } 
         return null;
     }
 }
