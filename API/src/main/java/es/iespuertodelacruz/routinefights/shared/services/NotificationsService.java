@@ -72,7 +72,7 @@ public class NotificationsService {
             String sent = fcm.send(message);
             log.info("Sent message to user: " + sent);
         } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
+            log.severe("Failed to send message to user: " + e.getMessage());
         }
         return null;
     }
