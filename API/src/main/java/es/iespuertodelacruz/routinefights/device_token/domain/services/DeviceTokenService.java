@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.routinefights.device_token.domain.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
@@ -13,6 +14,11 @@ public class DeviceTokenService implements IDeviceTokenService {
 
     private IDeviceTokenRepository deviceTokenRepository;
     private IUserService userService;
+
+    public DeviceTokenService(IDeviceTokenRepository deviceTokenRepository, IUserService userService) {
+        this.deviceTokenRepository = deviceTokenRepository;
+        this.userService = userService;
+    }
 
     @Override
     public DeviceToken save(String email, String deviceToken, String language) {
