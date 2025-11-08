@@ -237,4 +237,59 @@ class NotificationsServiceTest {
         verify(fcm, times(2)).sendMulticast(any(MulticastMessage.class));
         verify(translationService, times(4)).translate(anyString(), anyString(), any());
     }
+
+    @Test
+    void testSendToMultipleUsersNoTokensProvided() {
+        Map<String, ?> args = Map.of();
+        List<DeviceToken> usersTokens = Collections.emptyList();
+
+        String result = notificationsService.sendTo(TITLE_KEY, BODY_KEY, usersTokens, args);
+        assertNull(result);
+        verifyNoInteractions(fcm);
+        verify(translationService, times(0)).translate(anyString(), anyString(), any());
+    
+    }
+
+    @Test
+    void testSendToMultipleUsersPartialFailure() throws Exception {
+        Map<String, ?> args = Map.of();
+        DeviceToken userToken1 = new DeviceToken(TOKEN1, null, EN);
+        DeviceToken userToken2 = new DeviceToken(TOKEN2, null, ES);
+        List<DeviceToken> usersTokens = Arrays.asList(userToken1, userToken2);
+        when(translationService.translate(TITLE_KEY, EN, args)).thenReturn(HELLO);
+        when(translationService.translate(BODY_KEY, EN, args)).thenReturn(WORLD);
+        when(translationService.translate(TITLE_KEY, ES, args)).thenReturn(HOLA);
+        when(translationService.translate(BODY_KEY, ES, args)).thenReturn(MUNDO);
+        BatchResponse mockBatchResponse = mock(BatchResponse.class);
+        when(fcm.sendMulticast(any(MulticastMessage.class))).thenReturn(mockBatchResponse);
+        when(mockBatchResponse.getSuccessCount()).thenReturn(1);
+        when(mockBatchResponse.getFailureCount()).thenReturn(1);
+
+        String result = notificationsService.sendTo(TITLE_KEY, BODY_KEY, usersTokens, args);
+        assertNull(result);
+        verify(fcm, times(2)).sendMulticast(any(MulticastMessage.class));
+        verify(translationService, times(4)).translate(anyString(), anyString(), any());
+    }
+
+    @Test
+    void testSendToMultipleUsersAllFailures() throws Exception {
+        Map<String, ?> args = Map.of();
+        DeviceToken userToken1 = new DeviceToken(TOKEN1, null, EN);
+        DeviceToken userToken2 = new DeviceToken(TOKEN2, null, ES);
+        List<DeviceToken> usersTokens = Arrays.asList(userToken1, userToken2);
+        when(translationService.translate(TITLE_KEY, EN, args)).thenReturn(HELLO);
+        when(translationService.translate(BODY_KEY, EN, args)).thenReturn(WORLD);
+        when(translationService.translate(TITLE_KEY, ES, args)).thenReturn(HOLA);
+        when(translationService.translate(BODY_KEY, ES, args)).thenReturn(MUNDO);
+
+        FirebaseMessagingException fakeException = mock(FirebaseMessagingException.class);
+        when(fakeException.getMessage()).thenReturn("failed");
+        when(fakeException.getErrorCode()).thenReturn(ErrorCode.UNKNOWN);
+        when(fcm.sendMulticast(any(MulticastMessage.class))).thenThrow(fakeException);
+        String result = notificationsService.sendTo(TITLE_KEY, BODY_KEY, usersTokens, args);
+        assertNull(result);
+        verify(fcm, times(2)).sendMulticast(any(MulticastMessage.class));
+        verify(translationService, times(4)).translate(anyString(), anyString(), any());
+    }
+
 }
