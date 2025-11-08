@@ -4,6 +4,7 @@ package es.iespuertodelacruz.routinefights.shared.controllers;
 import es.iespuertodelacruz.routinefights.shared.services.DeeplService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ public class DeeplController {
         this.deeplService = deeplService;
     }
     @GetMapping("/translate")
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public String translate(@RequestParam String text, @RequestParam String targetLang) {
         return deeplService.translateText(text, targetLang);
     }
