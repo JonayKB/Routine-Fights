@@ -1,6 +1,5 @@
 package es.iespuertodelacruz.routinefights.device_token.domain.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
