@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 public class DeeplService {
     private final DeepLClient deeplClient;
 
+    @Autowired
     public DeeplService() {
         InputStream is = getClass().getClassLoader().getResourceAsStream("keystore/deeplKey");
         if (is == null) {
@@ -33,8 +34,8 @@ public class DeeplService {
         }
         deeplClient = new DeepLClient(key);
     }
-    
-    @Autowired
+
+
     protected DeeplService(DeepLClient deeplClient) {
         this.deeplClient = deeplClient;
     }
