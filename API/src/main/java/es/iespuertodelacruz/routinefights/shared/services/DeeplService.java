@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.routinefights.shared.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.deepl.api.DeepLClient;
@@ -32,6 +33,8 @@ public class DeeplService {
         }
         deeplClient = new DeepLClient(key);
     }
+    
+    @Autowired
     protected DeeplService(DeepLClient deeplClient) {
         this.deeplClient = deeplClient;
     }
