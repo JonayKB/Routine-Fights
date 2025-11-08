@@ -32,6 +32,9 @@ public class DeeplService {
         }
         deeplClient = new DeepLClient(key);
     }
+    protected DeeplService(DeepLClient deeplClient) {
+        this.deeplClient = deeplClient;
+    }
 
     public String translateText(String text, String targetLang) {
         try {
