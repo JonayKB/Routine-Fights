@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.deepl.api.DeepLClient;
 import com.deepl.api.DeepLException;
 
+import es.iespuertodelacruz.routinefights.shared.exceptions.DeeplException;
 import lombok.extern.java.Log;
 
 import java.io.BufferedReader;
@@ -27,7 +28,7 @@ public class DeeplService {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             key = br.readLine();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read deeplKey resource", e);
+            throw new DeeplException("Failed to read deeplKey resource", e);
         }
         deeplClient = new DeepLClient(key);
     }
