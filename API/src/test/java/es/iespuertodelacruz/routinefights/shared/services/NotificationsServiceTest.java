@@ -22,11 +22,43 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.google.firebase.ErrorCode;
+import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.MulticastMessage;
+
+import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
 
 class NotificationsServiceTest {
+
+    private static final String TOKEN1 = "token1";
+
+    private static final String TOKEN2 = "token2";
+
+    private static final String TOKEN = "token123";
+
+    private static final String EN_MSG_EN = "en=msgEn";
+
+    private static final String MSG_ES = "msgEs";
+
+    private static final String MUNDO = "Mundo";
+
+    private static final String HOLA = "Hola";
+
+    private static final String WORLD = "World";
+
+    private static final String HELLO = "Hello";
+
+    private static final String ES = "es";
+
+    private static final String MSG_EN = "msgEn";
+
+    private static final String EN = "en";
+
+    private static final String BODY_KEY = "body.key";
+
+    private static final String TITLE_KEY = "title.key";
 
     @Mock
     private FirebaseMessaging fcm;
@@ -44,39 +76,36 @@ class NotificationsServiceTest {
 
     @Test
     void testSendToAllUsersSingleLanguageSuccess() throws Exception {
-        String titleKey = "title.key";
-        String bodyKey = "body.key";
+
         Map<String, ?> args = Map.of();
 
-        when(translationService.getSupportedLanguages()).thenReturn(List.of("en"));
-        when(translationService.translate(titleKey, "en", args)).thenReturn("Hello");
-        when(translationService.translate(bodyKey, "en", args)).thenReturn("World");
-        when(fcm.send(any(Message.class))).thenReturn("msgEn");
+        when(translationService.getSupportedLanguages()).thenReturn(List.of(EN));
+        when(translationService.translate(TITLE_KEY, EN, args)).thenReturn(HELLO);
+        when(translationService.translate(BODY_KEY, EN, args)).thenReturn(WORLD);
+        when(fcm.send(any(Message.class))).thenReturn(MSG_EN);
 
-        String result = notificationsService.sendToAllUsers(titleKey, bodyKey, args);
+        String result = notificationsService.sendToAllUsers(TITLE_KEY, BODY_KEY, args);
 
-        assertEquals("en=msgEn", result);
+        assertEquals(EN_MSG_EN, result);
         verify(fcm, times(1)).send(any(Message.class));
         verify(translationService).getSupportedLanguages();
-        verify(translationService).translate(titleKey, "en", args);
-        verify(translationService).translate(bodyKey, "en", args);
+        verify(translationService).translate(TITLE_KEY, EN, args);
+        verify(translationService).translate(BODY_KEY, EN, args);
     }
 
     @Test
     void testSendToAllUsersMultipleLanguagesSuccessConcatenated() throws Exception {
-        String titleKey = "title.key";
-        String bodyKey = "body.key";
         Map<String, ?> args = Map.of();
 
-        when(translationService.getSupportedLanguages()).thenReturn(Arrays.asList("en", "es"));
-        when(translationService.translate(titleKey, "en", args)).thenReturn("Hello");
-        when(translationService.translate(bodyKey, "en", args)).thenReturn("World");
-        when(translationService.translate(titleKey, "es", args)).thenReturn("Hola");
-        when(translationService.translate(bodyKey, "es", args)).thenReturn("Mundo");
+        when(translationService.getSupportedLanguages()).thenReturn(Arrays.asList(EN, ES));
+        when(translationService.translate(TITLE_KEY, EN, args)).thenReturn(HELLO);
+        when(translationService.translate(BODY_KEY, EN, args)).thenReturn(WORLD);
+        when(translationService.translate(TITLE_KEY, ES, args)).thenReturn(HOLA);
+        when(translationService.translate(BODY_KEY, ES, args)).thenReturn(MUNDO);
 
-        when(fcm.send(any(Message.class))).thenReturn("msgEn", "msgEs");
+        when(fcm.send(any(Message.class))).thenReturn(MSG_EN, MSG_ES);
 
-        String result = notificationsService.sendToAllUsers(titleKey, bodyKey, args);
+        String result = notificationsService.sendToAllUsers(TITLE_KEY, BODY_KEY, args);
 
         assertEquals("en=msgEn; es=msgEs", result);
         verify(fcm, times(2)).send(any(Message.class));
@@ -84,15 +113,13 @@ class NotificationsServiceTest {
 
     @Test
     void testSendToAllUsersPartialFailure() throws Exception {
-        String titleKey = "title.key";
-        String bodyKey = "body.key";
         Map<String, ?> args = Map.of();
 
-        when(translationService.getSupportedLanguages()).thenReturn(Arrays.asList("en", "es"));
-        when(translationService.translate(titleKey, "en", args)).thenReturn("Hello");
-        when(translationService.translate(bodyKey, "en", args)).thenReturn("World");
-        when(translationService.translate(titleKey, "es", args)).thenReturn("Hola");
-        when(translationService.translate(bodyKey, "es", args)).thenReturn("Mundo");
+        when(translationService.getSupportedLanguages()).thenReturn(Arrays.asList(EN, ES));
+        when(translationService.translate(TITLE_KEY, EN, args)).thenReturn(HELLO);
+        when(translationService.translate(BODY_KEY, EN, args)).thenReturn(WORLD);
+        when(translationService.translate(TITLE_KEY, ES, args)).thenReturn(HOLA);
+        when(translationService.translate(BODY_KEY, ES, args)).thenReturn(MUNDO);
 
         FirebaseMessagingException fakeException = mock(FirebaseMessagingException.class);
         when(fakeException.getErrorCode()).thenReturn(ErrorCode.INVALID_ARGUMENT);
@@ -109,26 +136,24 @@ class NotificationsServiceTest {
             }
 
             if ("general-en".equals(topic)) {
-                return "msgEn";
+                return MSG_EN;
             } else if ("general-es".equals(topic)) {
                 throw fakeException;
             }
             return null;
         });
 
-        String result = notificationsService.sendToAllUsers(titleKey, bodyKey, args);
+        String result = notificationsService.sendToAllUsers(TITLE_KEY, BODY_KEY, args);
 
-        assertEquals("en=msgEn", result);
+        assertEquals(EN_MSG_EN, result);
         verify(fcm, times(2)).send(any(Message.class));
     }
 
     @Test
     void testSendToAllUsersAllFailuresReturnsNull() throws Exception {
-        String titleKey = "title.key";
-        String bodyKey = "body.key";
         Map<String, ?> args = Map.of();
 
-        when(translationService.getSupportedLanguages()).thenReturn(Arrays.asList("en", "es"));
+        when(translationService.getSupportedLanguages()).thenReturn(Arrays.asList(EN, ES));
         when(translationService.translate(anyString(), anyString(), any())).thenReturn("t", "b");
 
         FirebaseMessagingException fakeException = mock(FirebaseMessagingException.class);
@@ -139,7 +164,7 @@ class NotificationsServiceTest {
             throw fakeException;
         });
 
-        String result = notificationsService.sendToAllUsers(titleKey, bodyKey, args);
+        String result = notificationsService.sendToAllUsers(TITLE_KEY, BODY_KEY, args);
 
         assertNull(result);
         verify(fcm, times(2)).send(any(Message.class));
@@ -147,8 +172,8 @@ class NotificationsServiceTest {
 
     @Test
     void testSendToAllUsersNoLanguagesReturnsNullAndNoSend() {
-        String titleKey = "title.key";
-        String bodyKey = "body.key";
+        String titleKey = TITLE_KEY;
+        String bodyKey = BODY_KEY;
         Map<String, ?> args = Map.of();
 
         when(translationService.getSupportedLanguages()).thenReturn(Collections.emptyList());
@@ -157,5 +182,59 @@ class NotificationsServiceTest {
 
         assertNull(result);
         verifyNoInteractions(fcm);
+    }
+
+    @Test
+    void testSendToUserSuccess() throws Exception {
+        Map<String, ?> args = Map.of();
+        DeviceToken userToken = new DeviceToken(TOKEN, null, EN);
+
+        when(translationService.translate(TITLE_KEY, EN, args)).thenReturn(HELLO);
+        when(translationService.translate(BODY_KEY, EN, args)).thenReturn(WORLD);
+        when(fcm.send(any(Message.class))).thenReturn("msgToUser");
+        String result = notificationsService.sendTo(TITLE_KEY, BODY_KEY, userToken, args);
+        assertNull(result);
+        verify(fcm, times(1)).send(any(Message.class));
+    }
+
+    @Test
+    void testSendToUserFailureReturnsNull() throws Exception {
+        Map<String, ?> args = Map.of();
+        DeviceToken userToken = new DeviceToken(TOKEN, null, EN);
+
+        when(translationService.translate(TITLE_KEY, EN, args)).thenReturn(HELLO);
+        when(translationService.translate(BODY_KEY, EN, args)).thenReturn(WORLD);
+        FirebaseMessagingException fakeException = mock(FirebaseMessagingException.class);
+        when(fakeException.getMessage()).thenReturn("failed");
+        when(fakeException.getErrorCode()).thenReturn(ErrorCode.UNKNOWN);
+        when(fcm.send(any(Message.class))).thenThrow(fakeException);
+
+        String result = notificationsService.sendTo(TITLE_KEY, BODY_KEY, userToken, args);
+
+        assertNull(result);
+        verify(fcm, times(1)).send(any(Message.class));
+    }
+
+    @Test
+    void testSendToMultipleUsersSuccess() throws Exception {
+        Map<String, ?> args = Map.of();
+        DeviceToken userToken1 = new DeviceToken(TOKEN1, null, EN);
+        DeviceToken userToken2 = new DeviceToken(TOKEN2, null, ES);
+        List<DeviceToken> usersTokens = Arrays.asList(userToken1, userToken2);
+        
+        when(translationService.translate(TITLE_KEY, EN, args)).thenReturn(HELLO);
+        when(translationService.translate(BODY_KEY, EN, args)).thenReturn(WORLD);
+        when(translationService.translate(TITLE_KEY, ES, args)).thenReturn(HOLA);
+        when(translationService.translate(BODY_KEY, ES, args)).thenReturn(MUNDO);
+
+        BatchResponse mockBatchResponse = mock(BatchResponse.class);
+        when(fcm.sendMulticast(any(MulticastMessage.class))).thenReturn(mockBatchResponse);
+        when(mockBatchResponse.getSuccessCount()).thenReturn(2);
+        when(mockBatchResponse.getFailureCount()).thenReturn(0);
+
+        String result = notificationsService.sendTo(TITLE_KEY, BODY_KEY, usersTokens, args);
+        assertNull(result);
+        verify(fcm, times(2)).sendMulticast(any(MulticastMessage.class));
+        verify(translationService, times(4)).translate(anyString(), anyString(), any());
     }
 }
