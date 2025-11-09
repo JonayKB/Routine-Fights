@@ -3,7 +3,7 @@ package es.iespuertodelacruz.routinefights.badge.domain;
 import java.util.List;
 
 import es.iespuertodelacruz.routinefights.badge.commons.BadgeCommons;
-import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
+import es.iespuertodelacruz.routinefights.community_event.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 
 public class Badge extends BadgeCommons {

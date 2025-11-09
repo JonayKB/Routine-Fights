@@ -11,6 +11,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
 import es.iespuertodelacruz.routinefights.badge.infrastructure.adapters.secondary.entities.BadgeEntity;
 import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.secondary.entities.CommentEntity;
+import es.iespuertodelacruz.routinefights.device_token.infrastructure.adapters.secondary.entities.DeviceTokenEntity;
 import es.iespuertodelacruz.routinefights.meeting.infrastructure.adapters.secondary.entities.MeetingEntity;
 import es.iespuertodelacruz.routinefights.post.infrastructure.adapters.secondary.entities.PostEntity;
 import es.iespuertodelacruz.routinefights.report.infrastructure.adapters.secondary.entities.ReportEntity;
@@ -61,6 +62,9 @@ public class UserEntity extends UserCommon {
     @Relationship(type = "Participated", direction = Relationship.Direction.OUTGOING)
     private List<ActivityEntity> activities;
 
+    @Relationship(type = "Has_Device", direction = Relationship.Direction.OUTGOING)
+    private List<DeviceTokenEntity> deviceTokens;
+
     /**
      * Default constructor
      */
@@ -85,16 +89,18 @@ public class UserEntity extends UserCommon {
      * @param deletedAt         The date when the user was deleted
      * @param followers         The list of followers of the user
      * @param following         The list of users that the user is following
+     * @param deviceTokens      The list of device tokens of the user
      */
     public UserEntity(String id, String username, String email, String password, String nationality, String phoneNumber,
             String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
             LocalDateTime updatedAt, LocalDateTime deletedAt, List<UserEntity> followers,
-            List<UserEntity> following) {
+            List<UserEntity> following, List<DeviceTokenEntity> deviceTokens) {
         super(username, email, password, nationality, phoneNumber, image, role, verified, verificationToken, createdAt,
                 updatedAt, deletedAt);
         this.id = id;
         this.followers = followers;
         this.following = following;
+        this.deviceTokens = deviceTokens;
     }
 
     public UserEntity(String id, List<UserEntity> followers, List<UserEntity> following, List<ReportEntity> reports,
@@ -179,6 +185,14 @@ public class UserEntity extends UserCommon {
         this.badges = badges;
     }
 
+    public List<DeviceTokenEntity> getDeviceTokens() {
+        return this.deviceTokens;
+    }
+
+    public void setDeviceTokens(List<DeviceTokenEntity> deviceTokens) {
+        this.deviceTokens = deviceTokens;
+    }
+
     public UserEntity id(String id) {
         setId(id);
         return this;
@@ -244,6 +258,11 @@ public class UserEntity extends UserCommon {
 
     public UserEntity badges(List<BadgeEntity> badges) {
         setBadges(badges);
+        return this;
+    }
+
+    public UserEntity deviceTokens(List<DeviceTokenEntity> deviceTokens) {
+        setDeviceTokens(deviceTokens);
         return this;
     }
 
