@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import es.iespuertodelacruz.routinefights.badge.domain.Badge;
 import es.iespuertodelacruz.routinefights.badge.infrastructure.adapters.primary.v2.dtos.BadgeV2Output;
-import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.primary.v2.mappers.CommunityEventOutputV2Mapper;
+import es.iespuertodelacruz.routinefights.community_event.infrastructure.adapters.primary.v2.mappers.CommunityEventOutputV2Mapper;
 
 @Mapper(componentModel = "spring", uses = { CommunityEventOutputV2Mapper.class })
 public interface BadgeV2OutputMapper {

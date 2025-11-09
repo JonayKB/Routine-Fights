@@ -71,7 +71,7 @@ public class UserService implements IUserService {
             String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
             LocalDateTime updatedAt, LocalDateTime deletedAt) {
         User user = new User(id, username, email, password, nationality, phoneNumber, image, role, verified,
-                verificationToken, createdAt, updatedAt, deletedAt, null, null);
+                verificationToken, createdAt, updatedAt, deletedAt, null, null, null);
         return userRepository.put(user);
     }
 
@@ -143,7 +143,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> getPaginationByName(int page,int perPage, String userName, String userID) {
+    public List<User> getPaginationByName(int page, int perPage, String userName, String userID) {
         int offset = (page - 1) * perPage;
         return userRepository.getPaginationByName(offset, perPage, userName, userID);
     }
@@ -157,5 +157,5 @@ public class UserService implements IUserService {
     public Boolean unLikePost(String userId, String postId) {
         return userRepository.unLikePost(userId, postId);
     }
-    
+
 }

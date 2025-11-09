@@ -11,7 +11,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
+import es.iespuertodelacruz.routinefights.community_event.domain.CommunityEvent;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 
 class BadgeTests {

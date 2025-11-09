@@ -16,11 +16,11 @@ import org.mockito.MockitoAnnotations;
 
 import es.iespuertodelacruz.routinefights.activity.domain.Activity;
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.secondary.entities.ActivityEntity;
-import es.iespuertodelacruz.routinefights.communityEvent.domain.CommunityEvent;
-import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.entities.CommunityEventEntity;
-import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.mappers.CommunityEventEntityMapper;
-import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.repositories.ICommunityEventEntityRepository;
-import es.iespuertodelacruz.routinefights.communityEvent.infrastructure.adapters.secondary.services.CommunityEventEntityService;
+import es.iespuertodelacruz.routinefights.community_event.domain.CommunityEvent;
+import es.iespuertodelacruz.routinefights.community_event.infrastructure.adapters.secondary.entities.CommunityEventEntity;
+import es.iespuertodelacruz.routinefights.community_event.infrastructure.adapters.secondary.mappers.CommunityEventEntityMapper;
+import es.iespuertodelacruz.routinefights.community_event.infrastructure.adapters.secondary.repositories.ICommunityEventEntityRepository;
+import es.iespuertodelacruz.routinefights.community_event.infrastructure.adapters.secondary.services.CommunityEventEntityService;
 
 class CommunityEventEntityServiceTest {
     private CommunityEventEntityService communityEventEntityService;

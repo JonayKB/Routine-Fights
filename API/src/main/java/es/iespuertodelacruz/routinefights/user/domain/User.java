@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
 import es.iespuertodelacruz.routinefights.user.common.UserCommon;
 
 /**
@@ -13,6 +14,7 @@ public class User extends UserCommon {
     private String id;
     private List<User> followers;
     private List<User> following;
+    private List<DeviceToken> deviceTokens;
 
     /**
      * Default constructor
@@ -73,12 +75,14 @@ public class User extends UserCommon {
      */
     public User(String id, String username, String email, String password, String nationality, String phoneNumber,
             String image, String role, boolean verified, String verificationToken, LocalDateTime createdAt,
-            LocalDateTime updatedAt, LocalDateTime deletedAt, List<User> followers, List<User> following) {
+            LocalDateTime updatedAt, LocalDateTime deletedAt, List<User> followers, List<User> following,
+            List<DeviceToken> deviceTokens) {
         super(username, email, password, nationality, phoneNumber, image, role, verified, verificationToken, createdAt,
                 updatedAt, deletedAt);
         this.id = id;
         this.followers = followers;
         this.following = following;
+        this.deviceTokens = deviceTokens;
     }
 
     /**
@@ -150,6 +154,24 @@ public class User extends UserCommon {
      */
     public void setFollowing(List<User> following) {
         this.following = following;
+    }
+
+    /**
+     * Get the device tokens of the user
+     * 
+     * @return The device tokens of the user
+     */
+    public List<DeviceToken> getDeviceTokens() {
+        return this.deviceTokens;
+    }
+
+    /**
+     * Set the device tokens of the user
+     * 
+     * @param deviceTokens The device tokens of the user
+     */
+    public void setDeviceTokens(List<DeviceToken> deviceTokens) {
+        this.deviceTokens = deviceTokens;
     }
 
     /**

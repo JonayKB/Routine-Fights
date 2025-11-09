@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import es.iespuertodelacruz.routinefights.activity.domain.ports.primary.IActivityService;
-import es.iespuertodelacruz.routinefights.communityEvent.domain.ports.primary.ICommunityEventService;
+import es.iespuertodelacruz.routinefights.community_event.domain.ports.primary.ICommunityEventService;
 import es.iespuertodelacruz.routinefights.post.domain.ports.primary.IPostService;
 import es.iespuertodelacruz.routinefights.shared.services.ImageService;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
