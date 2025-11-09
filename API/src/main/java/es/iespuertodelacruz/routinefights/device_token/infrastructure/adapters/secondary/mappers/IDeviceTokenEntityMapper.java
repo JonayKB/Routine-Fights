@@ -10,6 +10,6 @@ import es.iespuertodelacruz.routinefights.device_token.infrastructure.adapters.s
 public interface IDeviceTokenEntityMapper {
     DeviceToken toDomain(DeviceTokenEntity deviceTokenEntity);
 
-    @Mapping(target = "user.deviceTokens", ignore = true)
+    @Mapping(target = "user", ignore = true)
     DeviceTokenEntity toEntity(DeviceToken deviceToken);
 }
