@@ -13,7 +13,6 @@ services:
       - SPRING_AUTHENTICATION_NEO4J_PASSWORD=***REMOVED***
       - MAIL_FROM=routinefights@gmail.com
       - MAIL_PASSWORD=***REMOVED***
-      - SERVER_SSL_ENABLED=false
       - JWT_SECRET=***REMOVED***
     depends_on:
       - db
