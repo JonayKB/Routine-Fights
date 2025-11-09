@@ -13,7 +13,6 @@ services:
       - SPRING_AUTHENTICATION_NEO4J_PASSWORD=1q2w3e4r
       - MAIL_FROM=routinefights@gmail.com
       - MAIL_PASSWORD=yhah camn tnmx uzgn
-      - SERVER_SSL_ENABLED=false
       - JWT_SECRET=096c1b60e347ba237541b283bdaa3df7
     depends_on:
       - db
