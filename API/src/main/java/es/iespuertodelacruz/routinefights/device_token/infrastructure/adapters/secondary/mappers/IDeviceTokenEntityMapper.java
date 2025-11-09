@@ -27,7 +27,14 @@ public interface IDeviceTokenEntityMapper {
         userEntity.setUsername(user.getUsername());
         userEntity.setEmail(user.getEmail());
         userEntity.setPassword(user.getPassword());
+        userEntity.setNationality(user.getNationality());
+        userEntity.setPhoneNumber(user.getPhoneNumber());
+        userEntity.setImage(user.getImage());
+        userEntity.setRole(user.getRole());
+        userEntity.setVerified(user.getVerified());
+        userEntity.setVerificationToken(user.getVerificationToken());
         
+
         return userEntity;
     }
 }

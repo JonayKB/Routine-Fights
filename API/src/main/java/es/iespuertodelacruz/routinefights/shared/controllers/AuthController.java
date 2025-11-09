@@ -33,11 +33,14 @@ public class AuthController {
     Logger logger = Logger.getLogger(AuthController.class.getName());
     private final IDeviceTokenService deviceTokenService;
 
-    public AuthController(MailService mailService, AuthService authService, UserDTOAuthMapper userDTOAuthMapper, IDeviceTokenService deviceTokenService) {
+
+    public AuthController(MailService mailService, AuthService authService, UserDTOAuthMapper userDTOAuthMapper,
+            IDeviceTokenService deviceTokenService) {
         this.mailService = mailService;
         this.authService = authService;
         this.userDTOAuthMapper = userDTOAuthMapper;
         this.deviceTokenService = deviceTokenService;
+
     }
 
     @PostMapping("/register")
@@ -55,10 +58,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,@RequestParam(required = false) String deviceToken, @RequestParam(required = false) String language) {
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,
+            @RequestParam(required = false) String deviceToken, @RequestParam(required = false) String language) {
         try {
             String token = authService.login(email, password);
             if (deviceToken != null && language != null) {
+
                 deviceTokenService.save(email, deviceToken, language);
             }
             return ResponseEntity.ok(token);
@@ -87,8 +92,5 @@ public class AuthController {
 
         return HTMLTemplates.BAD_REQUEST;
     }
-
-    
-
 
 }
