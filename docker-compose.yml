@@ -6,7 +6,7 @@ services:
     container_name: apiroutinefights
     restart: always
     ports:
-      - "8080:8080"
+      - "6342:8080"
     environment:
       - SPRING_NEO4J_URI=bolt://db:7687
       - SPRING_AUTHENTICATION_NEO4J_USER=neo4j
@@ -14,13 +14,14 @@ services:
       - MAIL_FROM=routinefights@gmail.com
       - MAIL_PASSWORD=yhah camn tnmx uzgn
       - SERVER_SSL_ENABLED=false
-      - JWT_SECRET=secret
+      - JWT_SECRET=096c1b60e347ba237541b283bdaa3df7
     depends_on:
       - db
     networks:
       - apiNetwork
     volumes:
-      - app_uploads:/uploads
+      - app_uploads:/$HOME/uploads
+      - /etc/letsencrypt:/etc/letsencrypt:ro
   db:
     image: neo4j:latest
     volumes:
@@ -31,11 +32,20 @@ services:
     environment:
         - NEO4J_AUTH=neo4j/1q2w3e4r
     restart: always
+    ports:
+      - "7687:7687"
     networks:
       - apiNetwork
-
+  admin:
+    image: jonaykb/administrationroutinefights:latest
+    restart: always
+    ports:
+     - "8023:80"
+    networks:
+     - apiNetwork
 volumes:
   db_data:
   app_uploads:
 networks:
   apiNetwork:
+
