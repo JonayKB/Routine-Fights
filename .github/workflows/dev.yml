@@ -43,6 +43,11 @@ jobs:
     strategy:
       matrix:
         component: [API, administration]
+        include:
+        - name: API
+          slug: api
+        - name: administration
+          slug: administration
     steps:
       - name: Create TIMESTAMP
         run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
@@ -59,8 +64,8 @@ jobs:
           file: ${{ matrix.component }}/Dockerfile
           push: true
           tags: |
-            ${{ vars.DOCKERHUB_USERNAME }}/${{ toLower(matrix.component) }}routinefights:latest,
-            ${{ vars.DOCKERHUB_USERNAME }}/${{ toLower(matrix.component) }}routinefights:${{ env.TIMESTAMP }}
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.slug }}routinefights:latest,
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.slug }}routinefights:${{ env.TIMESTAMP }}
           cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.component }}routinefights:latest
           cache-to: type=inline
   deploy:
