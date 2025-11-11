@@ -3,9 +3,12 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
-COPY . .
+COPY public ./public
+COPY src ./src
+COPY tsconfig.json ./
+COPY tailwind.config.js ./
 RUN npm run build
 
 # Production Stage
