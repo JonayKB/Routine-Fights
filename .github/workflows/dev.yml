@@ -40,38 +40,27 @@ jobs:
     needs: checks
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'main' }}
+    strategy:
+      matrix:
+        component: [API, administration]
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-      
-    - name: Log in to DockerHub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ vars.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-    - name: Create Maven Package
-      run: mvn -f API/pom.xml clean package -DskipTests
-    - name: Create TIMESTAMP
-      run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
-    - name: Build and push java image
-      uses: docker/build-push-action@v6
-      with:
-        context: API
-        file: API/Dockerfile
-        push: true
-        tags: ${{ vars.DOCKERHUB_USERNAME }}/apiroutinefights:latest,${{ vars.DOCKERHUB_USERNAME }}/apiroutinefights:${{ env.TIMESTAMP }}
-        
-    - name: Build and push admin image
-      uses: docker/build-push-action@v6
-      with:
-        context: administration
-        file: administration/Dockerfile
-        push: true
-        tags: ${{ vars.DOCKERHUB_USERNAME }}/administrationroutinefights:latest,${{ vars.DOCKERHUB_USERNAME }}/administrationroutinefights:${{ env.TIMESTAMP }}
+      - uses: actions/checkout@v3
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.component }}
+          file: ${{ matrix.component }}/Dockerfile
+          push: true
+          tags: |
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.component }}routinefights:latest,
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.component }}routinefights:${{ env.TIMESTAMP }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.component }}routinefights:latest
+          cache-to: type=inline
   deploy:
     needs: build
     runs-on: ubuntu-latest
