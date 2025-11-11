@@ -49,12 +49,13 @@ jobs:
     if: ${{ github.ref_name == 'main' }}
     strategy:
       matrix:
-        component: [API, administration]
         include:
         - name: API
           slug: api
+          component: API
         - name: administration
           slug: administration
+          component: administration
     steps:
       - uses: actions/checkout@v3
 
