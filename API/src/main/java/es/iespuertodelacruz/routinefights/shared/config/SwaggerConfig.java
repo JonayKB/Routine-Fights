@@ -12,7 +12,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "API JONAYYYYYYYYYYYYYYYYYYYYYYYYYYYYY", version = "0.0.1"), tags = {
+@OpenAPIDefinition(info = @Info(title = "API Routine Fights", version = "0.0.1"), tags = {
                 @Tag(name = "AUTH", description = "Get access token"),
 })
 public class SwaggerConfig {
