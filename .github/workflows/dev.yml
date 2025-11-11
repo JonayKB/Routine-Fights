@@ -44,6 +44,8 @@ jobs:
       matrix:
         component: [API, administration]
     steps:
+      - name: Create TIMESTAMP
+        run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - uses: docker/setup-buildx-action@v2
       - uses: docker/login-action@v3
@@ -57,8 +59,8 @@ jobs:
           file: ${{ matrix.component }}/Dockerfile
           push: true
           tags: |
-            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.component }}routinefights:latest,
-            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.component }}routinefights:${{ env.TIMESTAMP }}
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ toLower(matrix.component) }}routinefights:latest,
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ toLower(matrix.component) }}routinefights:${{ env.TIMESTAMP }}
           cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.component }}routinefights:latest
           cache-to: type=inline
   deploy:
