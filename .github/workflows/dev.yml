@@ -73,9 +73,8 @@ jobs:
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      
-      - name: Verificar archivos en target
-        run: ls -lh API/target
+      - name: DEBUG
+        run: echo "${{ matrix.slug }} -- ${{ matrix.component }} -- ${{ matrix.name }}"
       
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
