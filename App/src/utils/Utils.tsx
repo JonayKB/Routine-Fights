@@ -1,6 +1,6 @@
 import { translations } from "../../translations/translation";
 
-export const uri: string = "https://routinefights.ddns.net:8081";
+export const uri: string = "https://routinefights.ddns.net:6342";
 export const neo4jUri: string = uri + "/graphql";
 export const limit: number = 10;
 
