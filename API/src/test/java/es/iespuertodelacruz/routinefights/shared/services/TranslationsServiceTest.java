@@ -2,7 +2,9 @@ package es.iespuertodelacruz.routinefights.shared.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.ResourceLoader;
 
@@ -24,43 +27,14 @@ class TranslationsServiceTest {
 
     private TranslationService translationService;
 
-    @Mock
-    private ResourceLoader resourceLoader;
-
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        try {
-            Path tempDir = Files.createTempDirectory("translations_test");
-            File enFile = tempDir.resolve("en-US.json").toFile();
-            File esFile = tempDir.resolve("es-ES.json").toFile();
-            Files.write(enFile.toPath(), "{\"greeting\":\"Hello\",\"test\":\"Test {testArg}\"}".getBytes(StandardCharsets.UTF_8));
-            Files.write(esFile.toPath(), "{\"greeting\":\"Hola\",\"test\":\"Prueba {testArg}\"}".getBytes(StandardCharsets.UTF_8));
-            when(resourceLoader.getResource("classpath:translations"))
-                    .thenReturn(new FileSystemResource(tempDir.toFile()));
-            translationService = new TranslationService(resourceLoader);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        translationService = new TranslationService(new DefaultResourceLoader());
     }
 
     @Test
     void getTranslationsDirectorySuccess() {
-        File directory = translationService.getTranslationsDirectory();
-        assertNotNull(directory);
-        assertTrue(directory.listFiles().length > 0);
-    }
-
-    @Test
-    void setTranslationsDirectorySuccess() {
-        File newDirectory = new File("src/main/resources/translations/");
-        translationService.setTranslationsDirectory(newDirectory);
-        File directory = translationService.getTranslationsDirectory();
-        assertNotNull(directory);
-
-        assertEquals(directory, newDirectory);
+        assertNull(translationService.getTranslationsDirectory());
     }
 
     @Test

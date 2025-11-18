@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.shared.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,28 +31,23 @@ public class TranslationService {
 
     public TranslationService(ResourceLoader resourceLoader) {
         try {
-            Resource resource = resourceLoader.getResource("classpath:translations");
-            if (resource.exists() && resource.getFile().isDirectory()) {
-                this.translationsDirectory = resource.getFile();
-                log.info("Loaded translations from classpath: " + this.translationsDirectory);
-            } else {
-                this.translationsDirectory = new File("translations");
+            Resource[] resources = new PathMatchingResourcePatternResolver()
+                    .getResources("classpath:translations/*.json");
+
+            for (Resource res : resources) {
+                loadTranslationResource(res);
             }
+
+            log.info("Loaded " + translations.size() + " translation files from classpath");
         } catch (Exception e) {
-            log.warning("Could not load translations from classpath, defaulting to 'translations' directory.");
-            this.translationsDirectory = new File("translations");
+            log.warning("Could not load translations from classpath: " + e.getMessage());
         }
-        loadTranslations();
     }
 
     public File getTranslationsDirectory() {
         return translationsDirectory;
     }
 
-    public void setTranslationsDirectory(File translationsDirectory) {
-        this.translationsDirectory = translationsDirectory;
-        loadTranslations();
-    }
 
     /**
      * Translate a key to targetLanguage and replace named placeholders with values
@@ -93,25 +90,20 @@ public class TranslationService {
         return translate(key, targetLanguage, null);
     }
 
-    private void loadTranslations() {
-        translations.clear();
-        if (translationsDirectory == null) {
-            return;
-        }
-        File[] files = translationsDirectory.listFiles((d, name) -> name.toLowerCase().endsWith(".json"));
-        if (files == null) {
-            return;
-        }
-        for (File f : files) {
-            try {
-                String name = f.getName();
-                String lang = name.substring(0, name.lastIndexOf('.'));
-                byte[] bytes = Files.readAllBytes(f.toPath());
-                Map<String, String> map = objectMapper.readValue(bytes, new TypeReference<Map<String, String>>() {});
-                translations.put(lang, map);
-            } catch (IOException e) {
-                // ignore malformed files, continue loading others
-            }
+    private void loadTranslationResource(Resource res) {
+        try (InputStream in = res.getInputStream()) {
+            String filename = res.getFilename();
+            if (filename == null || !filename.endsWith(".json"))
+                return;
+
+            String lang = filename.substring(0, filename.lastIndexOf('.'));
+
+            Map<String, String> map = objectMapper.readValue(in,
+                    new TypeReference<Map<String, String>>() {
+                    });
+            translations.put(lang, map);
+        } catch (Exception e) {
+            log.warning("Failed to load translation file " + res.getFilename() + ": " + e.getMessage());
         }
     }
 

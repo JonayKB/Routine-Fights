@@ -1,4 +1,6 @@
 {
     "newEventTitle": "New Event Activated!",
-    "newEventBody": "The new event \"{eventName}\" has just started.\nDon't miss out on exclusive rewards and challenges!"
+    "newEventBody": "The new event \"{eventName}\" has just started.\nDon't miss out on exclusive rewards and challenges!",
+    "greeting": "Hello",
+    "test": "Test {testArg}"
 }
