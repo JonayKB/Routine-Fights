@@ -32,8 +32,8 @@ class TranslationsServiceTest {
         MockitoAnnotations.openMocks(this);
         try {
             Path tempDir = Files.createTempDirectory("translations_test");
-            File enFile = tempDir.resolve("en_US.json").toFile();
-            File esFile = tempDir.resolve("es_ES.json").toFile();
+            File enFile = tempDir.resolve("en-US.json").toFile();
+            File esFile = tempDir.resolve("es-ES.json").toFile();
             Files.write(enFile.toPath(), "{\"greeting\":\"Hello\",\"test\":\"Test {testArg}\"}".getBytes(StandardCharsets.UTF_8));
             Files.write(esFile.toPath(), "{\"greeting\":\"Hola\",\"test\":\"Prueba {testArg}\"}".getBytes(StandardCharsets.UTF_8));
             when(resourceLoader.getResource("classpath:translations"))
@@ -65,21 +65,21 @@ class TranslationsServiceTest {
 
     @Test
     void translateSuccessNotArgs() {
-        String translated = translationService.translate("greeting", "en_US", null);
+        String translated = translationService.translate("greeting", "en-US", null);
         assertEquals("Hello", translated);
     }
 
     @Test
     void translateSuccessEmptyArgs() {
-        String translated = translationService.translate("greeting", "es_ES", Collections.emptyMap());
+        String translated = translationService.translate("greeting", "es-ES", Collections.emptyMap());
         assertEquals("Hola", translated);
     }
 
     @Test
     void translateSuccessWithArgs() {
-        String translatedEs = translationService.translate("test", "es_ES", Map.of("testArg", "mundo"));
+        String translatedEs = translationService.translate("test", "es-ES", Map.of("testArg", "mundo"));
         assertEquals("Prueba mundo", translatedEs);
-        String translatedEn = translationService.translate("test", "en_US", Map.of("testArg", "world"));
+        String translatedEn = translationService.translate("test", "en-US", Map.of("testArg", "world"));
         assertEquals("Test world", translatedEn);
     }
 

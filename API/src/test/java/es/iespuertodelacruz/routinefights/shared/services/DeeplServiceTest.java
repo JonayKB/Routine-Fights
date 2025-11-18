@@ -28,11 +28,11 @@ class DeeplServiceTest {
     @Test
     void testTranslateText() throws DeepLException, InterruptedException {
         String text = "Hello, world!";
-        String targetLang = "es_ES";
+        String targetLang = "es-ES";
         String expectedTranslation = "¡Hola, mundo!";
 
         when(deeplClientMock.translateText(text, null, targetLang)).thenReturn(
-            new TextResult(expectedTranslation, "en_US", 0, null)
+            new TextResult(expectedTranslation, "en-US", 0, null)
         );
 
         String actualTranslation = deeplService.translateText(text, targetLang);
@@ -43,7 +43,7 @@ class DeeplServiceTest {
     @Test
     void testTranslateText_throwsDeepLException() throws DeepLException, InterruptedException {
         String text = "Hello, world!";
-        String targetLang = "es_ES";
+        String targetLang = "es-ES";
 
         when(deeplClientMock.translateText(text, null, targetLang)).thenThrow(new DeepLException("Translation error"));
 
@@ -55,7 +55,7 @@ class DeeplServiceTest {
     @Test
     void testTranslateText_throwsInterruptedException() throws DeepLException, InterruptedException {
         String text = "Hello, world!";
-        String targetLang = "es_ES";
+        String targetLang = "es-ES";
 
         when(deeplClientMock.translateText(text, null, targetLang)).thenThrow(new InterruptedException("Translation interrupted"));
 
