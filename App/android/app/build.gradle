@@ -98,9 +98,9 @@ android {
         }
         release {
             storeFile file('my-release-key.keystore')
-            storePassword '***REMOVED***'
+            storePassword '1q2w3e4r'
             keyAlias 'your_key_alias'
-            keyPassword '***REMOVED***'
+            keyPassword '1q2w3e4r'
         }
     }
     buildTypes {

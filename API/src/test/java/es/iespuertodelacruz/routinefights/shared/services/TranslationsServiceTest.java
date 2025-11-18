@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.DefaultResourceLoader;
 
 class TranslationsServiceTest {
 
@@ -17,7 +16,7 @@ class TranslationsServiceTest {
 
     @BeforeEach
     void setUp() {
-        translationService = new TranslationService(new DefaultResourceLoader());
+        translationService = new TranslationService();
     }
 
     @Test
