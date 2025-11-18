@@ -16,7 +16,10 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.java.Log;
+
 @Service
+@Log
 public class TranslationService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -29,10 +32,12 @@ public class TranslationService {
             Resource resource = resourceLoader.getResource("classpath:translations");
             if (resource.exists() && resource.getFile().isDirectory()) {
                 this.translationsDirectory = resource.getFile();
+                log.info("Loaded translations from classpath: " + this.translationsDirectory);
             } else {
                 this.translationsDirectory = new File("translations");
             }
         } catch (Exception e) {
+            log.warning("Could not load translations from classpath, defaulting to 'translations' directory.");
             this.translationsDirectory = new File("translations");
         }
         loadTranslations();
