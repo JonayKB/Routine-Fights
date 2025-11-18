@@ -9,7 +9,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class TranslationService {
     private final Map<String, Map<String, String>> translations = new ConcurrentHashMap<>();
     private static final Pattern PLACEHOLDER = Pattern.compile("\\{([^}]+)\\}");
 
-    public TranslationService(ResourceLoader resourceLoader) {
+    public TranslationService() {
         try {
             Resource[] resources = new PathMatchingResourcePatternResolver()
                     .getResources("classpath:translations/*.json");
