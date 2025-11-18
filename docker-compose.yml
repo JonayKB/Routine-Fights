@@ -10,10 +10,10 @@ services:
     environment:
       - SPRING_NEO4J_URI=bolt://db:7687
       - SPRING_AUTHENTICATION_NEO4J_USER=neo4j
-      - SPRING_AUTHENTICATION_NEO4J_PASSWORD=***REMOVED***
+      - SPRING_AUTHENTICATION_NEO4J_PASSWORD=1q2w3e4r
       - MAIL_FROM=routinefights@gmail.com
-      - MAIL_PASSWORD=***REMOVED***
-      - JWT_SECRET=***REMOVED***
+      - MAIL_PASSWORD=yhah camn tnmx uzgn
+      - JWT_SECRET=096c1b60e347ba237541b283bdaa3df7
     depends_on:
       - db
     networks:
@@ -29,7 +29,7 @@ services:
         - /$HOME/neo4j/data:/data
         - /$HOME/neo4j/plugins:/plugins
     environment:
-        - NEO4J_AUTH=neo4j/***REMOVED***
+        - NEO4J_AUTH=neo4j/1q2w3e4r
     restart: always
     ports:
       - "7687:7687"

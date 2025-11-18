@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "161737061797",
+    "project_id": "routinefights-1",
+    "storage_bucket": "routinefights-1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:161737061797:android:57de4fb60145890efe244c",
+        "android_client_info": {
+          "package_name": "com.routinefights"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqyP0Gb34PYVc6MHyeagYi9TWSzZ8RULo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
