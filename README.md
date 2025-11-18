@@ -74,59 +74,10 @@
 
 ## Using Docker
 
-## Without Docker
-
 Execute this docker-compose
-CONNECT TO API BY 8081
-```Dockerfile
-version: '3.3'
+[Docker-Compose](docker-compose.yml)
 
-services:
-  app:
-    image: jonaykb/apiroutinefights:latest
-    container_name: apiroutinefights
-    restart: always
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_NEO4J_URI=bolt://db:7687
-      - SPRING_AUTHENTICATION_NEO4J_USER=neo4j
-      - SPRING_AUTHENTICATION_NEO4J_PASSWORD=***REMOVED***
-      - MAIL_FROM=routinefights@gmail.com
-      - MAIL_PASSWORD=***REMOVED***
-      - SERVER_SSL_ENABLED=false
-      - JWT_SECRET=secret
-    depends_on:
-      - db
-    networks:
-      - apiNetwork
-    volumes:
-      - app_uploads:/$HOME/uploads
-  db:
-    image: neo4j:latest
-    volumes:
-        - /$HOME/neo4j/logs:/logs
-        - /$HOME/neo4j/config:/config
-        - /$HOME/neo4j/data:/data
-        - /$HOME/neo4j/plugins:/plugins
-    environment:
-        - NEO4J_AUTH=neo4j/***REMOVED***
-    restart: always
-    networks:
-      - apiNetwork
-  admin:
-    image: jonaykb/administrationroutinefights:latest
-    restart: always
-    ports:
-     - "8023:80"
-    networks:
-     - apiNetwork
-volumes:
-  db_data:
-  app_uploads:
-networks:
-  apiNetwork:
-```
+## Without Docker
 
 ### Clone Repository
 
@@ -451,7 +402,7 @@ Social media campaign featuring promotional videos that highlight:
 
 # Sonarqube
 
-[Look the quality of code and how it upgraded](http://zombiesurvive.ddns.net:9000)
+[Look the quality of code and how it upgraded](http://routinefights.ddns.net:9000)
 > Ask to us to get the credentials
 
 # Download The App
