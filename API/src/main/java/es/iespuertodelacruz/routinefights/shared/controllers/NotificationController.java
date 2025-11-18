@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/notifications")
 @RestController()
 @Tag(name = "NOTIFICATIONS", description = "Notifications")
-@Secured("ROLE_ADMIN")
+// @Secured("ROLE_ADMIN")
 public class NotificationController {
     private NotificationsService notificationService;
 
