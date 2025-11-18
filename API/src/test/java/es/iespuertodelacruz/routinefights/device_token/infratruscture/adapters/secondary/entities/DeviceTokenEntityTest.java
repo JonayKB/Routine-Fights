@@ -10,7 +10,7 @@ import es.iespuertodelacruz.routinefights.user.infrastructure.adapters.secondary
 
 class DeviceTokenEntityTest {
 
-    private static final String LANGUAGE = "en_US";
+    private static final String LANGUAGE = "en-US";
     private static final String TOKEN = "sampleToken";
     private static final UserEntity USER = new UserEntity();
 

@@ -8,7 +8,7 @@ import es.iespuertodelacruz.routinefights.user.domain.User;
 
 class DeviceTokenTest {
 
-    private static final String LANGUAGE = "en_US";
+    private static final String LANGUAGE = "en-US";
     private static final String TOKEN = "sampleToken";
     private static final User USER = new User();
 
