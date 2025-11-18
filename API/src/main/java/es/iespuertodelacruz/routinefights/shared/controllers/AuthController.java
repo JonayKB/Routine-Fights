@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.routinefights.shared.controllers;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.http.ResponseEntity;
@@ -57,8 +58,9 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,@RequestParam(required = false) String deviceToken, @RequestParam(required = false) String language) {
         try {
-            logger.info("Login /api/auth/login with email: " + email);
-            logger.info("Token: " + deviceToken + " Language: " + language);
+            logger.log(Level.WARNING, "Login attempt for email: " + email);
+            logger.log(Level.INFO, "Token: " + deviceToken + " Language: " + language);
+
             String token = authService.login(email, password);
             if (deviceToken != null && language != null) {
                 deviceTokenService.save(email, deviceToken, language);
