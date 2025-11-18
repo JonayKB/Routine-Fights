@@ -1,6 +1,5 @@
 package es.iespuertodelacruz.routinefights.shared.controllers;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.http.ResponseEntity;
