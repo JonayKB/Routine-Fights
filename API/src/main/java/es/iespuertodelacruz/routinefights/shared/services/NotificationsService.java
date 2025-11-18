@@ -37,6 +37,8 @@ public class NotificationsService {
             String title = translationService.translate(titleKey, lang, args);
             String body = translationService.translate(bodyKey, lang, args);
 
+            log.info("Preparing to send to language: general-" + lang);
+
             Message message = Message.builder()
                     .setTopic("general-" + lang)
                     .setNotification(Notification.builder().setTitle(title).setBody(body).build())
@@ -59,7 +61,7 @@ public class NotificationsService {
         return !results.isEmpty() ? results.toString() : null;
     }
 
-    public String sendTo(String titleKey, String bodyKey, DeviceToken userToken, Map<String, ?> args) {
+    public String sendTo(String titleKey, String bodyKey, DeviceToken userToken, Map<String, Object> args) {
         String title = translationService.translate(titleKey, userToken.getLanguage(), args);
         String body = translationService.translate(bodyKey, userToken.getLanguage(), args);
 
