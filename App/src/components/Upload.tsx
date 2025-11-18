@@ -18,7 +18,7 @@ const Upload = ({ navigation }: Props) => {
       <Text
         className={`text-2xl font-bold mb-8 ${textColor(darkmode)}`}
       >
-        {translations[language || "en-EN"].screens.UploadForm.title}
+        {translations[language || "en-US"].screens.UploadForm.title}
       </Text>
 
       <TouchableOpacity
@@ -33,7 +33,7 @@ const Upload = ({ navigation }: Props) => {
       >
         <Icon name="camera-outline" size={36} color="#4B0082" />
         <Text className="ml-4 text-lg font-semibold text-[#4B0082]">
-          {translations[language || "en-EN"].screens.UploadForm.takeFromCamera}
+          {translations[language || "en-US"].screens.UploadForm.takeFromCamera}
         </Text>
       </TouchableOpacity>
 
@@ -50,7 +50,7 @@ const Upload = ({ navigation }: Props) => {
         <Icon name="image-outline" size={36} color="#4B0082" />
         <Text className="ml-4 text-lg font-semibold text-[#4B0082]">
           {
-            translations[language || "en-EN"].screens.UploadForm
+            translations[language || "en-US"].screens.UploadForm
               .selectFromLibrary
           }
         </Text>

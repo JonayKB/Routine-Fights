@@ -26,7 +26,7 @@ const FollowCount = (props: Props) => {
         }
       >
         <Text className="text-black text-lg">
-          {translations[language || 'en-EN'].screens.Profile.followers}: {props.followers}
+          {translations[language || 'en-US'].screens.Profile.followers}: {props.followers}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -38,7 +38,7 @@ const FollowCount = (props: Props) => {
         }
       >
         <Text className="text-black text-lg">
-          {translations[language || 'en-EN'].screens.Profile.following}: {props.following}
+          {translations[language || 'en-US'].screens.Profile.following}: {props.following}
         </Text>
       </TouchableOpacity>
     </View>

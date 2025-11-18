@@ -88,7 +88,7 @@ const UploadFormScreen = (props: Props) => {
             >
               <Text className="text-white font-bold text-lg text-center">
                 {
-                  translations[language || "en-EN"].screens.UploadForm
+                  translations[language || "en-US"].screens.UploadForm
                     .changePicture
                 }
               </Text>
@@ -106,7 +106,7 @@ const UploadFormScreen = (props: Props) => {
             value={activityName}
             setValue={setActivityName}
             message={
-              translations[language || "en-EN"].screens.UploadForm
+              translations[language || "en-US"].screens.UploadForm
                 .selectactivity
             }
             onFocus={fetchCategories}
@@ -123,12 +123,12 @@ const UploadFormScreen = (props: Props) => {
           }`}
         >
           <Text className="text-white font-bold text-xl text-center">
-            {translations[language || "en-EN"].screens.UploadForm.postButton}
+            {translations[language || "en-US"].screens.UploadForm.postButton}
           </Text>
         </TouchableOpacity>
 
         <Text className={`pb-6 text-center ${textColor(darkmode)}`}>
-          {translations[language || "en-EN"].screens.UploadForm.timesRemaining}
+          {translations[language || "en-US"].screens.UploadForm.timesRemaining}
           {": "}
           {`${activity?.timesRemaining || 0}`}
         </Text>

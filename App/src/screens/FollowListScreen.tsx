@@ -50,7 +50,7 @@ const FollowListScreen = ({ navigation, route }: Props) => {
       <ProfileNavigation
         navigation={navigation}
         message={`${
-          translations[language || "en-EN"].screens.Profile[route.params.type]
+          translations[language || "en-US"].screens.Profile[route.params.type]
         }: ${users.length}`}
       />
       <View className="items-center">

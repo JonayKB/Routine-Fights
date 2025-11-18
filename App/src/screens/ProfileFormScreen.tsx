@@ -58,14 +58,14 @@ const ProfileFormScreen = ({ navigation }: Props) => {
       >
         <View className="m-10">
           <FormInput
-            label={translations[language || "en-EN"].screens.ProfileForm.email}
+            label={translations[language || "en-US"].screens.ProfileForm.email}
             name={user.email}
             setText={(text) => setUser({ ...user, email: text })}
             mode="text"
           />
           <FormInput
             label={
-              translations[language || "en-EN"].screens.ProfileForm.username
+              translations[language || "en-US"].screens.ProfileForm.username
             }
             name={user.username}
             setText={(text) => setUser({ ...user, username: text })}
@@ -73,7 +73,7 @@ const ProfileFormScreen = ({ navigation }: Props) => {
           />
           <FormInput
             label={
-              translations[language || "en-EN"].screens.ProfileForm.password
+              translations[language || "en-US"].screens.ProfileForm.password
             }
             name={user.password}
             setText={(text) => setUser({ ...user, password: text })}
@@ -81,7 +81,7 @@ const ProfileFormScreen = ({ navigation }: Props) => {
           />
           <FormInput
             label={
-              translations[language || "en-EN"].screens.ProfileForm.nationality
+              translations[language || "en-US"].screens.ProfileForm.nationality
             }
             name={user.nationality}
             setText={(text) => setUser({ ...user, nationality: text })}
@@ -89,7 +89,7 @@ const ProfileFormScreen = ({ navigation }: Props) => {
           />
           <FormInput
             label={
-              translations[language || "en-EN"].screens.ProfileForm.phoneNumber
+              translations[language || "en-US"].screens.ProfileForm.phoneNumber
             }
             name={user.phoneNumber}
             setText={(text) => setUser({ ...user, phoneNumber: text })}
@@ -100,7 +100,7 @@ const ProfileFormScreen = ({ navigation }: Props) => {
             onPress={updateProfile}
           >
             <Text className="text-white font-bold text-xl text-center">
-              {translations[language || "en-EN"].screens.ProfileForm.update}
+              {translations[language || "en-US"].screens.ProfileForm.update}
             </Text>
           </TouchableOpacity>
         </View>

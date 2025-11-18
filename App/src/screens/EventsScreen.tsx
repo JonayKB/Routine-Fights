@@ -135,7 +135,7 @@ const EventsScreen = (props: Props) => {
           <DateFormatString date={event?.finishDate} />
         </View>
         <Text className={`text-2xl ${textColor(darkmode)} text-center mt-2`}>
-          {translations[language || "en-EN"].screens.Events.timeLeft}
+          {translations[language || "en-US"].screens.Events.timeLeft}
           {": "}
           {formatTime(timeLeft)}
         </Text>
@@ -146,7 +146,7 @@ const EventsScreen = (props: Props) => {
           darkmode
         )} text-center mt-4`}
       >
-        {translations[language || "en-EN"].screens.Events.progress}
+        {translations[language || "en-US"].screens.Events.progress}
         {": "}
         {currentPoints + "pts / " + event?.totalRequired + "pts"}
       </Text>
@@ -224,7 +224,7 @@ const EventsScreen = (props: Props) => {
         })}
       </View>
       <Text className={`text-md ${textColor(darkmode)} text-center mt-4 mb-6`}>
-        {translations[language || "en-EN"].screens.Events.finalMessage}
+        {translations[language || "en-US"].screens.Events.finalMessage}
       </Text>
     </ScrollView>
   );

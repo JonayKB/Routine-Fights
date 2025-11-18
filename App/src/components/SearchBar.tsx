@@ -13,7 +13,7 @@ const SearchBar = (props: Props) => {
   return (
     <View className="justify-center items-center">
       <TextInput
-        placeholder={translations[language || "en-EN"].screens.Home.search}
+        placeholder={translations[language || "en-US"].screens.Home.search}
         placeholderTextColor={darkmode ? "#B28DFF" : "#4B0082"}
         className={`border-2 rounded-xl text-2xl w-11/12 my-5 pl-3 ${
           darkmode

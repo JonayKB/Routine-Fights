@@ -36,7 +36,7 @@ const RegisterScreen = ({ navigation, route }: Props) => {
 
     try {
       await register({ ...userIn, image: "null.jpg" });
-      Alert.alert(translations[language || "en-EN"].screens.Register.successMessage);
+      Alert.alert(translations[language || "en-US"].screens.Register.successMessage);
     } catch (error) {
       Alert.alert("Error", error.response.data);
     }
@@ -52,20 +52,20 @@ const RegisterScreen = ({ navigation, route }: Props) => {
       >
         <View className="m-10">
           <FormInput
-            label={translations[language || "en-EN"].screens.Register.username}
+            label={translations[language || "en-US"].screens.Register.username}
             name={userIn.username}
             setText={(text) => setUserIn({ ...userIn, username: text })}
             mode="text"
           />
           <FormInput
-            label={translations[language || "en-EN"].screens.Login.email}
+            label={translations[language || "en-US"].screens.Login.email}
             name={userIn.email}
             setText={(text) => setUserIn({ ...userIn, email: text })}
             mode="email"
           />
           <FormInput
             label={
-              translations[language || "en-EN"].screens.ProfileForm.nationality
+              translations[language || "en-US"].screens.ProfileForm.nationality
             }
             name={userIn.nationality}
             setText={(text) => setUserIn({ ...userIn, nationality: text })}
@@ -110,7 +110,7 @@ const RegisterScreen = ({ navigation, route }: Props) => {
 
           <TextInput
             placeholder={
-              translations[language || "en-EN"].screens.Login.password
+              translations[language || "en-US"].screens.Login.password
             }
             placeholderTextColor={`${darkmode ? "#E0D3F5" : "#4B0082"}`}
             secureTextEntry={!passwordShown}
@@ -123,7 +123,7 @@ const RegisterScreen = ({ navigation, route }: Props) => {
           />
           <TextInput
             placeholder={
-              translations[language || "en-EN"].screens.Register.confirmPassword
+              translations[language || "en-US"].screens.Register.confirmPassword
             }
             placeholderTextColor={`${darkmode ? "#E0D3F5" : "#4B0082"}`}
             secureTextEntry={!passwordShown}
@@ -149,7 +149,7 @@ const RegisterScreen = ({ navigation, route }: Props) => {
             className="bg-[#F65261] rounded-lg py-3 mb-5"
           >
             <Text className="text-white font-bold text-xl text-center">
-              {translations[language || "en-EN"].screens.Login.register}
+              {translations[language || "en-US"].screens.Login.register}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -157,7 +157,7 @@ const RegisterScreen = ({ navigation, route }: Props) => {
             className="border-[#F65261] border-2 rounded-lg py-1"
           >
             <Text className="text-[#7D3C98] font-bold text-lg text-center">
-              {translations[language || "en-EN"].screens.Login.login}
+              {translations[language || "en-US"].screens.Login.login}
             </Text>
           </TouchableOpacity>
         </View>

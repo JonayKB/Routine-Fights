@@ -67,11 +67,11 @@ const FollowBox = (props: Props) => {
             {follower.username}
           </Text>
           <Text className={`${darkmode ? "text-white" : "text-[#333333]"}`}>
-            {translations[language || "en-EN"].screens.Profile.followers}:{" "}
+            {translations[language || "en-US"].screens.Profile.followers}:{" "}
             {convertQuantityToString(follower.followers)}
           </Text>
           <Text className={`${darkmode ? "text-white" : "text-[#333333]"}`}>
-            {translations[language || "en-EN"].screens.Profile.following}:{" "}
+            {translations[language || "en-US"].screens.Profile.following}:{" "}
             {convertQuantityToString(follower.following)}
           </Text>
         </View>
@@ -86,8 +86,8 @@ const FollowBox = (props: Props) => {
               }`}
             >
               {follower.isFollowing
-                ? translations[language || "en-EN"].screens.Profile.unfollow
-                : translations[language || "en-EN"].screens.Profile.follow}
+                ? translations[language || "en-US"].screens.Profile.unfollow
+                : translations[language || "en-US"].screens.Profile.follow}
             </Text>
           </TouchableOpacity>
         )}

@@ -115,7 +115,7 @@ const HomeScreen = ({ navigation }: Props) => {
               `}
               >
                 {
-                  translations[language || "en-EN"].screens.Home.type[
+                  translations[language || "en-US"].screens.Home.type[
                     selectedType
                   ]
                 }

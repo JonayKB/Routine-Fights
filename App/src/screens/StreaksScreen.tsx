@@ -75,7 +75,7 @@ const StreaksScreen = ({ navigation, route }: Props) => {
   return (
     <View className={`flex-1 ${bgColor(darkmode)} items-center pt-8`}>
       <Text className={`text-4xl font-bold mb-2 ${textColor(darkmode)}`}>
-        {translations[language || "en-EN"].screens.Streaks.myStreaks}
+        {translations[language || "en-US"].screens.Streaks.myStreaks}
       </Text>
 
       <FlatList

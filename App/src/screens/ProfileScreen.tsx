@@ -223,8 +223,8 @@ const ProfileScreen = ({ navigation, route }: Props) => {
                 }`}
               >
                 {user.isFollowing
-                  ? translations[language || "en-EN"].screens.Profile.unfollow
-                  : translations[language || "en-EN"].screens.Profile.follow}
+                  ? translations[language || "en-US"].screens.Profile.unfollow
+                  : translations[language || "en-US"].screens.Profile.follow}
               </Text>
             </TouchableOpacity>
           )}

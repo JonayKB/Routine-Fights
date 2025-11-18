@@ -62,7 +62,7 @@ const SettingsScreen = ({ navigation }: Props) => {
     <View className={`flex-1 ${bgColor(darkmode)}`}>
       <ProfileNavigation
         navigation={navigation}
-        message={translations[language || "en-EN"].screens.Settings.settings}
+        message={translations[language || "en-US"].screens.Settings.settings}
       />
       <View
         className={`p-5 gap-5 m-4 ${
@@ -70,7 +70,7 @@ const SettingsScreen = ({ navigation }: Props) => {
         } rounded-2xl`}
       >
         <Button
-          title={translations[language || "en-EN"].screens.Settings.editProfile}
+          title={translations[language || "en-US"].screens.Settings.editProfile}
           onPress={() => navigation.navigate("ProfileForm")}
           color={darkmode ? "#B28DFF" : "#7D3C98"}
         />
@@ -82,7 +82,7 @@ const SettingsScreen = ({ navigation }: Props) => {
           <DropDown
             data={languages(language)}
             message={
-              translations[language || "en-EN"].screens.Settings.language
+              translations[language || "en-US"].screens.Settings.language
             }
             value={language}
             setValue={changeLanguage}
@@ -91,18 +91,18 @@ const SettingsScreen = ({ navigation }: Props) => {
         <Button
           title={
             darkmode
-              ? translations[language || "en-EN"].screens.Settings.lightMode
-              : translations[language || "en-EN"].screens.Settings.darkMode
+              ? translations[language || "en-US"].screens.Settings.lightMode
+              : translations[language || "en-US"].screens.Settings.darkMode
           }
           onPress={changeMode}
           color={darkmode ? "#B28DFF" : "#7D3C98"}
         />
         <Button
-          title={translations[language || "en-EN"].screens.Settings.leftHand[lefthand ? "left" : "right"]}
+          title={translations[language || "en-US"].screens.Settings.leftHand[lefthand ? "left" : "right"]}
           onPress={changeSide}
           color={darkmode ? "#B28DFF" : "#7D3C98"}
         />
-        <Button title={translations[language || "en-EN"].screens.Settings.logout} onPress={closeSession} color="#F65261" />
+        <Button title={translations[language || "en-US"].screens.Settings.logout} onPress={closeSession} color="#F65261" />
       </View>
     </View>
   );

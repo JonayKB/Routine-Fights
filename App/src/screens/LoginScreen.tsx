@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, PermissionsAndroid, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
@@ -47,35 +47,44 @@ const LoginScreen = ({ navigation }: Props) => {
       Alert.alert("Error", error.response.data);
     }
   };
-  async function requestUserPermission() {
-        const authStatus = await requestPermission();
-        console.log('Auth status:', authStatus);
-      }
+  async function requestUserPermission(messaging) {
+    if (Platform.OS === 'android' && Platform.Version >= 33) {
+      const result = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+      );
 
-      function useFirebaseMessaging() {
-          const messaging = getMessaging();
+      console.log("POST_NOTIFICATIONS permission:", result);
+      return result === PermissionsAndroid.RESULTS.GRANTED;
+    }
 
-          requestUserPermission();
+    // iOS
+    const authStatus = await messaging().requestPermission();
+    console.log("Authorization status:", authStatus);
+    return authStatus === messaging.AuthorizationStatus.AUTHORIZED;
+  }
 
-          getToken(messaging)
-            .then(token => {
-              console.log('FCM Token:', token);
-              setDeviceToken(token)
-              return subscribeToTopic(messaging,'general');
-            })
-            .then(() => {
-              console.log('Subscribed to general topic');
-            })
-            .catch(err => {
-              console.error('Error subscribing to general topic:', err);
-            });
+  function useFirebaseMessaging() {
+    const messaging = getMessaging();
 
-          const unsubscribe = onMessage(messaging, async remoteMessage => {
-            console.log('Foregorund message:', remoteMessage);
-          });
+    requestUserPermission(messaging);
 
-          return unsubscribe;
-      }
+    getToken(messaging)
+      .then(token => {
+        console.log('FCM Token:', token);
+        setDeviceToken(token)
+        return subscribeToTopic(messaging, 'general-'+language);
+      })
+      .then(() => {
+        console.log('Subscribed to general topic: general-'+language);
+      })
+      .catch(err => {
+        console.error('Error subscribing to general topic:', err);
+      });
+
+    onMessage(messaging, async remoteMessage => {
+      console.log('Foregorund message:', remoteMessage);
+    });
+  }
 
   const fetchLanguage = async () => {
     try {
@@ -97,7 +106,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
   const log = async () => {
     try {
-      const token = await login(email, password,deviceToken,language);
+      const token = await login(email, password, deviceToken, language);
       setToken(token);
       resetNavigation(navigation, "MainTabNavigation");
     } catch (error) {
@@ -110,29 +119,27 @@ const LoginScreen = ({ navigation }: Props) => {
       className={`flex-1 ${cardBgColor(darkmode)} justify-center items-center`}
     >
       <View
-        className={`justify-evenly ${
-          darkmode ? "bg-[#E8E2F0]" : "bg-white"
-        } rounded-2xl w-96`}
+        className={`justify-evenly ${darkmode ? "bg-[#E8E2F0]" : "bg-white"
+          } rounded-2xl w-96`}
         style={{ height: 400 }}
       >
         <View className="m-10 mb-5">
           <FormInput
-            label={translations[language || "en-EN"].screens.Login.email}
+            label={translations[language || "en-US"].screens.Login.email}
             name={email}
             setText={(text) => setEmail(text)}
             mode="email"
           />
           <TextInput
             placeholder={
-              translations[language || "en-EN"].screens.Login.password
+              translations[language || "en-US"].screens.Login.password
             }
             placeholderTextColor={`${darkmode ? "#E0D3F5" : "#4B0082"}`}
             secureTextEntry={!passwordShown}
-            className={`text-lg mb-5 pl-3 rounded-lg border-2 ${
-              darkmode
-                ? "bg-[#4B294F] text-white border-[#B28DFF]"
-                : "bg-[#F8F7FE] text-black border-[#4B0082]"
-            }`}
+            className={`text-lg mb-5 pl-3 rounded-lg border-2 ${darkmode
+              ? "bg-[#4B294F] text-white border-[#B28DFF]"
+              : "bg-[#F8F7FE] text-black border-[#4B0082]"
+              }`}
             onChangeText={(text) => setPassword(text)}
           />
           <TouchableOpacity onPress={() => setPasswordShown(!passwordShown)}>
@@ -153,7 +160,7 @@ const LoginScreen = ({ navigation }: Props) => {
               className={style.utils.button}
               style={{ fontFamily: "Lexend-Regular" }}
             >
-              {translations[language || "en-EN"].screens.Login.login}
+              {translations[language || "en-US"].screens.Login.login}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -161,7 +168,7 @@ const LoginScreen = ({ navigation }: Props) => {
             className="border-[#F65261] border-2 rounded-lg py-1"
           >
             <Text className="text-[#7D3C98] font-bold text-2xl text-center">
-              {translations[language || "en-EN"].screens.Login.register}
+              {translations[language || "en-US"].screens.Login.register}
             </Text>
           </TouchableOpacity>
         </View>

@@ -1,6 +1,6 @@
 import { translations } from "../../translations/translation";
 
-export const uri: string = "http://routinefights.ddns.net:6342";
+export const uri: string = "https://routinefights.ddns.net:6342";
 export const neo4jUri: string = uri + "/graphql";
 export const limit: number = 10;
 
@@ -26,22 +26,22 @@ export const convertQuantityToString = (quantity: number): string => {
 export const languages = (language: string) => [
   {
     label:
-      translations[language || "en-EN"].screens.Settings.languages["english"],
-    value: "en-EN",
+      translations[language || "en-US"].screens.Settings.languages["english"],
+    value: "en-US",
   },
   {
     label:
-      translations[language || "en-EN"].screens.Settings.languages["spanish"],
+      translations[language || "en-US"].screens.Settings.languages["spanish"],
     value: "es-ES",
   },
   {
     label:
-      translations[language || "en-EN"].screens.Settings.languages["french"],
+      translations[language || "en-US"].screens.Settings.languages["french"],
     value: "fr-FR",
   },
   {
     label:
-      translations[language || "en-EN"].screens.Settings.languages["german"],
+      translations[language || "en-US"].screens.Settings.languages["german"],
     value: "de-DE",
   },
 ];

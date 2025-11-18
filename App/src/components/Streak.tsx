@@ -35,7 +35,7 @@ const Streak = (props: Props) => {
           {props.streak?.name}
         </Text>
         <Text className={`text-2xl mt-4 ${textColor(darkmode)}`}>
-          {translations[language || "en-EN"].screens.Streaks.timesRemaining}
+          {translations[language || "en-US"].screens.Streaks.timesRemaining}
           {": "}
           {props.streak?.timesRemaining == null
             ? props.streak?.timesRequiered

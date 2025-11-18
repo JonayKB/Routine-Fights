@@ -4,7 +4,7 @@ import fr from './fr.json';
 import de from './de.json';
 
 export const translations = {
-    'en-EN': en,
+    'en-US': en,
     'es-ES': es,
     'fr-FR': fr,
     'de-DE': de

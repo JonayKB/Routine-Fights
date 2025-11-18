@@ -40,15 +40,15 @@ const ActivityDetailsBox = ({ activity }: Props) => {
           darkmode ? "text-[#B0A1C1]" : "text-[#4B0082]"
         }`}
       >
-        {translations[language || "en-EN"].screens.ActivityDetails.numOfTimes}:{" "}
+        {translations[language || "en-US"].screens.ActivityDetails.numOfTimes}:{" "}
         {activity.timesRequiered}
       </Text>
 
       <Text
         className={`text-xl ${darkmode ? "text-[#B0A1C1]" : "text-[#4B0082]"}`}
       >
-        {translations[language || "en-EN"].screens.ActivityDetails.frequency}:{" "}
-        {translations[language || "en-EN"].screens.ActivityDetails.timeRates[activity.timeRate]}
+        {translations[language || "en-US"].screens.ActivityDetails.frequency}:{" "}
+        {translations[language || "en-US"].screens.ActivityDetails.timeRates[activity.timeRate]}
       </Text>
     </View>
   );

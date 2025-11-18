@@ -62,7 +62,7 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
               className="text-white font-bold text-2xl"
               style={{ fontFamily: "Roboto-Regular" }}
             >
-              {translations[language || "en-EN"].screens.ActivityDetails.add}
+              {translations[language || "en-US"].screens.ActivityDetails.add}
             </Text>
           </TouchableOpacity>
         )}

@@ -23,7 +23,7 @@ const SearchBarHeader = (props: Props) => {
         <Icon name="arrow-back" size={28} color={iconColor(darkmode)} />
       </TouchableOpacity>
       <TextInput
-        placeholder={translations[language || "en-EN"].screens.Home.search}
+        placeholder={translations[language || "en-US"].screens.Home.search}
         placeholderTextColor={darkmode ? "#B28DFF" : "#7D3C98"}
         className={`ml-4 flex-1 rounded-xl border-2 px-4 py-2 text-2xl ${
           darkmode

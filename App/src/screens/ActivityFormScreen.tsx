@@ -30,23 +30,23 @@ const ActivityFormScreen = (props: Props) => {
   const timeRates = [
     {
       label:
-        translations[language || "en-EN"].screens.ActivityForm.timeRates.daily,
+        translations[language || "en-US"].screens.ActivityForm.timeRates.daily,
       value: "daily",
     },
     {
       label:
-        translations[language || "en-EN"].screens.ActivityForm.timeRates.weekly,
+        translations[language || "en-US"].screens.ActivityForm.timeRates.weekly,
       value: "weekly",
     },
     {
       label:
-        translations[language || "en-EN"].screens.ActivityForm.timeRates
+        translations[language || "en-US"].screens.ActivityForm.timeRates
           .monthly,
       value: "monthly",
     },
     {
       label:
-        translations[language || "en-EN"].screens.ActivityForm.timeRates.yearly,
+        translations[language || "en-US"].screens.ActivityForm.timeRates.yearly,
       value: "yearly",
     },
   ];
@@ -64,7 +64,7 @@ const ActivityFormScreen = (props: Props) => {
       );
 
       Alert.alert(
-        translations[language || "en-EN"].screens.ActivityForm.success
+        translations[language || "en-US"].screens.ActivityForm.success
       );
       setUri(null);
       props.navigation.goBack();
@@ -88,7 +88,7 @@ const ActivityFormScreen = (props: Props) => {
           )}
 
           <FormInput
-            label={translations[language || "en-EN"].screens.ActivityForm.title}
+            label={translations[language || "en-US"].screens.ActivityForm.title}
             name={activity.name}
             setText={(text) => setActivity({ ...activity, name: text })}
             mode="text"
@@ -96,7 +96,7 @@ const ActivityFormScreen = (props: Props) => {
 
           <FormInput
             label={
-              translations[language || "en-EN"].screens.ActivityForm.description
+              translations[language || "en-US"].screens.ActivityForm.description
             }
             name={activity.description}
             setText={(text) => setActivity({ ...activity, description: text })}
@@ -109,14 +109,14 @@ const ActivityFormScreen = (props: Props) => {
               value={timeRate}
               setValue={setTimeRate}
               message={
-                translations[language || "en-EN"].screens.UploadForm.timeRate
+                translations[language || "en-US"].screens.UploadForm.timeRate
               }
             />
           </View>
 
           <FormInput
             label={
-              translations[language || "en-EN"].screens.ActivityForm
+              translations[language || "en-US"].screens.ActivityForm
                 .timesRequired
             }
             name={activity.timesRequiered}
@@ -131,7 +131,7 @@ const ActivityFormScreen = (props: Props) => {
             onPress={addActivity}
           >
             <Text className="text-white font-bold text-xl text-center">
-              {translations[language || "en-EN"].screens.ActivityForm.post}
+              {translations[language || "en-US"].screens.ActivityForm.post}
             </Text>
           </TouchableOpacity>
         </ScrollView>
