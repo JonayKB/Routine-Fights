@@ -21,11 +21,13 @@ import es.iespuertodelacruz.routinefights.shared.services.MailService;
 import es.iespuertodelacruz.routinefights.shared.utils.HTMLTemplates;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.java.Log;
 
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin
 @Tag(name = "AUTH", description = "Get access token")
+@Log
 public class AuthController {
 
     private final MailService mailService;
@@ -58,9 +60,9 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,@RequestParam(required = false) String deviceToken, @RequestParam(required = false) String language) {
         try {
-            logger.log(Level.WARNING, "Login attempt for email: " + email);
-            logger.log(Level.INFO, "Token: " + deviceToken + " Language: " + language);
-
+            log.warning("Login attempt for email: " + email);
+            log.info("Token: " + deviceToken + " Language: " + language);
+            
             String token = authService.login(email, password);
             if (deviceToken != null && language != null) {
                 deviceTokenService.save(email, deviceToken, language);
