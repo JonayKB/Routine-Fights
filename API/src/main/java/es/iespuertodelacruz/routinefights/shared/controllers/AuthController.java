@@ -57,6 +57,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,@RequestParam(required = false) String deviceToken, @RequestParam(required = false) String language) {
         try {
+            logger.info("Login /api/auth/login with email: " + email);
+            logger.info("Token: " + deviceToken + " Language: " + language);
             String token = authService.login(email, password);
             if (deviceToken != null && language != null) {
                 deviceTokenService.save(email, deviceToken, language);
