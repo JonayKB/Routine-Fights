@@ -61,7 +61,7 @@ public class NotificationsService {
         return !results.isEmpty() ? results.toString() : null;
     }
 
-    public String sendTo(String titleKey, String bodyKey, DeviceToken userToken, Map<String, Object> args) {
+    public String sendTo(String titleKey, String bodyKey, DeviceToken userToken, Map<String, ?> args) {
         String title = translationService.translate(titleKey, userToken.getLanguage(), args);
         String body = translationService.translate(bodyKey, userToken.getLanguage(), args);
 
