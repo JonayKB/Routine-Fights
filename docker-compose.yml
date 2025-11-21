@@ -39,7 +39,7 @@ services:
     image: jonaykb/administrationroutinefights:latest
     restart: always
     ports:
-     - "80:80"
+     - "8023:80"
     networks:
      - apiNetwork
     volumes:
