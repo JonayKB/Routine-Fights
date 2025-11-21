@@ -12,8 +12,8 @@ services:
       - SPRING_AUTHENTICATION_NEO4J_USER=neo4j
       - SPRING_AUTHENTICATION_NEO4J_PASSWORD=1q2w3e4r
       - MAIL_FROM=routinefights@gmail.com
-      - MAIL_PASSWORD=yhah camn tnmx uzgn
-      - JWT_SECRET=096c1b60e347ba237541b283bdaa3df7
+      - MAIL_PASSWORD=MAIL_PASSWORD
+      - JWT_SECRET=SECRET
     depends_on:
       - db
     networks:
@@ -39,14 +39,13 @@ services:
     image: jonaykb/administrationroutinefights:latest
     restart: always
     ports:
-     - "8023:80"
-    volumes:
-     - /etc/letsencrypt:/etc/letsencrypt:ro
+     - "80:80"
     networks:
      - apiNetwork
+    volumes:
+     - /etc/letsencrypt:/etc/letsencrypt:ro
 volumes:
   db_data:
   app_uploads:
 networks:
   apiNetwork:
-
