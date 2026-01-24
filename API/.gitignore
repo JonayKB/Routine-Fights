@@ -35,3 +35,7 @@ build/
 
 ### UPLOADS ###
 uploads/
+
+### SECRESTS ###
+keystore/
+*.env
