@@ -19,6 +19,16 @@ jobs:
           java-version: '17'
           cache: maven
 
+          # ---RECONSTRUIR ARCHIVOS PRIVADOS ---
+      - name: Reconstruir archivos secretos
+        run: |
+          mkdir -p API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore
+          
+          echo '${{ secrets.FIREBASE_JSON }}' > API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore/routinefights-1-firebase-adminsdk-fbsvc-a9082c7c49.json
+          echo "${{ secrets.P12_BASE64 }}" | base64 -d > API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore/routinefights.p12
+          echo "${{ secrets.DEEPL_KEY_CONTENT }}" > API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore/deeplkKey
+          
+          echo "${{ secrets.APPLICATION_PROPERTIES_PROD }}" > API/src/main/resources/application.properties
       - name: Compilar y ejecutar tests con Maven
         working-directory: API
         run: mvn verify
