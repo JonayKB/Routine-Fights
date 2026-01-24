@@ -30,3 +30,8 @@ replay_pid*
 .vscode/
 .idea/
 
+deeplKey
+routinefights-1-firebase-adminsdk-fbsvc-a9082c7c49.json
+routinefights.p12
+keystore/
+google-services.json
