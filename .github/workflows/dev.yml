@@ -18,8 +18,6 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-
-          # ---RECONSTRUIR ARCHIVOS PRIVADOS ---
       - name: Reconstruir archivos secretos
         run: |
           mkdir -p API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore
