@@ -56,6 +56,10 @@ type Query {
   activityTimeRateChart: ChartData
 
   translate(text: String!, targetLang: String!): String
+
+  myPostDaysByActivity(activityID: String!, days: Int): [String]
+  bestStreakByEmail(email: String!): Int
+  communityEventRanking(id: String!, limit: Int): [RankingEntry]
 }
 
 type Mutation {
@@ -297,4 +301,11 @@ type Followers {
   followers: Int
   following: Int
   isFollowing: Boolean
+}
+
+type RankingEntry {
+  username: String
+  email: String
+  image: String
+  points: Float
 }

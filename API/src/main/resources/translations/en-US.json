@@ -2,5 +2,7 @@
     "newEventTitle": "New Event Activated!",
     "newEventBody": "The new event \"{eventName}\" has just started.\nDon't miss out on exclusive rewards and challenges!",
     "greeting": "Hello",
-    "test": "Test {testArg}"
+    "test": "Test {testArg}",
+    "streakRiskTitle": "Your {activity} streak is about to go out",
+    "streakRiskBody": "Post today to keep your {streak}-day flame alive."
 }
