@@ -1,42 +1,19 @@
-import axios from "axios";
-import { limit, neo4jUri } from "../utils/Utils";
-import RNSecureKeyStore from "react-native-secure-key-store";
+import { limit } from "../utils/Utils";
+import { gql } from "../utils/graphql";
 import { Followers } from "../utils/User";
 
-export const fetchUsersByName = async (pageNum: number, text: string, perPage: number = limit): Promise<Followers[]> => {
-  if (!text) {
-    return [];
-  }
-
-  const token = await RNSecureKeyStore.get("token");
-
-  try {
-    const response = await axios.post(
-      neo4jUri,
-      {
-        query: `
-            query {
-                getUserPaginationByName(page: ${pageNum}, perPage: ${perPage}, userName: "${text}") {
-                    followers
-                    following
-                    id
-                    image
-                    username
-                    email
-                    isFollowing
-                }
-            }`,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    return response.data.data.getUserPaginationByName;
-  } catch (error) {
-    console.error("Error:", error.response.data);
-    throw error;
-  }
-};
+export const fetchUsersByName = async (
+  pageNum: number,
+  text: string,
+  perPage: number = limit
+): Promise<Followers[]> =>
+  (
+    await gql(
+      `query Users($page: Int!, $perPage: Int!, $name: String!) {
+        getUserPaginationByName(page: $page, perPage: $perPage, userName: $name) {
+          followers following id image username email isFollowing
+        }
+      }`,
+      { page: pageNum, perPage, name: text ?? "" }
+    )
+  ).getUserPaginationByName ?? [];

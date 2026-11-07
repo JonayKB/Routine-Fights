@@ -1,30 +1,24 @@
-import axios from "axios";
 import RNSecureKeyStore, { ACCESSIBLE } from "react-native-secure-key-store";
-import { uri } from "../utils/Utils";
+import { gql } from "../utils/graphql";
 
 export const login = async (email: string, password: string) => {
-  try {
-    const { status, data } = await axios.post(
-      uri + "/auth/login?email=" + email + "&password=" + password
-    );
-
-    if (status === 200) {
-      await RNSecureKeyStore.set("token", data, {
-        accessible: ACCESSIBLE.ALWAYS_THIS_DEVICE_ONLY,
-      });
-      return await RNSecureKeyStore.get("token");
-    }
-  } catch (error) {
-    console.error("Error:", error.response.data);
-    throw error;
-  }
+  const data = await gql(
+    `mutation Login($email: String!, $password: String!) {
+      login(email: $email, password: $password)
+    }`,
+    { email, password },
+    { auth: false }
+  );
+  await RNSecureKeyStore.set("token", data.login, {
+    accessible: ACCESSIBLE.ALWAYS_THIS_DEVICE_ONLY,
+  });
+  return await RNSecureKeyStore.get("token");
 };
 
 export const getToken = async (): Promise<string | null> => {
   try {
     return await RNSecureKeyStore.get("token");
-  } catch (error) {
-    console.error("Error:", error.response.data);
-    throw error;
+  } catch {
+    return null;
   }
 };

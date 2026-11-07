@@ -1,7 +1,8 @@
 {
     "screens": {
         "Activities": {
-            "name": "Name"
+            "name": "Name",
+            "create": "Create activity"
         },
         "ActivityDetails": {
             "numOfTimes": "Number of times",
@@ -25,27 +26,39 @@
                 "weekly": "weekly",
                 "monthly": "monthly",
                 "yearly": "yearly"
-            }
+            },
+            "photoTitle": "Add a cover photo",
+            "detailsTitle": "Name and description",
+            "rhythmTitle": "How often?",
+            "missing": "Fill in all the fields",
+            "timesHint": "Times per period",
+            "success": "Activity created"
         },
         "Home": {
             "search": "Search",
             "type": {
-                "following": "following", 
-                "home": "home", 
+                "following": "following",
+                "home": "home",
                 "activity": "activity"
-            }
+            },
+            "emptyTitle": "Nothing here yet",
+            "emptyHint": "Follow people or join activities to fill your feed",
+            "emptyAction": "Find activities"
         },
         "Login": {
             "email": "Email",
             "password": "Password",
             "login": "Login",
-            "register": "Register"
+            "register": "Register",
+            "missing": "Enter your email and password"
         },
         "Profile": {
             "followers": "followers",
             "following": "following",
             "follow": "follow",
-            "unfollow": "unfollow"
+            "unfollow": "unfollow",
+            "noPosts": "No posts yet",
+            "noPostsHint": "Shared posts will appear here"
         },
         "ProfileForm": {
             "email": "Email",
@@ -54,13 +67,23 @@
             "phoneNumber": "Phone number",
             "username": "Username",
             "password": "Password",
-            "update": "Update"
+            "update": "Update",
+            "updated": "Profile updated"
         },
         "Register": {
             "username": "Username",
             "confirmPassword": "Confirm password",
             "success": "Successfully registered",
-            "successMessage": "Verify your email in the spam folder"
+            "successMessage": "Verify your email in the spam folder",
+            "accountTitle": "Create your account",
+            "profileTitle": "About you",
+            "reviewTitle": "Check your details",
+            "passwordHint": "At least 8 characters",
+            "passwordShort": "The password needs at least 8 characters",
+            "mismatch": "Passwords do not match",
+            "missing": "Fill in all the fields",
+            "invalidEmail": "Enter a valid email",
+            "invalidPhone": "Enter a valid phone number"
         },
         "Settings": {
             "language": "Language",
@@ -82,21 +105,106 @@
         },
         "Streaks": {
             "myStreaks": "My streaks",
-            "timesRemaining": "Times remaining"
+            "timesRemaining": "Times remaining",
+            "tiers": {
+                "unlit": "Unlit",
+                "spark": "Spark",
+                "blaze": "Blaze",
+                "inferno": "Inferno",
+                "blue": "Blue flame",
+                "plasma": "Plasma",
+                "legend": "White-hot"
+            },
+            "units": {
+                "daily": [
+                    "day",
+                    "days"
+                ],
+                "weekly": [
+                    "week",
+                    "weeks"
+                ],
+                "monthly": [
+                    "month",
+                    "months"
+                ],
+                "yearly": [
+                    "year",
+                    "years"
+                ]
+            },
+            "toNext": "{n} to {tier}",
+            "maxTier": "Hottest flame reached",
+            "best": "Hottest streak",
+            "lightIt": "Post to light it",
+            "left": "{n} left this period",
+            "done": "Done for this period",
+            "add": "Add activity",
+            "emptyTitle": "No streaks yet",
+            "emptyHint": "Join an activity and post to light your first flame",
+            "deleteTitle": "Stop tracking {name}?",
+            "deleteBody": "Your {n} {unit} streak will be lost.",
+            "deleteBodyNoStreak": "You can join it again whenever you want.",
+            "delete": "Remove",
+            "levelUp": "New flame unlocked",
+            "levelUpBody": "{n} {unit} in a row",
+            "keepGoing": "Keep going",
+            "calendar": "Last 12 weeks"
         },
         "UploadForm": {
             "title": "Upload post",
             "takeFromCamera": "Take from camera",
             "selectFromLibrary": "Select from library",
-            "selectactivity": "Select a activity",
+            "selectactivity": "Select an activity",
             "changePicture": "Change picture",
             "postButton": "Post",
-            "timesRemaining": "Times remaining"
+            "timesRemaining": "Times remaining",
+            "photoTitle": "Take or pick a photo",
+            "activityTitle": "Which activity is it for?",
+            "reviewTitle": "Ready to post",
+            "streakAfter": "Your streak will be {n} {unit}",
+            "noActivities": "Join an activity first",
+            "posted": "Posted"
         },
         "Events": {
             "timeLeft": "Time left",
             "progress": "Event progress",
-            "finalMessage": "Keep contributing to earn the medals!"
+            "finalMessage": "Keep contributing to earn the medals!",
+            "completed": "Goal reached",
+            "ranking": "Top contributors",
+            "noEvent": "No event right now",
+            "noEventHint": "New community challenges will show up here",
+            "you": "you"
+        },
+        "Common": {
+            "next": "Next",
+            "back": "Back",
+            "cancel": "Cancel",
+            "step": "Step {n} of {total}",
+            "close": "Close",
+            "required": "Required"
+        },
+        "Comments": {
+            "placeholder": "Write a comment",
+            "empty": "No comments yet",
+            "emptyHint": "Be the first to say something"
+        },
+        "Errors": {
+            "invalidCredentials": "Wrong email or password",
+            "notVerified": "Verify your email before signing in",
+            "emailTaken": "That email is already registered",
+            "usernameTaken": "That username is taken",
+            "mailFailed": "We couldn't send the verification email. Try again later",
+            "passwordShort": "The password needs at least 8 characters",
+            "invalidEmail": "Enter a valid email",
+            "invalidPhone": "Enter a valid phone number with its country code",
+            "emptyComment": "Write something first",
+            "alreadyDone": "You already completed this activity for this period",
+            "notSubscribed": "Join the activity before posting",
+            "imageMissing": "The photo didn't upload, try again",
+            "noConnection": "No connection, try again",
+            "generic": "Something went wrong, try again",
+            "forbidden": "You can't do that"
         }
     }
 }

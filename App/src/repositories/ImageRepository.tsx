@@ -33,7 +33,7 @@ export const uploadImage = async (imageUri: string): Promise<string> => {
 
     return response.data;
   } catch (error) {
-    console.error("Error:", error.response.data);
+    console.error("Error uploading image:", error?.response?.data ?? error?.message);
     throw error;
   }
 };

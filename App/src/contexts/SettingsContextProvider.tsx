@@ -1,4 +1,6 @@
+import { setErrorLanguage } from "../utils/graphql";
 import React, {
+  useEffect,
   createContext,
   Dispatch,
   SetStateAction,
@@ -21,6 +23,8 @@ const SettingsContextProvider = (props: any) => {
   const [language, setLanguage] = useState<string>("en-EN");
   const [darkmode, setDarkmode] = useState<boolean>(true);
   const [lefthand, setLefthand] = useState<boolean>(false);
+
+  useEffect(() => setErrorLanguage(language), [language]);
 
   const contextValues: AppContextType = {
     language: language,

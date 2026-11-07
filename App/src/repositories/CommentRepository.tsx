@@ -1,68 +1,20 @@
-import axios from "axios";
-import { neo4jUri } from "../utils/Utils";
-import RNSecureKeyStore from "react-native-secure-key-store";
+import { Comment } from "../utils/Comment";
+import { gql } from "../utils/graphql";
 
-export const getComments = async (postID: string) => {
-  try {
-    const token = await RNSecureKeyStore.get("token");
+export const getComments = async (postID: string): Promise<Comment[]> =>
+  (
+    await gql(
+      `query Comments($postID: String!) {
+        getComments(postID: $postID) { createdAt id message user { image email username } }
+      }`,
+      { postID }
+    )
+  ).getComments ?? [];
 
-    const response = await axios.post(
-      neo4jUri,
-      {
-        query: `
-            query {
-                getComments(postID: "${postID}") {
-                    createdAt
-                    id
-                    message
-                    user {
-                        image
-                        email
-                        username
-                    }
-                }
-            }`,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    return response.data.data.getComments;
-  } catch (error) {
-    console.error("Error:", error.response.data);
-    throw error;
-  }
-};
-
-export const postComment = async (message: string, postID: string) => {
-  try {
-    const token = await RNSecureKeyStore.get("token");
-
-    const response = await axios.post(
-      neo4jUri,
-      {
-        query: `
-            mutation {
-              postComment(
-                commentInput: {message: "${message}", postID: "${postID}"}
-              ) {
-                id
-              }
-            }`,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    return response.data.data.postComment;
-  } catch (error) {
-    console.error("Error:", error.response.data);
-    throw error;
-  }
-};
+export const postComment = async (message: string, postID: string) =>
+  (
+    await gql(
+      `mutation PostComment($input: CommentInputV2!) { postComment(commentInput: $input) { id } }`,
+      { input: { message, postID } }
+    )
+  ).postComment;
