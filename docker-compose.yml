@@ -40,16 +40,14 @@ services:
   admin:
     image: jonaykb/administrationroutinefights:latest
     restart: always
-    # https://routinefights.jonaykb.com: admin panel + API proxy (administration/nginx.conf)
+    # Admin panel + API router (administration/nginx.conf). Published on
+    # localhost only: the host nginx terminates HTTPS for
+    # https://routinefights.jonaykb.com and forwards here
+    # (deploy/nginx/routinefights.jonaykb.com.conf).
     ports:
-     - "80:80"
-     - "443:443"
+     - "127.0.0.1:8023:80"
     depends_on:
      - app
-    volumes:
-     - /etc/letsencrypt:/etc/letsencrypt:ro
-     # certbot --webroot writes HTTP-01 challenges here
-     - /var/www/certbot:/var/www/certbot:ro
     networks:
      - apiNetwork
 volumes:
