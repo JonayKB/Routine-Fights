@@ -1,21 +1,33 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+import { useToast } from "../contexts/FeedbackContextProvider";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import { login } from "../repositories/LoginRepository";
-import { cardBgColor, resetNavigation } from "../utils/Utils";
+import {
+  bgColor,
+  resetNavigation,
+  secondaryTextColor,
+  textColor,
+} from "../utils/Utils";
+import StreakFlame from "../components/StreakFlame";
+import { fonts } from "../styles/theme";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
-import style from "../styles/Styles.json";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import FormInput from "../components/FormInput";
+import { errorMessage } from "../utils/graphql";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
 const LoginScreen = ({ navigation }: Props) => {
-  const [passwordShown, setPasswordShown] = useState<boolean>(false);
+  const toast = useToast();
+  const [errors, setErrors] = useState<{ email?: string | null; password?: string | null }>({});
+  const [formError, setFormError] = useState<string | null>(null);
+  const [sending, setSending] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setToken } = useTokenContext();
@@ -42,7 +54,7 @@ const LoginScreen = ({ navigation }: Props) => {
       const darkMode = await AsyncStorage.getItem("darkMode");
       setDarkmode(darkMode === "true");
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
@@ -51,7 +63,7 @@ const LoginScreen = ({ navigation }: Props) => {
       const language = await AsyncStorage.getItem("language");
       setLanguage(language);
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
@@ -60,81 +72,92 @@ const LoginScreen = ({ navigation }: Props) => {
       const lefthand = await AsyncStorage.getItem("lefthand");
       setLefthand(lefthand === "true");
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
   const log = async () => {
+    const required = translations[language || "en-EN"].screens.Common.required;
+    const fieldErrors = {
+      email: email.trim() ? null : required,
+      password: password ? null : required,
+    };
+    setErrors(fieldErrors);
+    setFormError(null);
+    if (fieldErrors.email || fieldErrors.password) return;
+    setSending(true);
     try {
-      const token = await login(email, password);
+      const token = await login(email.trim(), password);
       setToken(token);
       resetNavigation(navigation, "MainTabNavigation");
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      setFormError(errorMessage(error));
+    } finally {
+      setSending(false);
     }
   };
 
   return (
-    <View
-      className={`flex-1 ${cardBgColor(darkmode)} justify-center items-center`}
-    >
-      <View
-        className={`justify-evenly ${
-          darkmode ? "bg-[#E8E2F0]" : "bg-white"
-        } rounded-2xl w-96`}
-        style={{ height: 400 }}
-      >
-        <View className="m-10 mb-5">
-          <FormInput
-            label={translations[language || "en-EN"].screens.Login.email}
-            name={email}
-            setText={(text) => setEmail(text)}
-            mode="email"
-          />
-          <TextInput
-            placeholder={
-              translations[language || "en-EN"].screens.Login.password
-            }
-            placeholderTextColor={`${darkmode ? "#E0D3F5" : "#4B0082"}`}
-            secureTextEntry={!passwordShown}
-            className={`text-lg mb-5 pl-3 rounded-lg border-2 ${
-              darkmode
-                ? "bg-[#4B294F] text-white border-[#B28DFF]"
-                : "bg-[#F8F7FE] text-black border-[#4B0082]"
-            }`}
-            onChangeText={(text) => setPassword(text)}
-          />
-          <TouchableOpacity onPress={() => setPasswordShown(!passwordShown)}>
-            <Text
-              className="text-[#4B0082] font-bold text-lg mt-3"
-              style={{ fontFamily: "Lexend-Regular" }}
-            >
-              {passwordShown ? "Hide" : "Show"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View className="m-10 mt-5">
-          <TouchableOpacity
-            onPress={log}
-            className="bg-[#F65261] rounded-lg py-3 mb-5"
-          >
-            <Text
-              className={style.utils.button}
-              style={{ fontFamily: "Lexend-Regular" }}
-            >
-              {translations[language || "en-EN"].screens.Login.login}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => resetNavigation(navigation, "Register")}
-            className="border-[#F65261] border-2 rounded-lg py-1"
-          >
-            <Text className="text-[#7D3C98] font-bold text-2xl text-center">
-              {translations[language || "en-EN"].screens.Login.register}
-            </Text>
-          </TouchableOpacity>
-        </View>
+    <View className={`flex-1 justify-center px-6 ${bgColor(darkmode)}`}>
+      <View className="items-center mb-10">
+        <StreakFlame streak={3} size={56} animated />
+        <Text
+          style={{ fontFamily: fonts.display }}
+          className={`text-3xl mt-4 ${textColor(darkmode)}`}
+        >
+          Routine Fights
+        </Text>
       </View>
+
+      <FormInput
+        label={translations[language || "en-EN"].screens.Login.email}
+        name={email}
+        setText={(text) => {
+          setEmail(text);
+          setErrors({ ...errors, email: null });
+          setFormError(null);
+        }}
+        mode="email"
+        error={errors.email}
+      />
+      <FormInput
+        label={translations[language || "en-EN"].screens.Login.password}
+        name={password}
+        setText={(text) => {
+          setPassword(text);
+          setErrors({ ...errors, password: null });
+          setFormError(null);
+        }}
+        mode="text"
+        secure
+        error={errors.password}
+      />
+
+      {!!formError && (
+        <View className="flex-row items-center mt-1 mb-1 px-3 py-2.5 rounded-xl bg-[#E5484D1A]">
+          <Icon name="alert-circle" size={16} color="#E5484D" />
+          <Text className="flex-1 ml-2 text-sm text-[#E5484D]">{formError}</Text>
+        </View>
+      )}
+      <TouchableOpacity
+        disabled={sending}
+        onPress={log}
+        activeOpacity={0.85}
+        className="h-12 mt-3 rounded-xl bg-[#C2410C] items-center justify-center"
+      >
+        <Text className="text-base font-semibold text-white">
+          {translations[language || "en-EN"].screens.Login.login}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => resetNavigation(navigation, "Register")}
+        activeOpacity={0.6}
+        className="h-12 mt-2 items-center justify-center"
+      >
+        <Text className={`text-sm font-medium ${secondaryTextColor(darkmode)}`}>
+          {translations[language || "en-EN"].screens.Login.register}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };

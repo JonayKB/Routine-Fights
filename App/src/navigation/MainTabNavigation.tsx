@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import EventsScreen from "../screens/EventsScreen";
 import ActivitiesStackNavigation from "./ActivitiesStackNavigation";
@@ -9,10 +10,11 @@ import { useImageContext } from "../contexts/ImageContextProvider";
 import { UserOut } from "../utils/User";
 import { getOwnUserImageAndEmail } from "../repositories/UserRepository";
 import HomeStackNavigation from "./HomeStackNavigation";
-import Picture from "../components/Picture";
+import Avatar from "../components/Avatar";
+import { palette } from "../styles/theme";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { borderColor, iconColor } from "../utils/Utils";
+import { iconColor } from "../utils/Utils";
 
 type Props = {};
 
@@ -30,12 +32,22 @@ const MainTabNavigation = (props: Props) => {
   const { setEmail } = useTokenContext();
   const { uri } = useImageContext();
   const { darkmode } = useSettingsContext();
-  const baseBg = darkmode ? "#4B294F" : "#E8E2F0";
+  const baseBg = darkmode ? "#1C1A18" : "#FFFFFF";
+  const activeColor = darkmode ? palette.accentOnDark : palette.accent;
+  const [username, setUsername] = useState<string>("");
+  const tabIcon = (name: string, focused: boolean) => (
+    <Icon
+      name={focused ? name : `${name}-outline`}
+      size={24}
+      color={focused ? activeColor : iconColor(darkmode)}
+    />
+  );
 
   useEffect(() => {
     const fetchImageAndEmail = async () => {
       const user: UserOut = await getOwnUserImageAndEmail();
       setImage(user.image);
+      setUsername(user.username ?? user.email);
       setEmail(user.email);
     };
     fetchImageAndEmail();
@@ -48,6 +60,23 @@ const MainTabNavigation = (props: Props) => {
         headerShown: false,
         tabBarActiveBackgroundColor: baseBg,
         tabBarInactiveBackgroundColor: baseBg,
+        tabBarStyle: {
+          height: 64,
+          backgroundColor: baseBg,
+          borderTopWidth: 0,
+          elevation: 0,
+        },
+        tabBarBackground: () => (
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: baseBg,
+              borderTopWidth: 1,
+              borderTopColor: darkmode ? "#EFE9DE1A" : "#1F1B161A",
+            }}
+          />
+        ),
+        tabBarItemStyle: { paddingTop: 8 },
         tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
         animation: "shift",
@@ -58,11 +87,7 @@ const MainTabNavigation = (props: Props) => {
         component={HomeStackNavigation}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "home" : "home-outline"}
-              size={30}
-              color={`${iconColor(darkmode)}`}
-            />
+            tabIcon("home", focused)
           ),
         }}
       />
@@ -71,11 +96,7 @@ const MainTabNavigation = (props: Props) => {
         component={ActivitiesStackNavigation}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "flame" : "flame-outline"}
-              size={30}
-              color={`${iconColor(darkmode)}`}
-            />
+            tabIcon("flame", focused)
           ),
         }}
       />
@@ -84,11 +105,7 @@ const MainTabNavigation = (props: Props) => {
         component={UploadFormScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "add-circle" : "add-circle-outline"}
-              size={30}
-              color={`${iconColor(darkmode)}`}
-            />
+            tabIcon("add-circle", focused)
           ),
         }}
       />
@@ -97,25 +114,30 @@ const MainTabNavigation = (props: Props) => {
         component={EventsScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name={focused ? "people" : "people-outline"}
-              size={30}
-              color={`${iconColor(darkmode)}`}
-            />
+            tabIcon("people", focused)
           ),
         }}
       />
       <Tab.Screen
         name="ProfileStackNavigation"
         component={ProfileStackNavigation}
+        listeners={({ navigation }) => ({
+          tabPress: (e: any) => {
+            // Coming from someone else's profile, the tab should open yours.
+            e.preventDefault();
+            (navigation as any).navigate("ProfileStackNavigation", {
+              screen: "Profile",
+              params: { email: undefined },
+            });
+          },
+        })}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Picture
+            <Avatar
               image={image}
-              size={32}
-              style={`rounded-full ${
-                focused && `border-2 ${borderColor(darkmode)}`
-              }`}
+              name={username}
+              size={28}
+              ring={focused ? activeColor : undefined}
             />
           ),
         }}

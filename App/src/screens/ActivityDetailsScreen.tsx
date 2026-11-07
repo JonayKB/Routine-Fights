@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
@@ -7,14 +13,18 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { subscribeActivity } from "../repositories/ActivityRepository";
 import ActivityDetailsBox from "../components/ActivityDetailsBox";
-import { resetNavigation } from "../utils/Utils";
+import { bgColor, resetNavigation } from "../utils/Utils";
 import Picture from "../components/Picture";
 import ProfileNavigation from "../components/ProfileNavigation";
+import StreakCalendar from "../components/StreakCalendar";
+import { errorMessage } from "../utils/graphql";
+import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 
 const ActivityDetailsScreen = ({ navigation, route }: Props) => {
   const { language, darkmode } = useSettingsContext();
+  const toast = useToast();
   const [activity, setActivity] = useState<Activity>({} as Activity);
 
   useEffect(() => {
@@ -26,47 +36,48 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
       await subscribeActivity(activity.id);
       resetNavigation(navigation, "Streaks");
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   }
 
+  const width = Dimensions.get("window").width;
+
   return (
-    <View className={`flex-1 ${darkmode ? "bg-[#1C1C1E]" : "bg-[#FCFCFC]"}`}>
+    <View className={`flex-1 ${bgColor(darkmode)}`}>
       <ProfileNavigation
         navigation={navigation}
         message={route.params.activity?.name}
       />
 
-      <View className="items-center justify-center border-b-8 border-[#F65261]">
+      <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
         <Picture
           image={activity.image}
-          size={440}
-          height={550}
-          style="rounded-3xl"
+          size={width}
+          height={Math.round(width * 0.75)}
+          style=""
         />
-      </View>
 
-      <View
-        className={`flex-1 items-center w-full ${
-          !route.params.suscribed ? "-mt-40" : "-mt-24"
-        }`}
-      >
         <ActivityDetailsBox activity={activity} />
+
+        {route.params.suscribed && !!activity?.id && (
+          <StreakCalendar
+            activityId={activity.id}
+            streak={(route.params.activity as any)?.streak ?? 0}
+          />
+        )}
 
         {!route.params.suscribed && (
           <TouchableOpacity
             onPress={suscribe}
-            className="bg-[#F65261] rounded-2xl py-4 px-6 mt-6 w-11/12 shadow-md shadow-black items-center"
+            activeOpacity={0.85}
+            className="h-12 mx-5 mt-4 rounded-xl bg-[#C2410C] items-center justify-center"
           >
-            <Text
-              className="text-white font-bold text-2xl"
-              style={{ fontFamily: "Roboto-Regular" }}
-            >
+            <Text className="text-white font-semibold text-base">
               {translations[language || "en-EN"].screens.ActivityDetails.add}
             </Text>
           </TouchableOpacity>
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 };

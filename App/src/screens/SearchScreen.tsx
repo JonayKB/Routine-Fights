@@ -1,4 +1,4 @@
-import { View, FlatList, RefreshControl, Alert } from "react-native";
+import { View, FlatList, RefreshControl } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Followers } from "../utils/User";
 import { fetchUsersByName } from "../repositories/SearchRepository";
@@ -8,10 +8,13 @@ import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import SearchBarHeader from "../components/SearchBarHeader";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { bgColor } from "../utils/Utils";
+import { errorMessage } from "../utils/graphql";
+import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Search">;
 
 const SearchScreen = ({ navigation }: Props) => {
+  const toast = useToast();
   const [users, setUsers] = useState<Followers[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const pageNum = useRef<number>(1);
@@ -30,7 +33,7 @@ const SearchScreen = ({ navigation }: Props) => {
       const response = await fetchUsersByName(pageNum.current, searchText);
       setUsers(isLoadingMore ? [...users, ...response] : response);
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     } finally {
       setLoad(false);
       setIsLoadingMore(false);

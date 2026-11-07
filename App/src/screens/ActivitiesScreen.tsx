@@ -1,4 +1,4 @@
-import { View, FlatList, RefreshControl, Alert } from "react-native";
+import { View, FlatList, RefreshControl } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
@@ -9,6 +9,9 @@ import AddButton from "../components/AddButton";
 import SearchBar from "../components/SearchBar";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { bgColor } from "../utils/Utils";
+import { translations } from "../../translations/translation";
+import { errorMessage } from "../utils/graphql";
+import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "Activities">;
 
@@ -18,7 +21,8 @@ const ActivitiesScreen = ({ navigation }: Props) => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const pageNum = useRef(1);
-  const { darkmode } = useSettingsContext();
+  const { darkmode, language } = useSettingsContext();
+  const toast = useToast();
 
   useEffect(() => {
     fetchActivities();
@@ -42,7 +46,7 @@ const ActivitiesScreen = ({ navigation }: Props) => {
         setActivities(response);
       }
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     } finally {
       setLoad(false);
       setIsLoadingMore(false);
@@ -86,10 +90,14 @@ const ActivitiesScreen = ({ navigation }: Props) => {
         )}
         keyExtractor={(item) => item.id}
         numColumns={2}
+        contentContainerStyle={{ paddingHorizontal: 14, paddingBottom: 16 }}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
       />
-      <AddButton navigateFunction={() => navigation.navigate("ActivityForm")} />
+      <AddButton
+        navigateFunction={() => navigation.navigate("ActivityForm")}
+        label={translations[language || "en-EN"].screens.Activities.create}
+      />
     </View>
   );
 };

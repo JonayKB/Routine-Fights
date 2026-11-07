@@ -1,6 +1,8 @@
-import { View, TouchableOpacity, Text, ScrollView, Alert } from "react-native";
+import { View, TouchableOpacity, Text, Image } from "react-native";
+import { useToast } from "../contexts/FeedbackContextProvider";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import Icon from "react-native-vector-icons/Ionicons";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
@@ -8,135 +10,199 @@ import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { Activity } from "../utils/Activity";
 import { createActivity } from "../repositories/ActivityRepository";
-import DropDown from "../components/DropDown";
-import ChangePicture from "../components/ChangePicture";
 import FormInput from "../components/FormInput";
 import { uploadImage } from "../repositories/ImageRepository";
-import { bgColor, cardBgColor } from "../utils/Utils";
+import {
+  borderColor,
+  cardBgColor,
+  iconColor,
+  mutedTextColor,
+  raisedBgColor,
+  textColor,
+} from "../utils/Utils";
+import { fonts } from "../styles/theme";
+import { errorMessage } from "../utils/graphql";
+import Stepper from "../components/Stepper";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityForm">;
+
+const TOTAL_STEPS = 3;
+const RATES = ["daily", "weekly", "monthly", "yearly"] as const;
 
 const ActivityFormScreen = (props: Props) => {
   const { language, darkmode } = useSettingsContext();
   const { uri, setUri, setWidth, setHeight } = useImageContext();
+  const [step, setStep] = useState<number>(1);
   const [activity, setActivity] = useState<Activity>({} as Activity);
-  const [timeRate, setTimeRate] = useState("daily");
+  const [timeRate, setTimeRate] = useState<(typeof RATES)[number]>("daily");
+  const [times, setTimes] = useState<number>(1);
+  const [sending, setSending] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{ name?: string; description?: string }>({});
+  const [formError, setFormError] = useState<string | null>(null);
+  const toast = useToast();
+  const t = translations[language || "en-EN"].screens;
 
   useEffect(() => {
-    setWidth(9);
-    setHeight(16);
+    setWidth(4);
+    setHeight(5);
   }, []);
 
-  const timeRates = [
-    {
-      label:
-        translations[language || "en-EN"].screens.ActivityForm.timeRates.daily,
-      value: "daily",
-    },
-    {
-      label:
-        translations[language || "en-EN"].screens.ActivityForm.timeRates.weekly,
-      value: "weekly",
-    },
-    {
-      label:
-        translations[language || "en-EN"].screens.ActivityForm.timeRates
-          .monthly,
-      value: "monthly",
-    },
-    {
-      label:
-        translations[language || "en-EN"].screens.ActivityForm.timeRates.yearly,
-      value: "yearly",
-    },
-  ];
-
   const addActivity = async () => {
+    setSending(true);
+    setFormError(null);
     try {
       const imageName = await uploadImage(uri);
-
       await createActivity(
-        activity.name,
-        activity.description,
+        activity.name.trim(),
+        activity.description.trim(),
         timeRate,
-        activity.timesRequiered,
+        String(times),
         imageName
       );
-
-      Alert.alert(
-        translations[language || "en-EN"].screens.ActivityForm.success
-      );
+      toast.success(t.ActivityForm.success);
       setUri(null);
       props.navigation.goBack();
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      setFormError(errorMessage(error));
+    } finally {
+      setSending(false);
     }
   };
 
+  const next = () => {
+    if (step === 2) {
+      const e = {
+        name: activity.name?.trim() ? undefined : t.Common.required,
+        description: activity.description?.trim() ? undefined : t.Common.required,
+      };
+      setErrors(e);
+      if (e.name || e.description) return;
+    }
+    if (step < TOTAL_STEPS) setStep(step + 1);
+    else addActivity();
+  };
+
+  const back = () => (step === 1 ? props.navigation.goBack() : setStep(step - 1));
+  const titles = [t.ActivityForm.photoTitle, t.ActivityForm.detailsTitle, t.ActivityForm.rhythmTitle];
+
   return (
-    <View className={`flex-1 ${bgColor(darkmode)} items-center justify-center`}>
-      <View className={`rounded-lg w-10/12 ${cardBgColor(darkmode)}`}>
-        <ScrollView
-          contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 16 }}
+    <Stepper
+      step={step}
+      total={TOTAL_STEPS}
+      title={titles[step - 1]}
+      onBack={back}
+      error={formError}
+      onNext={next}
+      nextDisabled={step === 1 && !uri}
+      nextLabel={step === TOTAL_STEPS ? t.Activities.create : undefined}
+      loading={sending}
+    >
+      {step === 1 && (
+        <View
+          style={{ height: 420 }}
+          className={`w-full rounded-2xl overflow-hidden border ${uri ? "" : "border-dashed"} ${borderColor(
+            darkmode
+          )} ${cardBgColor(darkmode)}`}
         >
           {uri ? (
-            <ChangePicture uri={uri} setUri={setUri} />
-          ) : (
-            <View className="w-full h-72 mb-6">
-              <ImageStackNavigation />
+            <View className="flex-1 bg-[#12110F]">
+              <Image source={{ uri: `file://${uri}` }} style={{ width: "100%", height: "100%" }} resizeMode="contain" />
+              <TouchableOpacity
+                onPress={() => setUri(null)}
+                activeOpacity={0.8}
+                className="absolute bottom-4 self-center flex-row items-center h-10 px-4 rounded-xl bg-[#12110FCC] border border-[#EFE9DE1A]"
+              >
+                <Icon name="refresh" size={16} color="#EFE9DE" />
+                <Text className="ml-2 text-sm font-medium text-[#EFE9DE]">{t.UploadForm.changePicture}</Text>
+              </TouchableOpacity>
             </View>
+          ) : (
+            <ImageStackNavigation />
           )}
+        </View>
+      )}
 
+      {step === 2 && (
+        <View>
           <FormInput
-            label={translations[language || "en-EN"].screens.ActivityForm.title}
+            label={t.ActivityForm.title}
             name={activity.name}
-            setText={(text) => setActivity({ ...activity, name: text })}
+            setText={(text) => {
+              setActivity({ ...activity, name: text });
+              setErrors({ ...errors, name: undefined });
+            }}
             mode="text"
+            error={errors.name}
           />
-
           <FormInput
-            label={
-              translations[language || "en-EN"].screens.ActivityForm.description
-            }
+            label={t.ActivityForm.description}
             name={activity.description}
-            setText={(text) => setActivity({ ...activity, description: text })}
+            setText={(text) => {
+              setActivity({ ...activity, description: text });
+              setErrors({ ...errors, description: undefined });
+            }}
             mode="text"
+            error={errors.description}
           />
+        </View>
+      )}
 
-          <View className="mb-5">
-            <DropDown
-              data={timeRates}
-              value={timeRate}
-              setValue={setTimeRate}
-              message={
-                translations[language || "en-EN"].screens.UploadForm.timeRate
-              }
-            />
+      {step === 3 && (
+        <View>
+          <View className="flex-row flex-wrap -mx-1">
+            {RATES.map((rate) => {
+              const active = rate === timeRate;
+              return (
+                <TouchableOpacity
+                  key={rate}
+                  activeOpacity={0.7}
+                  onPress={() => setTimeRate(rate)}
+                  style={{ width: "50%" }}
+                  className="p-1"
+                >
+                  <View
+                    className={`h-12 rounded-xl items-center justify-center border ${
+                      active ? "border-[#C2410C] bg-[#C2410C14]" : `${borderColor(darkmode)} ${raisedBgColor(darkmode)}`
+                    }`}
+                  >
+                    <Text className={`text-base ${active ? "font-semibold text-[#C2410C]" : textColor(darkmode)}`}>
+                      {t.ActivityForm.timeRates[rate]}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </View>
 
-          <FormInput
-            label={
-              translations[language || "en-EN"].screens.ActivityForm
-                .timesRequired
-            }
-            name={activity.timesRequiered}
-            setText={(text) =>
-              setActivity({ ...activity, timesRequiered: text })
-            }
-            mode="numeric"
-          />
-
-          <TouchableOpacity
-            className="bg-[#F65261] rounded-lg py-3 w-full mt-4"
-            onPress={addActivity}
+          <Text className={`text-xs mt-6 mb-2 ${mutedTextColor(darkmode)}`}>{t.ActivityForm.timesHint}</Text>
+          <View
+            className={`flex-row items-center justify-between h-14 px-2 rounded-xl border ${raisedBgColor(
+              darkmode
+            )} ${borderColor(darkmode)}`}
           >
-            <Text className="text-white font-bold text-xl text-center">
-              {translations[language || "en-EN"].screens.ActivityForm.post}
+            <TouchableOpacity
+              hitSlop={8}
+              disabled={times <= 1}
+              onPress={() => setTimes(Math.max(1, times - 1))}
+              className="w-10 h-10 items-center justify-center"
+            >
+              <Icon name="remove" size={20} color={iconColor(darkmode)} style={{ opacity: times <= 1 ? 0.3 : 1 }} />
+            </TouchableOpacity>
+            <Text style={{ fontFamily: fonts.display }} className={`text-2xl ${textColor(darkmode)}`}>
+              {times}
             </Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    </View>
+            <TouchableOpacity
+              hitSlop={8}
+              disabled={times >= 30}
+              onPress={() => setTimes(Math.min(30, times + 1))}
+              className="w-10 h-10 items-center justify-center"
+            >
+              <Icon name="add" size={20} color={iconColor(darkmode)} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+    </Stepper>
   );
 };
 

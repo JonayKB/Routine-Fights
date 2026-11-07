@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import ChangePicture from "../components/ChangePicture";
-import { Alert, Button, View } from "react-native";
+import { Button, View } from "react-native";
 import { uploadImage } from "../repositories/ImageRepository";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { getUser, updateUser } from "../repositories/UserRepository";
 import { UserIn, UserOut } from "../utils/User";
+import { errorMessage } from "../utils/graphql";
+import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "ProfilePictureScreen">;
 
 const ProfilePictureScreen = (props: Props) => {
+  const toast = useToast();
   const { uri, setUri, setWidth, setHeight } = useImageContext();
   const [user, setUser] = useState<UserOut>({} as UserOut);
 
@@ -29,7 +32,7 @@ const ProfilePictureScreen = (props: Props) => {
       const response = await getUser(props.route.params.email);
       setUser(response);
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
@@ -50,7 +53,7 @@ const ProfilePictureScreen = (props: Props) => {
         props.navigation.goBack();
       }
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 

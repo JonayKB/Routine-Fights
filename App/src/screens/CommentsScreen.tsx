@@ -4,25 +4,34 @@ import {
   RefreshControl,
   TextInput,
   TouchableOpacity,
-  Alert,
-} from "react-native";
+  } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { getComments, postComment } from "../repositories/CommentRepository";
 import ProfileNavigation from "../components/ProfileNavigation";
+import EmptyState from "../components/EmptyState";
 import Comment from "../components/Comment";
 import { Comment as CommentDomain } from "../utils/Comment";
 import { translations } from "../../translations/translation";
 import Icon from "react-native-vector-icons/Ionicons";
-import { bgColor } from "../utils/Utils";
+import {
+  bgColor,
+  borderColor,
+  iconColor,
+  raisedBgColor,
+  textColor,
+} from "../utils/Utils";
+import { errorMessage } from "../utils/graphql";
+import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Comments">;
 
 const CommentsScreen = (props: Props) => {
   const [comments, setComments] = useState<CommentDomain[]>([]);
   const { darkmode, language } = useSettingsContext();
+  const toast = useToast();
   const [load, setLoad] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
 
@@ -41,7 +50,7 @@ const CommentsScreen = (props: Props) => {
       const response = await getComments(props.route.params.postID);
       setComments(response);
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     } finally {
       setLoad(false);
     }
@@ -55,7 +64,7 @@ const CommentsScreen = (props: Props) => {
         setLoad(true);
       }
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
@@ -76,27 +85,44 @@ const CommentsScreen = (props: Props) => {
           />
         )}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={
+          !load ? (
+            <EmptyState
+              icon="chatbubbles-outline"
+              title={translations[language || "en-EN"].screens.Comments.empty}
+              hint={translations[language || "en-EN"].screens.Comments.emptyHint}
+            />
+          ) : null
+        }
       />
 
-      <View className="flex-row justify-center items-center w-full px-4 pb-4">
+      <View
+        className={`flex-row items-center px-4 py-3 border-t ${borderColor(
+          darkmode
+        )} ${bgColor(darkmode)}`}
+      >
         <TextInput
           value={text}
-          placeholder={translations[language || "en-EN"].screens.Home.search}
-          placeholderTextColor={darkmode ? "#D8BFFF" : "#4B0082"}
-          className={`text-2xl w-10/12 pl-4 py-3 rounded-xl ${
+          placeholder={translations[language || "en-EN"].screens.Comments.placeholder}
+          placeholderTextColor={darkmode ? "#8A847A" : "#7B7266"}
+          className={`flex-1 h-11 text-base px-4 py-0 rounded-xl border ${raisedBgColor(
             darkmode
-              ? "bg-[#4B294F] text-white border border-[#B28DFF]"
-              : "bg-white text-black border-2 border-[#4B0082]"
-          }`}
+          )} ${borderColor(darkmode)} ${textColor(darkmode)}`}
           onChangeText={(text) => setText(text)}
         />
         <TouchableOpacity
-          className={`ml-2 p-3 rounded-xl ${
-            darkmode ? "bg-[#B28DFF]" : "bg-[#4B0082]"
+          activeOpacity={0.8}
+          disabled={!text?.trim()}
+          className={`ml-2 w-11 h-11 items-center justify-center rounded-xl ${
+            text?.trim() ? "bg-[#C2410C]" : raisedBgColor(darkmode)
           }`}
           onPress={sendMessage}
         >
-          <Icon name="send" size={30} color="white" />
+          <Icon
+            name="arrow-up"
+            size={20}
+            color={text?.trim() ? "#FFFFFF" : iconColor(darkmode)}
+          />
         </TouchableOpacity>
       </View>
     </View>

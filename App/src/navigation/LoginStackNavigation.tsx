@@ -6,6 +6,8 @@ import MainTabNavigation from "./MainTabNavigation";
 import TokenContextProvider from "../contexts/TokenContextProvider";
 import SettingsContextProvider from "../contexts/SettingsContextProvider";
 import ImageContextProvider from "../contexts/ImageContextProvider";
+import ThemedStatusBar from "../components/ThemedStatusBar";
+import FeedbackContextProvider from "../contexts/FeedbackContextProvider";
 
 type Props = {};
 
@@ -22,6 +24,8 @@ const LoginStackNavigation = (props: Props) => {
     <SettingsContextProvider>
       <TokenContextProvider>
         <ImageContextProvider>
+          <FeedbackContextProvider>
+          <ThemedStatusBar />
           <Stack.Navigator
             id={undefined}
             screenOptions={{ headerShown: false }}
@@ -33,6 +37,7 @@ const LoginStackNavigation = (props: Props) => {
               component={MainTabNavigation}
             />
           </Stack.Navigator>
+          </FeedbackContextProvider>
         </ImageContextProvider>
       </TokenContextProvider>
     </SettingsContextProvider>

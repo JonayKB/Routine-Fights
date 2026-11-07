@@ -1,18 +1,31 @@
-import { View, Button, Alert } from "react-native";
+import { View, Text, Switch, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import React from "react";
 import { logout } from "../repositories/SettingsRepository";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { bgColor, languages, resetNavigation } from "../utils/Utils";
+import {
+  bgColor,
+  borderColor,
+  cardBgColor,
+  iconColor,
+  languages,
+  resetNavigation,
+  textColor,
+} from "../utils/Utils";
+import { colors, palette } from "../styles/theme";
 import DropDown from "../components/DropDown";
 import { translations } from "../../translations/translation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileNavigation from "../components/ProfileNavigation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
+import { errorMessage } from "../utils/graphql";
+import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Settings">;
 
 const SettingsScreen = ({ navigation }: Props) => {
+  const toast = useToast();
   const {
     language,
     setLanguage,
@@ -27,7 +40,7 @@ const SettingsScreen = ({ navigation }: Props) => {
       await AsyncStorage.setItem("language", language);
       setLanguage(language);
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
@@ -36,7 +49,7 @@ const SettingsScreen = ({ navigation }: Props) => {
       await AsyncStorage.setItem("darkMode", darkmode ? "false" : "true");
       setDarkmode(!darkmode);
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
@@ -45,7 +58,7 @@ const SettingsScreen = ({ navigation }: Props) => {
       await AsyncStorage.setItem("lefthand", lefthand ? "false" : "true");
       setLefthand(!lefthand);
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
@@ -54,55 +67,106 @@ const SettingsScreen = ({ navigation }: Props) => {
       await logout();
       resetNavigation(navigation, "Login");
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
+  const t = translations[language || "en-EN"].screens.Settings;
+  const c = colors(darkmode);
+
+  const Row = ({
+    icon,
+    label,
+    onPress,
+    right,
+    last,
+    danger,
+  }: {
+    icon: string;
+    label: string;
+    onPress?: () => void;
+    right?: React.ReactNode;
+    last?: boolean;
+    danger?: boolean;
+  }) => (
+    <TouchableOpacity
+      disabled={!onPress}
+      activeOpacity={0.6}
+      onPress={onPress}
+      className={`flex-row items-center h-14 px-4 ${
+        last ? "" : `border-b ${borderColor(darkmode)}`
+      }`}
+    >
+      <Icon
+        name={icon}
+        size={18}
+        color={danger ? palette.like : iconColor(darkmode)}
+      />
+      <Text
+        className={`flex-1 ml-3 text-base ${
+          danger ? "text-[#E5484D]" : textColor(darkmode)
+        }`}
+      >
+        {label}
+      </Text>
+      {right}
+    </TouchableOpacity>
+  );
+
   return (
     <View className={`flex-1 ${bgColor(darkmode)}`}>
-      <ProfileNavigation
-        navigation={navigation}
-        message={translations[language || "en-EN"].screens.Settings.settings}
-      />
+      <ProfileNavigation navigation={navigation} message={t.settings} />
+
       <View
-        className={`p-5 gap-5 m-4 ${
-          darkmode ? "bg-[#4B294F]" : "bg-[#E8E2F0]"
-        } rounded-2xl`}
+        className={`mx-5 mt-6 rounded-2xl border overflow-hidden ${cardBgColor(
+          darkmode
+        )} ${borderColor(darkmode)}`}
       >
-        <Button
-          title={translations[language || "en-EN"].screens.Settings.editProfile}
+        <Row
+          icon="person-outline"
+          label={t.editProfile}
           onPress={() => navigation.navigate("ProfileForm")}
-          color={darkmode ? "#B28DFF" : "#7D3C98"}
+          right={<Icon name="chevron-forward" size={18} color={c.textMuted} />}
         />
-        <View
-          className={`rounded-xl px-4 py-2 ${
-            darkmode ? "bg-[#3A1D3C]" : "bg-white"
-          }`}
-        >
-          <DropDown
-            data={languages(language)}
-            message={
-              translations[language || "en-EN"].screens.Settings.language
-            }
-            value={language}
-            setValue={changeLanguage}
-          />
+        <View className={`flex-row items-center px-4 py-1 border-b ${borderColor(darkmode)}`}>
+          <Icon name="language-outline" size={18} color={iconColor(darkmode)} />
+          <View className="flex-1 ml-1">
+            <DropDown
+              data={languages(language)}
+              message={t.language}
+              value={language}
+              setValue={changeLanguage}
+              bare
+            />
+          </View>
         </View>
-        <Button
-          title={
-            darkmode
-              ? translations[language || "en-EN"].screens.Settings.lightMode
-              : translations[language || "en-EN"].screens.Settings.darkMode
+        <Row
+          icon="moon-outline"
+          label={t.darkMode}
+          right={
+            <Switch
+              value={darkmode}
+              onValueChange={changeMode}
+              thumbColor="#FFFFFF"
+              trackColor={{ false: c.raised, true: palette.accent }}
+            />
           }
-          onPress={changeMode}
-          color={darkmode ? "#B28DFF" : "#7D3C98"}
         />
-        <Button
-          title={translations[language || "en-EN"].screens.Settings.leftHand[lefthand ? "left" : "right"]}
+        <Row
+          icon="hand-left-outline"
+          label={t.leftHand[lefthand ? "left" : "right"]}
           onPress={changeSide}
-          color={darkmode ? "#B28DFF" : "#7D3C98"}
+          right={<Icon name="swap-horizontal" size={18} color={c.textMuted} />}
+          last
         />
-        <Button title={translations[language || "en-EN"].screens.Settings.logout} onPress={closeSession} color="#F65261" />
+      </View>
+
+      <View
+        className={`mx-5 mt-4 rounded-2xl border overflow-hidden ${cardBgColor(
+          darkmode
+        )} ${borderColor(darkmode)}`}
+      >
+        <Row icon="log-out-outline" label={t.logout} onPress={closeSession} danger last />
       </View>
     </View>
   );
