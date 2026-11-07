@@ -18,27 +18,31 @@ export class GraphRepository {
     setPointsPerUserGraph: Dispatch<React.SetStateAction<GraphData | undefined>>
   ) {
     const getGraphData = async (
-      endpoint: string,
+      chart: string,
       state: React.Dispatch<React.SetStateAction<GraphData | undefined>>
     ) => {
       try {
-        const response = await axios.get(
-          CommonData.BASE_URL + "graphs/" + endpoint,
+        const response = await axios.post(
+          CommonData.BASE_URL + "graphql",
+          { query: `query { ${chart} { labels data } }` },
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        state(response.data as GraphData);
+        if (response.data.errors?.length) {
+          throw new Error(response.data.errors[0].message);
+        }
+        state(response.data.data[chart] as GraphData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    await getGraphData("users/creation", setUsersCreationGraph);
-    await getGraphData("posts/creation", setPostsCreationGraph);
-    await getGraphData("activities/timerate", setActivitiesTimeRateGraph);
-    await getGraphData("users/points", setPointsPerUserGraph);
+    await getGraphData("userCreationChart", setUsersCreationGraph);
+    await getGraphData("postCreationChart", setPostsCreationGraph);
+    await getGraphData("activityTimeRateChart", setActivitiesTimeRateGraph);
+    await getGraphData("userPointsChart", setPointsPerUserGraph);
   }
 }
