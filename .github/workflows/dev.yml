@@ -64,10 +64,12 @@ jobs:
           BRANCH_NAME: ${{ github.ref_name }}
           HOSTNAME: ${{ vars.HOSTING_PC }}
         run: |
-          mvn sonar:sonar \
+          # Full plugin coordinates: the "sonar" prefix is not resolvable
+          # without a pluginGroup in settings.xml.
+          mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:5.0.0.4389:sonar \
             -Dsonar.projectKey=RoutineFights \
             -Dsonar.host.url=http://$HOSTNAME:9000 \
-            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.qualitygate.wait=true  \
             -Dsonar.branch.name=$BRANCH_NAME
       # Production configuration is applied only after the tests, which run
