@@ -38,11 +38,36 @@ jobs:
           printf '%s' "$P12_BASE64" | base64 -d > "$KEYSTORE/routinefights.p12"
           # DeeplService reads "keystore/deeplKey" from the classpath (src/main/resources).
           mkdir -p API/src/main/resources/keystore
-          printf '%s\n' "$DEEPL_KEY_CONTENT" > API/src/main/resources/keystore/deeplKey
+          printf '%s\n' "${DEEPL_KEY_CONTENT:-ci-dummy-key:fx}" > API/src/main/resources/keystore/deeplKey
           printf '%s\n' "$APPLICATION_PROPERTIES_PROD" > API/src/main/resources/application.properties
+      # Tests must not depend on real credentials: give the Spring context a
+      # throwaway Firebase service account (nothing is ever sent) and dummy
+      # values for the placeholders in application.properties. No test
+      # connects to Neo4j or SendGrid.
+      - name: Preparar configuración de tests
+        run: |
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out "$RUNNER_TEMP/ci-key.pem" 2>/dev/null
+          python3 - "$RUNNER_TEMP" <<'PY'
+          import json, sys
+          tmp = sys.argv[1]
+          key = open(f"{tmp}/ci-key.pem").read()
+          json.dump({
+              "type": "service_account", "project_id": "rf-ci", "private_key_id": "ci",
+              "private_key": key, "client_email": "ci@rf-ci.iam.gserviceaccount.com",
+              "client_id": "0", "token_uri": "https://oauth2.googleapis.com/token",
+          }, open(f"{tmp}/firebase-ci.json", "w"))
+          PY
+
       - name: Compilar y ejecutar tests con Maven
         working-directory: API
-        run: mvn verify
+        env:
+          FIREBASE_SERVICEACCOUNT: file:${{ runner.temp }}/firebase-ci.json
+          JWT_SECRET: ci-test-secret
+          SENDGRID_API_KEY: SG.ci-test
+          SPRING_NEO4J_URI: bolt://localhost:7687
+          NEO4J_USER: neo4j
+          NEO4J_PASSWORD: ci-test
+        run: mvn -B verify
 
       - name: Ejecutar análisis en SonarQube
         working-directory: API
