@@ -80,5 +80,6 @@ class AuthResolverTest {
         doThrow(new MailException("Error sending email")).when(mailService).sentVerifyToken(anyString(), anyString(),
                 anyString());
         assertThrows(MailException.class, () -> resolver.register(INPUT));
+        verify(authService).rollbackRegistration(USER);
     }
 }

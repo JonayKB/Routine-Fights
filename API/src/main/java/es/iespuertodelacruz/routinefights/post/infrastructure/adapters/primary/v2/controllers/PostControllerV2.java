@@ -10,6 +10,9 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+
+import es.iespuertodelacruz.routinefights.post.exceptions.UploadPostException;
+import es.iespuertodelacruz.routinefights.shared.services.ImageService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import es.iespuertodelacruz.routinefights.post.domain.Post;
@@ -30,11 +33,14 @@ public class PostControllerV2 {
     private IPostService postService;
     private PostOutputV2Mapper postOutputV2Mapper;
     private IUserService userService;
+    private ImageService imageService;
 
-    public PostControllerV2(IPostService postService, PostOutputV2Mapper postOutputV2Mapper, IUserService userService) {
+    public PostControllerV2(IPostService postService, PostOutputV2Mapper postOutputV2Mapper, IUserService userService,
+            ImageService imageService) {
         this.postService = postService;
         this.postOutputV2Mapper = postOutputV2Mapper;
         this.userService = userService;
+        this.imageService = imageService;
     }
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
@@ -49,6 +55,9 @@ public class PostControllerV2 {
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("uploadPost")
     public PostOutputDTOV2 uploadPost(@Argument String image, @Argument String activityID) {
+        if (!imageService.exists(image)) {
+            throw new UploadPostException("Image not found, upload it first");
+        }
 
         User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
 

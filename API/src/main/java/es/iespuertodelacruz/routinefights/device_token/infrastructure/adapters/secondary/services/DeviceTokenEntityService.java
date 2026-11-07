@@ -21,9 +21,15 @@ public class DeviceTokenEntityService implements IDeviceTokenRepository {
 
     @Override
     public DeviceToken save(DeviceToken deviceToken) {
-        DeviceTokenEntity entity = deviceTokenEntityMapper.toEntity(deviceToken);
-        DeviceTokenEntity savedEntity = deviceTokenEntityRepository.save(entity);
-        return deviceTokenEntityMapper.toDomain(savedEntity);
+        if (deviceToken.getUser() == null || deviceToken.getUser().getEmail() == null) {
+            DeviceTokenEntity entity = deviceTokenEntityMapper.toEntity(deviceToken);
+            return deviceTokenEntityMapper.toDomain(deviceTokenEntityRepository.save(entity));
+        }
+        // Only the token is returned: mapping the linked node back would walk the
+        // user <-> device cycle.
+        deviceTokenEntityRepository.saveForUser(deviceToken.getUser().getEmail(), deviceToken.getToken(),
+                deviceToken.getLanguage());
+        return deviceToken;
     }
 
 }

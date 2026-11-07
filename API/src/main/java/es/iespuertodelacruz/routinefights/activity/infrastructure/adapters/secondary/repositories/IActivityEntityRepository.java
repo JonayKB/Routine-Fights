@@ -55,23 +55,30 @@ public interface IActivityEntityRepository extends Neo4jRepository<ActivityEntit
         @Query("""
                         MATCH (u:User)-[:Participated]->(a:Activity)<-[:Created]-(u2:User)
                         WHERE elementId(u) = $userID
-                        OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
-                        WITH u, a, u2, p
-                        ORDER BY p.createdAt DESC
-                        WITH u, a, u2, collect(p)[0] AS latestPost
-                        SET a.streak = coalesce(latestPost.streak, 0)
                         RETURN DISTINCT a, u2 AS c, u;
 
                         """)
         List<ActivityEntity> getSubscribedActivitiesWithStreak(@Param("userID") String userID);
 
+        /**
+         * Streak of the given user's most recent post in the activity, counting only
+         * posts made since {@code since} (start of the previous period). Older posts
+         * mean the streak is broken, so the result is 0.
+         */
+        @Query("""
+                        MATCH (u:User)-[:Posted]->(p:Post)-[:`Related-To`]->(a:Activity)
+                        WHERE elementId(u) = $userID AND elementId(a) = $activityID
+                        AND p.createdAt >= $since
+                        WITH p ORDER BY p.createdAt DESC LIMIT 1
+                        RETURN p.streak
+                        """)
+        Integer getCurrentStreak(@Param("activityID") String activityID, @Param("userID") String userID,
+                        @Param("since") java.time.LocalDateTime since);
+
         @Query("""
                         MATCH (u:User)-[:Participated]->(a:Activity)<-[c:Created]-(u2:User)
                         WHERE elementId(u) = $userID
                         AND lower(a.name) CONTAINS lower($activityName)
-                        OPTIONAL MATCH (a)<-[:`Related-To`]-(p:Post)
-                        WITH a, c, u, max(coalesce(p.streak, 0)) AS maxStreak
-                        SET a.streak = maxStreak
                         RETURN DISTINCT a, c, u;
 
                         """)

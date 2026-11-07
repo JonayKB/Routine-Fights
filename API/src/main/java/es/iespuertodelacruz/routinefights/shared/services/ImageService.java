@@ -29,9 +29,34 @@ public class ImageService {
         return filePath;
     }
 
+    /**
+     * Resolves a stored image name inside the uploads folder, rejecting anything
+     * that could escape it (separators, "..", absolute paths).
+     */
+    Path safeResolve(String imageName) {
+        if (imageName == null || imageName.isBlank() || imageName.contains("/") || imageName.contains("\\")
+                || imageName.contains("..")) {
+            throw new ImageNotFoundException(ERROR + "invalid image name");
+        }
+        Path root = uploads.toAbsolutePath().normalize();
+        Path resolved = root.resolve(imageName).normalize();
+        if (!resolved.startsWith(root)) {
+            throw new ImageNotFoundException(ERROR + "invalid image name");
+        }
+        return resolved;
+    }
+
+    public boolean exists(String imageName) {
+        try {
+            return Files.isRegularFile(safeResolve(imageName));
+        } catch (ImageNotFoundException e) {
+            return false;
+        }
+    }
+
     public UrlResource findImage(String imageName) {
         try {
-            Path pathForFilename = uploads.resolve(imageName);
+            Path pathForFilename = safeResolve(imageName);
             UrlResource resource = new UrlResource(pathForFilename.toUri());
             if (resource.exists()) {
                 return resource;
@@ -49,10 +74,20 @@ public class ImageService {
         } catch (IOException e) {
             throw new ImageSaveException("Could not initialize folder for upload");
         }
-        String filename = file.getOriginalFilename();
-        if (filename == null) {
+        String original = file.getOriginalFilename();
+        if (original == null) {
             throw new ImageSaveException("Filename is null");
         }
+        // Never trust the client's file name: keep only a short alphanumeric extension.
+        String extension = "";
+        int dot = original.lastIndexOf('.');
+        if (dot >= 0) {
+            String candidate = original.substring(dot + 1).toLowerCase();
+            if (candidate.matches("[a-z0-9]{1,5}")) {
+                extension = "." + candidate;
+            }
+        }
+        String filename = java.util.UUID.randomUUID() + extension;
         Path filePath = this.uploads.resolve(filename);
         filePath = getFreePath(filename, filePath);
         try {
@@ -64,7 +99,7 @@ public class ImageService {
     }
 
     public void delete(String imageName) {
-        Path pathForFilename = uploads.resolve(imageName);
+        Path pathForFilename = safeResolve(imageName);
         try {
             Files.delete(pathForFilename);
         } catch (IOException e) {

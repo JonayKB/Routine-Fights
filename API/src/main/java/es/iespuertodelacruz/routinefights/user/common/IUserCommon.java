@@ -82,6 +82,12 @@ public interface IUserCommon<T> extends ICRUD<T> {
     public boolean softDelete(String id);
 
     /**
+     * Permanently removes a user. Only used to roll back a registration that
+     * could not be completed (e.g. the verification e-mail failed).
+     */
+    public void hardDelete(String id);
+
+    /**
      * Method to find the users that match the username given
      * 
      * @param regex username

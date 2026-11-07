@@ -26,7 +26,7 @@ public class AuthService {
     public String login(String mail, String password) {
         User user = userService.findByEmailOnlyBase(mail);
 
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+        if (user != null && user.getDeletedAt() == null && passwordEncoder.matches(password, user.getPassword())) {
             if (user.getVerified()) {
                 return jwtService.generateToken(user.getEmail(), user.getRole());
             } else {
@@ -36,8 +36,19 @@ public class AuthService {
         throw new AuthException("User not found or Invalid Credentials");
     }
 
+    public static final int MIN_PASSWORD_LENGTH = 8;
+
+    public void rollbackRegistration(User user) {
+        if (user != null && user.getId() != null) {
+            userService.hardDelete(user.getId());
+        }
+    }
+
     public User register(String username, String email, String password, String nationality, String phoneNumber,
             String image) {
+        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
+            throw new AuthException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters");
+        }
         User user;
         user = userService.post(username, email, password, nationality, phoneNumber, image, "ROLE_USER", false,
                 UUID.randomUUID().toString(), LocalDateTime.now(), LocalDateTime.now(), null);

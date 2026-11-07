@@ -185,6 +185,13 @@ public class UserControllerV2 {
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("deleteUserV2")
     public boolean softDelete(@Argument String id) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+        User current = userService.findByEmailOnlyBase(auth.getName());
+        if (!isAdmin && (current == null || !current.getId().equals(id))) {
+            throw new UserDeleteException("You can only delete your own account");
+        }
         try {
             return userService.softDelete(id);
         } catch (Exception e) {

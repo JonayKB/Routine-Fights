@@ -44,7 +44,7 @@ public interface ICommunityEventEntityRepository extends Neo4jRepository<Communi
             UNWIND $activitiesIDs AS activityID
             MATCH (a:Activity) WHERE elementId(a) = activityID
             CREATE (ce)-[r:Related]->(a)
-            RETURN ce, r, a
+            RETURN ce, collect(r), collect(a)
             """)
     CommunityEventEntity create(@Param("name") String name, @Param("createdAt") LocalDateTime createdAt,
             @Param("startDate") LocalDateTime startDate, @Param("finishDate") LocalDateTime finishDate,

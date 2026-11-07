@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 
 import es.iespuertodelacruz.routinefights.device_token.domain.ports.primary.IDeviceTokenService;
 import es.iespuertodelacruz.routinefights.shared.dto.UserDTOAuth;
+import es.iespuertodelacruz.routinefights.shared.exceptions.MailException;
 import es.iespuertodelacruz.routinefights.shared.mappers.UserDTOAuthMapper;
 import es.iespuertodelacruz.routinefights.shared.services.AuthService;
 import es.iespuertodelacruz.routinefights.shared.services.MailService;
@@ -47,8 +48,16 @@ public class AuthResolver {
     public UserDTOAuth register(@Argument UserDTOAuth user) {
         User saved = authService.register(user.username(), user.email(), user.password(),
                 user.nationality(), user.phoneNumber(), user.image());
-        mailService.sentVerifyToken(saved.getEmail(), "Verify your email: " + saved.getUsername(),
-                saved.getVerificationToken());
+        try {
+            mailService.sentVerifyToken(saved.getEmail(), "Verify your email: " + saved.getUsername(),
+                    saved.getVerificationToken());
+        } catch (RuntimeException e) {
+            // Without the e-mail the account could never be verified: undo it so the
+            // user can simply try again instead of hitting "Email already exists".
+            log.warn("Verification e-mail failed for {}, rolling back registration", saved.getEmail(), e);
+            authService.rollbackRegistration(saved);
+            throw new MailException("We could not send the verification e-mail. Please try again later.");
+        }
         return userDTOAuthMapper.toDTO(saved);
     }
 }
