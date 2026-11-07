@@ -96,11 +96,15 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-        release {
-            storeFile file('my-release-key.keystore')
-            storePassword '1q2w3e4r'
-            keyAlias 'your_key_alias'
-            keyPassword '1q2w3e4r'
+        // Real release key, only when provided (CI secrets or local env).
+        // Never commit the keystore or its passwords.
+        if (System.getenv("RF_UPLOAD_STORE_FILE")) {
+            release {
+                storeFile file(System.getenv("RF_UPLOAD_STORE_FILE"))
+                storePassword System.getenv("RF_UPLOAD_STORE_PASSWORD")
+                keyAlias System.getenv("RF_UPLOAD_KEY_ALIAS")
+                keyPassword System.getenv("RF_UPLOAD_KEY_PASSWORD")
+            }
         }
     }
     buildTypes {
@@ -112,7 +116,8 @@ android {
             // see https://reactnative.dev/docs/signed-apk-android.
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            signingConfig signingConfigs.release
+            // Without a release key the APK is signed with the debug key so it can still be installed.
+            signingConfig System.getenv("RF_UPLOAD_STORE_FILE") ? signingConfigs.release : signingConfigs.debug
         }
     }
 }

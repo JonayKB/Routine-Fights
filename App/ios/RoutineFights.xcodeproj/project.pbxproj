@@ -11,6 +11,9 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		F0A1B2C3D4E5F60718293A11 /* Lexend-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5F60718293A01 /* Lexend-Regular.ttf */; };
+		F0A1B2C3D4E5F60718293A12 /* Lexend-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5F60718293A02 /* Lexend-Medium.ttf */; };
+		F0A1B2C3D4E5F60718293A13 /* Lexend-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5F60718293A03 /* Lexend-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +38,9 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = RoutineFights/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RoutineFights/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F0A1B2C3D4E5F60718293A01 /* Lexend-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lexend-Regular.ttf; path = ../assets/fonts/Lexend-Regular.ttf; sourceTree = SOURCE_ROOT; };
+		F0A1B2C3D4E5F60718293A02 /* Lexend-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lexend-Medium.ttf; path = ../assets/fonts/Lexend-Medium.ttf; sourceTree = SOURCE_ROOT; };
+		F0A1B2C3D4E5F60718293A03 /* Lexend-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lexend-SemiBold.ttf; path = ../assets/fonts/Lexend-SemiBold.ttf; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +71,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				F0A1B2C3D4E5F60718293A03 /* Lexend-SemiBold.ttf */,
+				F0A1B2C3D4E5F60718293A02 /* Lexend-Medium.ttf */,
+				F0A1B2C3D4E5F60718293A01 /* Lexend-Regular.ttf */,
 			);
 			name = RoutineFights;
 			sourceTree = "<group>";
@@ -184,6 +193,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				F0A1B2C3D4E5F60718293A13 /* Lexend-SemiBold.ttf in Resources */,
+				F0A1B2C3D4E5F60718293A12 /* Lexend-Medium.ttf in Resources */,
+				F0A1B2C3D4E5F60718293A11 /* Lexend-Regular.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
