@@ -1,7 +1,11 @@
 package es.iespuertodelacruz.routinefights.shared.services;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriUtils;
+
+import java.nio.charset.StandardCharsets;
 
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
@@ -19,6 +23,10 @@ public class MailService {
 
 	private final SendGrid sendGrid;
 	private final Email fromEmail;
+
+	/** Public base URL of the site, used to build the link in the verification e-mail. */
+	@Value("${app.public-url:https://routinefights.jonaykb.com}")
+	private String publicUrl = "https://routinefights.jonaykb.com";
 
 	public MailService(SendGrid sendGrid, Email fromEmail) {
 		this.sendGrid = sendGrid;
@@ -48,9 +56,15 @@ public class MailService {
 
 	public void sentVerifyToken(String destinatario, String asunto, String token) {
 
-		String html = String.format(HTMLTemplates.VERIFICATION_EMAIL, destinatario, token);
+		String html = String.format(HTMLTemplates.VERIFICATION_EMAIL, verifyBaseUrl(),
+				UriUtils.encodePathSegment(destinatario, StandardCharsets.UTF_8),
+				UriUtils.encodePathSegment(token, StandardCharsets.UTF_8));
 
 		dispatchEmail(destinatario, asunto, html);
+	}
+
+	String verifyBaseUrl() {
+		return publicUrl.endsWith("/") ? publicUrl.substring(0, publicUrl.length() - 1) : publicUrl;
 	}
 
 }

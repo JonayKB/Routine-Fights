@@ -80,5 +80,19 @@ class MailServiceTest {
 
         verify(sendGrid, times(1)).api(any(Request.class));
     }
-}
 
+    @Test
+    void verificationLinkUsesPublicUrl() throws Exception {
+        Response ok = new Response();
+        ok.setStatusCode(202);
+        ArgumentCaptor<Request> sent = ArgumentCaptor.forClass(Request.class);
+        when(sendGrid.api(sent.capture())).thenReturn(ok);
+
+        mailService.sentVerifyToken("ana+test@example.com", "Verify", "tok-123");
+
+        assertTrue(sent.getValue().getBody()
+                .contains("https://routinefights.jonaykb.com/auth/verify/ana+test@example.com/tok-123"),
+                sent.getValue().getBody());
+        assertFalse(sent.getValue().getBody().contains("64.226.71.234"));
+    }
+}

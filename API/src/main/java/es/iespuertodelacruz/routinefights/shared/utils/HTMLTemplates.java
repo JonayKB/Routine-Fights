@@ -64,7 +64,7 @@ public class HTMLTemplates {
                     </div>
                     <div class='content'>
                         <p>Gracias por registrarte. Para activar tu cuenta, haz clic en el botón de abajo:</p>
-                        <a href='http://64.226.71.234:8080/auth/verify/%s/%s' class='button'>Verificar Cuenta</a>
+                        <a href='%s/auth/verify/%s/%s' class='button'>Verificar Cuenta</a>
                     </div>
                     <div class='footer'>
                         <p>Si no realizaste esta solicitud, puedes ignorar este mensaje.</p>
@@ -72,7 +72,7 @@ public class HTMLTemplates {
                 </div>
             </body>
             </html>
-            """.formatted(COMMON_STYLES, "%s", "%s");
+            """.formatted(COMMON_STYLES, "%s", "%s", "%s");
 
     public static final String NEED_EMAIL_TOKEN = """
             <html>
