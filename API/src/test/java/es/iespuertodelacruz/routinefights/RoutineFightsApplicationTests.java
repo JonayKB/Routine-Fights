@@ -10,7 +10,8 @@ class RoutineFightsApplicationTests {
 
   @Test
   void testMain() {
-    assertDoesNotThrow(() -> RoutineFightsApplication.main(new String[] {}));
+    // Random free port: the test must not depend on 8080 being available.
+    assertDoesNotThrow(() -> RoutineFightsApplication.main(new String[] { "--server.port=0" }));
   }
 
 }

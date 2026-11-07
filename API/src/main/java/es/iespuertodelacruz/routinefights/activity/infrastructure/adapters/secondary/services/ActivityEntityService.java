@@ -70,6 +70,9 @@ public class ActivityEntityService implements IActivityRepository {
     }
 
     private Integer currentStreak(ActivityEntity activity, String userID) {
+        if (activity.getTimeRate() == null) {
+            return 0;
+        }
         LocalDateTime since = timeRatesDate.getLastIterationDates(activity.getTimeRate())[0];
         Integer streak = activityEntityRepository.getCurrentStreak(activity.getId(), userID, since);
         return streak == null ? 0 : streak;
