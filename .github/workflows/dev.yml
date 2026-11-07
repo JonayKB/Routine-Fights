@@ -60,15 +60,17 @@ jobs:
       - name: Ejecutar análisis en SonarQube
         working-directory: API
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          # Full URL of the SonarQube server, e.g. https://sonarqube.example.com
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY || 'RoutineFights' }}
           BRANCH_NAME: ${{ github.ref_name }}
-          HOSTNAME: ${{ vars.HOSTING_PC }}
         run: |
           # Full plugin coordinates: the "sonar" prefix is not resolvable
           # without a pluginGroup in settings.xml.
           mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:5.0.0.4389:sonar \
-            -Dsonar.projectKey=RoutineFights \
-            -Dsonar.host.url=http://$HOSTNAME:9000 \
+            -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
+            -Dsonar.host.url="$SONAR_HOST_URL" \
             -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.qualitygate.wait=true  \
             -Dsonar.branch.name=$BRANCH_NAME
