@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Dimensions } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import React, { useRef } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CropView } from "react-native-image-crop-tools";
@@ -11,7 +11,6 @@ type Props = NativeStackScreenProps<ImageStackProps, "ImageCrop">;
 const ImageCrop = ({ navigation, route }: Props) => {
   const { setUri } = useImageContext();
   const cropViewRef = useRef<CropView>(null);
-  const { width, height } = Dimensions.get("window");
 
   return (
     <View className="flex-1 bg-black">
@@ -24,7 +23,7 @@ const ImageCrop = ({ navigation, route }: Props) => {
           navigation.goBack();
         }}
         keepAspectRatio
-        aspectRatio={{ width: width, height: height }}
+        aspectRatio={{ width: 4, height: 5 }}
       />
       <View className="flex-row justify-around items-center p-4">
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -33,7 +32,7 @@ const ImageCrop = ({ navigation, route }: Props) => {
         <TouchableOpacity
           onPress={() => cropViewRef.current.saveImage(true, 90)}
         >
-          <Icon name="checkmark" size={32} color="#F65261" />
+          <Icon name="checkmark" size={32} color="#C2410C" />
         </TouchableOpacity>
       </View>
     </View>

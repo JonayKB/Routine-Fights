@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { borderColor, cardBgColor, iconColor } from "../utils/Utils";
+import { bgColor, borderColor, iconColor, textColor } from "../utils/Utils";
 
 type Props = {
   message?: string;
@@ -14,17 +14,20 @@ const ProfileNavigation = (props: Props) => {
 
   return (
     <View
-      className={`flex-row ${cardBgColor(darkmode)} border-b-2 ${borderColor(
+      className={`flex-row items-center h-14 px-3 border-b ${bgColor(
         darkmode
-      )} p-5`}
+      )} ${borderColor(darkmode)}`}
     >
-      <TouchableOpacity onPress={() => props.navigation.goBack()}>
-        <Icon name="arrow-back" size={30} color={iconColor(darkmode)} />
+      <TouchableOpacity
+        onPress={() => props.navigation.goBack()}
+        hitSlop={10}
+        className="w-10 h-10 items-center justify-center"
+      >
+        <Icon name="arrow-back" size={22} color={iconColor(darkmode)} />
       </TouchableOpacity>
       <Text
-        className={`${
-          darkmode ? "text-[#B28DFF]" : "text-[#7D3C98]"
-        } font-bold text-2xl ml-5`}
+        numberOfLines={1}
+        className={`flex-1 text-base font-medium ml-2 ${textColor(darkmode)}`}
       >
         {props.message}
       </Text>

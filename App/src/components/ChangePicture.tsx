@@ -23,9 +23,9 @@ const ChangePicture = ({ uri, setUri }: Props) => {
         />
         <TouchableOpacity
           onPress={() => setUri(null)}
-          className="border-white border-2 rounded-lg mb-5"
+          className="border-white border rounded-lg mb-5"
         >
-          <Text className="text-white font-bold text-xl text-center px-6 py-2">
+          <Text className="text-white font-semibold text-xl text-center px-6 py-2">
             {translations[language || "en-EN"].screens.UploadForm.changePicture}
           </Text>
         </TouchableOpacity>

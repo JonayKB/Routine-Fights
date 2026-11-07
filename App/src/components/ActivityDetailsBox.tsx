@@ -3,6 +3,14 @@ import React from "react";
 import { Activity } from "../utils/Activity";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import {
+  borderColor,
+  cardBgColor,
+  mutedTextColor,
+  secondaryTextColor,
+  textColor,
+} from "../utils/Utils";
+import { fonts } from "../styles/theme";
 
 type Props = {
   activity: Activity;
@@ -11,45 +19,42 @@ type Props = {
 const ActivityDetailsBox = ({ activity }: Props) => {
   const { language, darkmode } = useSettingsContext();
 
-  return (
-    <View
-      className={`rounded-2xl w-11/12 px-6 py-5 mt-6 items-center border-2 ${
-        darkmode
-          ? "bg-[#4B294F] border-[#B28DFF]"
-          : "bg-[#E8E2F0] border-[#4B0082]"
-      }`}
-    >
+  const t = translations[language || "en-EN"].screens.ActivityDetails;
+
+  const Fact = ({ label, value }: { label: string; value: string }) => (
+    <View className="flex-1">
+      <Text className={`text-xs ${mutedTextColor(darkmode)}`}>{label}</Text>
       <Text
-        className={`text-3xl font-bold mb-2 ${
-          darkmode ? "text-white" : "text-[#4B0082]"
-        }`}
+        style={{ fontFamily: fonts.displayMedium }}
+        className={`text-lg mt-1 ${textColor(darkmode)}`}
+      >
+        {value}
+      </Text>
+    </View>
+  );
+
+  return (
+    <View className="px-5 pt-5">
+      <Text
+        style={{ fontFamily: fonts.display }}
+        className={`text-2xl ${textColor(darkmode)}`}
       >
         {activity.name}
       </Text>
+      {!!activity.description && (
+        <Text className={`text-base mt-2 ${secondaryTextColor(darkmode)}`}>
+          {activity.description}
+        </Text>
+      )}
 
-      <Text
-        className={`text-lg text-center mb-6 ${
-          darkmode ? "text-[#E0D3F5]" : "text-[#4B0082]"
-        }`}
+      <View
+        className={`flex-row mt-5 p-4 rounded-2xl border ${cardBgColor(
+          darkmode
+        )} ${borderColor(darkmode)}`}
       >
-        {activity.description}
-      </Text>
-
-      <Text
-        className={`text-xl mb-1 ${
-          darkmode ? "text-[#B0A1C1]" : "text-[#4B0082]"
-        }`}
-      >
-        {translations[language || "en-EN"].screens.ActivityDetails.numOfTimes}:{" "}
-        {activity.timesRequiered}
-      </Text>
-
-      <Text
-        className={`text-xl ${darkmode ? "text-[#B0A1C1]" : "text-[#4B0082]"}`}
-      >
-        {translations[language || "en-EN"].screens.ActivityDetails.frequency}:{" "}
-        {translations[language || "en-EN"].screens.ActivityDetails.timeRates[activity.timeRate]}
-      </Text>
+        <Fact label={t.numOfTimes} value={String(activity.timesRequiered ?? "")} />
+        <Fact label={t.frequency} value={t.timeRates[activity.timeRate] ?? ""} />
+      </View>
     </View>
   );
 };

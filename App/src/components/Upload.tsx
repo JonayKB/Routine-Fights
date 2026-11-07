@@ -6,55 +6,52 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ImageStackProps } from "../navigation/ImageStackNavigation";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { cardBgColor, textColor } from "../utils/Utils";
+import {
+  borderColor,
+  cardBgColor,
+  iconColor,
+  raisedBgColor,
+  textColor,
+} from "../utils/Utils";
 
 type Props = NativeStackScreenProps<ImageStackProps, "Upload">;
 
 const Upload = ({ navigation }: Props) => {
   const { language, darkmode } = useSettingsContext();
 
-  return (
-    <View className={`flex-1 ${cardBgColor(darkmode)} justify-center items-center px-4`}>
+  const t = translations[language || "en-EN"].screens.UploadForm;
+  const pick = (source: "camera" | "library") => {
+    const launch = source === "camera" ? launchCamera : launchImageLibrary;
+    launch(
+      { mediaType: "photo" },
+      ({ assets }) =>
+        assets && navigation.navigate("ImageCrop", { uri: assets[0].uri })
+    );
+  };
+
+  const Option = ({ icon, label, source }: { icon: string; label: string; source: "camera" | "library" }) => (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={() => pick(source)}
+      className={`flex-1 items-center justify-center py-6 mx-1.5 rounded-xl border ${raisedBgColor(
+        darkmode
+      )} ${borderColor(darkmode)}`}
+    >
+      <Icon name={icon} size={24} color={iconColor(darkmode)} />
       <Text
-        className={`text-2xl font-bold mb-8 ${textColor(darkmode)}`}
+        className={`mt-3 text-sm font-medium text-center px-2 ${textColor(darkmode)}`}
       >
-        {translations[language || "en-EN"].screens.UploadForm.title}
+        {label}
       </Text>
+    </TouchableOpacity>
+  );
 
-      <TouchableOpacity
-        className="flex-row items-center bg-white rounded-2xl p-6 mb-6 w-full"
-        onPress={() =>
-          launchCamera(
-            { mediaType: "photo" },
-            ({ assets }) =>
-              assets && navigation.navigate("ImageCrop", { uri: assets[0].uri })
-          )
-        }
-      >
-        <Icon name="camera-outline" size={36} color="#4B0082" />
-        <Text className="ml-4 text-lg font-semibold text-[#4B0082]">
-          {translations[language || "en-EN"].screens.UploadForm.takeFromCamera}
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        className="flex-row items-center bg-white rounded-2xl p-6 w-full"
-        onPress={() =>
-          launchImageLibrary(
-            { mediaType: "photo" },
-            ({ assets }) =>
-              assets && navigation.navigate("ImageCrop", { uri: assets[0].uri })
-          )
-        }
-      >
-        <Icon name="image-outline" size={36} color="#4B0082" />
-        <Text className="ml-4 text-lg font-semibold text-[#4B0082]">
-          {
-            translations[language || "en-EN"].screens.UploadForm
-              .selectFromLibrary
-          }
-        </Text>
-      </TouchableOpacity>
+  return (
+    <View className={`flex-1 ${cardBgColor(darkmode)} justify-center px-4`}>
+      <View className="flex-row">
+        <Option icon="camera-outline" label={t.takeFromCamera} source="camera" />
+        <Option icon="images-outline" label={t.selectFromLibrary} source="library" />
+      </View>
     </View>
   );
 };

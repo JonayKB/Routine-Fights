@@ -3,7 +3,14 @@ import { TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { borderColor, cardBgColor, iconColor } from "../utils/Utils";
+import {
+  bgColor,
+  borderColor,
+  iconColor,
+  raisedBgColor,
+  textColor,
+} from "../utils/Utils";
+import { colors } from "../styles/theme";
 
 type Props = {
   navigation: any;
@@ -15,23 +22,31 @@ const SearchBarHeader = (props: Props) => {
 
   return (
     <View
-      className={`flex-row items-center ${cardBgColor(
+      className={`flex-row items-center h-16 px-3 border-b ${bgColor(
         darkmode
-      )} border-b-2 ${borderColor(darkmode)} px-4 py-3`}
+      )} ${borderColor(darkmode)}`}
     >
-      <TouchableOpacity onPress={() => props.navigation.goBack()}>
-        <Icon name="arrow-back" size={28} color={iconColor(darkmode)} />
+      <TouchableOpacity
+        onPress={() => props.navigation.goBack()}
+        hitSlop={10}
+        className="w-10 h-10 items-center justify-center"
+      >
+        <Icon name="arrow-back" size={22} color={iconColor(darkmode)} />
       </TouchableOpacity>
-      <TextInput
-        placeholder={translations[language || "en-EN"].screens.Home.search}
-        placeholderTextColor={darkmode ? "#B28DFF" : "#7D3C98"}
-        className={`ml-4 flex-1 rounded-xl border-2 px-4 py-2 text-2xl ${
+      <View
+        className={`flex-1 flex-row items-center h-11 ml-1 px-3 rounded-xl border ${raisedBgColor(
           darkmode
-            ? "bg-[#1C1C1E] text-white border-[#B28DFF]"
-            : "bg-white text-black border-[#7D3C98]"
-        }`}
-        onChangeText={(text) => props.searchFunction(text)}
-      />
+        )} ${borderColor(darkmode)}`}
+      >
+        <Icon name="search" size={18} color={iconColor(darkmode)} />
+        <TextInput
+          autoFocus
+          placeholder={translations[language || "en-EN"].screens.Home.search}
+          placeholderTextColor={colors(darkmode).textMuted}
+          className={`flex-1 ml-2 py-0 text-base ${textColor(darkmode)}`}
+          onChangeText={(text) => props.searchFunction(text)}
+        />
+      </View>
     </View>
   );
 };

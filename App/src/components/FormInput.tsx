@@ -1,29 +1,64 @@
-import { TextInput } from "react-native";
-import React from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import Icon from "react-native-vector-icons/Ionicons";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { borderColor, textColor } from "../utils/Utils";
+import { borderColor, iconColor, raisedBgColor, textColor } from "../utils/Utils";
+import { colors } from "../styles/theme";
 
 type Props = {
   setText: (text: string) => void;
   name: string;
   label: string;
   mode: TextInput["props"]["inputMode"];
+  /** Hide the value and show an eye toggle. */
+  secure?: boolean;
+  /** Message shown under the field; also turns its border red. */
+  error?: string | null;
 };
 
 const FormInput = (props: Props) => {
   const { darkmode } = useSettingsContext();
+  const [hidden, setHidden] = useState(true);
+  const [focused, setFocused] = useState(false);
 
   return (
-    <TextInput
-      placeholder={props.label}
-      placeholderTextColor={darkmode ? "#E0D3F5" : "#4B0082"}
-      inputMode={props.mode}
-      className={`text-lg mb-5 pl-3 rounded-lg border-2 ${
-        darkmode ? "bg-[#4B294F]" : "bg-[#F8F7FE]"
-      } ${textColor(darkmode)} ${borderColor(darkmode)}`}
-      onChangeText={(text) => props.setText(text)}
-      value={props.name}
-    />
+    <View className="mb-3">
+    <View
+      className={`flex-row items-center h-12 px-4 rounded-xl border ${raisedBgColor(
+        darkmode
+      )} ${
+        props.error ? "border-[#E5484D]" : focused ? "border-[#C2410C]" : borderColor(darkmode)
+      }`}
+    >
+      <TextInput
+        placeholder={props.label}
+        placeholderTextColor={colors(darkmode).textMuted}
+        inputMode={props.mode}
+        autoCapitalize={props.mode === "email" ? "none" : undefined}
+        secureTextEntry={props.secure && hidden}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className={`flex-1 text-base py-0 ${textColor(darkmode)}`}
+        onChangeText={(text) => props.setText(text)}
+        value={props.name}
+      />
+      {props.secure && (
+        <TouchableOpacity onPress={() => setHidden(!hidden)} hitSlop={10}>
+          <Icon
+            name={hidden ? "eye-outline" : "eye-off-outline"}
+            size={18}
+            color={iconColor(darkmode)}
+          />
+        </TouchableOpacity>
+      )}
+    </View>
+    {!!props.error && (
+      <View className="flex-row items-center mt-1.5 ml-1">
+        <Icon name="alert-circle" size={14} color="#E5484D" />
+        <Text className="ml-1.5 text-xs text-[#E5484D]">{props.error}</Text>
+      </View>
+    )}
+    </View>
   );
 };
 
