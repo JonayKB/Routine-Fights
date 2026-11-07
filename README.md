@@ -20,14 +20,7 @@
   - [GraphQL](#graphql)
     - [Queries](#queries)
     - [Mutations](#mutations)
-  - [REST](#rest)
-    - [AUTH](#auth)
-    - [IMAGES](#images)
-    - [GRAPH](#graph)
-  - [SOAP](#soap)
-    - [AuthService](#authservice)
-    - [GraphService](#graphservice)
-    - [ImageService](#imageservice)
+  - [HTTP](#http)
 - [Marketing Plan](#marketing-plan)
   - [Market Analysis](#market-analysis)
     - [Ideal Customer Profile](#ideal-customer-profile)
@@ -74,8 +67,13 @@
 
 ## Using Docker
 
-Execute this docker-compose
-[Docker-Compose](docker-compose.yml)
+Copy [`.env.example`](.env.example) to `.env`, fill in the secrets (never commit `.env`) and run
+[Docker-Compose](docker-compose.yml):
+
+```bash
+cp .env.example .env   # then edit it
+docker compose up -d
+```
 
 ## Without Docker
 
@@ -137,6 +135,15 @@ serve build/
 | `getOwnBadges`                                                   | Lists badges earned by the current user (v2).                                           |
 | `findBadgeById(id)`                                              | Fetches a badge by its ID (v3), including event details.                                |
 | `findBadgeByCommunityEvent(communityEventId)`                    | Lists all badges associated with a given community event.                               |
+| `userCreationChart` *(admin)*                                    | User sign‑up counts over time.                                                          |
+| `postCreationChart` *(admin)*                                    | Post creation counts over time.                                                         |
+| `postPointsChart` *(admin)*                                      | Points added per day.                                                                   |
+| `userPointsChart` *(admin)*                                      | Total points per user (for leaderboard charts).                                         |
+| `activityTimeRateChart` *(admin)*                                | Activities grouped by time rate.                                                        |
+| `translate(text, targetLang)`                                    | Translates a text with DeepL.                                                           |
+| `myPostDaysByActivity(activityID, days?)`                        | Days (yyyy-MM-dd) the current user posted in an activity, for the streak calendar.      |
+| `bestStreakByEmail(email)`                                       | Hottest current streak of a user, shown next to their name.                             |
+| `communityEventRanking(id, limit?)`                              | Users who contributed most points to a community event.                                 |
 
 ### Mutations
 
@@ -161,67 +168,20 @@ serve build/
 | `createBadge(image, level, communityEventId)` | Creates a new badge tied to a community event (v3).                                                       |
 | `addBadgeToUser(userEmail, badgeId)`          | Awards a badge to a single user.                                                                          |
 | `addBadgeToUsers(userEmail[], badgeId)`       | Awards a badge to multiple users, returning an array of success flags.                                    |
+| `login(email, password, deviceToken?, language?)` | Public. Returns a JWT; optionally stores the device's push token.                                    |
+| `register(user: RegisterInput)`               | Public. Creates an account and e‑mails the verification link.                                             |
+| `sendNotificationToAll(titleKey, bodyKey, args?)` *(admin)* | Sends a translated push notification to every user.                                         |
+| `sendNotificationToDevice(titleKey, bodyKey, deviceToken, language, args?)` *(admin)* | Sends a translated push notification to one device.               |
 
-## REST
+## HTTP
 
-### AUTH
+Everything goes through GraphQL (`POST /graphql`) except the few cases GraphQL does not cover well:
 
-| Method | Path                           | Parameters                                                                    | Request Body (JSON)                                                                                                                          | Description                                 |
-| ------ | ------------------------------ | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| POST   | `/auth/register`               | —                                                                             | <code>{"username": "string","email": "string","password": "string","nationality": "string","phoneNumber": "string","image": "string"}</code> | Create a new user account.                  |
-| POST   | `/auth/login`                  | **email** (query, string, required)<br>**password** (query, string, required) | —                                                                                                                                            | Authenticate a user and return a JWT token. |
-| GET    | `/auth/verify/{email}/{token}` | **email** (path, string, required)<br>**token** (path, string, required)      | —                                                                                                                                            | Verify user’s email with a token.           |
-
----
-
-### IMAGES
-
-| Method | Path                  | Parameters                             | Request Body (multipart/form-data) | Description                    |
-| ------ | --------------------- | -------------------------------------- | ---------------------------------- | ------------------------------ |
-| POST   | `/images/`            | —                                      | **file** (binary, required)        | Upload an image file.          |
-| GET    | `/images/{imageName}` | **imageName** (path, string, required) | —                                  | Retrieve an image by filename. |
-
----
-
-### GRAPH
-
-*All `/graphs` endpoints return JSON chart‑data objects.*
-
-| Method | Path                          | Parameters | Request Body | Description                                     |
-| ------ | ----------------------------- | ---------- | ------------ | ----------------------------------------------- |
-| GET    | `/graphs/users/points`        | —          | —            | Total points per user (for leaderboard charts). |
-| GET    | `/graphs/users/creation`      | —          | —            | User sign‑up counts over time.                  |
-| GET    | `/graphs/posts/points`        | —          | —            | Points or likes per post over time.             |
-| GET    | `/graphs/posts/creation`      | —          | —            | Post creation counts over time.                 |
-| GET    | `/graphs/activities/timerate` | —          | —            | Activity duration/frequency statistics.         |
-
----
-
-## SOAP
-
-### AuthService
-
-| Operation  | SOAP Action | Input                 | Output                        | Description                                     |
-| ---------- | ----------- | --------------------- | ----------------------------- | ----------------------------------------------- |
-| `login`    | (none)      | `<login>` XML body    | `<loginResponse>` XML body    | Authenticate user and return token or response. |
-| `register` | (none)      | `<register>` XML body | `<registerResponse>` XML body | Register a new user.                            |
-| `verify`   | (none)      | `<verify>` XML body   | `<verifyResponse>` XML body   | Verify user’s email and token.                  |
-
-### GraphService
-
-| Operation              | SOAP Action | Input                             | Output                           | Description                            |
-| ---------------------- | ----------- | --------------------------------- | -------------------------------- | -------------------------------------- |
-| `getPostPointsChart`   | (none)      | `<getPostPointsChart>` XML body   | `<getPostPointsChartResponse>`   | Get chart data for post points.        |
-| `getPostCreationChart` | (none)      | `<getPostCreationChart>` XML body | `<getPostCreationChartResponse>` | Get chart data for post creation.      |
-| `getUserCreationChart` | (none)      | `<getUserCreationChart>` XML body | `<getUserCreationChartResponse>` | Get chart data for user registrations. |
-| `getUserPointsChart`   | (none)      | `<getUserPointsChart>` XML body   | `<getUserPointsChartResponse>`   | Get chart data for user points.        |
-
-### ImageService
-
-| Operation    | SOAP Action | Input                   | Output                          | Description                   |
-| ------------ | ----------- | ----------------------- | ------------------------------- | ----------------------------- |
-| `getImage`   | (none)      | `<getImage>` XML body   | `<getImageResponse>` XML body   | Retrieve image by name or ID. |
-| `uploadFile` | (none)      | `<uploadFile>` XML body | `<uploadFileResponse>` XML body | Upload an image file.         |
+| Method | Path                           | Auth   | Description                                                        |
+| ------ | ------------------------------ | ------ | ------------------------------------------------------------------ |
+| GET    | `/auth/verify/{email}/{token}` | Public | E‑mail verification link (opened from the mail, returns HTML).     |
+| POST   | `/images/`                     | JWT    | Upload an image (`multipart/form-data`, field **file**).           |
+| GET    | `/images/{imageName}`          | JWT    | Retrieve an image by filename.                                     |
 
 # Marketing Plan
 
