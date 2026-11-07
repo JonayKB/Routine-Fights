@@ -17,7 +17,8 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secret = "secret";
 
-    @Value("${jwt.expiration}")
+    // 30 days unless configured; the production properties file does not set it.
+    @Value("${jwt.expiration:2592000000}")
     private long expiration = 9876543210L;
 
     public String generateToken(String mail, String rol) {
