@@ -3,7 +3,7 @@ import { translations } from "../../translations/translation";
 // Set to true to point a debug build on the Android emulator at an API running on this machine.
 const USE_LOCAL_API = false;
 export const uri: string =
-  __DEV__ && USE_LOCAL_API ? "http://10.0.2.2:8080" : "https://routinefights.ddns.net:6342";
+  __DEV__ && USE_LOCAL_API ? "http://10.0.2.2:8080" : "https://routinefights.jonaykb.com";
 export const neo4jUri: string = uri + "/graphql";
 export const limit: number = 10;
 

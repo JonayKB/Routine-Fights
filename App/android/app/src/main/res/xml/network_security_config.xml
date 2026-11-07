@@ -4,7 +4,6 @@
 
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">localhost</domain>
-        <domain includeSubdomains="true">64.226.71.234</domain>
 
         <trust-anchors>
             <certificates src="system" />
