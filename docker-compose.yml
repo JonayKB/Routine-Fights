@@ -13,6 +13,8 @@ services:
       - SPRING_NEO4J_URI=bolt://db:7687
       - SERVER_SSL_ENABLED=false
       - APP_PUBLIC_URL=https://routinefights.jonaykb.com
+      # Token lifetime in ms (30 days)
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-2592000000}
       - NEO4J_USER=${NEO4J_USER:?set NEO4J_USER in .env}
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:?set NEO4J_PASSWORD in .env}
       - JWT_SECRET=${JWT_SECRET:?set JWT_SECRET in .env}
