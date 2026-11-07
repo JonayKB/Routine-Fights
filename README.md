@@ -362,7 +362,7 @@ Social media campaign featuring promotional videos that highlight:
 
 # Sonarqube
 
-[Look the quality of code and how it upgraded](http://routinefights.ddns.net:9000)
+[Look the quality of code and how it upgraded](https://sonarqube.jonaykb.com)
 > Ask to us to get the credentials
 
 # Download The App

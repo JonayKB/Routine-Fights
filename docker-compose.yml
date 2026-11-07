@@ -5,10 +5,14 @@ services:
     image: jonaykb/apiroutinefights:latest
     container_name: apiroutinefights
     restart: always
-    ports:
-      - "6342:8080"
+    # Not published: nginx (admin) is the only public entry point and reaches
+    # the API as http://app:8080 on apiNetwork.
+    expose:
+      - "8080"
     environment:
       - SPRING_NEO4J_URI=bolt://db:7687
+      - SERVER_SSL_ENABLED=false
+      - APP_PUBLIC_URL=https://routinefights.jonaykb.com
       - NEO4J_USER=${NEO4J_USER:?set NEO4J_USER in .env}
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:?set NEO4J_PASSWORD in .env}
       - JWT_SECRET=${JWT_SECRET:?set JWT_SECRET in .env}
@@ -19,7 +23,6 @@ services:
       - apiNetwork
     volumes:
       - app_uploads:/$HOME/uploads
-      - /etc/letsencrypt:/etc/letsencrypt:ro
   db:
     image: neo4j:latest
     volumes:
@@ -37,10 +40,14 @@ services:
   admin:
     image: jonaykb/administrationroutinefights:latest
     restart: always
+    # Admin panel + API router (administration/nginx.conf). Published on
+    # localhost only: the host nginx terminates HTTPS for
+    # https://routinefights.jonaykb.com and forwards here
+    # (deploy/nginx/routinefights.jonaykb.com.conf).
     ports:
-     - "8023:80"
-    volumes:
-     - /etc/letsencrypt:/etc/letsencrypt:ro
+     - "127.0.0.1:8023:80"
+    depends_on:
+     - app
     networks:
      - apiNetwork
 volumes:
