@@ -23,29 +23,17 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-      - name: Reconstruir archivos secretos
-        # Secrets go through env vars: pasting them into the script breaks on
-        # quotes and exposes them to shell interpretation.
-        env:
-          FIREBASE_JSON: ${{ secrets.FIREBASE_JSON }}
-          P12_BASE64: ${{ secrets.P12_BASE64 }}
-          DEEPL_KEY_CONTENT: ${{ secrets.DEEPL_KEY_CONTENT }}
-          APPLICATION_PROPERTIES_PROD: ${{ secrets.APPLICATION_PROPERTIES_PROD }}
-        run: |
-          KEYSTORE=API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore
-          mkdir -p "$KEYSTORE"
-          printf '%s' "$FIREBASE_JSON" > "$KEYSTORE/routinefights-1-firebase-adminsdk-fbsvc-a9082c7c49.json"
-          printf '%s' "$P12_BASE64" | base64 -d > "$KEYSTORE/routinefights.p12"
-          # DeeplService reads "keystore/deeplKey" from the classpath (src/main/resources).
-          mkdir -p API/src/main/resources/keystore
-          printf '%s\n' "${DEEPL_KEY_CONTENT:-ci-dummy-key:fx}" > API/src/main/resources/keystore/deeplKey
-          printf '%s\n' "$APPLICATION_PROPERTIES_PROD" > API/src/main/resources/application.properties
       # Tests must not depend on real credentials: give the Spring context a
       # throwaway Firebase service account (nothing is ever sent) and dummy
       # values for the placeholders in application.properties. No test
       # connects to Neo4j or SendGrid.
       - name: Preparar configuración de tests
+        env:
+          DEEPL_KEY_CONTENT: ${{ secrets.DEEPL_KEY_CONTENT }}
         run: |
+          # DeeplService reads "keystore/deeplKey" from the classpath (src/main/resources).
+          mkdir -p API/src/main/resources/keystore
+          printf '%s\n' "${DEEPL_KEY_CONTENT:-ci-dummy-key:fx}" > API/src/main/resources/keystore/deeplKey
           openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out "$RUNNER_TEMP/ci-key.pem" 2>/dev/null
           python3 - "$RUNNER_TEMP" <<'PY'
           import json, sys
@@ -82,6 +70,26 @@ jobs:
             -Dsonar.login=$SONAR_TOKEN \
             -Dsonar.qualitygate.wait=true  \
             -Dsonar.branch.name=$BRANCH_NAME
+      # Production configuration is applied only after the tests, which run
+      # against the repository's application.properties. The jar that is
+      # deployed is then rebuilt with it.
+      - name: Reconstruir archivos secretos
+        # Secrets go through env vars: pasting them into the script breaks on
+        # quotes and exposes them to shell interpretation.
+        env:
+          FIREBASE_JSON: ${{ secrets.FIREBASE_JSON }}
+          P12_BASE64: ${{ secrets.P12_BASE64 }}
+          APPLICATION_PROPERTIES_PROD: ${{ secrets.APPLICATION_PROPERTIES_PROD }}
+        run: |
+          KEYSTORE=API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore
+          mkdir -p "$KEYSTORE"
+          printf '%s' "$FIREBASE_JSON" > "$KEYSTORE/routinefights-1-firebase-adminsdk-fbsvc-a9082c7c49.json"
+          printf '%s' "$P12_BASE64" | base64 -d > "$KEYSTORE/routinefights.p12"
+          printf '%s\n' "$APPLICATION_PROPERTIES_PROD" > API/src/main/resources/application.properties
+      - name: Empaquetar con la configuración de producción
+        working-directory: API
+        run: mvn -B -DskipTests package
+
       - name: Save Maven build output
         if: success() && ${{ github.ref_name == 'main' }}
         uses: actions/upload-artifact@v4
