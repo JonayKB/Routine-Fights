@@ -1,65 +1,112 @@
-import { Alert, RefreshControl, ScrollView, Text, View } from "react-native";
-import { useEffect, useRef, useState } from "react";
+import { RefreshControl, ScrollView, Text, View } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { Badge } from "../utils/Badge";
+import { useTokenContext } from "../contexts/TokenContextProvider";
+import Avatar from "../components/Avatar";
+import Skeleton from "../components/Skeleton";
+import EmptyState from "../components/EmptyState";
+import Icon from "react-native-vector-icons/Ionicons";
 import { Event } from "../utils/Event";
 import {
+  RankingEntry,
   getCurrentPoints,
+  getEventRanking,
   getNearestEvent,
 } from "../repositories/EventRepository";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { bgColor, borderColor, cardBgColor, textColor } from "../utils/Utils";
-import DateFormatString from "../components/DateFormatString";
+import {
+  bgColor,
+  borderColor,
+  cardBgColor,
+  mutedTextColor,
+  raisedBgColor,
+  secondaryTextColor,
+  textColor,
+} from "../utils/Utils";
+import { fonts } from "../styles/theme";
 import { translations } from "../../translations/translation";
 import { getBadgesByEvent } from "../repositories/BadgeRepository";
 import Picture from "../components/Picture";
+import { errorMessage } from "../utils/graphql";
+import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = {};
 
 const EventsScreen = (props: Props) => {
   const { darkmode, language } = useSettingsContext();
+  const toast = useToast();
   const [event, setEvent] = useState<Event>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [currentPoints, setCurrentPoints] = useState(0);
-  const barHeight = useRef(0);
   const [load, setLoad] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const secToMillis = 1000;
-  const totalHight = 550;
-  const [milestones, setMilestones] = useState<number[]>([250, 500]);
-  const [badges, setBadges] = useState([]);
+  const [badges, setBadges] = useState<Badge[]>([]);
+  const [ranking, setRanking] = useState<RankingEntry[]>([]);
+  const { email } = useTokenContext();
+
+  // One milestone per badge, evenly spread up to the event goal.
+  const milestones = useMemo(() => {
+    if (!event?.totalRequired || badges.length === 0) return [];
+    const step = event.totalRequired / badges.length;
+    return badges.map((_, i) => Math.floor((i + 1) * step));
+  }, [event?.totalRequired, badges]);
 
   const formatTime = (millis: number): string => {
     const totalSeconds = Math.floor(millis / 1000);
     const totalMinutes = Math.floor(totalSeconds / 60);
 
-    const hours = Math.floor(totalMinutes / 60);
+    const days = Math.floor(totalMinutes / 1440);
+    const hours = Math.floor(totalMinutes / 60) % 24;
     const minutes = totalMinutes % 60;
     const seconds = totalSeconds % 60;
+    if (days > 0) {
+      return `${days}d ${Math.max(0, hours)}h ${Math.max(0, minutes)}m`;
+    }
     return `${Math.max(0, hours)}h ${Math.max(0, minutes)}m ${Math.max(
       0,
       seconds
     )}s`;
   };
 
-  const getBarHeight = () => {
-    barHeight.current = (currentPoints * totalHight) / event.totalRequired;
-  };
-
-  const getMilestones = () => {
-    const milestonePoints = [];
-    const milestoneCount = event.totalRequired / badges.length;
-    for (let i = 1; i <= badges.length; i++) {
-      milestonePoints.push(Math.floor(i * milestoneCount));
+  // Everything is loaded from the event that was just fetched, not from state,
+  // which still holds the previous value inside this function.
+  const init = async () => {
+    try {
+      const nearest = await getNearestEvent();
+      setEvent(nearest);
+      if (nearest?.id) {
+        const [points, eventBadges, top] = await Promise.all([
+          getCurrentPoints(nearest.id),
+          getBadgesByEvent(nearest.id),
+          getEventRanking(nearest.id, 5),
+        ]);
+        setCurrentPoints(points ?? 0);
+        setBadges(eventBadges);
+        setRanking(top);
+      }
+    } catch (error) {
+      toast.error(errorMessage(error));
+    } finally {
+      setLoad(false);
+      setInitialLoading(false);
     }
-    setMilestones([...milestonePoints]);
   };
 
   useEffect(() => {
-    const init = async () => {
-      await fetchNearestEvent();
-      await fetchEventPoints();
-      await fetchBadges();
-    };
     init();
-  }, [load === true]);
+  }, []);
+
+  useEffect(() => {
+    if (load) init();
+  }, [load]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!initialLoading) init();
+    }, [initialLoading])
+  );
 
   useEffect(() => {
     if (!event?.finishDate) return;
@@ -80,40 +127,35 @@ const EventsScreen = (props: Props) => {
     return () => clearInterval(interval);
   }, [event?.finishDate]);
 
-  const fetchNearestEvent = async () => {
-    try {
-      const response = await getNearestEvent();
-      setEvent(response);
-      getMilestones();
-    } catch (error) {
-      Alert.alert("Error", error.response.data);
-    } finally {
-      setLoad(false);
-    }
-  };
+  const t = translations[language || "en-EN"].screens.Events;
+  const progress = event?.totalRequired
+    ? Math.min(1, (currentPoints ?? 0) / event.totalRequired)
+    : 0;
 
-  const fetchEventPoints = async () => {
-    try {
-      const response = await getCurrentPoints(event.id);
-      setCurrentPoints(response);
-      getBarHeight();
-    } catch (error) {
-      Alert.alert("Error", error.response.data);
-    } finally {
-      setLoad(false);
-    }
-  };
+  const completed = !!event?.totalRequired && (currentPoints ?? 0) >= event.totalRequired;
 
-  const fetchBadges = async () => {
-    try {
-      const response = await getBadgesByEvent(event.id);
-      setBadges(response);
-    } catch (error) {
-      Alert.alert("Error", error.response.data);
-    } finally {
-      setLoad(false);
-    }
-  };
+  if (initialLoading) {
+    return (
+      <View className={`flex-1 px-5 pt-8 ${bgColor(darkmode)}`}>
+        <Skeleton width="60%" height={32} />
+        <Skeleton width="40%" height={14} style={{ marginTop: 12 }} />
+        <Skeleton height={180} radius={16} style={{ marginTop: 32 }} />
+        <Skeleton height={120} radius={16} style={{ marginTop: 16 }} />
+      </View>
+    );
+  }
+
+  if (!event) {
+    return (
+      <ScrollView
+        className={`flex-1 ${bgColor(darkmode)}`}
+        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+        refreshControl={<RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />}
+      >
+        <EmptyState icon="trophy-outline" title={t.noEvent} hint={t.noEventHint} />
+      </ScrollView>
+    );
+  }
 
   return (
     <ScrollView
@@ -122,109 +164,139 @@ const EventsScreen = (props: Props) => {
         <RefreshControl refreshing={load} onRefresh={() => setLoad(true)} />
       }
     >
-      <View className={`p-4 ${cardBgColor(darkmode)}`}>
+      <View className="px-5 pt-8">
         <Text
-          className={`text-3xl font-bold ${textColor(
-            darkmode
-          )} text-center mb-2 mt-4`}
+          style={{ fontFamily: fonts.display }}
+          className={`text-3xl ${textColor(darkmode)}`}
         >
           {event?.name}
         </Text>
-        <View className="flex-row justify-evenly">
-          <DateFormatString date={event?.startDate} />
-          <DateFormatString date={event?.finishDate} />
-        </View>
-        <Text className={`text-2xl ${textColor(darkmode)} text-center mt-2`}>
-          {translations[language || "en-EN"].screens.Events.timeLeft}
-          {": "}
-          {formatTime(timeLeft)}
+        <Text className={`text-sm mt-1 ${mutedTextColor(darkmode)}`}>
+          {event?.startDate?.slice(0, 10)} – {event?.finishDate?.slice(0, 10)}
         </Text>
+
+        <View className="flex-row mt-6">
+          <View className="flex-1">
+            <Text className={`text-xs ${mutedTextColor(darkmode)}`}>
+              {t.timeLeft}
+            </Text>
+            <Text
+              style={{ fontFamily: fonts.displayMedium, fontVariant: ["tabular-nums"] }}
+              className={`text-xl mt-1 ${textColor(darkmode)}`}
+            >
+              {formatTime(timeLeft)}
+            </Text>
+          </View>
+        </View>
       </View>
 
-      <Text
-        className={`text-lg font-semibold ${textColor(
-          darkmode
-        )} text-center mt-4`}
-      >
-        {translations[language || "en-EN"].screens.Events.progress}
-        {": "}
-        {currentPoints + "pts / " + event?.totalRequired + "pts"}
-      </Text>
       <View
-        className={`${cardBgColor(darkmode)} ${borderColor(
+        className={`mx-5 mt-6 p-5 rounded-2xl border ${cardBgColor(
           darkmode
-        )} border-2 w-10/12 mt-2 m-auto rounded-3xl relative overflow-hidden`}
-        style={{ height: 600 }}
+        )} ${borderColor(darkmode)}`}
       >
+        <Text className={`text-xs ${mutedTextColor(darkmode)}`}>
+          {t.progress}
+        </Text>
+        <View className="flex-row items-end mt-1">
+          <Text
+            style={{ fontFamily: fonts.display, fontSize: 40, lineHeight: 44 }}
+            className={textColor(darkmode)}
+          >
+            {currentPoints ?? 0}
+          </Text>
+          <Text className={`text-base ml-2 mb-1 ${secondaryTextColor(darkmode)}`}>
+            / {event?.totalRequired ?? 0} pts
+          </Text>
+          {completed && (
+            <View className="flex-row items-center ml-auto mb-1.5 px-2.5 h-7 rounded-lg bg-[#16A34A1F]">
+              <Icon name="checkmark" size={14} color="#16A34A" />
+              <Text className="text-xs font-medium ml-1 text-[#16A34A]">{t.completed}</Text>
+            </View>
+          )}
+        </View>
+
+        <View className={`h-2.5 mt-5 rounded-full overflow-hidden ${raisedBgColor(darkmode)}`}>
+          <View
+            className="h-full rounded-full bg-[#C2410C]"
+            style={{ width: `${Math.round(progress * 100)}%` }}
+          />
+        </View>
+
+        {badges.length > 0 && (
+          <View className="flex-row justify-between mt-6">
+            {milestones.map((ms, i) => {
+              const reached = (currentPoints ?? 0) >= ms;
+              return (
+                <View key={`badge-${ms}`} className="items-center">
+                  <View style={{ opacity: reached ? 1 : 0.35 }}>
+                    <Picture
+                      image={badges[badges.length - 1 - i]?.image}
+                      size={48}
+                      style="rounded-full"
+                    />
+                  </View>
+                  <Text
+                    style={{ fontVariant: ["tabular-nums"] }}
+                    className={`text-xs mt-2 ${
+                      reached ? textColor(darkmode) : mutedTextColor(darkmode)
+                    }`}
+                  >
+                    {ms} pts
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+        )}
+      </View>
+
+      {ranking.length > 0 && (
         <View
-          style={{ height: totalHight }}
-          className={`w-10 overflow-hidden rounded-xl m-auto border-2 ${borderColor(
+          className={`mx-5 mt-4 rounded-2xl border overflow-hidden ${cardBgColor(
             darkmode
-          )} flex-col-reverse`}
+          )} ${borderColor(darkmode)}`}
         >
-          <View
-            className="bg-[#F65261]"
-            style={{ height: barHeight.current }}
-          />
-
-          <View
-            className={`${darkmode ? "bg-[#E8E2F0]" : "bg-[#4B294F]"}`}
-            style={{ height: totalHight }}
-          />
-
-          {milestones.map((ms, i) => {
-            const y = (ms * totalHight) / (event?.totalRequired ?? 1);
+          <Text className={`text-xs px-5 pt-4 pb-2 ${mutedTextColor(darkmode)}`}>
+            {t.ranking}
+          </Text>
+          {ranking.map((entry, i) => {
+            const mine = entry.email === email;
             return (
               <View
-                key={`line-${ms}`}
-                style={{
-                  position: "absolute",
-                  bottom: y - 1,
-                  left: 0,
-                  right: 0,
-                  height: 2,
-                }}
+                key={entry.email ?? i}
+                className={`flex-row items-center px-5 py-3 ${
+                  i > 0 ? `border-t ${borderColor(darkmode)}` : ""
+                }`}
               >
-                <View
-                  style={{
-                    flex: 1,
-                    backgroundColor: darkmode ? "#4B294F" : "#E8E2F0",
-                    height: 2,
-                  }}
-                />
+                <Text
+                  style={{ fontFamily: fonts.displayMedium, width: 20, fontVariant: ["tabular-nums"] }}
+                  className={`text-sm ${i === 0 ? "text-[#C2410C]" : mutedTextColor(darkmode)}`}
+                >
+                  {i + 1}
+                </Text>
+                <Avatar image={entry.image} name={entry.username} size={32} />
+                <Text
+                  numberOfLines={1}
+                  className={`flex-1 ml-3 text-sm ${mine ? "font-semibold" : ""} ${textColor(darkmode)}`}
+                >
+                  {entry.username}
+                  {mine ? ` (${t.you})` : ""}
+                </Text>
+                <Text
+                  style={{ fontFamily: fonts.displayMedium, fontVariant: ["tabular-nums"] }}
+                  className={`text-sm ${secondaryTextColor(darkmode)}`}
+                >
+                  {Math.round(entry.points)} pts
+                </Text>
               </View>
             );
           })}
         </View>
+      )}
 
-        {milestones.map((ms, i) => {
-          const y = (ms * totalHight) / (event?.totalRequired ?? 1);
-          return (
-            <View
-              key={`badge-${ms}`}
-              style={{
-                position: "absolute",
-                bottom: y - 4,
-                left: i % 2 ? 60 : 200,
-                alignItems: "center",
-              }}
-            >
-              <Picture
-                image={badges[badges.length - 1 - i]?.image}
-                size={60}
-                style={`rounded-full ${
-                  barHeight.current < y ? "opacity-100" : "opacity-40"
-                }`}
-              />
-              <Text className={`text-sm ${textColor(darkmode)} mt-1`}>
-                {`${ms} pts`}
-              </Text>
-            </View>
-          );
-        })}
-      </View>
-      <Text className={`text-md ${textColor(darkmode)} text-center mt-4 mb-6`}>
-        {translations[language || "en-EN"].screens.Events.finalMessage}
+      <Text className={`text-sm mx-5 mt-4 mb-8 ${mutedTextColor(darkmode)}`}>
+        {t.finalMessage.replace(/!/g, "").replace(/¡/g, "")}
       </Text>
     </ScrollView>
   );

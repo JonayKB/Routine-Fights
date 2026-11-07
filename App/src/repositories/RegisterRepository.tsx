@@ -1,12 +1,12 @@
-import axios from "axios";
 import { UserIn } from "../utils/User";
-import { uri } from "../utils/Utils";
+import { gql } from "../utils/graphql";
 
-export const register = async (userIn: UserIn): Promise<number> => {
-  try {
-    return (await axios.post(uri+"/auth/register", userIn)).status;
-  } catch (error) {
-    console.error("Error:", error.response.data);
-    throw error;
-  }
+export const register = async (userIn: UserIn): Promise<void> => {
+  await gql(
+    `mutation Register($user: RegisterInput!) {
+      register(user: $user) { username email }
+    }`,
+    { user: userIn },
+    { auth: false }
+  );
 };

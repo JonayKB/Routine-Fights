@@ -1,139 +1,249 @@
-import { Image, View, TouchableOpacity, Text, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import { Image, View, TouchableOpacity, Text } from "react-native";
+import { useToast } from "../contexts/FeedbackContextProvider";
+import React, { useCallback, useEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { useImageContext } from "../contexts/ImageContextProvider";
-import DropDown from "../components/DropDown";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { getSubscribedActivities } from "../repositories/ActivityRepository";
-import { ActivityWithStreak, Categories } from "../utils/Activity";
+import { ActivityWithStreak } from "../utils/Activity";
 import { uploadPost } from "../repositories/PostRepository";
 import { uploadImage } from "../repositories/ImageRepository";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
-import { bgColor, cardBgColor, textColor } from "../utils/Utils";
+import {
+  borderColor,
+  cardBgColor,
+  mutedTextColor,
+  textColor,
+} from "../utils/Utils";
+import { fonts } from "../styles/theme";
+import { errorMessage } from "../utils/graphql";
+import Stepper from "../components/Stepper";
+import EmptyState from "../components/EmptyState";
+import LevelUpModal from "../components/LevelUpModal";
+import StreakFlame, { TIERS, inkFor, tierFor } from "../components/StreakFlame";
+import { formatString, remainingOf, streakUnit } from "../components/Streak";
 
 type Props = {};
 
+const TOTAL_STEPS = 3;
+
+/** Streak the server will assign to the next post (see PostService.calculateStreak). */
+const predictedStreak = (a: ActivityWithStreak) => {
+  const current = a.streak ?? 0;
+  const postedThisPeriod = remainingOf(a) < Number(a.timesRequiered ?? 0);
+  if (postedThisPeriod) return Math.max(1, current);
+  return current + 1;
+};
+
 const UploadFormScreen = (props: Props) => {
   const { uri, setUri, setWidth, setHeight } = useImageContext();
-  const [categories, setCategories] = useState<Categories[]>([]);
-  const [activityName, setActivityName] = useState<string>(null);
-  const [activity, setActivity] = useState<Categories>({} as Categories);
+  const [step, setStep] = useState<number>(1);
+  const [activities, setActivities] = useState<ActivityWithStreak[]>([]);
+  const [selected, setSelected] = useState<ActivityWithStreak | null>(null);
+  const [sending, setSending] = useState<boolean>(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const toast = useToast();
+  const [levelUp, setLevelUp] = useState<{ streak: number; timeRate: string } | null>(null);
   const { language, darkmode } = useSettingsContext();
+  const navigation = useNavigation<any>();
+  const t = translations[language || "en-EN"].screens;
 
   useEffect(() => {
-    fetchCategories();
-    setWidth(9);
-    setHeight(16);
+    setWidth(4);
+    setHeight(5);
   }, []);
 
-  useEffect(() => {
-    setActivity(
-      categories.filter((c: Categories) => c.value === activityName)[0]
-    );
-  }, [activityName]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchActivities();
+    }, [])
+  );
 
-  const fetchCategories = async () => {
+  const fetchActivities = async () => {
     try {
-      const response = await getSubscribedActivities();
-      const categories: Categories[] = response.map(
-        (activity: ActivityWithStreak) => ({
-          label: activity.name,
-          value: activity.id,
-          timesRemaining: activity.timesRemaining,
-          timesRequiered: activity.timesRequiered,
-        })
-      );
-      setCategories(categories);
+      setActivities(await getSubscribedActivities());
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
+  };
+
+  const reset = () => {
+    setUri(null);
+    setSelected(null);
+    setStep(1);
   };
 
   const createPost = async () => {
+    if (!selected || !uri) return;
+    setSending(true);
+    setFormError(null);
     try {
+      const before = selected.streak ?? 0;
       const imageName = await uploadImage(uri);
-      const response = await uploadPost(
-        categories.filter((c: Categories) => c.value === activityName)[0]
-          ?.value,
-        imageName
-      );
-      if (response) {
-        Alert.alert("Post created");
-        setUri(null);
-        setActivityName(null);
+      const post = await uploadPost(selected.id, imageName);
+      const after: number = post?.streak ?? predictedStreak(selected);
+      const climbed = TIERS.indexOf(tierFor(after)) > TIERS.indexOf(tierFor(before));
+      reset();
+      fetchActivities();
+      if (climbed) {
+        setLevelUp({ streak: after, timeRate: selected.timeRate });
+      } else {
+        toast.success(t.UploadForm.posted);
       }
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      setFormError(errorMessage(error));
+    } finally {
+      setSending(false);
     }
   };
 
+  const next = () => {
+    if (step < TOTAL_STEPS) setStep(step + 1);
+    else createPost();
+  };
+
+  const titles = [t.UploadForm.photoTitle, t.UploadForm.activityTitle, t.UploadForm.reviewTitle];
+  const canContinue = (step === 1 && !!uri) || (step === 2 && !!selected) || step === 3;
+
   return (
-    <View
-      className={`flex-1 ${bgColor(darkmode)} justify-center items-center px-4`}
-    >
-      <View
-        className={`w-full ${cardBgColor(
-          darkmode
-        )} rounded-2xl overflow-hidden`}
+    <>
+      <Stepper
+        step={step}
+        total={TOTAL_STEPS}
+        title={titles[step - 1]}
+        error={formError}
+        onBack={
+          step > 1
+            ? () => {
+                setFormError(null);
+                setStep(step - 1);
+              }
+            : undefined
+        }
+        onNext={next}
+        nextDisabled={!canContinue}
+        nextLabel={step === TOTAL_STEPS ? t.UploadForm.postButton : undefined}
+        loading={sending}
       >
-        {uri ? (
-          <View className="items-center p-6 bg-black">
-            <Image
-              source={{ uri: `file://${uri}` }}
-              style={{ width: 160, height: 280, borderRadius: 12 }}
-            />
-            <TouchableOpacity
-              onPress={() => setUri(null)}
-              className="mt-4 border-2 border-white rounded-2xl px-8 py-3"
-            >
-              <Text className="text-white font-bold text-lg text-center">
-                {
-                  translations[language || "en-EN"].screens.UploadForm
-                    .changePicture
-                }
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View className="w-full h-3/5">
-            <ImageStackNavigation />
+        {step === 1 && (
+          <View
+            style={{ height: 420 }}
+            className={`w-full rounded-2xl overflow-hidden border ${
+              uri ? "" : "border-dashed"
+            } ${borderColor(darkmode)} ${cardBgColor(darkmode)}`}
+          >
+            {uri ? (
+              <View className="flex-1 bg-[#12110F]">
+                <Image
+                  source={{ uri: `file://${uri}` }}
+                  style={{ width: "100%", height: "100%" }}
+                  resizeMode="contain"
+                />
+                <TouchableOpacity
+                  onPress={() => setUri(null)}
+                  activeOpacity={0.8}
+                  className="absolute bottom-4 self-center flex-row items-center h-10 px-4 rounded-xl bg-[#12110FCC] border border-[#EFE9DE1A]"
+                >
+                  <Icon name="refresh" size={16} color="#EFE9DE" />
+                  <Text className="ml-2 text-sm font-medium text-[#EFE9DE]">
+                    {t.UploadForm.changePicture}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <ImageStackNavigation />
+            )}
           </View>
         )}
 
-        <View className="px-6 pt-6">
-          <DropDown
-            data={categories}
-            value={activityName}
-            setValue={setActivityName}
-            message={
-              translations[language || "en-EN"].screens.UploadForm
-                .selectactivity
-            }
-            onFocus={fetchCategories}
-          />
-        </View>
+        {step === 2 &&
+          (activities.length === 0 ? (
+            <EmptyState
+              visual={<StreakFlame streak={0} size={44} />}
+              title={t.UploadForm.noActivities}
+              actionLabel={t.Home.emptyAction}
+              onAction={() =>
+                navigation.navigate("ActivitiesStackNavigation", { screen: "Activities" })
+              }
+            />
+          ) : (
+            activities.map((a) => {
+              const remaining = remainingOf(a);
+              const done = remaining < 1;
+              const isSelected = selected?.id === a.id;
+              return (
+                <TouchableOpacity
+                  key={a.id}
+                  disabled={done}
+                  activeOpacity={0.7}
+                  onPress={() => setSelected(a)}
+                  style={{ opacity: done ? 0.5 : 1 }}
+                  className={`flex-row items-center mb-3 px-4 py-4 rounded-2xl border ${cardBgColor(
+                    darkmode
+                  )} ${isSelected ? "border-[#C2410C]" : borderColor(darkmode)}`}
+                >
+                  <StreakFlame streak={a.streak ?? 0} size={28} glow={false} />
+                  <View className="flex-1 ml-3">
+                    <Text className={`text-base font-medium ${textColor(darkmode)}`}>{a.name}</Text>
+                    <Text className={`text-xs mt-0.5 ${mutedTextColor(darkmode)}`}>
+                      {done ? t.Streaks.done : formatString(t.Streaks.left, { n: remaining })}
+                    </Text>
+                  </View>
+                  <Icon
+                    name={isSelected ? "radio-button-on" : "radio-button-off"}
+                    size={20}
+                    color={isSelected ? "#C2410C" : darkmode ? "#8A847A" : "#7B7266"}
+                  />
+                </TouchableOpacity>
+              );
+            })
+          ))}
 
-        <TouchableOpacity
-          onPress={createPost}
-          disabled={!activityName || !uri || activity?.timesRemaining < 1}
-          className={`m-6 rounded-2xl py-4 ${
-            !activityName || !uri || activity?.timesRemaining < 1
-              ? "bg-[#CCCCCC]"
-              : "bg-[#F65261]"
-          }`}
-        >
-          <Text className="text-white font-bold text-xl text-center">
-            {translations[language || "en-EN"].screens.UploadForm.postButton}
-          </Text>
-        </TouchableOpacity>
+        {step === 3 && selected && (
+          <View>
+            <View className={`flex-row rounded-2xl border overflow-hidden ${cardBgColor(darkmode)} ${borderColor(darkmode)}`}>
+              {!!uri && (
+                <Image source={{ uri: `file://${uri}` }} style={{ width: 96, height: 120 }} resizeMode="cover" />
+              )}
+              <View className="flex-1 p-4 justify-center">
+                <Text className={`text-base font-medium ${textColor(darkmode)}`}>{selected.name}</Text>
+                <Text className={`text-xs mt-1 ${mutedTextColor(darkmode)}`}>
+                  {t.ActivityForm.timeRates[selected.timeRate] ?? ""}
+                </Text>
+              </View>
+            </View>
 
-        <Text className={`pb-6 text-center ${textColor(darkmode)}`}>
-          {translations[language || "en-EN"].screens.UploadForm.timesRemaining}
-          {": "}
-          {`${activity?.timesRemaining || 0}`}
-        </Text>
-      </View>
-    </View>
+            {(() => {
+              const value = predictedStreak(selected);
+              const tier = tierFor(value);
+              return (
+                <View className="items-center mt-8">
+                  <StreakFlame streak={value} size={72} animated />
+                  <Text
+                    style={{ fontFamily: fonts.displayMedium, color: inkFor(tier, darkmode) }}
+                    className="text-base mt-4"
+                  >
+                    {formatString(t.UploadForm.streakAfter, {
+                      n: value,
+                      unit: streakUnit(t.Streaks, selected.timeRate, value),
+                    })}
+                  </Text>
+                </View>
+              );
+            })()}
+          </View>
+        )}
+      </Stepper>
+
+      <LevelUpModal
+        visible={!!levelUp}
+        streak={levelUp?.streak ?? 0}
+        timeRate={levelUp?.timeRate ?? "daily"}
+        onClose={() => setLevelUp(null)}
+      />
+    </>
   );
 };
 

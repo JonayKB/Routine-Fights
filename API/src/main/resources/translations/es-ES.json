@@ -1,6 +1,8 @@
 {
     "newEventTitle": "¡Nuevo evento activado!",
     "newEventBody": "El nuevo evento \"{eventName}\" ha comenzado.\n¡No te pierdas las recompensas y desafíos exclusivos!",
-    "greeting":"Hola",
-    "test": "Prueba {testArg}"
+    "greeting": "Hola",
+    "test": "Prueba {testArg}",
+    "streakRiskTitle": "Tu racha de {activity} está a punto de apagarse",
+    "streakRiskBody": "Publica hoy para mantener viva tu llama de {streak} días."
 }

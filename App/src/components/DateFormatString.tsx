@@ -15,7 +15,7 @@ const DateFormatString = (props: Props) => {
   return (
     <View className={`flex-row justify-between mt-2 ${props.containerStyle}`}>
       <Text className={`${textColor(darkmode)} ${props.textStyle}`}>
-        {props.date?.slice(12, 16)}
+        {props.date?.slice(11, 16)}
       </Text>
       <Text className={`${textColor(darkmode)} ml-2 ${props.textStyle}`}>
         {props.date?.slice(0, 10)}

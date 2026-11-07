@@ -1,103 +1,210 @@
 {
     "screens": {
-      "Activities": {
-        "name": "Name"
-      },
-      "ActivityDetails": {
-        "numOfTimes": "Anzahl der Male",
-        "frequency": "Häufigkeit",
-        "add": "Hinzufügen",
-        "timeRates": {
-          "daily": "täglich",
-          "weekly": "wöchentlich",
-          "monthly": "monatlich",
-          "yearly": "jährlich"
-        }
-      },
-      "ActivityForm": {
-        "title": "Titel",
-        "description": "Beschreibung",
-        "timeRate": "Zeitintervall",
-        "timesRequired": "Benötigte Anzahl",
-        "post": "Veröffentlichen",
-        "timeRates": {
-          "daily": "täglich",
-          "weekly": "wöchentlich",
-          "monthly": "monatlich",
-          "yearly": "jährlich"
-        }
-      },
-      "Home": {
-        "search": "Suche",
-        "type": {
-          "following": "folgend",
-          "home": "Startseite",
-          "activity": "Aktivität"
-        }
-      },
-      "Login": {
-        "email": "E-Mail",
-        "password": "Passwort",
-        "login": "Anmelden",
-        "register": "Registrieren"
-      },
-      "Profile": {
-        "followers": "Follower",
-        "following": "folgend",
-        "follow": "folgen",
-        "unfollow": "nicht mehr folgen"
-      },
-      "ProfileForm": {
-        "email": "E-Mail",
-        "image": "Bild",
-        "nationality": "Nationalität",
-        "phoneNumber": "Telefonnummer",
-        "username": "Benutzername",
-        "password": "Passwort",
-        "update": "Aktualisieren"
-      },
-      "Register": {
-        "username": "Benutzername",
-        "confirmPassword": "Passwort bestätigen",
-        "success": "Erfolgreich registriert",
-        "successMessage": "Überprüfen Sie Ihre E-Mails im Spam-Ordner"
-      },
-      "Settings": {
-        "language": "Sprache",
-        "darkMode": "Dunkelmodus",
-        "lightMode": "Hellmodus",
-        "logout": "Abmelden",
-        "settings": "Einstellungen",
-        "editProfile": "Profil bearbeiten",
-        "leftHand": {
-          "left": "Linke Hand",
-          "right": "Rechte Hand"
+        "Activities": {
+            "name": "Name",
+            "create": "Aktivität erstellen"
         },
-        "languages": {
-          "english": "Englisch",
-          "spanish": "Spanisch",
-          "french": "Französisch",
-          "german": "Deutsch"
+        "ActivityDetails": {
+            "numOfTimes": "Anzahl der Male",
+            "frequency": "Häufigkeit",
+            "add": "Hinzufügen",
+            "timeRates": {
+                "daily": "täglich",
+                "weekly": "wöchentlich",
+                "monthly": "monatlich",
+                "yearly": "jährlich"
+            }
+        },
+        "ActivityForm": {
+            "title": "Titel",
+            "description": "Beschreibung",
+            "timeRate": "Zeitintervall",
+            "timesRequired": "Benötigte Anzahl",
+            "post": "Veröffentlichen",
+            "timeRates": {
+                "daily": "täglich",
+                "weekly": "wöchentlich",
+                "monthly": "monatlich",
+                "yearly": "jährlich"
+            },
+            "photoTitle": "Titelbild hinzufügen",
+            "detailsTitle": "Name und Beschreibung",
+            "rhythmTitle": "Wie oft?",
+            "missing": "Fülle alle Felder aus",
+            "timesHint": "Mal pro Zeitraum",
+            "success": "Aktivität erstellt"
+        },
+        "Home": {
+            "search": "Suche",
+            "type": {
+                "following": "folgend",
+                "home": "Startseite",
+                "activity": "Aktivität"
+            },
+            "emptyTitle": "Noch nichts hier",
+            "emptyHint": "Folge Leuten oder tritt Aktivitäten bei, um deinen Feed zu füllen",
+            "emptyAction": "Aktivitäten finden"
+        },
+        "Login": {
+            "email": "E-Mail",
+            "password": "Passwort",
+            "login": "Anmelden",
+            "register": "Registrieren",
+            "missing": "Gib deine E-Mail und dein Passwort ein"
+        },
+        "Profile": {
+            "followers": "Follower",
+            "following": "folgend",
+            "follow": "folgen",
+            "unfollow": "nicht mehr folgen",
+            "noPosts": "Noch keine Beiträge",
+            "noPostsHint": "Geteilte Beiträge erscheinen hier"
+        },
+        "ProfileForm": {
+            "email": "E-Mail",
+            "image": "Bild",
+            "nationality": "Nationalität",
+            "phoneNumber": "Telefonnummer",
+            "username": "Benutzername",
+            "password": "Passwort",
+            "update": "Aktualisieren",
+            "updated": "Profil aktualisiert"
+        },
+        "Register": {
+            "username": "Benutzername",
+            "confirmPassword": "Passwort bestätigen",
+            "success": "Erfolgreich registriert",
+            "successMessage": "Überprüfen Sie Ihre E-Mails im Spam-Ordner",
+            "accountTitle": "Konto erstellen",
+            "profileTitle": "Über dich",
+            "reviewTitle": "Prüfe deine Angaben",
+            "passwordHint": "Mindestens 8 Zeichen",
+            "passwordShort": "Das Passwort braucht mindestens 8 Zeichen",
+            "mismatch": "Die Passwörter stimmen nicht überein",
+            "missing": "Fülle alle Felder aus",
+            "invalidEmail": "Gib eine gültige E-Mail ein",
+            "invalidPhone": "Gib eine gültige Telefonnummer ein"
+        },
+        "Settings": {
+            "language": "Sprache",
+            "darkMode": "Dunkelmodus",
+            "lightMode": "Hellmodus",
+            "logout": "Abmelden",
+            "settings": "Einstellungen",
+            "editProfile": "Profil bearbeiten",
+            "leftHand": {
+                "left": "Linke Hand",
+                "right": "Rechte Hand"
+            },
+            "languages": {
+                "english": "Englisch",
+                "spanish": "Spanisch",
+                "french": "Französisch",
+                "german": "Deutsch"
+            }
+        },
+        "Streaks": {
+            "myStreaks": "Meine Serien",
+            "timesRemaining": "Verbleibende Male",
+            "tiers": {
+                "unlit": "Aus",
+                "spark": "Funke",
+                "blaze": "Feuer",
+                "inferno": "Inferno",
+                "blue": "Blaue Flamme",
+                "plasma": "Plasma",
+                "legend": "Weißglut"
+            },
+            "units": {
+                "daily": [
+                    "Tag",
+                    "Tage"
+                ],
+                "weekly": [
+                    "Woche",
+                    "Wochen"
+                ],
+                "monthly": [
+                    "Monat",
+                    "Monate"
+                ],
+                "yearly": [
+                    "Jahr",
+                    "Jahre"
+                ]
+            },
+            "toNext": "Noch {n} bis {tier}",
+            "maxTier": "Heißeste Flamme erreicht",
+            "best": "Deine heißeste Serie",
+            "lightIt": "Poste, um sie zu entfachen",
+            "left": "Noch {n} in diesem Zeitraum",
+            "done": "Für diesen Zeitraum erledigt",
+            "add": "Aktivität hinzufügen",
+            "emptyTitle": "Noch keine Serien",
+            "emptyHint": "Tritt einer Aktivität bei und poste, um deine erste Flamme zu entfachen",
+            "deleteTitle": "{name} nicht mehr verfolgen?",
+            "deleteBody": "Deine Serie von {n} {unit} geht verloren.",
+            "deleteBodyNoStreak": "Du kannst jederzeit wieder beitreten.",
+            "delete": "Entfernen",
+            "levelUp": "Neue Flamme freigeschaltet",
+            "levelUpBody": "{n} {unit} in Folge",
+            "keepGoing": "Weiter so",
+            "calendar": "Letzte 12 Wochen"
+        },
+        "UploadForm": {
+            "title": "Beitrag hochladen",
+            "takeFromCamera": "Mit Kamera aufnehmen",
+            "selectFromLibrary": "Aus Bibliothek auswählen",
+            "selectactivity": "Aktivität auswählen",
+            "changePicture": "Bild ändern",
+            "postButton": "Veröffentlichen",
+            "timesRemaining": "Verbleibende Male",
+            "photoTitle": "Foto aufnehmen oder wählen",
+            "activityTitle": "Für welche Aktivität?",
+            "reviewTitle": "Bereit zum Posten",
+            "streakAfter": "Deine Serie wird {n} {unit}",
+            "noActivities": "Tritt zuerst einer Aktivität bei",
+            "posted": "Gepostet"
+        },
+        "Events": {
+            "timeLeft": "Verbleibende Zeit",
+            "progress": "Fortschritt der Veranstaltung",
+            "finalMessage": "Leiste weiterhin Beiträge, um die Medaillen zu erhalten!",
+            "completed": "Ziel erreicht",
+            "ranking": "Top-Beitragende",
+            "noEvent": "Gerade kein Event",
+            "noEventHint": "Neue Community-Challenges erscheinen hier",
+            "you": "du"
+        },
+        "Common": {
+            "next": "Weiter",
+            "back": "Zurück",
+            "cancel": "Abbrechen",
+            "step": "Schritt {n} von {total}",
+            "close": "Schließen",
+            "required": "Pflichtfeld"
+        },
+        "Comments": {
+            "placeholder": "Schreib einen Kommentar",
+            "empty": "Noch keine Kommentare",
+            "emptyHint": "Sei der Erste, der etwas sagt"
+        },
+        "Errors": {
+            "invalidCredentials": "E-Mail oder Passwort falsch",
+            "notVerified": "Bestätige deine E-Mail, bevor du dich anmeldest",
+            "emailTaken": "Diese E-Mail ist bereits registriert",
+            "usernameTaken": "Dieser Benutzername ist vergeben",
+            "mailFailed": "Die Bestätigungs-E-Mail konnte nicht gesendet werden. Versuch es später",
+            "passwordShort": "Das Passwort braucht mindestens 8 Zeichen",
+            "invalidEmail": "Gib eine gültige E-Mail ein",
+            "invalidPhone": "Gib eine gültige Nummer mit Ländervorwahl ein",
+            "emptyComment": "Schreib zuerst etwas",
+            "alreadyDone": "Du hast diese Aktivität für diesen Zeitraum bereits erledigt",
+            "notSubscribed": "Tritt der Aktivität bei, bevor du postest",
+            "imageMissing": "Das Foto wurde nicht hochgeladen, versuch es erneut",
+            "noConnection": "Keine Verbindung, versuch es erneut",
+            "generic": "Etwas ist schiefgelaufen, versuch es erneut",
+            "forbidden": "Das darfst du nicht"
         }
-      },
-      "Streaks": {
-        "myStreaks": "Meine Serien",
-        "timesRemaining": "Verbleibende Male"
-      },
-      "UploadForm": {
-        "title": "Beitrag hochladen",
-        "takeFromCamera": "Mit Kamera aufnehmen",
-        "selectFromLibrary": "Aus Bibliothek auswählen",
-        "selectactivity": "Aktivität auswählen",
-        "changePicture": "Bild ändern",
-        "postButton": "Veröffentlichen",
-        "timesRemaining": "Verbleibende Male"
-      },
-      "Events": {
-        "timeLeft": "Verbleibende Zeit",
-        "progress": "Fortschritt der Veranstaltung",
-        "finalMessage": "Leiste weiterhin Beiträge, um die Medaillen zu erhalten!"
-      }
     }
-  }
-  
+}

@@ -9,21 +9,21 @@ type Props = {
 
 const BadgeInfo = ({ item }: Props) => {
   return (
-    <View className="flex-row items-center justify-start p-5 bg-[#E8E2F0] rounded-2xl w-11/12 mx-auto my-3">
+    <View className="flex-row items-center justify-start p-5 bg-white rounded-2xl w-11/12 mx-auto my-3">
       <Picture
         image={item.image}
         size={90}
-        style="rounded-full border-2 border-[#4B0082]"
+        style="rounded-full border border-[#1F1B161A]"
       />
       <View className="ml-5 flex-1">
-        <Text className="text-2xl font-bold text-[#4B0082] mb-1">
+        <Text className="text-lg font-semibold text-[#1F1B16] mb-1">
           {item.communityEvent?.name}
         </Text>
-        <Text className="text-lg text-[#333333]">Level: {item.level}</Text>
-        <Text className="text-lg text-[#333333]">
+        <Text className="text-lg text-[#1F1B16]">Level: {item.level}</Text>
+        <Text className="text-lg text-[#1F1B16]">
           Points Needed: {item.communityEvent?.totalRequired}
         </Text>
-        <Text className="text-lg text-[#333333]">
+        <Text className="text-lg text-[#1F1B16]">
           End Date: {item.communityEvent?.finishDate.slice(0, 10)}
         </Text>
       </View>

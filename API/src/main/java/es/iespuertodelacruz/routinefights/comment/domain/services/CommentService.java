@@ -25,8 +25,14 @@ public class CommentService implements ICommentService {
 
     @Override
     public Comment save(String message, User user, String postID, String replingID) {
+        if (message == null || message.isBlank()) {
+            throw new IllegalArgumentException("Comment cannot be empty");
+        }
+        if (message.length() > 1000) {
+            throw new IllegalArgumentException("Comment is too long");
+        }
         Comment comment = new Comment();
-        comment.setMessage(message);
+        comment.setMessage(message.trim());
         comment.setCreatedAt(LocalDateTime.now());
         comment.setUser(user);
         Post post = postRepository.findById(postID);

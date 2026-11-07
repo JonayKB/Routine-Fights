@@ -2,6 +2,11 @@ name: CI SonarQube Analysis DEV
 
 on:
   push:
+    # The mobile app has its own workflow (mobile.yml); app-only commits
+    # should not rebuild and redeploy the backend.
+    paths-ignore:
+      - "App/**"
+      - ".github/workflows/mobile.yml"
 
 
 jobs:
@@ -10,40 +15,85 @@ jobs:
 
     steps:
       - name: Checkout del repositorio
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configurar JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
           cache: maven
-      - name: Reconstruir archivos secretos
+      # Tests must not depend on real credentials: give the Spring context a
+      # throwaway Firebase service account (nothing is ever sent) and dummy
+      # values for the placeholders in application.properties. No test
+      # connects to Neo4j or SendGrid.
+      - name: Preparar configuración de tests
+        env:
+          DEEPL_KEY_CONTENT: ${{ secrets.DEEPL_KEY_CONTENT }}
         run: |
-          mkdir -p API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore
-          
-          echo '${{ secrets.FIREBASE_JSON }}' > API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore/routinefights-1-firebase-adminsdk-fbsvc-a9082c7c49.json
-          echo "${{ secrets.P12_BASE64 }}" | base64 -d > API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore/routinefights.p12
-          echo "${{ secrets.DEEPL_KEY_CONTENT }}" > API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore/deeplkKey
-          
-          echo "${{ secrets.APPLICATION_PROPERTIES_PROD }}" > API/src/main/resources/application.properties
+          # DeeplService reads "keystore/deeplKey" from the classpath (src/main/resources).
+          mkdir -p API/src/main/resources/keystore
+          printf '%s\n' "${DEEPL_KEY_CONTENT:-ci-dummy-key:fx}" > API/src/main/resources/keystore/deeplKey
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out "$RUNNER_TEMP/ci-key.pem" 2>/dev/null
+          python3 - "$RUNNER_TEMP" <<'PY'
+          import json, sys
+          tmp = sys.argv[1]
+          key = open(f"{tmp}/ci-key.pem").read()
+          json.dump({
+              "type": "service_account", "project_id": "rf-ci", "private_key_id": "ci",
+              "private_key": key, "client_email": "ci@rf-ci.iam.gserviceaccount.com",
+              "client_id": "0", "token_uri": "https://oauth2.googleapis.com/token",
+          }, open(f"{tmp}/firebase-ci.json", "w"))
+          PY
+
       - name: Compilar y ejecutar tests con Maven
         working-directory: API
-        run: mvn verify
+        env:
+          FIREBASE_SERVICEACCOUNT: file:${{ runner.temp }}/firebase-ci.json
+          JWT_SECRET: ci-test-secret
+          SENDGRID_API_KEY: SG.ci-test
+          SPRING_NEO4J_URI: bolt://localhost:7687
+          NEO4J_USER: neo4j
+          NEO4J_PASSWORD: ci-test
+        run: mvn -B verify
 
       - name: Ejecutar análisis en SonarQube
         working-directory: API
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          # Full URL of the SonarQube server, e.g. https://sonarqube.example.com
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY || 'RoutineFights' }}
           BRANCH_NAME: ${{ github.ref_name }}
-          HOSTNAME: ${{ vars.HOSTING_PC }}
         run: |
-          mvn sonar:sonar \
-            -Dsonar.projectKey=RoutineFights \
-            -Dsonar.host.url=http://$HOSTNAME:9000 \
-            -Dsonar.login=$SONAR_TOKEN \
+          # Full plugin coordinates: the "sonar" prefix is not resolvable
+          # without a pluginGroup in settings.xml.
+          mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:5.0.0.4389:sonar \
+            -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
+            -Dsonar.host.url="$SONAR_HOST_URL" \
+            -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.qualitygate.wait=true  \
             -Dsonar.branch.name=$BRANCH_NAME
+      # Production configuration is applied only after the tests, which run
+      # against the repository's application.properties. The jar that is
+      # deployed is then rebuilt with it.
+      - name: Reconstruir archivos secretos
+        # Secrets go through env vars: pasting them into the script breaks on
+        # quotes and exposes them to shell interpretation.
+        env:
+          FIREBASE_JSON: ${{ secrets.FIREBASE_JSON }}
+          P12_BASE64: ${{ secrets.P12_BASE64 }}
+          APPLICATION_PROPERTIES_PROD: ${{ secrets.APPLICATION_PROPERTIES_PROD }}
+        run: |
+          KEYSTORE=API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore
+          mkdir -p "$KEYSTORE"
+          printf '%s' "$FIREBASE_JSON" > "$KEYSTORE/routinefights-1-firebase-adminsdk-fbsvc-a9082c7c49.json"
+          printf '%s' "$P12_BASE64" | base64 -d > "$KEYSTORE/routinefights.p12"
+          printf '%s\n' "$APPLICATION_PROPERTIES_PROD" > API/src/main/resources/application.properties
+      - name: Empaquetar con la configuración de producción
+        working-directory: API
+        run: mvn -B -DskipTests package
+
       - name: Save Maven build output
         if: success() && ${{ github.ref_name == 'main' }}
         uses: actions/upload-artifact@v4
@@ -65,7 +115,7 @@ jobs:
           slug: administration
           component: administration
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Create TIMESTAMP
         run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV

@@ -1,24 +1,72 @@
-import { View, TouchableOpacity, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Dimensions,
+  Pressable,
+  Animated,
+  Easing,
+  Vibration,
+} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
 import Icon from "react-native-vector-icons/Ionicons";
 import Picture from "./Picture";
+import Avatar from "./Avatar";
+import StreakFlame, { inkFor, tierFor } from "./StreakFlame";
 import { likePost, unLikePost } from "../repositories/PostRepository";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { borderColor, cardBgColor, iconColor, textColor } from "../utils/Utils";
+import {
+  borderColor,
+  cardBgColor,
+  iconColor,
+  mutedTextColor,
+  secondaryTextColor,
+  textColor,
+} from "../utils/Utils";
+import { fonts, palette } from "../styles/theme";
 
 type Props = {
   post: PostDomain;
   navigation: any;
 };
 
+const CARD_MARGIN = 20;
+
 const Post = (props: Props) => {
   const [post, setPost] = useState<PostDomain>({} as PostDomain);
   const { darkmode, lefthand } = useSettingsContext();
+  const photoWidth = Dimensions.get("window").width - CARD_MARGIN * 2 - 2;
 
   useEffect(() => {
     setPost({ ...props.post });
   }, [props.post]);
+
+  const lastTap = useRef(0);
+  const burst = useRef(new Animated.Value(0)).current;
+
+  const showBurst = () => {
+    burst.setValue(0);
+    Animated.timing(burst, {
+      toValue: 1,
+      duration: 700,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  };
+
+  // Double-tap the photo to like it, like most photo apps.
+  const onPhotoPress = () => {
+    const now = Date.now();
+    if (now - lastTap.current < 280) {
+      lastTap.current = 0;
+      showBurst();
+      Vibration.vibrate(10);
+      if (!post.isLiked) handleLike();
+    } else {
+      lastTap.current = now;
+    }
+  };
 
   const handleLike = async () => {
     try {
@@ -37,51 +85,105 @@ const Post = (props: Props) => {
     }
   };
 
-  return (
-    <View className={`${cardBgColor(darkmode)} flex-row rounded-xl m-5`}>
-      {lefthand && (
-        <View>
-          <Picture
-            image={post.image}
-            size={281}
-            height={485}
-            style="rounded-l-xl"
-          />
-          <View className="z-10 -mt-16 bg-[#33333395] rounded-bl-xl py-5">
-            <Text className="text-white text-xl font-bold text-center">
-              {post.activity?.name}
-            </Text>
-          </View>
-        </View>
-      )}
+  const openProfile = () =>
+    props.navigation.navigate("ProfileStackNavigation", {
+      screen: "Profile",
+      params: { email: post.user?.email },
+    });
 
-      <View className="flex-col m-3">
-        <TouchableOpacity
-          onPress={() =>
-            props.navigation.navigate("ProfileStackNavigation", {
-              screen: "Profile",
-              params: { email: post.user?.email },
-            })
-          }
-        >
-          <Picture
-            image={post.user?.image}
-            size={53}
-            style={`rounded-full border-2 ${borderColor(darkmode)}`}
-          />
+  const streak = post.streak ?? 0;
+  const tier = tierFor(streak);
+  const displayName = post.user?.username ?? post.user?.email?.split("@")[0];
+
+  return (
+    <View
+      className={`mx-5 mb-5 rounded-2xl border overflow-hidden ${cardBgColor(
+        darkmode
+      )} ${borderColor(darkmode)}`}
+    >
+      <View className="flex-row items-center px-4 py-3">
+        <TouchableOpacity onPress={openProfile} activeOpacity={0.7}>
+          <Avatar image={post.user?.image} name={displayName} size={36} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleLike} className="mt-10 items-center">
+        <TouchableOpacity
+          onPress={openProfile}
+          activeOpacity={0.7}
+          className="flex-1 ml-3"
+        >
+          <Text
+            numberOfLines={1}
+            className={`text-sm font-medium ${textColor(darkmode)}`}
+          >
+            {displayName}
+          </Text>
+          <Text numberOfLines={1} className={`text-xs ${mutedTextColor(darkmode)}`}>
+            {post.activity?.name}
+          </Text>
+        </TouchableOpacity>
+
+        {streak > 0 && (
+          <View className="flex-row items-center">
+            <StreakFlame streak={streak} size={14} glow={false} />
+            <Text
+              style={{ fontFamily: fonts.displayMedium, color: inkFor(tier, darkmode) }}
+              className="text-sm ml-1"
+            >
+              {streak}
+            </Text>
+          </View>
+        )}
+      </View>
+
+      <Pressable onPress={onPhotoPress}>
+        <Picture
+          image={post.image}
+          size={photoWidth}
+          height={Math.round(photoWidth * 1.25)}
+          style=""
+        />
+        <Animated.View
+          pointerEvents="none"
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            alignItems: "center",
+            justifyContent: "center",
+            opacity: burst.interpolate({ inputRange: [0, 0.15, 0.7, 1], outputRange: [0, 1, 1, 0] }),
+            transform: [
+              { scale: burst.interpolate({ inputRange: [0, 0.2, 1], outputRange: [0.6, 1.1, 1] }) },
+            ],
+          }}
+        >
+          <Icon
+            name="heart"
+            size={96}
+            color="#FFFFFF"
+            style={{ textShadowColor: "rgba(0,0,0,0.35)", textShadowRadius: 16 }}
+          />
+        </Animated.View>
+      </Pressable>
+
+      <View
+        className={`flex-row items-center px-3 py-2 ${
+          lefthand ? "justify-end" : "justify-start"
+        }`}
+      >
+        <TouchableOpacity
+          onPress={handleLike}
+          activeOpacity={0.6}
+          className="flex-row items-center px-2 py-2"
+        >
           <Icon
             name={post.isLiked ? "heart" : "heart-outline"}
-            size={53}
-            color={(() => {
-              if (post.isLiked) return "#F65261";
-              return `${iconColor(darkmode)}`;
-            })()}
+            size={22}
+            color={post.isLiked ? palette.like : iconColor(darkmode)}
           />
-          <Text className={`${textColor(darkmode)} text-center text-lg`}>
-            {post.likes}
+          <Text className={`ml-1.5 text-sm ${secondaryTextColor(darkmode)}`}>
+            {post.likes ?? 0}
           </Text>
         </TouchableOpacity>
 
@@ -89,37 +191,15 @@ const Post = (props: Props) => {
           onPress={() =>
             props.navigation.navigate("Comments", { postID: post.id })
           }
-          className="mt-10 items-center"
+          activeOpacity={0.6}
+          className="flex-row items-center px-2 py-2 ml-2"
         >
-          <Icon name="chatbox-outline" size={53} color={iconColor(darkmode)} />
-          <Text className={`${textColor(darkmode)} text-center text-lg`}>
-            {post.comments}
+          <Icon name="chatbubble-outline" size={21} color={iconColor(darkmode)} />
+          <Text className={`ml-1.5 text-sm ${secondaryTextColor(darkmode)}`}>
+            {post.comments ?? 0}
           </Text>
         </TouchableOpacity>
-
-        <View className="mt-32 items-center">
-          <Icon name="flame" size={53} color="#F65261" />
-          <Text className={`${textColor(darkmode)} text-center text-lg`}>
-            {post.streak}
-          </Text>
-        </View>
       </View>
-
-      {!lefthand && (
-        <View>
-          <Picture
-            image={post.image}
-            size={281}
-            height={485}
-            style="rounded-r-xl"
-          />
-          <View className="z-10 -mt-16 bg-[#33333395] rounded-br-xl py-5">
-            <Text className="text-white text-xl font-bold text-center">
-              {post.activity?.name}
-            </Text>
-          </View>
-        </View>
-      )}
     </View>
   );
 };

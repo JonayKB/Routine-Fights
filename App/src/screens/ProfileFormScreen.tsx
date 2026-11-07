@@ -1,4 +1,4 @@
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import FormInput from "../components/FormInput";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
@@ -8,10 +8,13 @@ import { getOwnUser, updateUser } from "../repositories/UserRepository";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { cardBgColor } from "../utils/Utils";
+import { errorMessage } from "../utils/graphql";
+import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "ProfileForm">;
 
 const ProfileFormScreen = ({ navigation }: Props) => {
+  const toast = useToast();
   const { language, darkmode } = useSettingsContext();
   const [user, setUser] = useState<UserIn>({} as UserIn);
 
@@ -33,17 +36,17 @@ const ProfileFormScreen = ({ navigation }: Props) => {
 
       setUser(ownUser);
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
   const updateProfile = async () => {
     try {
       await updateUser(user);
-      Alert.alert("Profile updated");
+      toast.success(translations[language || "en-EN"].screens.ProfileForm.updated);
       navigation.navigate("Profile");
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     }
   };
 
@@ -53,7 +56,7 @@ const ProfileFormScreen = ({ navigation }: Props) => {
     >
       <View
         className={`${
-          darkmode ? "bg-[#E8E2F0]" : "bg-white"
+          darkmode ? "bg-white" : "bg-white"
         } rounded-lg w-10/12`}
       >
         <View className="m-10">
@@ -96,10 +99,10 @@ const ProfileFormScreen = ({ navigation }: Props) => {
             mode="text"
           />
           <TouchableOpacity
-            className="bg-[#F65261] rounded-lg py-3 w-full"
+            className="bg-[#C2410C] rounded-lg py-3 w-full"
             onPress={updateProfile}
           >
-            <Text className="text-white font-bold text-xl text-center">
+            <Text className="text-white font-semibold text-xl text-center">
               {translations[language || "en-EN"].screens.ProfileForm.update}
             </Text>
           </TouchableOpacity>

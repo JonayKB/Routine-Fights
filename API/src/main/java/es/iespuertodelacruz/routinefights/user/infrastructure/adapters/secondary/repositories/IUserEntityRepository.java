@@ -19,11 +19,23 @@ public interface IUserEntityRepository extends Neo4jRepository<UserEntity, Strin
 
         public boolean existsByEmail(String email);
 
-        @Query("MATCH (fr:User {email: $email})-[:FOLLOWS]->(fd: User) WHERE lower(fd.username) CONTAINS lower($usernameFilter) RETURN DISTINCT fd")
+        @Query("""
+                        MATCH (fr:User {email: $email})-[:FOLLOWS]->(fd:User)
+                        WHERE lower(fd.username) CONTAINS lower($usernameFilter)
+                        OPTIONAL MATCH (fd)<-[r1:FOLLOWS]-(x:User)
+                        OPTIONAL MATCH (fd)-[r2:FOLLOWS]->(y:User)
+                        RETURN fd, collect(DISTINCT r1), collect(DISTINCT x), collect(DISTINCT r2), collect(DISTINCT y)
+                        """)
         public List<UserEntity> findFollowedUsersByEmail(@Param("email") String email,
                         @Param("usernameFilter") String usernameFilter);
 
-        @Query("MATCH (fr:User)-[:FOLLOWS]->(fd: User {email: $email}) WHERE lower(fr.username) CONTAINS lower($usernameFilter) RETURN DISTINCT fr")
+        @Query("""
+                        MATCH (fr:User)-[:FOLLOWS]->(fd:User {email: $email})
+                        WHERE lower(fr.username) CONTAINS lower($usernameFilter)
+                        OPTIONAL MATCH (fr)<-[r1:FOLLOWS]-(x:User)
+                        OPTIONAL MATCH (fr)-[r2:FOLLOWS]->(y:User)
+                        RETURN fr, collect(DISTINCT r1), collect(DISTINCT x), collect(DISTINCT r2), collect(DISTINCT y)
+                        """)
         public List<UserEntity> findFollowersByEmail(@Param("email") String email,
                         @Param("usernameFilter") String usernameFilter);
 

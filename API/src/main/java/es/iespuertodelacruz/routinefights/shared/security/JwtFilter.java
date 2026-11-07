@@ -46,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 "/webjars/", "/auth/",
                 "/api/register", "/v3/",
                 "/graphiql", "/graphql/schema",
-                "/websocket", "/index.html", "/h2-console", "/services", "/notifications"
+                "/websocket", "/index.html", "/h2-console"
         };
         String path = request.getRequestURI();
 

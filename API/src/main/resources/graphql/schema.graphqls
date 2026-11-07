@@ -48,6 +48,18 @@ type Query {
   findBadgeByCommunityEvent(communityEventId: String!): [BadgeOutputV2]
 
   findAllActivities:[ActivityOutputV2]
+
+  userCreationChart: ChartData
+  postCreationChart: ChartData
+  postPointsChart: ChartData
+  userPointsChart: ChartData
+  activityTimeRateChart: ChartData
+
+  translate(text: String!, targetLang: String!): String
+
+  myPostDaysByActivity(activityID: String!, days: Int): [String]
+  bestStreakByEmail(email: String!): Int
+  communityEventRanking(id: String!, limit: Int): [RankingEntry]
 }
 
 type Mutation {
@@ -89,6 +101,46 @@ type Mutation {
 
   addBadgeToUser(userEmail: String!, badgeId: String!): Boolean
   addBadgeToUsers(userEmail: [String!]!, badgeId: String!): [Boolean]
+
+  login(email: String!, password: String!, deviceToken: String, language: String): String
+  register(user: RegisterInput!): RegisteredUser
+
+  sendNotificationToAll(titleKey: String!, bodyKey: String!, args: [KeyValueInput!]): String
+  sendNotificationToDevice(
+    titleKey: String!
+    bodyKey: String!
+    deviceToken: String!
+    language: String!
+    args: [KeyValueInput!]
+  ): String
+}
+
+type ChartData {
+  labels: [String]
+  data: [Float]
+}
+
+input KeyValueInput {
+  key: String!
+  value: String!
+}
+
+input RegisterInput {
+  username: String!
+  email: String!
+  password: String!
+  nationality: String
+  phoneNumber: String
+  image: String
+}
+
+# Never exposes the password field of UserDTOAuth
+type RegisteredUser {
+  username: String
+  email: String
+  nationality: String
+  phoneNumber: String
+  image: String
 }
 type BadgeOutputV3 {
   id: ID
@@ -249,4 +301,11 @@ type Followers {
   followers: Int
   following: Int
   isFollowing: Boolean
+}
+
+type RankingEntry {
+  username: String
+  email: String
+  image: String
+  points: Float
 }

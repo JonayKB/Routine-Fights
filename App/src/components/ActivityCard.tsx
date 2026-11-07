@@ -1,8 +1,15 @@
-import { Text, TouchableOpacity } from "react-native";
+import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Activity } from "../utils/Activity";
 import Picture from "./Picture";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { translations } from "../../translations/translation";
+import {
+  borderColor,
+  cardBgColor,
+  mutedTextColor,
+  textColor,
+} from "../utils/Utils";
 
 type Props = {
   navigateFunction: () => void;
@@ -10,30 +17,29 @@ type Props = {
 };
 
 const ActivityCard = (props: Props) => {
-  const { darkmode } = useSettingsContext();
+  const { darkmode, language } = useSettingsContext();
   
+  const width = (Dimensions.get("window").width - 20 * 2 - 12) / 2;
   return (
     <TouchableOpacity
+      activeOpacity={0.8}
       onPress={props.navigateFunction}
-      className="w-44 h-56 m-6"
+      style={{ width, margin: 6 }}
+      className={`rounded-2xl overflow-hidden border ${cardBgColor(darkmode)} ${borderColor(
+        darkmode
+      )}`}
     >
-      <Picture
-        image={props.item.image}
-        size={44}
-        height={40}
-        style={`w-full h-40 rounded-t-2xl border-2 ${
-          darkmode ? "border-[#B28DFF]" : "border-[#4B0082]"
-        }`}
-      />
-      <Text
-        className={`flex-1 rounded-b-2xl border-2 text-center text-xl align-middle px-1 ${
-          darkmode
-            ? "border-[#B28DFF] bg-[#1C1C1E] text-[#B28DFF]"
-            : "border-[#4B0082] bg-white text-[#4B0082]"
-        }`}
-      >
-        {props.item.name}
-      </Text>
+      <Picture image={props.item.image} size={width} height={Math.round(width * 0.75)} style="" />
+      <View className="px-3 py-3">
+        <Text numberOfLines={1} className={`text-sm font-medium ${textColor(darkmode)}`}>
+          {props.item.name}
+        </Text>
+        {!!props.item.timeRate && (
+          <Text className={`text-xs mt-0.5 ${mutedTextColor(darkmode)}`}>
+            {translations[language || "en-EN"].screens.ActivityForm.timeRates[props.item.timeRate]}
+          </Text>
+        )}
+      </View>
     </TouchableOpacity>
   );
 };

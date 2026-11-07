@@ -1,4 +1,4 @@
-import { View, FlatList, RefreshControl, Alert } from "react-native";
+import { View, FlatList, RefreshControl } from "react-native";
 import { Followers } from "../utils/User";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
@@ -10,6 +10,8 @@ import FollowBox from "../components/FollowBox";
 import SearchBar from "../components/SearchBar";
 import { getFollows } from "../repositories/UserRepository";
 import { bgColor } from "../utils/Utils";
+import { errorMessage } from "../utils/graphql";
+import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "FollowList">;
 
@@ -17,6 +19,7 @@ const FollowListScreen = ({ navigation, route }: Props) => {
   const [load, setLoad] = useState<boolean>(false);
   const [users, setUsers] = useState<Followers[]>([]);
   const { language, darkmode } = useSettingsContext();
+  const toast = useToast();
   const [searchText, setSearchText] = useState<string>("");
 
   useEffect(() => {
@@ -39,7 +42,7 @@ const FollowListScreen = ({ navigation, route }: Props) => {
         setUsers(followedByEmail);
       }
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     } finally {
       setLoad(false);
     }

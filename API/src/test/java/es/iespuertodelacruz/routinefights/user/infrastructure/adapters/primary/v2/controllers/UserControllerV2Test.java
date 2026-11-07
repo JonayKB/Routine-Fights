@@ -169,14 +169,45 @@ class UserControllerV2Test extends UserInitializer {
         assertEquals("Error unfollowing user", exception.getMessage());
     }
 
+    /** Authenticates as "me@example.com" with the given role; that user's id is "id". */
+    private void loginAs(String role) {
+        when(authentication.getName()).thenReturn("me@example.com");
+        org.mockito.Mockito.doReturn(java.util.List.of(
+                new org.springframework.security.core.authority.SimpleGrantedAuthority(role)))
+                .when(authentication).getAuthorities();
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        User me = new User();
+        me.setId("id");
+        when(userService.findByEmailOnlyBase("me@example.com")).thenReturn(me);
+    }
+
     @Test
     void softDeleteTest() {
+        loginAs("ROLE_USER");
         when(userService.softDelete(anyString())).thenReturn(true);
         assertTrue(userControllerV2.softDelete("id"));
     }
 
     @Test
+    void softDeleteOtherUserIsRejected() {
+        loginAs("ROLE_USER");
+        UserDeleteException exception = assertThrows(UserDeleteException.class,
+                () -> userControllerV2.softDelete("someone-else"));
+        assertEquals("You can only delete your own account", exception.getMessage());
+        org.mockito.Mockito.verify(userService, org.mockito.Mockito.never()).softDelete(anyString());
+    }
+
+    @Test
+    void softDeleteOtherUserAsAdmin() {
+        loginAs("ROLE_ADMIN");
+        when(userService.softDelete("someone-else")).thenReturn(true);
+        assertTrue(userControllerV2.softDelete("someone-else"));
+    }
+
+    @Test
     void softDeleteExceptionTest() {
+        loginAs("ROLE_USER");
         when(userService.softDelete(anyString())).thenThrow(new UserDeleteException(TEST_EXCEPTION));
         UserDeleteException exception = assertThrows(UserDeleteException.class, () -> {
             userControllerV2.softDelete("id");

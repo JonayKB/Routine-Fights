@@ -1,80 +1,25 @@
-import axios from "axios";
 import { Badge } from "../utils/Badge";
-import RNSecureKeyStore from "react-native-secure-key-store";
-import { neo4jUri } from "../utils/Utils";
+import { gql } from "../utils/graphql";
 
-export const getBadgesByEmail = async (userEmail: string): Promise<Badge[]> => {
-  try {
-    const token = await RNSecureKeyStore.get("token");
+const BADGE_FIELDS = `
+  image
+  level
+  id
+  communityEvent { id name totalRequired finishDate image startDate }
+`;
 
-    const response = await axios.post(
-      neo4jUri,
-      {
-        query: `
-            query {
-                getBadgesByEmail(email: "${userEmail}") {
-                    image
-                    level
-                    id
-                    communityEvent {
-                        id
-                        name
-                        totalRequired
-                        finishDate
-                        image
-                        startDate
-                    }
-                }
-            }`,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+export const getBadgesByEmail = async (userEmail: string): Promise<Badge[]> =>
+  (
+    await gql(
+      `query Badges($email: String!) { getBadgesByEmail(email: $email) { ${BADGE_FIELDS} } }`,
+      { email: userEmail }
+    )
+  ).getBadgesByEmail ?? [];
 
-    return response.data.data.getBadgesByEmail;
-  } catch (error) {
-    console.error("Error:", error.response.data);
-    throw error;
-  }
-};
-
-export const getBadgesByEvent = async (eventId: string): Promise<Badge[]> => {
-  try {
-    const token = await RNSecureKeyStore.get("token");
-
-    const response = await axios.post(
-      neo4jUri,
-      {
-        query: `
-            query {
-                findBadgeByCommunityEvent(communityEventId: "${eventId}") {
-                    image
-                    level
-                    id
-                    communityEvent {
-                        id
-                        name
-                        totalRequired
-                        finishDate
-                        image
-                        startDate
-                    }
-                }
-            }`,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    return response.data.data.findBadgeByCommunityEvent;
-  } catch (error) {
-    console.error("Error:", error.response.data);
-    throw error;
-  }
-};
+export const getBadgesByEvent = async (eventId: string): Promise<Badge[]> =>
+  (
+    await gql(
+      `query EventBadges($id: String!) { findBadgeByCommunityEvent(communityEventId: $id) { ${BADGE_FIELDS} } }`,
+      { id: eventId }
+    )
+  ).findBadgeByCommunityEvent ?? [];

@@ -64,7 +64,18 @@ public class ActivityEntityService implements IActivityRepository {
 
     @Override
     public List<Activity> getSubscribedActivitiesWithStreak(String userID) {
-        return activityEntityMapper.toDomain(activityEntityRepository.getSubscribedActivitiesWithStreak(userID));
+        List<ActivityEntity> activities = activityEntityRepository.getSubscribedActivitiesWithStreak(userID);
+        activities.forEach(activity -> activity.setStreak(currentStreak(activity, userID)));
+        return activityEntityMapper.toDomain(activities);
+    }
+
+    private Integer currentStreak(ActivityEntity activity, String userID) {
+        if (activity.getTimeRate() == null) {
+            return 0;
+        }
+        LocalDateTime since = timeRatesDate.getLastIterationDates(activity.getTimeRate())[0];
+        Integer streak = activityEntityRepository.getCurrentStreak(activity.getId(), userID, since);
+        return streak == null ? 0 : streak;
     }
 
     @Override
@@ -85,6 +96,7 @@ public class ActivityEntityService implements IActivityRepository {
 
             activity.setTimesRemaining(
                     activityEntityRepository.getTimesRemaining(activity.getId(), dates[0], dates[1], userID));
+            activity.setStreak(currentStreak(activity, userID));
         });
         return activityEntityMapper.toDomain(subscribedActivities);
     }

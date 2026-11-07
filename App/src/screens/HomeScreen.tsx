@@ -5,9 +5,12 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Text,
-  Alert,
-} from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+  } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import Skeleton from "../components/Skeleton";
+import EmptyState from "../components/EmptyState";
+import StreakFlame from "../components/StreakFlame";
 import { Post as PostDomain } from "../utils/Post";
 import Post from "../components/Post";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -19,8 +22,18 @@ import {
   getPosts,
   getPostsFollowing,
 } from "../repositories/PostRepository";
-import { bgColor, cardBgColor, iconColor } from "../utils/Utils";
+import {
+  bgColor,
+  borderColor,
+  cardBgColor,
+  iconColor,
+  mutedTextColor,
+  raisedBgColor,
+  textColor,
+} from "../utils/Utils";
 import { translations } from "../../translations/translation";
+import { errorMessage } from "../utils/graphql";
+import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
@@ -32,7 +45,23 @@ const HomeScreen = ({ navigation }: Props) => {
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [posts, setPosts] = useState<PostDomain[]>([]);
   const { darkmode, language } = useSettingsContext();
+  const toast = useToast();
   const lastDate = useRef(new Date().toISOString().slice(0, 19));
+  const [initialLoading, setInitialLoading] = useState<boolean>(true);
+  const focusedOnce = useRef(false);
+  const t = translations[language || "en-EN"].screens.Home;
+
+  // Returning to the feed (e.g. after commenting) refreshes counts quietly.
+  useFocusEffect(
+    useCallback(() => {
+      if (!focusedOnce.current) {
+        focusedOnce.current = true;
+        return;
+      }
+      lastDate.current = new Date().toISOString().slice(0, 19);
+      fetchPosts(false);
+    }, [type])
+  );
 
   useEffect(() => {
     fetchPosts();
@@ -45,10 +74,11 @@ const HomeScreen = ({ navigation }: Props) => {
   }, [load, isLoadingMore]);
 
   useEffect(() => {
+    setInitialLoading(true);
     reload();
   }, [type]);
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (append: boolean = isLoadingMore) => {
     try {
       let response = [];
       switch (type) {
@@ -62,16 +92,17 @@ const HomeScreen = ({ navigation }: Props) => {
           response = await getPostBySuscribedActivities(lastDate.current);
           break;
       }
-      if (isLoadingMore) {
-        setPosts([...posts, ...response]);
-      } else {
-        setPosts(response);
-      }
+      setPosts((previous) => {
+        if (!append) return response;
+        const seen = new Set(previous.map((p) => p.id));
+        return [...previous, ...response.filter((p) => !seen.has(p.id))];
+      });
     } catch (error) {
-      Alert.alert("Error", error.response.data);
+      toast.error(errorMessage(error));
     } finally {
       setLoad(false);
       setIsLoadingMore(false);
+      setInitialLoading(false);
     }
   };
 
@@ -88,43 +119,49 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <View className={`flex-1 ${bgColor(darkmode)}`}>
-      <TouchableWithoutFeedback
-        className="absolute z-10 right-5 top-5"
-        onPress={() => navigation.navigate("Search")}
-      >
-        <Icon name="search" size={40} color={`${iconColor(darkmode)}`} />
-      </TouchableWithoutFeedback>
-      <View className="flex-row justify-evenly items-center px-4 mt-2">
-        {["following", "home", "activity"].map((selectedType) => {
-          const isActive = type === selectedType;
-          return (
-            <TouchableOpacity
-              key={selectedType}
-              onPress={() =>
-                setType(selectedType as "following" | "home" | "activity")
-              }
-              className={`
-              px-4 py-2 rounded-full
-              ${isActive ? "bg-[#F65261]" : `${cardBgColor(darkmode)}`}
-            `}
-            >
-              <Text
-                className={`
-                font-bold text-lg
-                ${isActive ? "text-white" : `text-[${iconColor(darkmode)}]`}
-              `}
-              >
-                {
-                  translations[language || "en-EN"].screens.Home.type[
-                    selectedType
-                  ]
+      <View className="flex-row items-center px-5 pt-4 pb-4">
+        <View
+          className={`flex-1 flex-row p-1 rounded-xl ${raisedBgColor(darkmode)}`}
+        >
+          {["following", "home", "activity"].map((selectedType) => {
+            const isActive = type === selectedType;
+            return (
+              <TouchableOpacity
+                key={selectedType}
+                activeOpacity={0.7}
+                onPress={() =>
+                  setType(selectedType as "following" | "home" | "activity")
                 }
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+                className={`flex-1 h-9 items-center justify-center rounded-lg ${
+                  isActive ? `${cardBgColor(darkmode)} border ${borderColor(darkmode)}` : ""
+                }`}
+              >
+                <Text
+                  className={`text-sm ${
+                    isActive
+                      ? `font-medium ${textColor(darkmode)}`
+                      : mutedTextColor(darkmode)
+                  }`}
+                >
+                  {
+                    translations[language || "en-EN"].screens.Home.type[
+                      selectedType
+                    ]
+                  }
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Search")}
+          hitSlop={8}
+          className="ml-4"
+        >
+          <Icon name="search" size={22} color={iconColor(darkmode)} />
+        </TouchableOpacity>
       </View>
-      <View className="flex-1 pt-6">
+      <View className="flex-1">
         <FlatList
           refreshControl={
             <RefreshControl refreshing={load} onRefresh={reload} />
@@ -134,6 +171,37 @@ const HomeScreen = ({ navigation }: Props) => {
             return <Post post={item} navigation={navigation} />;
           }}
           keyExtractor={(item) => item.id}
+          contentContainerStyle={{ flexGrow: 1 }}
+          ListEmptyComponent={
+            initialLoading ? (
+              <View className="px-5">
+                {[0, 1].map((i) => (
+                  <View key={i} className="mb-5">
+                    <View className="flex-row items-center mb-3">
+                      <Skeleton width={36} height={36} radius={18} />
+                      <View className="ml-3 flex-1">
+                        <Skeleton width="40%" height={12} />
+                        <Skeleton width="25%" height={10} style={{ marginTop: 6 }} />
+                      </View>
+                    </View>
+                    <Skeleton height={360} radius={16} />
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <EmptyState
+                visual={<StreakFlame streak={0} size={44} />}
+                title={t.emptyTitle}
+                hint={t.emptyHint}
+                actionLabel={t.emptyAction}
+                onAction={() =>
+                  (navigation.getParent() as any)?.navigate("ActivitiesStackNavigation", {
+                    screen: "Activities",
+                  })
+                }
+              />
+            )
+          }
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}
         />

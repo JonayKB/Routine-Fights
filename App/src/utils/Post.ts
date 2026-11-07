@@ -10,6 +10,7 @@ export type Post = {
   user: {
     email: string;
     image: string;
+    username?: string;
   };
   activity: {
     name: string;

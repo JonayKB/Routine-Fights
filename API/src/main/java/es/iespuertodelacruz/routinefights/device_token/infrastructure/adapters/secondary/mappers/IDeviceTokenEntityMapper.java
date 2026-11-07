@@ -8,6 +8,8 @@ import es.iespuertodelacruz.routinefights.device_token.infrastructure.adapters.s
 
 @Mapper(componentModel = "spring")
 public interface IDeviceTokenEntityMapper {
+    // The owner is not mapped back: User -> tokens -> user -> followers... would never end.
+    @Mapping(target = "user", ignore = true)
     DeviceToken toDomain(DeviceTokenEntity deviceTokenEntity);
 
     @Mapping(target = "user", ignore = true)

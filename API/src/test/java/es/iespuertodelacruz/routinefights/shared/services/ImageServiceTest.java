@@ -82,10 +82,9 @@ class ImageServiceTest {
         String savedFilename1 = imageService.save(file1);
         String savedFilename2 = imageService.save(file2);
 
-        assertEquals("duplicate.jpg", savedFilename1, "The first file should keep its original name");
-
-        assertNotEquals(savedFilename1, savedFilename2, "Duplicate file should have a different name");
-        assertTrue(savedFilename2.matches("duplicate_\\d+\\.jpg"), "Filename should be appended with a counter");
+        assertTrue(savedFilename1.endsWith(".jpg"), "The extension should be kept");
+        assertNotEquals(originalFilename, savedFilename1, "The client's file name must not be trusted");
+        assertNotEquals(savedFilename1, savedFilename2, "Two uploads must never share a name");
     }
 
     @Test
@@ -140,4 +139,22 @@ class ImageServiceTest {
         }
     }
 
+
+    @org.junit.jupiter.api.Test
+    void rejectsPathTraversal() {
+        org.junit.jupiter.api.Assertions.assertFalse(imageService.exists("../../etc/passwd"));
+        org.junit.jupiter.api.Assertions.assertThrows(
+                es.iespuertodelacruz.routinefights.shared.exceptions.ImageNotFoundException.class,
+                () -> imageService.findImage("../secret.png"));
+    }
+
+    @org.junit.jupiter.api.Test
+    void savedNamesIgnoreClientFileName() {
+        org.springframework.mock.web.MockMultipartFile file = new org.springframework.mock.web.MockMultipartFile(
+                "file", "../../evil.PNG", "image/png", new byte[] { 1, 2, 3 });
+        String saved = imageService.save(file);
+        org.junit.jupiter.api.Assertions.assertTrue(saved.matches("[0-9a-f-]{36}\\.png"), saved);
+        org.junit.jupiter.api.Assertions.assertTrue(imageService.exists(saved));
+        imageService.delete(saved);
+    }
 }

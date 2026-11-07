@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import es.iespuertodelacruz.routinefights.shared.services.ImageService;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,6 +42,9 @@ class PostControllerV2Test {
 
     @MockitoBean
     private IUserService userService;
+
+    @MockitoBean
+    private ImageService imageService;
 
     @Autowired
     private PostControllerV2 postController;
@@ -80,6 +84,7 @@ class PostControllerV2Test {
         PostOutputDTOV2 dto = new PostOutputDTOV2(ACTIVITY_ID, IMAGE, null, null, null, null, null, null, null,null);
 
         when(userService.findByEmailOnlyBase(DUMMY_EMAIL)).thenReturn(user);
+        when(imageService.exists(IMAGE)).thenReturn(true);
         when(postService.uploadPost(IMAGE, user, ACTIVITY_ID)).thenReturn(post);
         when(postOutputV2Mapper.toDto(post)).thenReturn(dto);
 
@@ -165,5 +170,13 @@ class PostControllerV2Test {
 
         List<PostOutputDTOV2> response = postController.getPaginationSubscribedActivities(LAST_DATE_STRING, LIMIT);
         assertEquals(dtoList, response);
+    }
+
+    @Test
+    void uploadPostRejectsMissingImage() {
+        when(imageService.exists("../../etc/passwd")).thenReturn(false);
+        org.junit.jupiter.api.Assertions.assertThrows(
+                es.iespuertodelacruz.routinefights.post.exceptions.UploadPostException.class,
+                () -> postController.uploadPost("../../etc/passwd", ACTIVITY_ID));
     }
 }

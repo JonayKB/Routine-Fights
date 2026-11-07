@@ -28,11 +28,11 @@ public interface IPostEntityRepository extends Neo4jRepository<PostEntity, Strin
 
     @Query("""
             MATCH (u:User {email:$userEmail})-[pp:`Posted`]->(p:Post)
+            WHERE p.createdAt < $lastDate
             OPTIONAL MATCH (p)-[r1:`Related-To`]->(a:Activity)
             OPTIONAL MATCH (p)<-[r2:`To_Report`]-(rep:Report)
             OPTIONAL MATCH (p)<-[r3:`Liked`]-(u2:User)
             OPTIONAL MATCH (p)<-[r4:`On`]-(c:Comment)
-            WHERE p.createdAt < $lastDate
             RETURN p, collect(r1), collect(a), collect(r2), collect(rep), collect(r3), collect(u2), collect(r4), collect(c), u, pp
             ORDER BY p.createdAt DESC
             LIMIT $limit

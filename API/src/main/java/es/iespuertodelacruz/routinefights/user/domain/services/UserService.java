@@ -123,6 +123,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void hardDelete(String id) {
+        userRepository.hardDelete(id);
+    }
+
+    @Override
     public List<User> findByUsername(String regex) {
         return userRepository.findByUsername(regex);
     }

@@ -1,0 +1,220 @@
+name: Mobile app
+
+# Builds the React Native app for Android and iOS on every change to it,
+# launches each build on an emulator / simulator as a smoke test, and on main
+# publishes both builds as a GitHub Release of this repository.
+
+on:
+  push:
+    paths:
+      - "App/**"
+      - ".github/workflows/mobile.yml"
+  pull_request:
+    paths:
+      - "App/**"
+      - ".github/workflows/mobile.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mobile-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  checks:
+    name: Type check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: App
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: App/package-lock.json
+
+      - run: npm ci
+
+      - name: TypeScript
+        run: npx tsc --noEmit
+
+  android:
+    name: Android build + smoke test
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: App/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install JS dependencies
+        working-directory: App
+        run: npm ci
+
+      # Optional: sign with the real upload key when the secrets exist,
+      # otherwise build.gradle falls back to the debug key.
+      - name: Restore release keystore
+        if: ${{ env.HAS_KEYSTORE == 'true' }}
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
+          echo "RF_UPLOAD_STORE_FILE=$RUNNER_TEMP/upload.keystore" >> "$GITHUB_ENV"
+
+      - name: Build release APK
+        working-directory: App/android
+        env:
+          RF_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          RF_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          RF_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Rename APK
+        run: cp App/android/app/build/outputs/apk/release/app-release.apk RoutineFights-android.apk
+
+      - name: Enable KVM for the emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Smoke test on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: |
+            adb install -r RoutineFights-android.apk
+            adb shell am start -W -n com.routinefights/.MainActivity
+            sleep 20
+            adb shell pidof com.routinefights || (adb logcat -d -s ReactNativeJS:V AndroidRuntime:E | tail -50; exit 1)
+            adb exec-out screencap -p > android-smoke.png
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: |
+            RoutineFights-android.apk
+            android-smoke.png
+          if-no-files-found: error
+
+  ios:
+    name: iOS build + smoke test
+    needs: checks
+    runs-on: macos-15
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: App/package-lock.json
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: App
+
+      - name: Install JS dependencies
+        working-directory: App
+        run: npm ci
+
+      - name: Install pods
+        working-directory: App/ios
+        run: bundle exec pod install
+
+      - name: Build for the simulator
+        working-directory: App/ios
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -workspace RoutineFights.xcworkspace \
+            -scheme RoutineFights \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build | tail -200
+
+      - name: Smoke test on the simulator
+        run: |
+          APP="App/ios/build/Build/Products/Release-iphonesimulator/RoutineFights.app"
+          BUNDLE_ID=$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "$APP/Info.plist")
+          UDID=$(xcrun simctl list devices available -j \
+            | jq -r '[.devices[] | .[] | select(.name | test("^iPhone"))][0].udid')
+          echo "Simulator: $UDID  Bundle: $BUNDLE_ID"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          sleep 25
+          # Still running after 25 s means it did not crash on start-up.
+          xcrun simctl spawn "$UDID" launchctl list | grep "$BUNDLE_ID"
+          xcrun simctl io "$UDID" screenshot ios-smoke.png
+
+      - name: Package simulator app
+        run: |
+          cd App/ios/build/Build/Products/Release-iphonesimulator
+          zip -qr "$GITHUB_WORKSPACE/RoutineFights-ios-simulator.zip" RoutineFights.app
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios
+          path: |
+            RoutineFights-ios-simulator.zip
+            ios-smoke.png
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    needs: [android, ios]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="app-v${{ github.run_number }}"
+          gh release create "$TAG" \
+            --repo "${{ github.repository }}" \
+            --target "${{ github.sha }}" \
+            --title "Routine Fights app #${{ github.run_number }}" \
+            --notes "Android APK and iOS simulator build for ${{ github.sha }}." \
+            dist/RoutineFights-android.apk \
+            dist/RoutineFights-ios-simulator.zip
