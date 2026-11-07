@@ -12,6 +12,8 @@
 
 # Package Files #
 *.jar
+# ...except the Gradle wrapper, which ./gradlew needs to run after a clone
+!**/gradle/wrapper/gradle-wrapper.jar
 *.war
 *.nar
 *.ear
@@ -35,3 +37,7 @@ routinefights-1-firebase-adminsdk-fbsvc-a9082c7c49.json
 routinefights.p12
 keystore
 google-services.json
+# Secrets
+.env
+*.env
+!.env.example
