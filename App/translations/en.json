@@ -68,7 +68,20 @@
             "username": "Username",
             "password": "Password",
             "update": "Update",
-            "updated": "Profile updated"
+            "updated": "Profile updated",
+            "account": "Account",
+            "aboutYou": "About you",
+            "passwordSection": "Password",
+            "newPassword": "New password",
+            "confirmPassword": "Confirm new password",
+            "passwordHint": "Leave it empty to keep your current password",
+            "emailHint": "If you change it, you'll need to confirm the new address",
+            "changePhoto": "Change photo",
+            "save": "Save changes",
+            "emailChangeTitle": "Change your email?",
+            "emailChangeBody": "We'll send a link to {email}. You'll need to confirm it and log in again.",
+            "emailChangeConfirm": "Change email",
+            "emailChanged": "Check your inbox to confirm your new email, then log in again."
         },
         "Register": {
             "username": "Username",
@@ -89,6 +102,13 @@
             "language": "Language",
             "darkMode": "Dark Mode",
             "lightMode": "Light Mode",
+            "theme": "Theme",
+            "systemLanguage": "Device language",
+            "themes": {
+                "system": "System",
+                "light": "Light",
+                "dark": "Dark"
+            },
             "logout": "Logout",
             "settings": "Settings",
             "editProfile": "Edit profile",

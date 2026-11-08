@@ -14,7 +14,6 @@ import {
 import StreakFlame from "../components/StreakFlame";
 import { fonts } from "../styles/theme";
 import RNSecureKeyStore from "react-native-secure-key-store";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { useTokenContext } from "../contexts/TokenContextProvider";
@@ -31,14 +30,10 @@ const LoginScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setToken } = useTokenContext();
-  const { language, setLanguage, darkmode, setDarkmode, setLefthand } =
-    useSettingsContext();
+  const { language, darkmode } = useSettingsContext();
 
   useEffect(() => {
-    fetchMode();
-    fetchLanguage();
     fetchToken();
-    fetchLefthand();
   }, []);
 
   const fetchToken = async () => {
@@ -46,33 +41,6 @@ const LoginScreen = ({ navigation }: Props) => {
     if (token) {
       setToken(token);
       resetNavigation(navigation, "MainTabNavigation");
-    }
-  };
-
-  const fetchMode = async () => {
-    try {
-      const darkMode = await AsyncStorage.getItem("darkMode");
-      setDarkmode(darkMode === "true");
-    } catch (error) {
-      toast.error(errorMessage(error));
-    }
-  };
-
-  const fetchLanguage = async () => {
-    try {
-      const language = await AsyncStorage.getItem("language");
-      setLanguage(language);
-    } catch (error) {
-      toast.error(errorMessage(error));
-    }
-  };
-
-  const fetchLefthand = async () => {
-    try {
-      const lefthand = await AsyncStorage.getItem("lefthand");
-      setLefthand(lefthand === "true");
-    } catch (error) {
-      toast.error(errorMessage(error));
     }
   };
 

@@ -1,6 +1,6 @@
-import { View, Text, Switch, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import React from "react";
+import React, { useState } from "react";
 import { logout } from "../repositories/SettingsRepository";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import {
@@ -8,46 +8,56 @@ import {
   borderColor,
   cardBgColor,
   iconColor,
-  languages,
+  LANGUAGES,
+  nativeLanguageName,
   resetNavigation,
   textColor,
 } from "../utils/Utils";
 import { colors, palette } from "../styles/theme";
-import DropDown from "../components/DropDown";
+import OptionSheet, { SheetOption } from "../components/OptionSheet";
 import { translations } from "../../translations/translation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileNavigation from "../components/ProfileNavigation";
-import { useSettingsContext } from "../contexts/SettingsContextProvider";
+import { ThemeMode, useSettingsContext } from "../contexts/SettingsContextProvider";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import { errorMessage } from "../utils/graphql";
+import { deviceLanguage } from "../utils/deviceSettings";
 import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Settings">;
+
+const THEME_OPTIONS: { mode: ThemeMode; icon: string }[] = [
+  { mode: "system", icon: "phone-portrait-outline" },
+  { mode: "light", icon: "sunny-outline" },
+  { mode: "dark", icon: "moon-outline" },
+];
 
 const SettingsScreen = ({ navigation }: Props) => {
   const toast = useToast();
   const {
     language,
-    setLanguage,
+    languageMode,
+    setLanguageMode,
     darkmode,
-    setDarkmode,
+    themeMode,
+    setThemeMode,
     lefthand,
     setLefthand,
   } = useSettingsContext();
 
-  const changeLanguage = async (language: string) => {
+  const [languageSheet, setLanguageSheet] = useState(false);
+
+  const changeLanguage = async (mode: string) => {
     try {
-      await AsyncStorage.setItem("language", language);
-      setLanguage(language);
+      await setLanguageMode(mode);
     } catch (error) {
       toast.error(errorMessage(error));
     }
   };
 
-  const changeMode = async () => {
+  const changeMode = async (mode: ThemeMode) => {
     try {
-      await AsyncStorage.setItem("darkMode", darkmode ? "false" : "true");
-      setDarkmode(!darkmode);
+      await setThemeMode(mode);
     } catch (error) {
       toast.error(errorMessage(error));
     }
@@ -72,6 +82,21 @@ const SettingsScreen = ({ navigation }: Props) => {
   };
 
   const t = translations[language || "en-EN"].screens.Settings;
+
+  const languageOptions: SheetOption[] = [
+    {
+      value: "system",
+      label: t.systemLanguage,
+      description: nativeLanguageName(deviceLanguage()),
+      icon: "phone-portrait-outline",
+    },
+    ...LANGUAGES.map((l) => ({
+      value: l.value,
+      label: l.nativeName,
+      // The name in the current language helps when the native one is unfamiliar.
+      description: l.value === language ? undefined : t.languages[l.key],
+    })),
+  ];
   const c = colors(darkmode);
 
   const Row = ({
@@ -128,30 +153,53 @@ const SettingsScreen = ({ navigation }: Props) => {
           onPress={() => navigation.navigate("ProfileForm")}
           right={<Icon name="chevron-forward" size={18} color={c.textMuted} />}
         />
-        <View className={`flex-row items-center px-4 py-1 border-b ${borderColor(darkmode)}`}>
-          <Icon name="language-outline" size={18} color={iconColor(darkmode)} />
-          <View className="flex-1 ml-1">
-            <DropDown
-              data={languages(language)}
-              message={t.language}
-              value={language}
-              setValue={changeLanguage}
-              bare
-            />
-          </View>
-        </View>
         <Row
-          icon="moon-outline"
-          label={t.darkMode}
+          icon="language-outline"
+          label={t.language}
+          onPress={() => setLanguageSheet(true)}
           right={
-            <Switch
-              value={darkmode}
-              onValueChange={changeMode}
-              thumbColor="#FFFFFF"
-              trackColor={{ false: c.raised, true: palette.accent }}
-            />
+            <View className="flex-row items-center">
+              <Text className="text-base mr-1" style={{ color: c.textSecondary }}>
+                {languageMode === "system" ? t.themes.system : nativeLanguageName(language)}
+              </Text>
+              <Icon name="chevron-forward" size={18} color={c.textMuted} />
+            </View>
           }
         />
+        <View className={`px-4 py-3 border-b ${borderColor(darkmode)}`}>
+          <View className="flex-row items-center mb-3">
+            <Icon name="contrast-outline" size={18} color={iconColor(darkmode)} />
+            <Text className={`flex-1 ml-3 text-base ${textColor(darkmode)}`}>{t.theme}</Text>
+          </View>
+          <View
+            accessibilityRole="radiogroup"
+            className="flex-row rounded-xl p-1"
+            style={{ backgroundColor: c.raised }}
+          >
+            {THEME_OPTIONS.map(({ mode, icon }) => {
+              const selected = themeMode === mode;
+              return (
+                <TouchableOpacity
+                  key={mode}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected }}
+                  activeOpacity={0.7}
+                  onPress={() => changeMode(mode)}
+                  className="flex-1 flex-row items-center justify-center h-9 rounded-lg"
+                  style={selected ? { backgroundColor: palette.accent } : undefined}
+                >
+                  <Icon name={icon} size={15} color={selected ? "#FFFFFF" : c.textSecondary} />
+                  <Text
+                    className="ml-1.5 text-sm font-medium"
+                    style={{ color: selected ? "#FFFFFF" : c.textSecondary }}
+                  >
+                    {t.themes[mode]}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
         <Row
           icon="hand-left-outline"
           label={t.leftHand[lefthand ? "left" : "right"]}
@@ -168,6 +216,15 @@ const SettingsScreen = ({ navigation }: Props) => {
       >
         <Row icon="log-out-outline" label={t.logout} onPress={closeSession} danger last />
       </View>
+
+      <OptionSheet
+        visible={languageSheet}
+        title={t.language}
+        options={languageOptions}
+        selected={languageMode}
+        onSelect={changeLanguage}
+        onClose={() => setLanguageSheet(false)}
+      />
     </View>
   );
 };

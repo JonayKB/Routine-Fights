@@ -1,9 +1,11 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import PhoneInput from "react-native-phone-number-input";
+import { getCountryNameAsync } from "react-native-country-picker-modal/lib/CountryService";
+import { CountryCode, TranslationLanguageCode } from "react-native-country-picker-modal/lib/types";
 import { UserIn } from "../utils/User";
 import {
   bgColor,
@@ -20,12 +22,22 @@ import { register } from "../repositories/RegisterRepository";
 import FormInput from "../components/FormInput";
 import Stepper from "../components/Stepper";
 import { errorMessage } from "../utils/graphql";
+import { deviceRegion } from "../utils/deviceSettings";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Register">;
 
 const TOTAL_STEPS = 3;
 const MIN_PASSWORD = 8;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const DEFAULT_COUNTRY = "ES";
+
+// Country names come from the phone input's own data, in the app's language.
+const COUNTRY_NAME_LANGUAGE: Record<string, TranslationLanguageCode> = {
+  "en-EN": "common",
+  "es-ES": "spa",
+  "fr-FR": "fra",
+  "de-DE": "deu",
+};
 
 const RegisterScreen = ({ navigation }: Props) => {
   const [step, setStep] = useState<number>(1);
@@ -36,11 +48,23 @@ const RegisterScreen = ({ navigation }: Props) => {
   const { language, darkmode } = useSettingsContext();
   const t = translations[language || "en-EN"].screens;
   const c = colors(darkmode);
+  // The phone's country fills in the nationality and the phone prefix.
+  const country = useMemo(() => deviceRegion() ?? DEFAULT_COUNTRY, []) as CountryCode;
 
   type Field = "email" | "password" | "confirm" | "username" | "nationality" | "phone";
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [done, setDone] = useState<boolean>(false);
+
+  useEffect(() => {
+    getCountryNameAsync(country, COUNTRY_NAME_LANGUAGE[language] ?? "common")
+      .then((name) => {
+        if (name) setUserIn((u) => (u.nationality ? u : { ...u, nationality: name }));
+      })
+      .catch(() => {
+        // Unknown country: the user types it.
+      });
+  }, [country, language]);
 
   const clear = (field: Field) => {
     setErrors((e) => ({ ...e, [field]: undefined }));
@@ -86,7 +110,7 @@ const RegisterScreen = ({ navigation }: Props) => {
         email: userIn.email.trim(),
         username: userIn.username.trim(),
         image: "null.jpg",
-      });
+      }, language);
       setDone(true);
     } catch (error) {
       setFormError(errorMessage(error));
@@ -217,7 +241,7 @@ const RegisterScreen = ({ navigation }: Props) => {
           >
             <PhoneInput
               ref={phoneInput}
-              defaultCode="ES"
+              defaultCode={country}
               layout="first"
               defaultValue={userIn.phoneNumber?.replace(/^\+\d{1,3}/, "")}
               placeholder={t.ProfileForm.phoneNumber}

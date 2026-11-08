@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import ImageStackNavigation from "../navigation/ImageStackNavigation";
 import { useImageContext } from "../contexts/ImageContextProvider";
 import ChangePicture from "../components/ChangePicture";
@@ -16,6 +17,7 @@ type Props = NativeStackScreenProps<ProfileStackProps, "ProfilePictureScreen">;
 const ProfilePictureScreen = (props: Props) => {
   const toast = useToast();
   const { uri, setUri, setWidth, setHeight } = useImageContext();
+  const { language } = useSettingsContext();
   const [user, setUser] = useState<UserOut>({} as UserOut);
 
   useEffect(() => {
@@ -47,7 +49,7 @@ const ProfilePictureScreen = (props: Props) => {
         password: "",
         image: imageName,
       };
-      const response = await updateUser(foundUser);
+      const response = await updateUser(foundUser, language);
       if (response) {
         setUri(null);
         props.navigation.goBack();

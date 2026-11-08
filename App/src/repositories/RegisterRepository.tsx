@@ -1,12 +1,13 @@
 import { UserIn } from "../utils/User";
 import { gql } from "../utils/graphql";
 
-export const register = async (userIn: UserIn): Promise<void> => {
+/** `language` picks the language of the verification e-mail. */
+export const register = async (userIn: UserIn, language: string): Promise<void> => {
   await gql(
-    `mutation Register($user: RegisterInput!) {
-      register(user: $user) { username email }
+    `mutation Register($user: RegisterInput!, $language: String) {
+      register(user: $user, language: $language) { username email }
     }`,
-    { user: userIn },
+    { user: userIn, language },
     { auth: false }
   );
 };
