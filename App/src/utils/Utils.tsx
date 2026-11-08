@@ -26,28 +26,19 @@ export const convertQuantityToString = (quantity: number): string => {
   return quantity?.toString();
 };
 
-export const languages = (language: string) => [
-  {
-    label:
-      translations[language || "en-EN"].screens.Settings.languages["english"],
-    value: "en-EN",
-  },
-  {
-    label:
-      translations[language || "en-EN"].screens.Settings.languages["spanish"],
-    value: "es-ES",
-  },
-  {
-    label:
-      translations[language || "en-EN"].screens.Settings.languages["french"],
-    value: "fr-FR",
-  },
-  {
-    label:
-      translations[language || "en-EN"].screens.Settings.languages["german"],
-    value: "de-DE",
-  },
-];
+/**
+ * Languages the app is translated to. `nativeName` is how speakers of each
+ * language write it, so people can find theirs whatever the current language.
+ */
+export const LANGUAGES = [
+  { value: "en-EN", nativeName: "English", key: "english" },
+  { value: "es-ES", nativeName: "Español", key: "spanish" },
+  { value: "fr-FR", nativeName: "Français", key: "french" },
+  { value: "de-DE", nativeName: "Deutsch", key: "german" },
+] as const;
+
+export const nativeLanguageName = (value: string) =>
+  LANGUAGES.find((l) => l.value === value)?.nativeName ?? value;
 
 export const borderColor = (darkmode: boolean) =>
   darkmode ? "border-[#EFE9DE1A]" : "border-[#1F1B161A]";

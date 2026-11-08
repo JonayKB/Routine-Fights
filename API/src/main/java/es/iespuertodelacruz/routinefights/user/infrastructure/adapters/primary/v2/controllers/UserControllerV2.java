@@ -161,7 +161,7 @@ public class UserControllerV2 {
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @MutationMapping("updateUserV2")
-    public UserOutputDTOV2 update(@Argument UserInputDTOV2 user) {
+    public UserOutputDTOV2 update(@Argument UserInputDTOV2 user, @Argument String language) {
         User userDomain;
 
         try {
@@ -172,9 +172,14 @@ public class UserControllerV2 {
                     user.nationality(), user.phoneNumber(), user.image());
 
             if (userDomain != null && (!userDomain.getVerified() && userDomain.getVerificationToken() != null)) {
-                mailService.sentVerifyToken(userDomain.getEmail(), "Verify your new email: " + userDomain.getUsername(),
-                        userDomain.getVerificationToken());
+                mailService.sendVerificationEmail(userDomain.getEmail(), userDomain.getUsername(),
+                        userDomain.getVerificationToken(), language, true);
             }
+        } catch (UserUpdateException e) {
+            // Validation messages ("Email already exists", "Invalid phone number"...)
+            // are meant for the user, so they reach the app unchanged.
+            logger.log(Level.WARNING, "(update) Rejected update: {0}", e.getMessage());
+            throw e;
         } catch (Exception e) {
             logger.log(Level.WARNING, "(update) Unable to update the user: {0}", e.getMessage());
             throw new UserUpdateException("Unable to update the user");

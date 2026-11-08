@@ -2,7 +2,14 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
-import { borderColor, iconColor, raisedBgColor, textColor } from "../utils/Utils";
+import {
+  borderColor,
+  iconColor,
+  mutedTextColor,
+  raisedBgColor,
+  secondaryTextColor,
+  textColor,
+} from "../utils/Utils";
 import { colors } from "../styles/theme";
 
 type Props = {
@@ -14,6 +21,10 @@ type Props = {
   secure?: boolean;
   /** Message shown under the field; also turns its border red. */
   error?: string | null;
+  /** Label shown above the field. Without it the label is the placeholder. */
+  title?: string;
+  /** Help text under the field, hidden while an error is shown. */
+  hint?: string;
 };
 
 const FormInput = (props: Props) => {
@@ -23,6 +34,9 @@ const FormInput = (props: Props) => {
 
   return (
     <View className="mb-3">
+    {!!props.title && (
+      <Text className={`mb-1.5 text-sm font-medium ${secondaryTextColor(darkmode)}`}>{props.title}</Text>
+    )}
     <View
       className={`flex-row items-center h-12 px-4 rounded-xl border ${raisedBgColor(
         darkmode
@@ -31,7 +45,8 @@ const FormInput = (props: Props) => {
       }`}
     >
       <TextInput
-        placeholder={props.label}
+        placeholder={props.title ? undefined : props.label}
+        accessibilityLabel={props.title ?? props.label}
         placeholderTextColor={colors(darkmode).textMuted}
         inputMode={props.mode}
         autoCapitalize={props.mode === "email" ? "none" : undefined}
@@ -52,6 +67,9 @@ const FormInput = (props: Props) => {
         </TouchableOpacity>
       )}
     </View>
+    {!props.error && !!props.hint && (
+      <Text className={`mt-1.5 ml-1 text-xs ${mutedTextColor(darkmode)}`}>{props.hint}</Text>
+    )}
     {!!props.error && (
       <View className="flex-row items-center mt-1.5 ml-1">
         <Icon name="alert-circle" size={14} color="#E5484D" />

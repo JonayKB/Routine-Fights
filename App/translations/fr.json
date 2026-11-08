@@ -68,7 +68,20 @@
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
             "update": "Mettre à jour",
-            "updated": "Profil mis à jour"
+            "updated": "Profil mis à jour",
+            "account": "Compte",
+            "aboutYou": "À propos de vous",
+            "passwordSection": "Mot de passe",
+            "newPassword": "Nouveau mot de passe",
+            "confirmPassword": "Confirmez le nouveau mot de passe",
+            "passwordHint": "Laissez vide pour garder votre mot de passe actuel",
+            "emailHint": "Si vous le modifiez, vous devrez confirmer la nouvelle adresse",
+            "changePhoto": "Changer la photo",
+            "save": "Enregistrer",
+            "emailChangeTitle": "Changer votre e-mail ?",
+            "emailChangeBody": "Nous enverrons un lien à {email}. Vous devrez le confirmer puis vous reconnecter.",
+            "emailChangeConfirm": "Changer l'e-mail",
+            "emailChanged": "Consultez votre boîte de réception pour confirmer votre nouvel e-mail, puis reconnectez-vous."
         },
         "Register": {
             "username": "Nom d'utilisateur",
@@ -89,6 +102,13 @@
             "language": "Langue",
             "darkMode": "Mode sombre",
             "lightMode": "Mode clair",
+            "theme": "Thème",
+            "systemLanguage": "Langue de l'appareil",
+            "themes": {
+                "system": "Système",
+                "light": "Clair",
+                "dark": "Sombre"
+            },
             "logout": "Déconnexion",
             "settings": "Paramètres",
             "editProfile": "Modifier le profil",

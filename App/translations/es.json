@@ -68,7 +68,20 @@
             "username": "Nombre de usuario",
             "password": "Contraseña",
             "update": "Actualizar",
-            "updated": "Perfil actualizado"
+            "updated": "Perfil actualizado",
+            "account": "Cuenta",
+            "aboutYou": "Sobre ti",
+            "passwordSection": "Contraseña",
+            "newPassword": "Nueva contraseña",
+            "confirmPassword": "Confirma la nueva contraseña",
+            "passwordHint": "Déjala vacía para mantener la actual",
+            "emailHint": "Si lo cambias, tendrás que confirmar la nueva dirección",
+            "changePhoto": "Cambiar foto",
+            "save": "Guardar cambios",
+            "emailChangeTitle": "¿Cambiar tu correo?",
+            "emailChangeBody": "Te enviaremos un enlace a {email}. Tendrás que confirmarlo y volver a iniciar sesión.",
+            "emailChangeConfirm": "Cambiar correo",
+            "emailChanged": "Revisa tu bandeja de entrada para confirmar el nuevo correo y vuelve a iniciar sesión."
         },
         "Register": {
             "username": "Nombre de usuario",
@@ -89,6 +102,13 @@
             "language": "Idioma",
             "darkMode": "Modo oscuro",
             "lightMode": "Modo claro",
+            "theme": "Tema",
+            "systemLanguage": "Idioma del sistema",
+            "themes": {
+                "system": "Sistema",
+                "light": "Claro",
+                "dark": "Oscuro"
+            },
             "logout": "Cerrar sesión",
             "settings": "Configuración",
             "editProfile": "Editar perfil",

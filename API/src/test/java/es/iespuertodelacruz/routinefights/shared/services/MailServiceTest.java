@@ -76,7 +76,7 @@ class MailServiceTest {
         mockResponse.setStatusCode(202);
         when(sendGrid.api(any(Request.class))).thenReturn(mockResponse);
 
-        assertDoesNotThrow(() -> mailService.sentVerifyToken(emailId, subject, body));
+        assertDoesNotThrow(() -> mailService.sendVerificationEmail(emailId, "ana", body, "en-EN", false));
 
         verify(sendGrid, times(1)).api(any(Request.class));
     }
@@ -88,11 +88,37 @@ class MailServiceTest {
         ArgumentCaptor<Request> sent = ArgumentCaptor.forClass(Request.class);
         when(sendGrid.api(sent.capture())).thenReturn(ok);
 
-        mailService.sentVerifyToken("ana+test@example.com", "Verify", "tok-123");
+        mailService.sendVerificationEmail("ana+test@example.com", "ana", "tok-123", null, false);
 
         assertTrue(sent.getValue().getBody()
                 .contains("https://routinefights.jonaykb.com/auth/verify/ana+test@example.com/tok-123"),
                 sent.getValue().getBody());
         assertFalse(sent.getValue().getBody().contains("64.226.71.234"));
+    }
+
+    @Test
+    void verificationEmailFollowsUserLanguage() throws Exception {
+        Response ok = new Response();
+        ok.setStatusCode(202);
+        ArgumentCaptor<Request> sent = ArgumentCaptor.forClass(Request.class);
+        when(sendGrid.api(sent.capture())).thenReturn(ok);
+
+        mailService.sendVerificationEmail("ana@example.com", "ana", "tok-123", "es-ES", true);
+
+        String body = sent.getValue().getBody();
+        assertTrue(body.contains("Confirma tu nuevo correo en Routine Fights"), body);
+        assertTrue(body.contains("/auth/verify/ana@example.com/tok-123?lang=es"), body);
+    }
+
+    @Test
+    void verificationEmailEscapesUsername() throws Exception {
+        Response ok = new Response();
+        ok.setStatusCode(202);
+        ArgumentCaptor<Request> sent = ArgumentCaptor.forClass(Request.class);
+        when(sendGrid.api(sent.capture())).thenReturn(ok);
+
+        mailService.sendVerificationEmail("ana@example.com", "<b>ana</b>", "tok-123", "en", false);
+
+        assertFalse(sent.getValue().getBody().contains("<b>ana</b>"));
     }
 }

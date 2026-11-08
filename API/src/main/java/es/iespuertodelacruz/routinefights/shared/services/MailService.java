@@ -54,13 +54,20 @@ public class MailService {
 		}
 	}
 
-	public void sentVerifyToken(String destinatario, String asunto, String token) {
+	/**
+	 * Sends the verification e-mail in the user's language (falls back to English).
+	 *
+	 * @param newEmail true when the user changed their address rather than signed up
+	 */
+	public void sendVerificationEmail(String to, String username, String token, String language,
+			boolean newEmail) {
+		String lang = HTMLTemplates.resolveLanguage(language);
+		String link = verifyBaseUrl() + "/auth/verify/"
+				+ UriUtils.encodePathSegment(to, StandardCharsets.UTF_8) + "/"
+				+ UriUtils.encodePathSegment(token, StandardCharsets.UTF_8) + "?lang=" + lang;
 
-		String html = String.format(HTMLTemplates.VERIFICATION_EMAIL, verifyBaseUrl(),
-				UriUtils.encodePathSegment(destinatario, StandardCharsets.UTF_8),
-				UriUtils.encodePathSegment(token, StandardCharsets.UTF_8));
-
-		dispatchEmail(destinatario, asunto, html);
+		dispatchEmail(to, HTMLTemplates.verificationSubject(lang, newEmail),
+				HTMLTemplates.verificationEmail(lang, username, link, newEmail));
 	}
 
 	String verifyBaseUrl() {

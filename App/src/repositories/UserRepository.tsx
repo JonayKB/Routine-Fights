@@ -49,11 +49,12 @@ export const unfollowUser = async (email: string) =>
     )
   ).unfollowUser;
 
-export const updateUser = async (user: UserIn): Promise<UserOut> =>
+/** `language` picks the language of the e-mail sent if the address changes. */
+export const updateUser = async (user: UserIn, language: string): Promise<UserOut> =>
   (
     await gql(
-      `mutation UpdateUser($user: UserInputV2) {
-        updateUserV2(user: $user) {
+      `mutation UpdateUser($user: UserInputV2, $language: String) {
+        updateUserV2(user: $user, language: $language) {
           id username email nationality phoneNumber image createdAt followers following
         }
       }`,
@@ -67,6 +68,7 @@ export const updateUser = async (user: UserIn): Promise<UserOut> =>
           phoneNumber: user.phoneNumber,
           password: user.password ? user.password : null,
         },
+        language,
       }
     )
   ).updateUserV2;
