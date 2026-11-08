@@ -45,12 +45,12 @@ public class AuthResolver {
     }
 
     @MutationMapping("register")
-    public UserDTOAuth register(@Argument UserDTOAuth user) {
+    public UserDTOAuth register(@Argument UserDTOAuth user, @Argument String language) {
         User saved = authService.register(user.username(), user.email(), user.password(),
                 user.nationality(), user.phoneNumber(), user.image());
         try {
-            mailService.sentVerifyToken(saved.getEmail(), "Verify your email: " + saved.getUsername(),
-                    saved.getVerificationToken());
+            mailService.sendVerificationEmail(saved.getEmail(), saved.getUsername(),
+                    saved.getVerificationToken(), language, false);
         } catch (RuntimeException e) {
             // Without the e-mail the account could never be verified: undo it so the
             // user can simply try again instead of hitting "Email already exists".

@@ -68,7 +68,7 @@ type Mutation {
   deleteUserV3(id: ID!): Boolean
   restoreUserV3(id: ID!): Boolean
 
-  updateUserV2(user: UserInputV2): UserOutputV2
+  updateUserV2(user: UserInputV2, language: String): UserOutputV2
   deleteUserV2(id: ID!): Boolean
 
   likePost(postID: String!): Boolean
@@ -103,7 +103,7 @@ type Mutation {
   addBadgeToUsers(userEmail: [String!]!, badgeId: String!): [Boolean]
 
   login(email: String!, password: String!, deviceToken: String, language: String): String
-  register(user: RegisterInput!): RegisteredUser
+  register(user: RegisterInput!, language: String): RegisteredUser
 
   sendNotificationToAll(titleKey: String!, bodyKey: String!, args: [KeyValueInput!]): String
   sendNotificationToDevice(

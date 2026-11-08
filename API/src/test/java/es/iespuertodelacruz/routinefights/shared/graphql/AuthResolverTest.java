@@ -3,6 +3,7 @@ package es.iespuertodelacruz.routinefights.shared.graphql;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -70,16 +71,16 @@ class AuthResolverTest {
     void registerSendsVerificationMail() {
         when(authService.register("username", EMAIL, PASSWORD, "nationality", "phone", "image")).thenReturn(USER);
         when(mapper.toDTO(USER)).thenReturn(INPUT);
-        assertSame(INPUT, resolver.register(INPUT));
-        verify(mailService).sentVerifyToken(EMAIL, "Verify your email: username", "verificationToken");
+        assertSame(INPUT, resolver.register(INPUT, "es-ES"));
+        verify(mailService).sendVerificationEmail(EMAIL, "username", "verificationToken", "es-ES", false);
     }
 
     @Test
     void registerPropagatesMailError() {
         when(authService.register("username", EMAIL, PASSWORD, "nationality", "phone", "image")).thenReturn(USER);
-        doThrow(new MailException("Error sending email")).when(mailService).sentVerifyToken(anyString(), anyString(),
-                anyString());
-        assertThrows(MailException.class, () -> resolver.register(INPUT));
+        doThrow(new MailException("Error sending email")).when(mailService).sendVerificationEmail(anyString(),
+                anyString(), anyString(), anyString(), anyBoolean());
+        assertThrows(MailException.class, () -> resolver.register(INPUT, "es-ES"));
         verify(authService).rollbackRegistration(USER);
     }
 }

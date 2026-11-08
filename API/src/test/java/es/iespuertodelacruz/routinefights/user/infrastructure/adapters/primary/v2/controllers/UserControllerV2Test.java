@@ -241,7 +241,7 @@ class UserControllerV2Test extends UserInitializer {
                 anyString()))
                 .thenReturn(new User());
         when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
-        assertNotNull(userControllerV2.update(userInputDTOV2));
+        assertNotNull(userControllerV2.update(userInputDTOV2, "en-EN"));
     }
 
     @Test
@@ -250,9 +250,22 @@ class UserControllerV2Test extends UserInitializer {
                 anyString()))
                 .thenThrow(new UserUpdateException(TEST_EXCEPTION));
         UserUpdateException exception = assertThrows(UserUpdateException.class, () -> {
-            userControllerV2.update(userInputDTOV2);
+            userControllerV2.update(userInputDTOV2, "en-EN");
         });
         assertEquals("Unable to update the user", exception.getMessage());
+    }
+
+    @Test
+    void updateKeepsValidationMessage() {
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+        when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
+                anyString()))
+                .thenThrow(new UserUpdateException("Email already exists"));
+        UserUpdateException exception = assertThrows(UserUpdateException.class,
+                () -> userControllerV2.update(userInputDTOV2, "en-EN"));
+        assertEquals("Email already exists", exception.getMessage());
     }
 
     @Test
