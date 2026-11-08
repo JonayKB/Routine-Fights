@@ -38,6 +38,7 @@ routinefights.p12
 keystore
 google-services.json
 # Secrets
+secrets/
 .env
 *.env
 !.env.example
