@@ -74,25 +74,10 @@ jobs:
             -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.qualitygate.wait=true  \
             -Dsonar.branch.name=$BRANCH_NAME
-      # Production configuration is applied only after the tests, which run
-      # against the repository's application.properties. The jar that is
-      # deployed is then rebuilt with it.
-      - name: Reconstruir archivos secretos
-        # Secrets go through env vars: pasting them into the script breaks on
-        # quotes and exposes them to shell interpretation.
-        env:
-          FIREBASE_JSON: ${{ secrets.FIREBASE_JSON }}
-          P12_BASE64: ${{ secrets.P12_BASE64 }}
-          APPLICATION_PROPERTIES_PROD: ${{ secrets.APPLICATION_PROPERTIES_PROD }}
-        run: |
-          KEYSTORE=API/src/main/java/es/iespuertodelacruz/routinefights/resources/keystore
-          mkdir -p "$KEYSTORE"
-          printf '%s' "$FIREBASE_JSON" > "$KEYSTORE/routinefights-1-firebase-adminsdk-fbsvc-a9082c7c49.json"
-          printf '%s' "$P12_BASE64" | base64 -d > "$KEYSTORE/routinefights.p12"
-          printf '%s\n' "$APPLICATION_PROPERTIES_PROD" > API/src/main/resources/application.properties
-      - name: Empaquetar con la configuración de producción
-        working-directory: API
-        run: mvn -B -DskipTests package
+      # The jar built by `mvn verify` is the one deployed. It ships the
+      # repository's application.properties, which reads every credential
+      # (Neo4j, JWT, SendGrid) from the environment set in docker-compose.yml;
+      # the Firebase key is mounted into the container from the server.
 
       - name: Save Maven build output
         if: success() && ${{ github.ref_name == 'main' }}
