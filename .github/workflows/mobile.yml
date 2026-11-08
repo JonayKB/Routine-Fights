@@ -1,8 +1,8 @@
 name: Mobile app
 
-# Builds the React Native app for Android and iOS on every change to it,
-# launches each build on an emulator / simulator as a smoke test, and on main
-# publishes both builds as a GitHub Release of this repository.
+# Builds the React Native Android app on every change to it, launches the
+# build on an emulator as a smoke test, and on main publishes the APK as a
+# GitHub Release of this repository.
 
 on:
   push:
@@ -122,80 +122,9 @@ jobs:
             android-smoke.png
           if-no-files-found: error
 
-  ios:
-    name: iOS build + smoke test
-    needs: checks
-    runs-on: macos-15
-    timeout-minutes: 75
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: App/package-lock.json
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.3"
-          bundler-cache: true
-          working-directory: App
-
-      - name: Install JS dependencies
-        working-directory: App
-        run: npm ci
-
-      - name: Install pods
-        working-directory: App/ios
-        run: bundle exec pod install
-
-      - name: Build for the simulator
-        working-directory: App/ios
-        run: |
-          set -o pipefail
-          xcodebuild \
-            -workspace RoutineFights.xcworkspace \
-            -scheme RoutineFights \
-            -configuration Release \
-            -sdk iphonesimulator \
-            -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO \
-            build | tail -200
-
-      - name: Smoke test on the simulator
-        run: |
-          APP="App/ios/build/Build/Products/Release-iphonesimulator/RoutineFights.app"
-          BUNDLE_ID=$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "$APP/Info.plist")
-          UDID=$(xcrun simctl list devices available -j \
-            | jq -r '[.devices[] | .[] | select(.name | test("^iPhone"))][0].udid')
-          echo "Simulator: $UDID  Bundle: $BUNDLE_ID"
-          xcrun simctl boot "$UDID"
-          xcrun simctl bootstatus "$UDID" -b
-          xcrun simctl install "$UDID" "$APP"
-          xcrun simctl launch "$UDID" "$BUNDLE_ID"
-          sleep 25
-          # Still running after 25 s means it did not crash on start-up.
-          xcrun simctl spawn "$UDID" launchctl list | grep "$BUNDLE_ID"
-          xcrun simctl io "$UDID" screenshot ios-smoke.png
-
-      - name: Package simulator app
-        run: |
-          cd App/ios/build/Build/Products/Release-iphonesimulator
-          zip -qr "$GITHUB_WORKSPACE/RoutineFights-ios-simulator.zip" RoutineFights.app
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ios
-          path: |
-            RoutineFights-ios-simulator.zip
-            ios-smoke.png
-          if-no-files-found: error
-
   release:
     name: Publish release
-    needs: [android, ios]
+    needs: android
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:
@@ -215,6 +144,5 @@ jobs:
             --repo "${{ github.repository }}" \
             --target "${{ github.sha }}" \
             --title "Routine Fights app #${{ github.run_number }}" \
-            --notes "Android APK and iOS simulator build for ${{ github.sha }}." \
-            dist/RoutineFights-android.apk \
-            dist/RoutineFights-ios-simulator.zip
+            --notes "Android APK for ${{ github.sha }}." \
+            dist/RoutineFights-android.apk
