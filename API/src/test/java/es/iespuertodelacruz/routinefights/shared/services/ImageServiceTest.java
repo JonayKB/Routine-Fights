@@ -221,4 +221,54 @@ class ImageServiceTest {
         assertTrue(saved.matches("[0-9a-f-]{36}\\.jpg"), saved);
         assertTrue(imageService.exists(saved));
     }
+
+    @Test
+    void servesLegacyFileAsIsWhenItCannotBeResized() throws IOException {
+        Files.write(uploadsDirectory.resolve("broken.jpg"), "not really a jpeg".getBytes());
+        UrlResource resource = imageService.findImage("broken.jpg", ImageSize.SMALL);
+        assertEquals(uploadsDirectory.resolve("broken.jpg").toUri(), resource.getURI());
+    }
+
+    @Test
+    void rejectsInvalidNames() {
+        assertFalse(imageService.exists(null));
+        assertFalse(imageService.exists(" "));
+        assertFalse(imageService.exists("a\\b.png"));
+        assertFalse(imageService.exists("missing.png"));
+        assertThrows(ImageNotFoundException.class, () -> imageService.findImage("missing.png", ImageSize.TINY));
+    }
+
+    @Test
+    void rejectsEmptyUploads() {
+        MockMultipartFile empty = new MockMultipartFile("file", "x.jpg", "image/jpeg", new byte[0]);
+        assertThrows(ImageUploadException.class, () -> imageService.save(empty));
+        assertThrows(ImageUploadException.class, () -> imageService.save(null, null));
+    }
+
+    @Test
+    void contentTypesByExtension() {
+        assertEquals("image/png", ImageService.contentType("a.PNG"));
+        assertEquals("image/jpeg", ImageService.contentType("a.jpg"));
+        assertEquals("image/jpeg", ImageService.contentType("a.jpeg"));
+        assertEquals("image/webp", ImageService.contentType("a.webp"));
+        assertEquals("image/gif", ImageService.contentType("a.gif"));
+        assertEquals("application/octet-stream", ImageService.contentType("a.bin"));
+    }
+
+    @Test
+    void moveIntoPlaceReplacesTarget() throws IOException {
+        Path source = Files.writeString(uploadsDirectory.resolve("src.part"), "new");
+        Path target = Files.writeString(uploadsDirectory.resolve("dst.jpg"), "old");
+        ImageService.moveIntoPlace(source, target);
+        assertEquals("new", Files.readString(target));
+        assertTrue(Files.notExists(source));
+    }
+
+    @Test
+    void reusesExistingVariant() throws IOException {
+        String saved = imageService.save(jpeg(800, 600));
+        UrlResource first = imageService.findImage(saved, ImageSize.MEDIUM);
+        UrlResource second = imageService.findImage(saved, ImageSize.MEDIUM);
+        assertEquals(first.getURI(), second.getURI());
+    }
 }

@@ -178,7 +178,6 @@ public class UserControllerV2 {
         } catch (UserUpdateException e) {
             // Validation messages ("Email already exists", "Invalid phone number"...)
             // are meant for the user, so they reach the app unchanged.
-            logger.log(Level.WARNING, "(update) Rejected update: {0}", e.getMessage());
             throw e;
         } catch (Exception e) {
             logger.log(Level.WARNING, "(update) Unable to update the user: {0}", e.getMessage());
