@@ -256,21 +256,31 @@ public class ImageService {
             try (OutputStream out = Files.newOutputStream(temp)) {
                 ImageProcessor.write(image, alpha, quality, out);
             }
-            try {
-                Files.move(temp, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-            } catch (AtomicMoveNotSupportedException e) {
-                Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING);
-            }
+            moveIntoPlace(temp, target);
         } catch (IOException e) {
             throw new ImageSaveException("Could not store the file. Error: " + e.getMessage());
         } finally {
-            if (temp != null) {
-                try {
-                    Files.deleteIfExists(temp);
-                } catch (IOException ignored) {
-                    // best effort
-                }
-            }
+            deleteQuietly(temp);
+        }
+    }
+
+    /** Replaces {@code target} atomically when the file system allows it. */
+    static void moveIntoPlace(Path source, Path target) throws IOException {
+        try {
+            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    private static void deleteQuietly(Path path) {
+        if (path == null) {
+            return;
+        }
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            LOGGER.log(Level.FINE, "Could not delete temporary file {0}", path);
         }
     }
 }
