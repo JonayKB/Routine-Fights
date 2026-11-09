@@ -43,7 +43,24 @@
             },
             "emptyTitle": "Noch nichts hier",
             "emptyHint": "Folge Leuten oder tritt Aktivitäten bei, um deinen Feed zu füllen",
-            "emptyAction": "Aktivitäten finden"
+            "emptyAction": "Aktivitäten finden",
+            "empty": {
+                "home": {
+                    "title": "Noch keine Beiträge",
+                    "hint": "Erledige eine Aktivität und poste als Erste:r",
+                    "action": "Posten"
+                },
+                "following": {
+                    "title": "Nichts von Leuten, denen du folgst",
+                    "hint": "Finde Leute und folge ihnen, um ihre Beiträge hier zu sehen",
+                    "action": "Leute finden"
+                },
+                "activity": {
+                    "title": "Nichts aus deinen Aktivitäten",
+                    "hint": "Tritt einer Aktivität bei, um zu sehen, was dort gepostet wird",
+                    "action": "Aktivitäten ansehen"
+                }
+            }
         },
         "Login": {
             "email": "E-Mail",
@@ -224,7 +241,8 @@
             "imageMissing": "Das Foto wurde nicht hochgeladen, versuch es erneut",
             "noConnection": "Keine Verbindung, versuch es erneut",
             "generic": "Etwas ist schiefgelaufen, versuch es erneut",
-            "forbidden": "Das darfst du nicht"
+            "forbidden": "Das darfst du nicht",
+            "sessionExpired": "Deine Sitzung ist abgelaufen. Melde dich erneut an"
         }
     }
 }

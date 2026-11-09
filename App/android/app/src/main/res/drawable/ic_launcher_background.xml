@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the StreakFlame paths (src/components/StreakFlame.tsx). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+  <path android:pathData="M0 0 H108 V108 H0 Z" android:fillColor="#FF161513"/>
+  <path android:pathData="M0 0 H108 V108 H0 Z"><aapt:attr name="android:fillColor"><gradient android:type="radial" android:centerX="54" android:centerY="58" android:gradientRadius="40"><item android:offset="0" android:color="#59EF4444"/><item android:offset="0.5" android:color="#1AEF4444"/><item android:offset="1" android:color="#00EF4444"/></gradient></aapt:attr></path>
+</vector>

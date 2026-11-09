@@ -43,7 +43,24 @@
             },
             "emptyTitle": "Aún no hay nada por aquí",
             "emptyHint": "Sigue a gente o únete a actividades para llenar tu feed",
-            "emptyAction": "Buscar actividades"
+            "emptyAction": "Buscar actividades",
+            "empty": {
+                "home": {
+                    "title": "Aún no hay publicaciones",
+                    "hint": "Completa una actividad y sé el primero en publicar",
+                    "action": "Publicar"
+                },
+                "following": {
+                    "title": "Nada de la gente que sigues",
+                    "hint": "Busca gente y síguela para ver aquí lo que publica",
+                    "action": "Buscar gente"
+                },
+                "activity": {
+                    "title": "Nada de tus actividades",
+                    "hint": "Únete a una actividad para ver lo que publica su gente",
+                    "action": "Ver actividades"
+                }
+            }
         },
         "Login": {
             "email": "Correo electrónico",
@@ -224,7 +241,8 @@
             "imageMissing": "La foto no se subió, inténtalo de nuevo",
             "noConnection": "Sin conexión, inténtalo de nuevo",
             "generic": "Algo ha fallado, inténtalo de nuevo",
-            "forbidden": "No puedes hacer eso"
+            "forbidden": "No puedes hacer eso",
+            "sessionExpired": "Tu sesión ha caducado. Vuelve a iniciar sesión"
         }
     }
 }

@@ -12,6 +12,7 @@ import React, {
 import { useColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { deviceLanguage, isSupportedLanguage } from "../utils/deviceSettings";
+import { setNavigationBarTheme } from "../utils/navigationBar";
 
 /** "system" follows the phone's light/dark mode. */
 export type ThemeMode = "system" | "light" | "dark";
@@ -32,6 +33,8 @@ export interface AppContextType {
   setThemeMode: (mode: ThemeMode) => Promise<void>;
   lefthand: boolean;
   setLefthand: Dispatch<SetStateAction<boolean>>;
+  /** False until the saved settings have been read. */
+  ready: boolean;
 }
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -45,6 +48,7 @@ const SettingsContextProvider = (props: any) => {
   const [languageMode, setLanguageModeState] = useState<LanguageMode>("system");
   const [themeMode, setThemeModeState] = useState<ThemeMode>("system");
   const [lefthand, setLefthand] = useState<boolean>(false);
+  const [ready, setReady] = useState<boolean>(false);
 
   const systemLanguage = useMemo(deviceLanguage, []);
   const language = languageMode === "system" ? systemLanguage : languageMode;
@@ -83,12 +87,16 @@ const SettingsContextProvider = (props: any) => {
         setLefthand(savedLefthand === "true");
       } catch {
         // Keep the phone's settings if storage can't be read.
+      } finally {
+        setReady(true);
       }
     };
     loadSaved();
   }, []);
 
   useEffect(() => setErrorLanguage(language), [language]);
+
+  useEffect(() => setNavigationBarTheme(darkmode), [darkmode]);
 
   const contextValues: AppContextType = {
     language: language,
@@ -99,6 +107,7 @@ const SettingsContextProvider = (props: any) => {
     setThemeMode: setThemeMode,
     lefthand: lefthand,
     setLefthand: setLefthand,
+    ready: ready,
   };
 
   return (

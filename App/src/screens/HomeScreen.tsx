@@ -4,8 +4,7 @@ import {
   RefreshControl,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Text,
-  } from "react-native";
+} from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import Skeleton from "../components/Skeleton";
@@ -27,20 +26,26 @@ import {
   borderColor,
   cardBgColor,
   iconColor,
-  mutedTextColor,
   raisedBgColor,
-  textColor,
 } from "../utils/Utils";
+import { palette } from "../styles/theme";
 import { translations } from "../../translations/translation";
 import { errorMessage } from "../utils/graphql";
 import { useToast } from "../contexts/FeedbackContextProvider";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
+type FeedType = "home" | "following" | "activity";
+
+/** Feed tabs, General first since it is the one that opens. */
+const FEED_TABS: { type: FeedType; icon: string }[] = [
+  { type: "home", icon: "earth" },
+  { type: "following", icon: "people" },
+  { type: "activity", icon: "flame" },
+];
+
 const HomeScreen = ({ navigation }: Props) => {
-  const [type, setType] = useState<"following" | "home" | "activity">(
-    "following"
-  );
+  const [type, setType] = useState<FeedType>("home");
   const [load, setLoad] = useState<boolean>(false);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [posts, setPosts] = useState<PostDomain[]>([]);
@@ -106,6 +111,15 @@ const HomeScreen = ({ navigation }: Props) => {
     }
   };
 
+  // Each feed is empty for a different reason, so each offers its own way out.
+  const tabs = () => navigation.getParent() as any;
+  const emptyActions: Record<FeedType, () => void> = {
+    home: () => tabs()?.navigate("UploadForm"),
+    following: () => navigation.navigate("Search"),
+    activity: () =>
+      tabs()?.navigate("ActivitiesStackNavigation", { screen: "Activities" }),
+  };
+
   const reload = () => {
     lastDate.current = new Date().toISOString().slice(0, 19);
     setLoad(true);
@@ -123,32 +137,31 @@ const HomeScreen = ({ navigation }: Props) => {
         <View
           className={`flex-1 flex-row p-1 rounded-xl ${raisedBgColor(darkmode)}`}
         >
-          {["following", "home", "activity"].map((selectedType) => {
-            const isActive = type === selectedType;
+          {FEED_TABS.map((tab) => {
+            const isActive = type === tab.type;
             return (
               <TouchableOpacity
-                key={selectedType}
+                key={tab.type}
                 activeOpacity={0.7}
-                onPress={() =>
-                  setType(selectedType as "following" | "home" | "activity")
-                }
+                onPress={() => setType(tab.type)}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: isActive }}
+                accessibilityLabel={t.type[tab.type]}
                 className={`flex-1 h-9 items-center justify-center rounded-lg ${
                   isActive ? `${cardBgColor(darkmode)} border ${borderColor(darkmode)}` : ""
                 }`}
               >
-                <Text
-                  className={`text-sm ${
+                <Icon
+                  name={isActive ? tab.icon : `${tab.icon}-outline`}
+                  size={20}
+                  color={
                     isActive
-                      ? `font-medium ${textColor(darkmode)}`
-                      : mutedTextColor(darkmode)
-                  }`}
-                >
-                  {
-                    translations[language || "en-EN"].screens.Home.type[
-                      selectedType
-                    ]
+                      ? darkmode
+                        ? palette.accentOnDark
+                        : palette.accent
+                      : iconColor(darkmode)
                   }
-                </Text>
+                />
               </TouchableOpacity>
             );
           })}
@@ -191,14 +204,10 @@ const HomeScreen = ({ navigation }: Props) => {
             ) : (
               <EmptyState
                 visual={<StreakFlame streak={0} size={44} />}
-                title={t.emptyTitle}
-                hint={t.emptyHint}
-                actionLabel={t.emptyAction}
-                onAction={() =>
-                  (navigation.getParent() as any)?.navigate("ActivitiesStackNavigation", {
-                    screen: "Activities",
-                  })
-                }
+                title={t.empty[type].title}
+                hint={t.empty[type].hint}
+                actionLabel={t.empty[type].action}
+                onAction={emptyActions[type]}
               />
             )
           }
