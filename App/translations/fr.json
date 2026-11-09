@@ -242,7 +242,22 @@
             "noConnection": "Pas de connexion, réessaie",
             "generic": "Une erreur est survenue, réessaie",
             "forbidden": "Tu ne peux pas faire ça",
-            "sessionExpired": "Ta session a expiré. Reconnecte-toi"
+            "sessionExpired": "Ta session a expiré. Reconnecte-toi",
+            "imageTooLarge": "Cette photo est trop lourde (10 Mo max.)",
+            "invalidImage": "Ce fichier n'est pas une photo valide"
+        },
+        "ImageEditor": {
+            "title": "Recadrer la photo",
+            "done": "OK",
+            "cancel": "Annuler",
+            "rotate": "Pivoter",
+            "reset": "Réinitialiser",
+            "hint": "Pincez pour zoomer · Glissez pour déplacer · Touchez deux fois pour agrandir",
+            "tooLarge": "Cette photo est trop lourde (10 Mo max.)",
+            "loadError": "Impossible d'ouvrir cette photo",
+            "uploadError": "Impossible d'envoyer la photo, réessayez",
+            "edit": "Ajuster",
+            "save": "Enregistrer"
         }
     }
 }

@@ -242,7 +242,22 @@
             "noConnection": "No connection, try again",
             "generic": "Something went wrong, try again",
             "forbidden": "You can't do that",
-            "sessionExpired": "Your session expired. Sign in again"
+            "sessionExpired": "Your session expired. Sign in again",
+            "imageTooLarge": "That photo is too large (max 10 MB)",
+            "invalidImage": "That file isn't a valid photo"
+        },
+        "ImageEditor": {
+            "title": "Crop photo",
+            "done": "Done",
+            "cancel": "Cancel",
+            "rotate": "Rotate",
+            "reset": "Reset",
+            "hint": "Pinch to zoom · Drag to move · Double tap to zoom",
+            "tooLarge": "That photo is too large (max 10 MB)",
+            "loadError": "Couldn't open that photo",
+            "uploadError": "Couldn't upload the photo, try again",
+            "edit": "Adjust",
+            "save": "Save"
         }
     }
 }

@@ -242,7 +242,22 @@
             "noConnection": "Keine Verbindung, versuch es erneut",
             "generic": "Etwas ist schiefgelaufen, versuch es erneut",
             "forbidden": "Das darfst du nicht",
-            "sessionExpired": "Deine Sitzung ist abgelaufen. Melde dich erneut an"
+            "sessionExpired": "Deine Sitzung ist abgelaufen. Melde dich erneut an",
+            "imageTooLarge": "Das Foto ist zu groß (max. 10 MB)",
+            "invalidImage": "Die Datei ist kein gültiges Foto"
+        },
+        "ImageEditor": {
+            "title": "Foto zuschneiden",
+            "done": "Fertig",
+            "cancel": "Abbrechen",
+            "rotate": "Drehen",
+            "reset": "Zurücksetzen",
+            "hint": "Mit zwei Fingern zoomen · Ziehen zum Verschieben · Doppeltippen zum Vergrößern",
+            "tooLarge": "Das Foto ist zu groß (max. 10 MB)",
+            "loadError": "Das Foto konnte nicht geöffnet werden",
+            "uploadError": "Das Foto konnte nicht hochgeladen werden, bitte erneut versuchen",
+            "edit": "Anpassen",
+            "save": "Speichern"
         }
     }
 }

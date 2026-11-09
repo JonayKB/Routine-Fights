@@ -1,11 +1,12 @@
-import { View, TouchableOpacity, Text, Image } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { useToast } from "../contexts/FeedbackContextProvider";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Icon from "react-native-vector-icons/Ionicons";
 import { ActivitiesStackProps } from "../navigation/ActivitiesStackNavigation";
 import { useImageContext } from "../contexts/ImageContextProvider";
-import ImageStackNavigation from "../navigation/ImageStackNavigation";
+import PhotoPicker from "../components/PhotoPicker";
+import PickedPhotoPreview from "../components/PickedPhotoPreview";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { Activity } from "../utils/Activity";
@@ -31,7 +32,7 @@ const RATES = ["daily", "weekly", "monthly", "yearly"] as const;
 
 const ActivityFormScreen = (props: Props) => {
   const { language, darkmode } = useSettingsContext();
-  const { uri, setUri, setWidth, setHeight } = useImageContext();
+  const { uri, picked, clear, setWidth, setHeight } = useImageContext();
   const [step, setStep] = useState<number>(1);
   const [activity, setActivity] = useState<Activity>({} as Activity);
   const [timeRate, setTimeRate] = useState<(typeof RATES)[number]>("daily");
@@ -51,7 +52,7 @@ const ActivityFormScreen = (props: Props) => {
     setSending(true);
     setFormError(null);
     try {
-      const imageName = await uploadImage(uri);
+      const imageName = await uploadImage(picked);
       await createActivity(
         activity.name.trim(),
         activity.description.trim(),
@@ -60,7 +61,7 @@ const ActivityFormScreen = (props: Props) => {
         imageName
       );
       toast.success(t.ActivityForm.success);
-      setUri(null);
+      clear();
       props.navigation.goBack();
     } catch (error) {
       setFormError(errorMessage(error));
@@ -104,21 +105,7 @@ const ActivityFormScreen = (props: Props) => {
             darkmode
           )} ${cardBgColor(darkmode)}`}
         >
-          {uri ? (
-            <View className="flex-1 bg-[#12110F]">
-              <Image source={{ uri: `file://${uri}` }} style={{ width: "100%", height: "100%" }} resizeMode="contain" />
-              <TouchableOpacity
-                onPress={() => setUri(null)}
-                activeOpacity={0.8}
-                className="absolute bottom-4 self-center flex-row items-center h-10 px-4 rounded-xl bg-[#12110FCC] border border-[#EFE9DE1A]"
-              >
-                <Icon name="refresh" size={16} color="#EFE9DE" />
-                <Text className="ml-2 text-sm font-medium text-[#EFE9DE]">{t.UploadForm.changePicture}</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <ImageStackNavigation />
-          )}
+          {uri ? <PickedPhotoPreview /> : <PhotoPicker />}
         </View>
       )}
 

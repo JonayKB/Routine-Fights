@@ -1,4 +1,4 @@
-import { Image, View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { useToast } from "../contexts/FeedbackContextProvider";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -10,7 +10,9 @@ import { getSubscribedActivities } from "../repositories/ActivityRepository";
 import { ActivityWithStreak } from "../utils/Activity";
 import { uploadPost } from "../repositories/PostRepository";
 import { uploadImage } from "../repositories/ImageRepository";
-import ImageStackNavigation from "../navigation/ImageStackNavigation";
+import PhotoPicker from "../components/PhotoPicker";
+import PickedPhotoPreview from "../components/PickedPhotoPreview";
+import CroppedImage from "../components/CroppedImage";
 import {
   borderColor,
   cardBgColor,
@@ -38,7 +40,7 @@ const predictedStreak = (a: ActivityWithStreak) => {
 };
 
 const UploadFormScreen = (props: Props) => {
-  const { uri, setUri, setWidth, setHeight } = useImageContext();
+  const { uri, picked, clear, setWidth, setHeight } = useImageContext();
   const [step, setStep] = useState<number>(1);
   const [activities, setActivities] = useState<ActivityWithStreak[]>([]);
   const [selected, setSelected] = useState<ActivityWithStreak | null>(null);
@@ -70,18 +72,18 @@ const UploadFormScreen = (props: Props) => {
   };
 
   const reset = () => {
-    setUri(null);
+    clear();
     setSelected(null);
     setStep(1);
   };
 
   const createPost = async () => {
-    if (!selected || !uri) return;
+    if (!selected || !picked) return;
     setSending(true);
     setFormError(null);
     try {
       const before = selected.streak ?? 0;
-      const imageName = await uploadImage(uri);
+      const imageName = await uploadImage(picked);
       const post = await uploadPost(selected.id, imageName);
       const after: number = post?.streak ?? predictedStreak(selected);
       const climbed = TIERS.indexOf(tierFor(after)) > TIERS.indexOf(tierFor(before));
@@ -134,27 +136,7 @@ const UploadFormScreen = (props: Props) => {
               uri ? "" : "border-dashed"
             } ${borderColor(darkmode)} ${cardBgColor(darkmode)}`}
           >
-            {uri ? (
-              <View className="flex-1 bg-[#12110F]">
-                <Image
-                  source={{ uri: `file://${uri}` }}
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMode="contain"
-                />
-                <TouchableOpacity
-                  onPress={() => setUri(null)}
-                  activeOpacity={0.8}
-                  className="absolute bottom-4 self-center flex-row items-center h-10 px-4 rounded-xl bg-[#12110FCC] border border-[#EFE9DE1A]"
-                >
-                  <Icon name="refresh" size={16} color="#EFE9DE" />
-                  <Text className="ml-2 text-sm font-medium text-[#EFE9DE]">
-                    {t.UploadForm.changePicture}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <ImageStackNavigation />
-            )}
+            {uri ? <PickedPhotoPreview /> : <PhotoPicker />}
           </View>
         )}
 
@@ -204,9 +186,7 @@ const UploadFormScreen = (props: Props) => {
         {step === 3 && selected && (
           <View>
             <View className={`flex-row rounded-2xl border overflow-hidden ${cardBgColor(darkmode)} ${borderColor(darkmode)}`}>
-              {!!uri && (
-                <Image source={{ uri: `file://${uri}` }} style={{ width: 96, height: 120 }} resizeMode="cover" />
-              )}
+              {!!picked && <CroppedImage picked={picked} maxWidth={96} maxHeight={120} cover />}
               <View className="flex-1 p-4 justify-center">
                 <Text className={`text-base font-medium ${textColor(darkmode)}`}>{selected.name}</Text>
                 <Text className={`text-xs mt-1 ${mutedTextColor(darkmode)}`}>
