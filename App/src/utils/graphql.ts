@@ -2,9 +2,13 @@ import axios from "axios";
 import RNSecureKeyStore from "react-native-secure-key-store";
 import { neo4jUri } from "./Utils";
 import { translations } from "../../translations/translation";
+import { notifySessionExpired } from "./session";
 
 /** An error returned by the API, with a message meant for the user. */
 export class ApiError extends Error {}
+
+/** Message of the error thrown when the saved session is no longer accepted. */
+export const SESSION_EXPIRED = "Session expired";
 
 const readToken = async (): Promise<string | null> => {
   try {
@@ -25,11 +29,21 @@ export const gql = async <T = any>(
   options: { auth?: boolean } = { auth: true }
 ): Promise<T> => {
   const token = options.auth === false ? null : await readToken();
-  const { data } = await axios.post(
-    neo4jUri,
-    { query, variables },
-    { headers: token ? { Authorization: `Bearer ${token}` } : {} }
-  );
+  let data: any;
+  try {
+    ({ data } = await axios.post(
+      neo4jUri,
+      { query, variables },
+      { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+    ));
+  } catch (error: any) {
+    // The API answers 401 when the saved token has expired or is no longer valid.
+    if (token && error?.response?.status === 401) {
+      notifySessionExpired();
+      throw new ApiError(SESSION_EXPIRED);
+    }
+    throw error;
+  }
   if (data?.errors?.length) {
     throw new ApiError(data.errors[0].message);
   }
@@ -61,6 +75,7 @@ const KNOWN_ERRORS: [string, string][] = [
   ["Access Denied", "forbidden"],
   ["You can only delete your own account", "forbidden"],
   ["Network Error", "noConnection"],
+  [SESSION_EXPIRED, "sessionExpired"],
 ];
 
 const localize = (message: string): string => {

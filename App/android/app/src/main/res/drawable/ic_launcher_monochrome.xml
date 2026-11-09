@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the StreakFlame paths (src/components/StreakFlame.tsx). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+  <group android:translateX="29" android:translateY="24" android:scaleX="0.5" android:scaleY="0.5">
+    <path android:pathData="M21 30 C17 48 13 64 18 80 C21 89 29 95 42 95 C37 78 35 64 31 54 C27 46 22 40 21 30 Z" android:fillColor="#FF000000"/>
+    <path android:pathData="M80 22 C85 42 88 62 83 79 C80 88 71 95 58 95 C63 76 65 62 69 52 C73 42 79 34 80 22 Z" android:fillColor="#FF000000"/>
+    <path android:pathData="M51 2 C55 24 70 38 71 60 C72 80 64 98 50 98 C36 98 29 84 31 66 C33 46 48 30 51 2 Z" android:fillColor="#FF000000"/>
+    <path android:pathData="M50 40 C66 50 84 64 83 86 C82 106 67 117 50 117 C33 117 18 106 17 86 C16 64 34 50 50 40 Z" android:fillColor="#FF000000"/>
+  </group>
+</vector>

@@ -43,7 +43,24 @@
             },
             "emptyTitle": "Nothing here yet",
             "emptyHint": "Follow people or join activities to fill your feed",
-            "emptyAction": "Find activities"
+            "emptyAction": "Find activities",
+            "empty": {
+                "home": {
+                    "title": "No posts yet",
+                    "hint": "Complete an activity and be the first to post",
+                    "action": "Post"
+                },
+                "following": {
+                    "title": "Nothing from people you follow",
+                    "hint": "Find people and follow them to see their posts here",
+                    "action": "Find people"
+                },
+                "activity": {
+                    "title": "Nothing from your activities",
+                    "hint": "Join an activity to see what its people post",
+                    "action": "See activities"
+                }
+            }
         },
         "Login": {
             "email": "Email",
@@ -224,7 +241,8 @@
             "imageMissing": "The photo didn't upload, try again",
             "noConnection": "No connection, try again",
             "generic": "Something went wrong, try again",
-            "forbidden": "You can't do that"
+            "forbidden": "You can't do that",
+            "sessionExpired": "Your session expired. Sign in again"
         }
     }
 }

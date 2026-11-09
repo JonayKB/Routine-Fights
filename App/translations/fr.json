@@ -43,7 +43,24 @@
             },
             "emptyTitle": "Rien pour l'instant",
             "emptyHint": "Suis des personnes ou rejoins des activités pour remplir ton fil",
-            "emptyAction": "Trouver des activités"
+            "emptyAction": "Trouver des activités",
+            "empty": {
+                "home": {
+                    "title": "Aucune publication pour l'instant",
+                    "hint": "Termine une activité et sois le premier à publier",
+                    "action": "Publier"
+                },
+                "following": {
+                    "title": "Rien des personnes que tu suis",
+                    "hint": "Trouve des personnes et suis-les pour voir leurs publications ici",
+                    "action": "Trouver des personnes"
+                },
+                "activity": {
+                    "title": "Rien de tes activités",
+                    "hint": "Rejoins une activité pour voir ce que ses membres publient",
+                    "action": "Voir les activités"
+                }
+            }
         },
         "Login": {
             "email": "Email",
@@ -224,7 +241,8 @@
             "imageMissing": "La photo ne s'est pas envoyée, réessaie",
             "noConnection": "Pas de connexion, réessaie",
             "generic": "Une erreur est survenue, réessaie",
-            "forbidden": "Tu ne peux pas faire ça"
+            "forbidden": "Tu ne peux pas faire ça",
+            "sessionExpired": "Ta session a expiré. Reconnecte-toi"
         }
     }
 }

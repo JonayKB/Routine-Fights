@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useToast } from "../contexts/FeedbackContextProvider";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LoginStackProps } from "../navigation/LoginStackNavigation";
 import { login } from "../repositories/LoginRepository";
@@ -13,12 +13,12 @@ import {
 } from "../utils/Utils";
 import StreakFlame from "../components/StreakFlame";
 import { fonts } from "../styles/theme";
-import RNSecureKeyStore from "react-native-secure-key-store";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import FormInput from "../components/FormInput";
 import { errorMessage } from "../utils/graphql";
+import { sessionStarted } from "../utils/session";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
@@ -32,18 +32,6 @@ const LoginScreen = ({ navigation }: Props) => {
   const { setToken } = useTokenContext();
   const { language, darkmode } = useSettingsContext();
 
-  useEffect(() => {
-    fetchToken();
-  }, []);
-
-  const fetchToken = async () => {
-    const token = await RNSecureKeyStore.get("token");
-    if (token) {
-      setToken(token);
-      resetNavigation(navigation, "MainTabNavigation");
-    }
-  };
-
   const log = async () => {
     const required = translations[language || "en-EN"].screens.Common.required;
     const fieldErrors = {
@@ -56,6 +44,7 @@ const LoginScreen = ({ navigation }: Props) => {
     setSending(true);
     try {
       const token = await login(email.trim(), password);
+      sessionStarted();
       setToken(token);
       resetNavigation(navigation, "MainTabNavigation");
     } catch (error) {
