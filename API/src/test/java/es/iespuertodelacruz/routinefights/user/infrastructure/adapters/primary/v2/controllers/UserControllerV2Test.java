@@ -256,6 +256,25 @@ class UserControllerV2Test extends UserInitializer {
     }
 
     @Test
+    void updateSendsVerificationEmailWhenEmailChanged() {
+        when(authentication.getName()).thenReturn("testUser");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);
+        User changed = new User();
+        changed.setEmail("new@example.com");
+        changed.setUsername("ana");
+        changed.setVerified(false);
+        changed.setVerificationToken("token");
+        when(userService.update(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
+                anyString()))
+                .thenReturn(changed);
+        when(userOutputMapper.toOutputDTOV2(any(User.class))).thenReturn(userOutputDTOV2);
+        assertNotNull(userControllerV2.update(userInputDTOV2, "es-ES"));
+        org.mockito.Mockito.verify(mailService).sendVerificationEmail("new@example.com", "ana", "token", "es-ES",
+                true);
+    }
+
+    @Test
     void updateKeepsValidationMessage() {
         when(authentication.getName()).thenReturn("testUser");
         when(securityContext.getAuthentication()).thenReturn(authentication);

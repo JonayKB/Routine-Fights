@@ -69,7 +69,6 @@ class MailServiceTest {
     @Test
     void testSendVerificationEmail_Success()throws Exception {
         String emailId = "test@example.com";
-        String subject = "Test Subject";
         String body = "Test Body";
 
         Response mockResponse = new Response();

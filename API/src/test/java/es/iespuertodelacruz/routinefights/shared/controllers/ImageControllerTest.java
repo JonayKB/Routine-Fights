@@ -94,6 +94,31 @@ class ImageControllerTest {
     }
 
     @Test
+    void uploadFileTooLargeTest() {
+        MockMultipartFile file = new MockMultipartFile("file", ORIGINAL_FILE_NAME, "image/jpeg",
+                new byte[(int) ImageService.MAX_UPLOAD_BYTES + 1]);
+        ResponseEntity<?> responseEntity = imageController.uploadFile(file);
+        assertEquals(HttpStatusCode.valueOf(413), responseEntity.getStatusCode());
+    }
+
+    @Test
+    void uploadFileWithCropTest() {
+        MockMultipartFile file = new MockMultipartFile("file", ORIGINAL_FILE_NAME, "image/jpeg", "test".getBytes());
+        es.iespuertodelacruz.routinefights.shared.dto.CropRequest crop =
+                new es.iespuertodelacruz.routinefights.shared.dto.CropRequest(0.1, 0.1, 0.5, 0.5, 90);
+        when(imageService.save(file, crop)).thenReturn(ORIGINAL_FILE_NAME);
+        ResponseEntity<?> responseEntity = imageController.uploadFile(file, 0.1, 0.1, 0.5, 0.5, 90);
+        assertEquals(ORIGINAL_FILE_NAME, responseEntity.getBody());
+    }
+
+    @Test
+    void uploadFileInvalidCropTest() {
+        MockMultipartFile file = new MockMultipartFile("file", ORIGINAL_FILE_NAME, "image/jpeg", "test".getBytes());
+        ResponseEntity<?> responseEntity = imageController.uploadFile(file, 0.0, 0.0, 0.0, 1.0, 0);
+        assertEquals(HttpStatusCode.valueOf(400), responseEntity.getStatusCode());
+    }
+
+    @Test
     void getImageOKTest() {
         when(imageService.findImage(ORIGINAL_FILE_NAME, null)).thenReturn(URL_RESOURCE);
         ResponseEntity<?> responseEntity = imageController.getImage(ORIGINAL_FILE_NAME);

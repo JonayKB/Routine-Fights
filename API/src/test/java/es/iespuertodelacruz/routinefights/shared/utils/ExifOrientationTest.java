@@ -44,4 +44,38 @@ class ExifOrientationTest {
         assertEquals(1, ExifOrientation.read(new byte[] { (byte) 0xFF, (byte) 0xD8, (byte) 0xFF, (byte) 0xD9 }));
         assertEquals(1, ExifOrientation.read(jpegWithOrientation(42, false)));
     }
+
+    @Test
+    void skipsOtherSegmentsAndStopsAtScan() {
+        // SOI, APP0 (4 bytes long), then start of scan.
+        byte[] jfif = { (byte) 0xFF, (byte) 0xD8, (byte) 0xFF, (byte) 0xE0, 0, 4, 0, 0, (byte) 0xFF, (byte) 0xDA, 0,
+                2 };
+        assertEquals(1, ExifOrientation.read(jfif));
+        // Garbage where a marker is expected.
+        assertEquals(1, ExifOrientation.read(new byte[] { (byte) 0xFF, (byte) 0xD8, 0x12, 0x34, 0, 0 }));
+        // A segment longer than the data.
+        assertEquals(1, ExifOrientation.read(new byte[] { (byte) 0xFF, (byte) 0xD8, (byte) 0xFF, (byte) 0xE0, 0x7F,
+                0x7F }));
+    }
+
+    @Test
+    void ignoresExifWithoutOrientationOrTruncated() {
+        byte[] full = jpegWithOrientation(6, false);
+        // Bytes 22-23 hold the tag id of the only IFD entry.
+        byte[] other = full.clone();
+        other[23] = 0x10;
+        assertEquals(1, ExifOrientation.read(other));
+        // More entries than the segment holds, none of them Orientation.
+        byte[] lying = other.clone();
+        lying[21] = 9;
+        assertEquals(1, ExifOrientation.read(lying));
+        // IFD offset pointing past the segment.
+        byte[] farIfd = full.clone();
+        farIfd[19] = 0x7F;
+        assertEquals(1, ExifOrientation.read(farIfd));
+        // An APP1 segment with another signature, such as XMP, is skipped.
+        byte[] xmp = full.clone();
+        xmp[6] = 'X';
+        assertEquals(1, ExifOrientation.read(xmp));
+    }
 }

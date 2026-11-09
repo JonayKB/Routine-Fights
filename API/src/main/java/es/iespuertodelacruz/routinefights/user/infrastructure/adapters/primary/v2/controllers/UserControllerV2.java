@@ -175,12 +175,12 @@ public class UserControllerV2 {
                 mailService.sendVerificationEmail(userDomain.getEmail(), userDomain.getUsername(),
                         userDomain.getVerificationToken(), language, true);
             }
-        } catch (UserUpdateException e) {
+        } catch (Exception e) {
             // Validation messages ("Email already exists", "Invalid phone number"...)
             // are meant for the user, so they reach the app unchanged.
-            logger.log(Level.WARNING, "(update) Rejected update: {0}", e.getMessage());
-            throw e;
-        } catch (Exception e) {
+            if (e instanceof UserUpdateException validation) {
+                throw validation;
+            }
             logger.log(Level.WARNING, "(update) Unable to update the user: {0}", e.getMessage());
             throw new UserUpdateException("Unable to update the user");
         }

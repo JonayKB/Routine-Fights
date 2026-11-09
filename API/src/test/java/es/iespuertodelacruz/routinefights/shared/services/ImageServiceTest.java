@@ -221,4 +221,71 @@ class ImageServiceTest {
         assertTrue(saved.matches("[0-9a-f-]{36}\\.jpg"), saved);
         assertTrue(imageService.exists(saved));
     }
+
+    @Test
+    void servesLegacyFileAsIsWhenItCannotBeResized() throws IOException {
+        Files.write(uploadsDirectory.resolve("broken.jpg"), "not really a jpeg".getBytes());
+        UrlResource resource = imageService.findImage("broken.jpg", ImageSize.SMALL);
+        assertEquals(uploadsDirectory.resolve("broken.jpg").toUri(), resource.getURI());
+    }
+
+    @Test
+    void rejectsInvalidNames() {
+        assertFalse(imageService.exists(null));
+        assertFalse(imageService.exists(" "));
+        assertFalse(imageService.exists("a\\b.png"));
+        assertFalse(imageService.exists("missing.png"));
+        assertThrows(ImageNotFoundException.class, () -> imageService.findImage("missing.png", ImageSize.TINY));
+    }
+
+    @Test
+    void rejectsEmptyUploads() {
+        MockMultipartFile empty = new MockMultipartFile("file", "x.jpg", "image/jpeg", new byte[0]);
+        assertThrows(ImageUploadException.class, () -> imageService.save(empty));
+        assertThrows(ImageUploadException.class, () -> imageService.save(null, null));
+    }
+
+    @Test
+    void contentTypesByExtension() {
+        assertEquals("image/png", ImageService.contentType("a.PNG"));
+        assertEquals("image/jpeg", ImageService.contentType("a.jpg"));
+        assertEquals("image/jpeg", ImageService.contentType("a.jpeg"));
+        assertEquals("image/webp", ImageService.contentType("a.webp"));
+        assertEquals("image/gif", ImageService.contentType("a.gif"));
+        assertEquals("application/octet-stream", ImageService.contentType("a.bin"));
+    }
+
+    @Test
+    void servesOriginalWhenVariantCannotBeStored() throws IOException {
+        Files.write(uploadsDirectory.resolve("legacy.jpg"), image(400, 300, "jpg", false));
+        // A non-empty directory where the variant should go makes the final move fail.
+        Path blocked = Files.createDirectories(uploadsDirectory.resolve(".variants/legacy.jpg.small.jpg"));
+        Files.writeString(blocked.resolve("inside"), "x");
+        UrlResource resource = imageService.findImage("legacy.jpg", ImageSize.SMALL);
+        assertEquals(uploadsDirectory.resolve("legacy.jpg").toUri(), resource.getURI());
+        try (var leftovers = Files.list(uploadsDirectory.resolve(".variants"))) {
+            assertEquals(1, leftovers.count(), "the temporary file must be cleaned up");
+        }
+    }
+
+    @Test
+    void deleteQuietlyNeverThrows() throws IOException {
+        ImageService.deleteQuietly(null);
+        Path file = Files.writeString(uploadsDirectory.resolve("temp.part"), "x");
+        ImageService.deleteQuietly(file);
+        assertTrue(Files.notExists(file));
+        // A non-empty directory can't be deleted: the error is swallowed.
+        Path dir = Files.createDirectories(uploadsDirectory.resolve("full"));
+        Files.writeString(dir.resolve("inside"), "x");
+        ImageService.deleteQuietly(dir);
+        assertTrue(Files.exists(dir));
+    }
+
+    @Test
+    void reusesExistingVariant() throws IOException {
+        String saved = imageService.save(jpeg(800, 600));
+        UrlResource first = imageService.findImage(saved, ImageSize.MEDIUM);
+        UrlResource second = imageService.findImage(saved, ImageSize.MEDIUM);
+        assertEquals(first.getURI(), second.getURI());
+    }
 }
