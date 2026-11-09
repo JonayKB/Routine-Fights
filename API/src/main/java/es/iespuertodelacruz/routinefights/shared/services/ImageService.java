@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -256,7 +255,8 @@ public class ImageService {
             try (OutputStream out = Files.newOutputStream(temp)) {
                 ImageProcessor.write(image, alpha, quality, out);
             }
-            moveIntoPlace(temp, target);
+            // The temp file lives in the same folder, so the rename is atomic.
+            Files.move(temp, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new ImageSaveException("Could not store the file. Error: " + e.getMessage());
         } finally {
@@ -264,16 +264,7 @@ public class ImageService {
         }
     }
 
-    /** Replaces {@code target} atomically when the file system allows it. */
-    static void moveIntoPlace(Path source, Path target) throws IOException {
-        try {
-            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-        } catch (AtomicMoveNotSupportedException e) {
-            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-        }
-    }
-
-    private static void deleteQuietly(Path path) {
+    static void deleteQuietly(Path path) {
         if (path == null) {
             return;
         }

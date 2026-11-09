@@ -256,12 +256,29 @@ class ImageServiceTest {
     }
 
     @Test
-    void moveIntoPlaceReplacesTarget() throws IOException {
-        Path source = Files.writeString(uploadsDirectory.resolve("src.part"), "new");
-        Path target = Files.writeString(uploadsDirectory.resolve("dst.jpg"), "old");
-        ImageService.moveIntoPlace(source, target);
-        assertEquals("new", Files.readString(target));
-        assertTrue(Files.notExists(source));
+    void servesOriginalWhenVariantCannotBeStored() throws IOException {
+        Files.write(uploadsDirectory.resolve("legacy.jpg"), image(400, 300, "jpg", false));
+        // A non-empty directory where the variant should go makes the final move fail.
+        Path blocked = Files.createDirectories(uploadsDirectory.resolve(".variants/legacy.jpg.small.jpg"));
+        Files.writeString(blocked.resolve("inside"), "x");
+        UrlResource resource = imageService.findImage("legacy.jpg", ImageSize.SMALL);
+        assertEquals(uploadsDirectory.resolve("legacy.jpg").toUri(), resource.getURI());
+        try (var leftovers = Files.list(uploadsDirectory.resolve(".variants"))) {
+            assertEquals(1, leftovers.count(), "the temporary file must be cleaned up");
+        }
+    }
+
+    @Test
+    void deleteQuietlyNeverThrows() throws IOException {
+        ImageService.deleteQuietly(null);
+        Path file = Files.writeString(uploadsDirectory.resolve("temp.part"), "x");
+        ImageService.deleteQuietly(file);
+        assertTrue(Files.notExists(file));
+        // A non-empty directory can't be deleted: the error is swallowed.
+        Path dir = Files.createDirectories(uploadsDirectory.resolve("full"));
+        Files.writeString(dir.resolve("inside"), "x");
+        ImageService.deleteQuietly(dir);
+        assertTrue(Files.exists(dir));
     }
 
     @Test

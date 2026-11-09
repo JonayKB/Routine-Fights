@@ -256,7 +256,7 @@ class UserControllerV2Test extends UserInitializer {
     }
 
     @Test
-    void updateSendsVerificationEmailWhenEmailChanged() throws Exception {
+    void updateSendsVerificationEmailWhenEmailChanged() {
         when(authentication.getName()).thenReturn("testUser");
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(userService.findByEmailOnlyBase(anyString())).thenReturn(user);

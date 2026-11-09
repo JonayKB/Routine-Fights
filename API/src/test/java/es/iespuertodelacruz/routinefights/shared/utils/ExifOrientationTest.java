@@ -73,7 +73,7 @@ class ExifOrientationTest {
         byte[] farIfd = full.clone();
         farIfd[19] = 0x7F;
         assertEquals(1, ExifOrientation.read(farIfd));
-        // APP1 that isn't Exif (e.g. XMP).
+        // An APP1 segment with another signature, such as XMP, is skipped.
         byte[] xmp = full.clone();
         xmp[6] = 'X';
         assertEquals(1, ExifOrientation.read(xmp));
