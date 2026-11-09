@@ -242,7 +242,22 @@
             "noConnection": "Sin conexión, inténtalo de nuevo",
             "generic": "Algo ha fallado, inténtalo de nuevo",
             "forbidden": "No puedes hacer eso",
-            "sessionExpired": "Tu sesión ha caducado. Vuelve a iniciar sesión"
+            "sessionExpired": "Tu sesión ha caducado. Vuelve a iniciar sesión",
+            "imageTooLarge": "La foto es demasiado grande (máx. 10 MB)",
+            "invalidImage": "El archivo no es una foto válida"
+        },
+        "ImageEditor": {
+            "title": "Recortar foto",
+            "done": "Listo",
+            "cancel": "Cancelar",
+            "rotate": "Girar",
+            "reset": "Restablecer",
+            "hint": "Pellizca para hacer zoom · Arrastra para mover · Doble toque para ampliar",
+            "tooLarge": "La foto es demasiado grande (máx. 10 MB)",
+            "loadError": "No se pudo abrir la foto",
+            "uploadError": "No se pudo subir la foto, inténtalo de nuevo",
+            "edit": "Ajustar",
+            "save": "Guardar"
         }
     }
 }

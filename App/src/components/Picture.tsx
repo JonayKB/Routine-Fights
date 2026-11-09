@@ -1,7 +1,5 @@
-import { Image } from "react-native";
 import React from "react";
-import { uri } from "../utils/Utils";
-import { useTokenContext } from "../contexts/TokenContextProvider";
+import ProgressiveImage from "./ProgressiveImage";
 
 type Props = {
   image: string;
@@ -10,22 +8,10 @@ type Props = {
   style: string;
 };
 
+/** A stored picture, loaded progressively (blurred thumbnail → medium → sharp). */
 const Picture = ({ image, size, style, height }: Props) => {
-  const { token } = useTokenContext();  
-  
-  return (
-    <Image
-      source={{
-        uri: uri + "/images/" + image,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }}
-      width={size}
-      height={height ?? size}
-      className={style}
-    />
-  );
+  if (!image) return null;
+  return <ProgressiveImage image={image} width={size} height={height ?? size} className={style} />;
 };
 
 export default Picture;

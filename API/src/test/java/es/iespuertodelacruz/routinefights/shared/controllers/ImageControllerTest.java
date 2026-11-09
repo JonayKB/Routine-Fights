@@ -50,7 +50,7 @@ class ImageControllerTest {
     @Test
     void uploadFileOKTest() {
         MockMultipartFile file = new MockMultipartFile("file", ORIGINAL_FILE_NAME, "image/jpeg", "test".getBytes());
-        when(imageService.save(file)).thenReturn(ORIGINAL_FILE_NAME);
+        when(imageService.save(file, null)).thenReturn(ORIGINAL_FILE_NAME);
         ResponseEntity<?> responseEntity = imageController.uploadFile(file);
 
         assertEquals(HttpStatusCode.valueOf(200), responseEntity.getStatusCode());
@@ -95,14 +95,30 @@ class ImageControllerTest {
 
     @Test
     void getImageOKTest() {
-        when(imageService.findImage(ORIGINAL_FILE_NAME)).thenReturn(URL_RESOURCE);
+        when(imageService.findImage(ORIGINAL_FILE_NAME, null)).thenReturn(URL_RESOURCE);
         ResponseEntity<?> responseEntity = imageController.getImage(ORIGINAL_FILE_NAME);
         assertEquals(URL_RESOURCE, responseEntity.getBody());
     }
 
     @Test
+    void getImageSizedTest() {
+        when(imageService.findImage(ORIGINAL_FILE_NAME, es.iespuertodelacruz.routinefights.shared.dto.ImageSize.TINY))
+                .thenReturn(URL_RESOURCE);
+        ResponseEntity<?> responseEntity = imageController.getImage(ORIGINAL_FILE_NAME, "tiny");
+        assertEquals(URL_RESOURCE, responseEntity.getBody());
+        assertEquals("image/jpeg", responseEntity.getHeaders().getContentType().toString());
+        org.junit.jupiter.api.Assertions.assertTrue(responseEntity.getHeaders().getCacheControl().contains("immutable"));
+    }
+
+    @Test
+    void getImageUnknownSizeTest() {
+        ResponseEntity<?> responseEntity = imageController.getImage(ORIGINAL_FILE_NAME, "huge");
+        assertEquals(HttpStatusCode.valueOf(400), responseEntity.getStatusCode());
+    }
+
+    @Test
     void getImageErrorTest() {
-        when(imageService.findImage(ORIGINAL_FILE_NAME)).thenThrow(new ImageNotFoundException("Image not found"));
+        when(imageService.findImage(ORIGINAL_FILE_NAME, null)).thenThrow(new ImageNotFoundException("Image not found"));
         ResponseEntity<?> responseEntity = imageController.getImage(ORIGINAL_FILE_NAME);
         assertEquals(HttpStatusCode.valueOf(404), responseEntity.getStatusCode());
     }

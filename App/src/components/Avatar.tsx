@@ -1,7 +1,7 @@
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { uri } from "../utils/Utils";
-import { useTokenContext } from "../contexts/TokenContextProvider";
+import { hasImage as isStoredImage } from "../utils/images";
+import ProgressiveImage from "./ProgressiveImage";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { fonts } from "../styles/theme";
 
@@ -15,13 +15,12 @@ type Props = {
 
 /** A user picture that falls back to initials when there is no image or it fails to load. */
 const Avatar = ({ image, name, size, ring }: Props) => {
-  const { token } = useTokenContext();
   const { darkmode } = useSettingsContext();
   const [failed, setFailed] = useState(false);
 
   useEffect(() => setFailed(false), [image]);
 
-  const hasImage = !!image && image !== "null.jpg" && !failed;
+  const hasImage = isStoredImage(image) && !failed;
   const initials = (name ?? "")
     .trim()
     .split(/[\s._@-]+/)
@@ -45,14 +44,7 @@ const Avatar = ({ image, name, size, ring }: Props) => {
       }}
     >
       {hasImage ? (
-        <Image
-          source={{
-            uri: uri + "/images/" + image,
-            headers: { Authorization: `Bearer ${token}` },
-          }}
-          style={{ width: "100%", height: "100%" }}
-          onError={() => setFailed(true)}
-        />
+        <ProgressiveImage image={image} width={size} height={size} onError={() => setFailed(true)} />
       ) : (
         <Text
           style={{

@@ -1,16 +1,23 @@
 package es.iespuertodelacruz.routinefights.shared.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,112 +26,173 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import es.iespuertodelacruz.routinefights.shared.dto.CropRequest;
+import es.iespuertodelacruz.routinefights.shared.dto.ImageSize;
 import es.iespuertodelacruz.routinefights.shared.exceptions.ImageNotFoundException;
+import es.iespuertodelacruz.routinefights.shared.exceptions.ImageUploadException;
 
 class ImageServiceTest {
     private ImageService imageService;
     private Path uploadsDirectory;
 
     @BeforeEach
-    void setup() throws IOException, NoSuchFieldException, IllegalAccessException {
+    void setup() throws IOException {
         uploadsDirectory = Files.createTempDirectory("uploads_test");
         imageService = new ImageService();
-        Field uploadsField = ImageService.class.getDeclaredField("uploads");
-        uploadsField.setAccessible(true);
-        uploadsField.set(imageService, uploadsDirectory);
+        ReflectionTestUtils.setField(imageService, "uploads", uploadsDirectory);
     }
 
     @AfterEach
     void tearDown() throws IOException {
-        Files.walk(uploadsDirectory)
-                .forEach(path -> {
-                    try {
-                        Files.delete(path);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
+        try (var walk = Files.walk(uploadsDirectory)) {
+            walk.sorted(Comparator.reverseOrder()).forEach(path -> path.toFile().delete());
+        }
+    }
+
+    private static byte[] image(int width, int height, String format, boolean transparent) throws IOException {
+        BufferedImage img = new BufferedImage(width, height,
+                transparent ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = img.createGraphics();
+        g.setColor(Color.RED);
+        g.fillRect(0, 0, width / 2, height);
+        g.setColor(Color.BLUE);
+        g.fillRect(width / 2, 0, width - width / 2, height);
+        if (transparent) {
+            // Punch a fully transparent hole in the middle.
+            g.setComposite(java.awt.AlphaComposite.Clear);
+            g.fillRect(width / 4, height / 4, width / 2, height / 2);
+        }
+        g.dispose();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ImageIO.write(img, format, out);
+        return out.toByteArray();
+    }
+
+    private static MockMultipartFile jpeg(int width, int height) throws IOException {
+        return new MockMultipartFile("file", "photo.jpg", "image/jpeg", image(width, height, "jpg", false));
+    }
+
+    private BufferedImage read(Path path) throws IOException {
+        return ImageIO.read(path.toFile());
     }
 
     @Test
-    void testSaveAndFindImage() {
-        String originalFilename = "test.jpg";
-        byte[] content = "dummy image content".getBytes();
-        MockMultipartFile multipartFile = new MockMultipartFile("file", originalFilename, "image/jpeg", content);
-
-        String savedFilename = imageService.save(multipartFile);
-        assertNotNull(savedFilename, "Saved filename should not be null");
-        Path savedFilePath = uploadsDirectory.resolve(savedFilename);
-        assertTrue(Files.exists(savedFilePath), "Saved file should exist");
+    void testSaveAndFindImage() throws IOException {
+        String savedFilename = imageService.save(jpeg(400, 300));
+        assertNotNull(savedFilename);
+        assertTrue(Files.exists(uploadsDirectory.resolve(savedFilename)));
 
         UrlResource resource = imageService.findImage(savedFilename);
-        assertNotNull(resource, "Returned resource should not be null");
-        assertTrue(resource.exists(), "Returned resource should exist");
+        assertTrue(resource.exists());
+    }
+
+    @Test
+    void storesEveryVariantNeverUpscaling() throws IOException {
+        String saved = imageService.save(jpeg(3000, 2000));
+        BufferedImage stored = read(uploadsDirectory.resolve(saved));
+        assertEquals(ImageService.MAX_STORED_SIDE, stored.getWidth());
+
+        for (ImageSize size : ImageSize.values()) {
+            UrlResource variant = imageService.findImage(saved, size);
+            BufferedImage img = ImageIO.read(variant.getFile());
+            assertEquals(size.getMaxSide(), Math.max(img.getWidth(), img.getHeight()), size.name());
+        }
+
+        String small = imageService.save(jpeg(200, 100));
+        BufferedImage large = ImageIO.read(imageService.findImage(small, ImageSize.LARGE).getFile());
+        assertEquals(200, large.getWidth());
+    }
+
+    @Test
+    void cropsAndRotates() throws IOException {
+        // Left half red, right half blue. Keep the right half, then rotate it.
+        String saved = imageService.save(jpeg(400, 200), new CropRequest(0.5, 0, 0.5, 1, 0));
+        BufferedImage img = read(uploadsDirectory.resolve(saved));
+        assertEquals(200, img.getWidth());
+        assertEquals(200, img.getHeight());
+        assertTrue(new Color(img.getRGB(100, 100)).getBlue() > 200);
+
+        String rotated = imageService.save(jpeg(400, 200), new CropRequest(0, 0, 1, 1, 90));
+        BufferedImage r = read(uploadsDirectory.resolve(rotated));
+        assertEquals(200, r.getWidth());
+        assertEquals(400, r.getHeight());
+        // Rotating clockwise moves the (red) left half to the top.
+        assertTrue(new Color(r.getRGB(100, 50)).getRed() > 200);
+    }
+
+    @Test
+    void keepsTransparencyAsPng() throws IOException {
+        MockMultipartFile png = new MockMultipartFile("file", "badge.png", "image/png", image(100, 100, "png", true));
+        String saved = imageService.save(png);
+        assertTrue(saved.endsWith(".png"));
+        assertTrue(imageService.findImage(saved, ImageSize.TINY).getFilename().endsWith(".png"));
+    }
+
+    @Test
+    void opaquePngIsStoredAsJpeg() throws IOException {
+        MockMultipartFile png = new MockMultipartFile("file", "x.png", "image/png", image(100, 100, "png", false));
+        assertTrue(imageService.save(png).endsWith(".jpg"));
+    }
+
+    @Test
+    void rejectsFilesThatAreNotImages() {
+        MockMultipartFile fake = new MockMultipartFile("file", "x.jpg", "image/jpeg", "not an image".getBytes());
+        assertThrows(ImageUploadException.class, () -> imageService.save(fake));
+        assertTrue(imageService.getAll().isEmpty());
+    }
+
+    @Test
+    void rejectsOversizedUploads() {
+        MockMultipartFile big = new MockMultipartFile("file", "x.jpg", "image/jpeg",
+                new byte[(int) ImageService.MAX_UPLOAD_BYTES + 1]);
+        assertThrows(ImageUploadException.class, () -> imageService.save(big));
+    }
+
+    @Test
+    void createsVariantsLazilyForLegacyImages() throws IOException {
+        Files.write(uploadsDirectory.resolve("legacy.png"), image(1000, 500, "png", false));
+        UrlResource medium = imageService.findImage("legacy.png", ImageSize.MEDIUM);
+        assertEquals(720, ImageIO.read(medium.getFile()).getWidth());
+        assertNotEquals(uploadsDirectory.resolve("legacy.png").toUri(), medium.getURI());
     }
 
     @Test
     void testFindImageNotFound() {
-        String nonExistentFilename = "nonexistent.jpg";
-        Exception exception = assertThrows(ImageNotFoundException.class, () -> {
-            imageService.findImage(nonExistentFilename);
-        });
-        assertTrue(exception.getMessage().contains("not found"),
-                "Exception message should indicate file was not found");
+        Exception exception = assertThrows(ImageNotFoundException.class,
+                () -> imageService.findImage("nonexistent.jpg"));
+        assertTrue(exception.getMessage().contains("not found"));
     }
 
     @Test
-    void testSaveDuplicateFileNames() {
-        String originalFilename = "duplicate.jpg";
-        byte[] content = "dummy content".getBytes();
-        MockMultipartFile file1 = new MockMultipartFile("file", originalFilename, "image/jpeg", content);
-        MockMultipartFile file2 = new MockMultipartFile("file", originalFilename, "image/jpeg", content);
-
-        String savedFilename1 = imageService.save(file1);
-        String savedFilename2 = imageService.save(file2);
-
-        assertTrue(savedFilename1.endsWith(".jpg"), "The extension should be kept");
-        assertNotEquals(originalFilename, savedFilename1, "The client's file name must not be trusted");
-        assertNotEquals(savedFilename1, savedFilename2, "Two uploads must never share a name");
+    void testSaveDuplicateFileNames() throws IOException {
+        String savedFilename1 = imageService.save(jpeg(10, 10));
+        String savedFilename2 = imageService.save(jpeg(10, 10));
+        assertTrue(savedFilename1.endsWith(".jpg"));
+        assertNotEquals(savedFilename1, savedFilename2);
     }
 
     @Test
-    void testGetAll() {
-        String originalFilename = "test.jpg";
-        byte[] content = "dummy image content".getBytes();
-        MockMultipartFile multipartFile = new MockMultipartFile("file", originalFilename, "image/jpeg", content);
-
-        String savedFilename = imageService.save(multipartFile);
-        assertNotNull(savedFilename, "Saved filename should not be null");
-        Path savedFilePath = uploadsDirectory.resolve(savedFilename);
-        assertTrue(Files.exists(savedFilePath), "Saved file should exist");
-
+    void getAllListsOnlyStoredPictures() throws IOException {
+        String savedFilename = imageService.save(jpeg(50, 50));
         List<String> images = imageService.getAll();
-        assertEquals(1, images.size(), "There should be one image");
-        assertEquals(savedFilename, images.get(0), "The saved filename should be in the list");
+        assertEquals(List.of(savedFilename), images);
     }
 
     @Test
-    void testDelete() {
-        String originalFilename = "test.jpg";
-        byte[] content = "dummy image content".getBytes();
-        MockMultipartFile multipartFile = new MockMultipartFile("file", originalFilename, "image/jpeg", content);
-
-        String savedFilename = imageService.save(multipartFile);
-        assertNotNull(savedFilename, "Saved filename should not be null");
-        Path savedFilePath = uploadsDirectory.resolve(savedFilename);
-        assertTrue(Files.exists(savedFilePath), "Saved file should exist");
-
+    void deleteRemovesVariants() throws IOException {
+        String savedFilename = imageService.save(jpeg(50, 50));
         imageService.delete(savedFilename);
-        assertTrue(Files.notExists(savedFilePath), "Deleted file should not exist");
+        assertTrue(Files.notExists(uploadsDirectory.resolve(savedFilename)));
+        try (var stream = Files.list(uploadsDirectory.resolve(".variants"))) {
+            assertEquals(0, stream.count());
+        }
     }
 
     @Test
     void testDeleteException() {
-        Exception exception = assertThrows(ImageNotFoundException.class, () -> {
-            imageService.delete("nonexistent.jpg");
-        });
-        assertTrue(exception.getMessage().contains("Error"),
-                "Exception message should indicate file was not found");
+        Exception exception = assertThrows(ImageNotFoundException.class,
+                () -> imageService.delete("nonexistent.jpg"));
+        assertTrue(exception.getMessage().contains("Error"));
     }
 
     @Test
@@ -132,29 +200,25 @@ class ImageServiceTest {
         Path tempFile = Files.createTempFile("test", ".tmp");
         try {
             ReflectionTestUtils.setField(imageService, "uploads", tempFile);
-
             assertThrows(ImageNotFoundException.class, () -> imageService.getAll());
         } finally {
             Files.deleteIfExists(tempFile);
         }
     }
 
-
-    @org.junit.jupiter.api.Test
+    @Test
     void rejectsPathTraversal() {
-        org.junit.jupiter.api.Assertions.assertFalse(imageService.exists("../../etc/passwd"));
-        org.junit.jupiter.api.Assertions.assertThrows(
-                es.iespuertodelacruz.routinefights.shared.exceptions.ImageNotFoundException.class,
-                () -> imageService.findImage("../secret.png"));
+        assertFalse(imageService.exists("../../etc/passwd"));
+        assertFalse(imageService.exists(".variants"));
+        assertThrows(ImageNotFoundException.class, () -> imageService.findImage("../secret.png"));
     }
 
-    @org.junit.jupiter.api.Test
-    void savedNamesIgnoreClientFileName() {
-        org.springframework.mock.web.MockMultipartFile file = new org.springframework.mock.web.MockMultipartFile(
-                "file", "../../evil.PNG", "image/png", new byte[] { 1, 2, 3 });
+    @Test
+    void savedNamesIgnoreClientFileName() throws IOException {
+        MockMultipartFile file = new MockMultipartFile("file", "../../evil.PNG", "image/png",
+                image(20, 20, "png", false));
         String saved = imageService.save(file);
-        org.junit.jupiter.api.Assertions.assertTrue(saved.matches("[0-9a-f-]{36}\\.png"), saved);
-        org.junit.jupiter.api.Assertions.assertTrue(imageService.exists(saved));
-        imageService.delete(saved);
+        assertTrue(saved.matches("[0-9a-f-]{36}\\.jpg"), saved);
+        assertTrue(imageService.exists(saved));
     }
 }
