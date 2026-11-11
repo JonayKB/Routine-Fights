@@ -51,11 +51,11 @@ export const createActivity = async (
   timeRate: string,
   timesRequiered: string,
   image: string
-): Promise<string> =>
+): Promise<Activity> =>
   (
     await gql(
       `mutation CreateActivity($input: ActivityInputV2!) {
-        createActivity(activityInput: $input) { id }
+        createActivity(activityInput: $input) { id name description image timeRate timesRequiered }
       }`,
       { input: { name, description, image, timeRate, timesRequiered } }
     )

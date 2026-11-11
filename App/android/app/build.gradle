@@ -1,6 +1,14 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+// Push notifications need the Firebase config of the project. It is not in the
+// repository (CI writes it from the GOOGLE_SERVICES_JSON secret): without it the
+// app still builds and runs, only without push.
+if (file("google-services.json").exists()) {
+    apply plugin: "com.google.gms.google-services"
+} else {
+    logger.warn("google-services.json not found: building without push notifications")
+}
 project.ext.vectoricons = [
 iconFontNames: ['MaterialCommunityIcons.ttf', 'Ionicons.ttf' ]
 ]

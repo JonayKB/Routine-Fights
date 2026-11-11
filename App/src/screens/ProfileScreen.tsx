@@ -30,6 +30,7 @@ import {
   raisedBgColor,
   textColor,
 } from "../utils/Utils";
+import { openChat } from "../contexts/InboxContextProvider";
 import Avatar from "../components/Avatar";
 import { fonts } from "../styles/theme";
 import ProfilePost from "../components/ProfilePost";
@@ -272,25 +273,40 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           </View>
         </View>
         {user.email && user.email !== email && (
-          <TouchableOpacity
-            activeOpacity={0.85}
-            className={`h-10 mt-5 rounded-xl items-center justify-center ${
-              user.isFollowing
-                ? `border ${borderColor(darkmode)} ${raisedBgColor(darkmode)}`
-                : "bg-[#C2410C]"
-            }`}
-            onPress={handleFollow}
-          >
-            <Text
-              className={`text-sm font-semibold ${
-                user.isFollowing ? textColor(darkmode) : "text-white"
+          <View className="flex-row mt-5">
+            <TouchableOpacity
+              activeOpacity={0.85}
+              className={`flex-1 h-10 rounded-xl items-center justify-center ${
+                user.isFollowing
+                  ? `border ${borderColor(darkmode)} ${raisedBgColor(darkmode)}`
+                  : "bg-[#C2410C]"
               }`}
+              onPress={handleFollow}
             >
-              {user.isFollowing
-                ? translations[language || "en-EN"].screens.Profile.unfollow
-                : translations[language || "en-EN"].screens.Profile.follow}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                className={`text-sm font-semibold ${
+                  user.isFollowing ? textColor(darkmode) : "text-white"
+                }`}
+              >
+                {user.isFollowing
+                  ? translations[language || "en-EN"].screens.Profile.unfollow
+                  : translations[language || "en-EN"].screens.Profile.follow}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              accessibilityRole="button"
+              className={`flex-1 h-10 ml-2 flex-row rounded-xl items-center justify-center border ${borderColor(
+                darkmode
+              )} ${raisedBgColor(darkmode)}`}
+              onPress={() => openChat(user.email, user.username)}
+            >
+              <Icon name="paper-plane-outline" size={16} color={iconColor(darkmode)} />
+              <Text className={`ml-2 text-sm font-semibold ${textColor(darkmode)}`}>
+                {translations[language || "en-EN"].screens.Inbox.message}
+              </Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
       <FlatList

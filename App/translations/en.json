@@ -258,6 +258,44 @@
             "uploadError": "Couldn't upload the photo, try again",
             "edit": "Adjust",
             "save": "Save"
+        },
+        "Inbox": {
+            "notificationsTitle": "Notifications",
+            "messagesTitle": "Messages",
+            "markAllRead": "Mark all as read",
+            "emptyNotifications": "Nothing new yet",
+            "emptyNotificationsHint": "Likes, comments, new followers and streak reminders will show up here.",
+            "emptyMessages": "No conversations yet",
+            "emptyMessagesHint": "Open someone's profile and tap Message to start one.",
+            "findPeople": "Find people",
+            "likeOne": "{actor} liked your post.",
+            "likeMany": "{actor} and {others} more liked your post.",
+            "commentOne": "{actor} commented: {preview}",
+            "commentMany": "{actor} and {others} more commented: {preview}",
+            "followOne": "{actor} started following you.",
+            "followMany": "{actor} and {others} more started following you.",
+            "streakRisk": "Your {activity} streak ({streak}) is about to go out. Post now to keep it alive!",
+            "postNow": "Post now",
+            "earlier": "Earlier",
+            "new": "New",
+            "time": {
+                "now": "now",
+                "min": "min",
+                "hour": "h",
+                "day": "d"
+            },
+            "message": "Message",
+            "placeholder": "Message…",
+            "send": "Send",
+            "typing": "typing…",
+            "seen": "Seen",
+            "today": "Today",
+            "yesterday": "Yesterday",
+            "notSent": "Not sent · tap to retry",
+            "sayHi": "Say hi to {name}",
+            "sayHiHint": "Messages are private between the two of you.",
+            "you": "You",
+            "newMessages": "New messages"
         }
     }
 }

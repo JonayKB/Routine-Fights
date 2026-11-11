@@ -15,6 +15,8 @@ import { palette } from "../styles/theme";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { iconColor } from "../utils/Utils";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import InboxContextProvider from "../contexts/InboxContextProvider";
 
 type Props = {};
 
@@ -35,6 +37,7 @@ const MainTabNavigation = (props: Props) => {
   const baseBg = darkmode ? "#1C1A18" : "#FFFFFF";
   const activeColor = darkmode ? palette.accentOnDark : palette.accent;
   const [username, setUsername] = useState<string>("");
+  const insets = useSafeAreaInsets();
   const tabIcon = (name: string, focused: boolean) => (
     <Icon
       name={focused ? name : `${name}-outline`}
@@ -54,6 +57,7 @@ const MainTabNavigation = (props: Props) => {
   }, [uri]);
 
   return (
+    <InboxContextProvider>
     <Tab.Navigator
       id={undefined}
       screenOptions={{
@@ -61,7 +65,9 @@ const MainTabNavigation = (props: Props) => {
         tabBarActiveBackgroundColor: baseBg,
         tabBarInactiveBackgroundColor: baseBg,
         tabBarStyle: {
-          height: 64,
+          // Room for the home indicator on iPhones (0 on Android).
+          height: 64 + insets.bottom,
+          paddingBottom: insets.bottom,
           backgroundColor: baseBg,
           borderTopWidth: 0,
           elevation: 0,
@@ -143,6 +149,7 @@ const MainTabNavigation = (props: Props) => {
         }}
       />
     </Tab.Navigator>
+    </InboxContextProvider>
   );
 };
 

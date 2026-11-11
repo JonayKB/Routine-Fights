@@ -258,6 +258,44 @@
             "uploadError": "No se pudo subir la foto, inténtalo de nuevo",
             "edit": "Ajustar",
             "save": "Guardar"
+        },
+        "Inbox": {
+            "notificationsTitle": "Notificaciones",
+            "messagesTitle": "Mensajes",
+            "markAllRead": "Marcar todo como leído",
+            "emptyNotifications": "Nada nuevo por ahora",
+            "emptyNotificationsHint": "Aquí verás los me gusta, comentarios, nuevos seguidores y avisos de racha.",
+            "emptyMessages": "Aún no tienes conversaciones",
+            "emptyMessagesHint": "Abre el perfil de alguien y pulsa Mensaje para empezar una.",
+            "findPeople": "Buscar gente",
+            "likeOne": "A {actor} le gusta tu publicación.",
+            "likeMany": "A {actor} y {others} más les gusta tu publicación.",
+            "commentOne": "{actor} ha comentado: {preview}",
+            "commentMany": "{actor} y {others} más han comentado: {preview}",
+            "followOne": "{actor} ha empezado a seguirte.",
+            "followMany": "{actor} y {others} más han empezado a seguirte.",
+            "streakRisk": "Tu racha de {activity} ({streak}) está a punto de apagarse. ¡Publica ahora para mantenerla!",
+            "postNow": "Publicar ahora",
+            "earlier": "Anteriores",
+            "new": "Nuevas",
+            "time": {
+                "now": "ahora",
+                "min": "min",
+                "hour": "h",
+                "day": "d"
+            },
+            "message": "Mensaje",
+            "placeholder": "Mensaje…",
+            "send": "Enviar",
+            "typing": "escribiendo…",
+            "seen": "Visto",
+            "today": "Hoy",
+            "yesterday": "Ayer",
+            "notSent": "No enviado · toca para reintentar",
+            "sayHi": "Saluda a {name}",
+            "sayHiHint": "Los mensajes son privados entre vosotros dos.",
+            "you": "Tú",
+            "newMessages": "Mensajes nuevos"
         }
     }
 }
