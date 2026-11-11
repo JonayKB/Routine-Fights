@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --page: 247 244 238;
+  --card: 255 255 255;
+  --raised: 239 233 223;
+  --ink: 31 27 22;
+  --ink-2: 94 85 74;
+  --ink-3: 123 114 102;
+  --accent: 194 65 12;
+  --accent-ink: 194 65 12;
+  --danger: 229 72 77;
+  --success: 22 163 74;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: 22 21 19;
+    --card: 28 26 24;
+    --raised: 38 36 33;
+    --ink: 239 233 222;
+    --ink-2: 170 163 152;
+    --ink-3: 138 132 122;
+    --accent: 194 65 12;
+    --accent-ink: 251 146 60;
+    color-scheme: dark;
+  }
+}
+
+html,
+body {
+  @apply bg-page text-ink font-sans antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--accent-ink));
+  outline-offset: 2px;
+}

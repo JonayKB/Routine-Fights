@@ -1,5 +1,7 @@
 type Query {
   myNotifications(page: Int, perPage: Int): [Notification]
+  pushDevices: [LanguageCount]
+  pushLanguages: [String]
   unreadNotificationsCount: Int
 
   conversations(page: Int, perPage: Int): [Conversation]
@@ -123,6 +125,8 @@ type Mutation {
   register(user: RegisterInput!, language: String): RegisteredUser
 
   sendNotificationToAll(titleKey: String!, bodyKey: String!, args: [KeyValueInput!]): String
+  broadcastNotification(texts: [PushTextInput!]!): String
+  notifyUser(email: String!, title: String!, body: String): Int
   sendNotificationToDevice(
     titleKey: String!
     bodyKey: String!
@@ -375,4 +379,15 @@ type UserEvent {
   readAt: String
   unreadNotifications: Int
   unreadMessages: Int
+}
+
+input PushTextInput {
+  language: String!
+  title: String!
+  body: String
+}
+
+type LanguageCount {
+  language: String
+  devices: Int
 }
