@@ -228,13 +228,13 @@ class NotificationsServiceTest {
         when(translationService.translate(BODY_KEY, ES, args)).thenReturn(MUNDO);
 
         BatchResponse mockBatchResponse = mock(BatchResponse.class);
-        when(fcm.sendMulticast(any(MulticastMessage.class))).thenReturn(mockBatchResponse);
+        when(fcm.sendEachForMulticast(any(MulticastMessage.class))).thenReturn(mockBatchResponse);
         when(mockBatchResponse.getSuccessCount()).thenReturn(2);
         when(mockBatchResponse.getFailureCount()).thenReturn(0);
 
         String result = notificationsService.sendTo(TITLE_KEY, BODY_KEY, usersTokens, args);
         assertNull(result);
-        verify(fcm, times(2)).sendMulticast(any(MulticastMessage.class));
+        verify(fcm, times(2)).sendEachForMulticast(any(MulticastMessage.class));
         verify(translationService, times(4)).translate(anyString(), anyString(), any());
     }
 
@@ -261,13 +261,13 @@ class NotificationsServiceTest {
         when(translationService.translate(TITLE_KEY, ES, args)).thenReturn(HOLA);
         when(translationService.translate(BODY_KEY, ES, args)).thenReturn(MUNDO);
         BatchResponse mockBatchResponse = mock(BatchResponse.class);
-        when(fcm.sendMulticast(any(MulticastMessage.class))).thenReturn(mockBatchResponse);
+        when(fcm.sendEachForMulticast(any(MulticastMessage.class))).thenReturn(mockBatchResponse);
         when(mockBatchResponse.getSuccessCount()).thenReturn(1);
         when(mockBatchResponse.getFailureCount()).thenReturn(1);
 
         String result = notificationsService.sendTo(TITLE_KEY, BODY_KEY, usersTokens, args);
         assertNull(result);
-        verify(fcm, times(2)).sendMulticast(any(MulticastMessage.class));
+        verify(fcm, times(2)).sendEachForMulticast(any(MulticastMessage.class));
         verify(translationService, times(4)).translate(anyString(), anyString(), any());
     }
 
@@ -285,11 +285,47 @@ class NotificationsServiceTest {
         FirebaseMessagingException fakeException = mock(FirebaseMessagingException.class);
         when(fakeException.getMessage()).thenReturn("failed");
         when(fakeException.getErrorCode()).thenReturn(ErrorCode.UNKNOWN);
-        when(fcm.sendMulticast(any(MulticastMessage.class))).thenThrow(fakeException);
+        when(fcm.sendEachForMulticast(any(MulticastMessage.class))).thenThrow(fakeException);
         String result = notificationsService.sendTo(TITLE_KEY, BODY_KEY, usersTokens, args);
         assertNull(result);
-        verify(fcm, times(2)).sendMulticast(any(MulticastMessage.class));
+        verify(fcm, times(2)).sendEachForMulticast(any(MulticastMessage.class));
         verify(translationService, times(4)).translate(anyString(), anyString(), any());
     }
 
+
+    @Test
+    void pushForgetsDevicesFcmNoLongerKnows() throws Exception {
+        es.iespuertodelacruz.routinefights.device_token.domain.ports.primary.IDeviceTokenService devices = mock(
+                es.iespuertodelacruz.routinefights.device_token.domain.ports.primary.IDeviceTokenService.class);
+        NotificationsService service = new NotificationsService(fcm, translationService, devices);
+        when(translationService.translate(anyString(), anyString(), any())).thenReturn("text");
+
+        com.google.firebase.messaging.SendResponse ok = mock(com.google.firebase.messaging.SendResponse.class);
+        when(ok.isSuccessful()).thenReturn(true);
+        com.google.firebase.messaging.SendResponse gone = mock(com.google.firebase.messaging.SendResponse.class);
+        FirebaseMessagingException unregistered = mock(FirebaseMessagingException.class);
+        when(unregistered.getMessagingErrorCode())
+                .thenReturn(com.google.firebase.messaging.MessagingErrorCode.UNREGISTERED);
+        when(gone.isSuccessful()).thenReturn(false);
+        when(gone.getException()).thenReturn(unregistered);
+        BatchResponse batch = mock(BatchResponse.class);
+        when(batch.getSuccessCount()).thenReturn(1);
+        when(batch.getResponses()).thenReturn(List.of(ok, gone));
+        when(fcm.sendEachForMulticast(any(MulticastMessage.class))).thenReturn(batch);
+
+        int delivered = service.push(Arrays.asList(new DeviceToken(TOKEN1, null, EN), new DeviceToken(TOKEN2, null, EN)),
+                new NotificationsService.Push(TITLE_KEY, BODY_KEY, Map.of(), Map.of("type", "LIKE"),
+                        "LIKE:" + "x".repeat(80), 3));
+
+        assertEquals(1, delivered);
+        verify(fcm, times(1)).sendEachForMulticast(any(MulticastMessage.class));
+        verify(devices).delete(TOKEN2);
+    }
+
+    @Test
+    void languagePrefixes() {
+        assertEquals("es", NotificationsService.languagePrefix("es-ES"));
+        assertEquals("en", NotificationsService.languagePrefix(null));
+        assertEquals("fr", NotificationsService.languagePrefix("FR_fr"));
+    }
 }

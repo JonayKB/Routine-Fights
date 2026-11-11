@@ -46,6 +46,11 @@ public class ActivityControllerV2 {
                 activityInput.image(),
                 activityInput.timeRate(), activityInput.timesRequiered(), user.getId(), activityInput.categoryID());
 
+        // Whoever creates an activity takes part in it straight away.
+        if (activity != null && activity.getId() != null) {
+            userService.subscribeActivity(user.getEmail(), activity.getId());
+        }
+
         return activityOutputV2Mapper.toDTO(activity);
     }
 

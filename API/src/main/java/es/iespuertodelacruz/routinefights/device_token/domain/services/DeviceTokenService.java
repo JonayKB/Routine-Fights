@@ -1,5 +1,7 @@
 package es.iespuertodelacruz.routinefights.device_token.domain.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
@@ -32,5 +34,17 @@ public class DeviceTokenService implements IDeviceTokenService {
         token.setLanguage(language);
 
         return deviceTokenRepository.save(token);
+    }
+
+    @Override
+    public List<DeviceToken> findByEmail(String email) {
+        return deviceTokenRepository.findByEmail(email);
+    }
+
+    @Override
+    public void delete(String deviceToken) {
+        if (deviceToken != null && !deviceToken.isBlank()) {
+            deviceTokenRepository.delete(deviceToken);
+        }
     }
 }

@@ -1,5 +1,7 @@
 package es.iespuertodelacruz.routinefights.device_token.infrastructure.adapters.secondary.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
@@ -30,6 +32,18 @@ public class DeviceTokenEntityService implements IDeviceTokenRepository {
         deviceTokenEntityRepository.saveForUser(deviceToken.getUser().getEmail(), deviceToken.getToken(),
                 deviceToken.getLanguage());
         return deviceToken;
+    }
+
+    @Override
+    public List<DeviceToken> findByEmail(String email) {
+        return deviceTokenEntityRepository.findTokensByEmail(email).stream()
+                .map(row -> new DeviceToken(row.getToken(), null, row.getLanguage()))
+                .toList();
+    }
+
+    @Override
+    public void delete(String deviceToken) {
+        deviceTokenEntityRepository.deleteToken(deviceToken);
     }
 
 }

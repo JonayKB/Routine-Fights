@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.neo4j.core.Neo4jClient;
 
 
 import es.iespuertodelacruz.routinefights.activity.infrastructure.adapters.primary.v2.controllers.ActivityControllerV2;
@@ -23,6 +24,9 @@ class ActivityV2ControllerIntegrationTest extends BaseDatabaseIntegration {
     @Autowired
     private ActivityControllerV2 activityControllerV2;
 
+    @Autowired
+    private Neo4jClient client;
+
     @Test
     void createActivity() {
         ActivityInputV2 input = new ActivityInputV2(NAME, DESCRIPTION, IMAGE, TIME_RATE, TIMES_REQUIERED, CATEGORY_ID);
@@ -34,5 +38,13 @@ class ActivityV2ControllerIntegrationTest extends BaseDatabaseIntegration {
         assertEquals(IMAGE, output.image());
         assertEquals(TIME_RATE, output.timeRate());
         assertEquals(TIMES_REQUIERED, output.timesRequiered());
+
+        // The creator takes part in the new activity straight away.
+        long participating = client.query("""
+                MATCH (:User {email: 'jonaykb@gmail.com'})-[:Participated]->(a:Activity {name: $name})
+                RETURN count(a) AS total
+                """).bind(NAME).to("name")
+                .fetchAs(Long.class).mappedBy((t, r) -> r.get("total").asLong()).one().orElse(0L);
+        assertEquals(1L, participating);
     }
 }

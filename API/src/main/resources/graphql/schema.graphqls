@@ -1,4 +1,13 @@
 type Query {
+  myNotifications(page: Int, perPage: Int): [Notification]
+  unreadNotificationsCount: Int
+
+  conversations(page: Int, perPage: Int): [Conversation]
+  conversation(id: String!): Conversation
+  conversationWith(email: String!): Conversation
+  messages(conversationId: String!, before: String, limit: Int): [ChatMessage]
+  unreadConversationsCount: Int
+
   getUserPaginationByName(
     page: Int!
     perPage: Int!
@@ -63,6 +72,14 @@ type Query {
 }
 
 type Mutation {
+  markNotificationsRead(id: String): Boolean
+  registerDevice(token: String!, language: String): Boolean
+  unregisterDevice(token: String!): Boolean
+
+  sendMessage(conversationId: String, toEmail: String, text: String!): ChatMessage
+  markConversationRead(conversationId: String!): Boolean
+  sendTyping(conversationId: String!): Boolean
+
   saveUserV3(user: UserInputV3): UserOutputV3
   updateUserV3(user: UserInputV3): UserOutputV3
   deleteUserV3(id: ID!): Boolean
@@ -308,4 +325,54 @@ type RankingEntry {
   email: String
   image: String
   points: Float
+}
+
+type Subscription {
+  userEvents: UserEvent
+}
+
+type UserSummary {
+  email: String
+  username: String
+  image: String
+}
+
+type Notification {
+  id: String!
+  type: String!
+  targetId: String
+  actors: [UserSummary]
+  actorCount: Int
+  preview: String
+  extra: String
+  targetImage: String
+  updatedAt: String
+  read: Boolean
+}
+
+type ChatMessage {
+  id: String!
+  conversationId: String
+  text: String
+  senderEmail: String
+  createdAt: String
+  mine: Boolean
+}
+
+type Conversation {
+  id: String!
+  other: UserSummary
+  lastMessage: ChatMessage
+  unread: Int
+  updatedAt: String
+  otherReadAt: String
+}
+
+type UserEvent {
+  kind: String!
+  conversationId: String
+  message: ChatMessage
+  readAt: String
+  unreadNotifications: Int
+  unreadMessages: Int
 }
