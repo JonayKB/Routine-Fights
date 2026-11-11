@@ -156,18 +156,22 @@ public class NotificationsService {
     private MulticastMessage buildMessage(Push push, String lang, List<String> ids) {
         String title = translationService.translate(push.titleKey(), lang, push.args());
         String body = translationService.translate(push.bodyKey(), lang, push.args());
+        return buildMessage(title, body, push.data(), push.tag(), push.badge(), ids);
+    }
 
+    private MulticastMessage buildMessage(String title, String body, Map<String, String> data, String tag,
+            Integer badge, List<String> ids) {
         AndroidNotification.Builder android = AndroidNotification.builder().setChannelId(ANDROID_CHANNEL);
         Aps.Builder aps = Aps.builder().setSound("default");
         ApnsConfig.Builder apns = ApnsConfig.builder();
-        if (push.tag() != null) {
-            android.setTag(push.tag());
-            aps.setThreadId(push.tag());
+        if (tag != null) {
+            android.setTag(tag);
+            aps.setThreadId(tag);
             // apns-collapse-id may not exceed 64 bytes.
-            apns.putHeader("apns-collapse-id", push.tag().length() > 64 ? push.tag().substring(0, 64) : push.tag());
+            apns.putHeader("apns-collapse-id", tag.length() > 64 ? tag.substring(0, 64) : tag);
         }
-        if (push.badge() != null) {
-            aps.setBadge(push.badge());
+        if (badge != null) {
+            aps.setBadge(badge);
         }
 
         MulticastMessage.Builder builder = MulticastMessage.builder()
@@ -178,10 +182,73 @@ public class NotificationsService {
                         .build())
                 .setApnsConfig(apns.setAps(aps.build()).build())
                 .addAllTokens(ids);
-        if (push.data() != null && !push.data().isEmpty()) {
-            builder.putAllData(push.data());
+        if (data != null && !data.isEmpty()) {
+            builder.putAllData(data);
         }
         return builder.build();
+    }
+
+    /** A text written by hand (admin panel), the same for every device given. */
+    public int pushText(List<DeviceToken> tokens, String title, String body) {
+        if (tokens == null || tokens.isEmpty()) {
+            return 0;
+        }
+        List<String> ids = tokens.stream().map(DeviceToken::getToken).toList();
+        try {
+            BatchResponse sent = fcm.sendEachForMulticast(buildMessage(title, body, Map.of(), null, null, ids));
+            forgetDead(ids, sent);
+            return sent.getSuccessCount();
+        } catch (FirebaseMessagingException e) {
+            log.severe("Failed to send text to user devices: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Sends hand-written texts to everyone, each language to its own topic. A
+     * language without its own text gets {@code fallback}.
+     *
+     * @param texts    language prefix ("es") → title and body
+     * @param fallback text for the languages not in {@code texts}
+     * @return "es=messageId; en=messageId", or null if nothing was sent
+     */
+    public String broadcast(Map<String, PushText> texts, PushText fallback) {
+        StringBuilder results = new StringBuilder();
+        for (String prefix : supportedPrefixes()) {
+            PushText text = texts.getOrDefault(prefix, fallback);
+            if (text == null || text.title() == null || text.title().isBlank()) {
+                continue;
+            }
+            Message message = Message.builder()
+                    .setTopic(GENERAL_TOPIC + prefix)
+                    .setNotification(Notification.builder().setTitle(text.title()).setBody(text.body()).build())
+                    .setAndroidConfig(AndroidConfig.builder()
+                            .setNotification(AndroidNotification.builder().setChannelId(ANDROID_CHANNEL).build())
+                            .build())
+                    .build();
+            try {
+                String sent = fcm.send(message);
+                if (!results.isEmpty()) {
+                    results.append("; ");
+                }
+                results.append(prefix).append("=").append(sent);
+            } catch (FirebaseMessagingException e) {
+                log.severe("Failed to broadcast to " + prefix + USERS + e.getMessage());
+            }
+        }
+        return results.isEmpty() ? null : results.toString();
+    }
+
+    /** "en", "es"... one per translation file, in a stable order. */
+    public List<String> supportedPrefixes() {
+        return translationService.getSupportedLanguages().stream()
+                .map(NotificationsService::languagePrefix)
+                .distinct()
+                .sorted()
+                .toList();
+    }
+
+    public record PushText(String title, String body) {
     }
 
     private void forgetDead(List<String> ids, BatchResponse sent) {
