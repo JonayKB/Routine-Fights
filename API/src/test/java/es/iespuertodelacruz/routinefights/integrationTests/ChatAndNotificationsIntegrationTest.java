@@ -203,6 +203,7 @@ class ChatAndNotificationsIntegrationTest extends BaseDatabaseIntegration {
         assertEquals(2, devices.findByEmail(ANA).size());
         assertEquals("es-ES", devices.findByEmail(ANA).stream()
                 .filter(d -> d.getToken().equals("token-1")).findFirst().orElseThrow().getLanguage());
+        assertEquals(1L, devices.countByLanguage().get("es-ES"));
         devices.delete("token-1");
         devices.delete(" ");
         assertEquals(1, devices.findByEmail(ANA).size());
