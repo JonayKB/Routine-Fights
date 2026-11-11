@@ -19,6 +19,7 @@ import org.springframework.web.reactive.socket.client.StandardWebSocketClient;
 
 import es.iespuertodelacruz.routinefights.chat.domain.ports.primary.IChatService;
 import es.iespuertodelacruz.routinefights.shared.realtime.UserEvent;
+import es.iespuertodelacruz.routinefights.shared.realtime.UserEventBus;
 import es.iespuertodelacruz.routinefights.shared.security.JwtService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -42,6 +43,8 @@ class RealtimeWebSocketIntegrationTest extends BaseDatabaseIntegration {
     private IChatService chatService;
     @Autowired
     private Neo4jClient client;
+    @Autowired
+    private UserEventBus bus;
 
     @BeforeEach
     void seed() {
@@ -73,17 +76,15 @@ class RealtimeWebSocketIntegrationTest extends BaseDatabaseIntegration {
                 .toFlux("userEvents", UserEvent.class);
 
         StepVerifier.create(events.take(1))
-                // Let the subscription register before sending.
                 .then(() -> {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
+                    // Send once Bea's subscription is listening on the server.
+                    Flux.interval(Duration.ofMillis(20))
+                            .filter(tick -> bus.isOnline(BEA))
+                            .blockFirst(Duration.ofSeconds(5));
                     chatService.send(ANA, null, BEA, "hola Bea");
                 })
                 .assertNext(event -> {
-                    assertEquals(UserEvent.MESSAGE, event.kind());
+                    assertEquals(UserEvent.KIND_MESSAGE, event.kind());
                     assertEquals("hola Bea", event.message().text());
                     assertEquals(ANA, event.message().senderEmail());
                     assertTrue(!event.message().mine());

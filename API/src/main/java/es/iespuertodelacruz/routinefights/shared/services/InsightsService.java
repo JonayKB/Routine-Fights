@@ -30,6 +30,8 @@ public class InsightsService {
             String timeRate) {
     }
 
+    private static final String EMAIL = "email";
+
     private final Neo4jClient neo4jClient;
     private final IUserService userService;
     private final IActivityService activityService;
@@ -48,7 +50,7 @@ public class InsightsService {
                 RETURN DISTINCT toString(date(p.createdAt)) AS day
                 ORDER BY day
                 """)
-                .bindAll(Map.of("email", email, "activityID", activityID, "since", since))
+                .bindAll(Map.of(EMAIL, email, "activityID", activityID, "since", since))
                 .fetchAs(String.class)
                 .mappedBy((type, row) -> row.get("day").asString())
                 .all());
@@ -80,7 +82,7 @@ public class InsightsService {
                 .bindAll(Map.of("id", eventID, "limit", limit))
                 .fetchAs(RankingEntry.class)
                 .mappedBy((type, row) -> new RankingEntry(row.get("username").asString(null),
-                        row.get("email").asString(null), row.get("image").asString(null),
+                        row.get(EMAIL).asString(null), row.get("image").asString(null),
                         row.get("points").asLong(0)))
                 .all());
     }
@@ -118,7 +120,7 @@ public class InsightsService {
                             "currentStart", current[0].atStartOfDay(),
                             "nextStart", current[1].plusDays(1).atStartOfDay()))
                     .fetchAs(StreakAtRisk.class)
-                    .mappedBy((type, row) -> new StreakAtRisk(row.get("email").asString(),
+                    .mappedBy((type, row) -> new StreakAtRisk(row.get(EMAIL).asString(),
                             row.get("activityId").asString(), row.get("activity").asString(""),
                             row.get("streak").asLong(0), row.get("remaining").asLong(1), timeRate))
                     .all());
