@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.integrationTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -65,8 +66,8 @@ class ChatAndNotificationsIntegrationTest extends BaseDatabaseIntegration {
     }
 
     @Test
-    void chatBetweenTwoUsers() {
-        LocalDateTime t0 = LocalDateTime.now().minusMinutes(5);
+    void eachPairOfUsersHasOneChat() {
+        LocalDateTime t0 = LocalDateTime.now();
         String id = chat.findOrCreateConversation(ANA, BEA, t0);
         assertNotNull(id);
         // The same pair always gets the same chat, whoever starts it.
@@ -78,9 +79,14 @@ class ChatAndNotificationsIntegrationTest extends BaseDatabaseIntegration {
         assertTrue(chat.isMember(id, ANA));
         assertFalse(chat.isMember(id, CARLA));
         assertEquals(BEA, chat.otherMember(id, ANA));
-
         // Empty chats are not listed.
         assertTrue(chat.findConversations(ANA, 0, 10).isEmpty());
+    }
+
+    @Test
+    void messagesUnreadCountsAndReceipts() {
+        LocalDateTime t0 = LocalDateTime.now().minusMinutes(5);
+        String id = chat.findOrCreateConversation(ANA, BEA, t0);
 
         ChatMessage first = chat.saveMessage(id, ANA, "hola", t0.plusSeconds(1));
         chat.saveMessage(id, ANA, "¿qué tal?", t0.plusSeconds(2));
@@ -142,7 +148,7 @@ class ChatAndNotificationsIntegrationTest extends BaseDatabaseIntegration {
         assertEquals(0, notifications.countUnread(ANA));
         // Once read, new likes start a fresh entry.
         Notification fresh = notifications.accumulate(ANA, NotificationType.LIKE, post, CARLA, null, null, now);
-        assertFalse(fresh.id().equals(again.id()));
+        assertNotEquals(again.id(), fresh.id());
         notifications.accumulate(ANA, NotificationType.FOLLOW, ANA, BEA, null, null, now);
         assertEquals(2, notifications.countUnread(ANA));
         notifications.markAllRead(ANA);

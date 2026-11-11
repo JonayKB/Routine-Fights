@@ -33,6 +33,8 @@ public class NotificationsService {
     public static final String GENERAL_TOPIC = "general-";
     /** Android notification channel created by the app. */
     public static final String ANDROID_CHANNEL = "activity";
+    /** Accent of the app: tints the small icon of Android notifications. */
+    public static final String ANDROID_COLOR = "#C2410C";
 
     /**
      * A push for one user. {@code tag} groups the notifications of the same thing
@@ -157,7 +159,8 @@ public class NotificationsService {
         String title = translationService.translate(push.titleKey(), lang, push.args());
         String body = translationService.translate(push.bodyKey(), lang, push.args());
 
-        AndroidNotification.Builder android = AndroidNotification.builder().setChannelId(ANDROID_CHANNEL);
+        AndroidNotification.Builder android = AndroidNotification.builder().setChannelId(ANDROID_CHANNEL)
+                .setColor(ANDROID_COLOR);
         Aps.Builder aps = Aps.builder().setSound("default");
         ApnsConfig.Builder apns = ApnsConfig.builder();
         if (push.tag() != null) {

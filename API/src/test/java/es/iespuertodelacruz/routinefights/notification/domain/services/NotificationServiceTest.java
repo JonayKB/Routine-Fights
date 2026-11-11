@@ -79,7 +79,7 @@ class NotificationServiceTest {
         assertEquals(3, sent.getValue().badge());
         assertEquals(2, sent.getValue().args().get("others"));
         assertEquals(POST, sent.getValue().data().get("targetId"));
-        verify(bus).publish(OWNER, UserEvent.notification(2));
+        verify(bus).publish(OWNER, UserEvent.ofNotification(2));
     }
 
     @Test
@@ -185,7 +185,7 @@ class NotificationServiceTest {
         assertEquals(4, service.countUnread(OWNER));
 
         service.markAllRead(OWNER);
-        verify(bus).publish(OWNER, UserEvent.notification(0));
+        verify(bus).publish(OWNER, UserEvent.ofNotification(0));
         service.markRead(OWNER, "n1");
         verify(repository).markRead(OWNER, "n1");
     }

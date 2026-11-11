@@ -63,7 +63,7 @@ class ChatServiceTest {
         ChatMessage result = service.send(ME, null, YOU, "  hola ");
 
         assertTrue(result.mine());
-        verify(bus).publish(eq(YOU), eq(UserEvent.message(saved().forReader(YOU), 1)));
+        verify(bus).publish(YOU, UserEvent.ofMessage(saved().forReader(YOU), 1));
         verify(notifications).messageReceived(YOU, ME, "me", CHAT, "hola", 2, 1);
     }
 
@@ -82,8 +82,8 @@ class ChatServiceTest {
     void invalidMessagesAreRejected() {
         assertThrows(IllegalArgumentException.class, () -> service.send(ME, null, YOU, " "));
         assertThrows(IllegalArgumentException.class, () -> service.send(ME, null, YOU, null));
-        assertThrows(IllegalArgumentException.class,
-                () -> service.send(ME, null, YOU, "x".repeat(ChatService.MAX_LENGTH + 1)));
+        String tooLong = "x".repeat(ChatService.MAX_LENGTH + 1);
+        assertThrows(IllegalArgumentException.class, () -> service.send(ME, null, YOU, tooLong));
         assertThrows(IllegalArgumentException.class, () -> service.send(ME, null, ME, "hi"));
         assertThrows(IllegalArgumentException.class, () -> service.send(ME, null, null, "hi"));
         assertThrows(IllegalArgumentException.class, () -> service.send(ME, null, "ghost@x.com", "hi"));
@@ -98,7 +98,7 @@ class ChatServiceTest {
         service.typing(ME, CHAT);
 
         verify(repository).markRead(eq(CHAT), eq(ME), any());
-        verify(bus).publish(YOU, UserEvent.typing(CHAT));
+        verify(bus).publish(YOU, UserEvent.ofTyping(CHAT));
         assertThrows(IllegalArgumentException.class, () -> service.typing(YOU, CHAT));
         assertThrows(IllegalArgumentException.class, () -> service.markRead(ME, null));
     }
