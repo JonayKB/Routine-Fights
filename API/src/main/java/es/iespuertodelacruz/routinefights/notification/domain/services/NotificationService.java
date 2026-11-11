@@ -78,7 +78,7 @@ public class NotificationService implements INotificationService {
                 return;
             }
             repository.retract(owner, NotificationType.LIKE, postId, actorEmail);
-            bus.publish(owner, UserEvent.notification(repository.countUnread(owner)));
+            bus.publish(owner, UserEvent.ofNotification(repository.countUnread(owner)));
         });
     }
 
@@ -115,7 +115,7 @@ public class NotificationService implements INotificationService {
     public void userUnfollowed(String actorEmail, String followedEmail) {
         safely(() -> {
             repository.retract(followedEmail, NotificationType.FOLLOW, followedEmail, actorEmail);
-            bus.publish(followedEmail, UserEvent.notification(repository.countUnread(followedEmail)));
+            bus.publish(followedEmail, UserEvent.ofNotification(repository.countUnread(followedEmail)));
         });
     }
 
@@ -183,19 +183,19 @@ public class NotificationService implements INotificationService {
     @Override
     public void markAllRead(String email) {
         repository.markAllRead(email);
-        bus.publish(email, UserEvent.notification(0));
+        bus.publish(email, UserEvent.ofNotification(0));
     }
 
     @Override
     public void markRead(String email, String id) {
         repository.markRead(email, id);
-        bus.publish(email, UserEvent.notification(repository.countUnread(email)));
+        bus.publish(email, UserEvent.ofNotification(repository.countUnread(email)));
     }
 
     /** Tells the open apps and pushes to the user's devices. */
     private void deliver(String email, Notification n, String titleKey, String bodyKey, Map<String, ?> args) {
         int unread = repository.countUnread(email);
-        bus.publish(email, UserEvent.notification(unread));
+        bus.publish(email, UserEvent.ofNotification(unread));
 
         List<DeviceToken> tokens = deviceTokenService.findByEmail(email);
         if (tokens.isEmpty()) {

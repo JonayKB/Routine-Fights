@@ -28,19 +28,19 @@ class RealtimeTest {
     @Test
     void busDeliversOnlyToListeners() {
         UserEventBus bus = new UserEventBus();
-        bus.publish("nobody@x.com", UserEvent.notification(1));
-        bus.publish(null, UserEvent.notification(1));
+        bus.publish("nobody@x.com", UserEvent.ofNotification(1));
+        bus.publish(null, UserEvent.ofNotification(1));
         assertFalse(bus.isOnline("ana@x.com"));
 
         StepVerifier.create(bus.listen("ana@x.com").take(2))
                 .then(() -> {
                     assertTrue(bus.isOnline("ana@x.com"));
-                    bus.publish("bea@x.com", UserEvent.typing("c"));
-                    bus.publish("ana@x.com", UserEvent.notification(3));
-                    bus.publish("ana@x.com", UserEvent.read("c", "now"));
+                    bus.publish("bea@x.com", UserEvent.ofTyping("c"));
+                    bus.publish("ana@x.com", UserEvent.ofNotification(3));
+                    bus.publish("ana@x.com", UserEvent.ofRead("c", "now"));
                 })
-                .expectNext(UserEvent.notification(3))
-                .expectNext(UserEvent.read("c", "now"))
+                .expectNext(UserEvent.ofNotification(3))
+                .expectNext(UserEvent.ofRead("c", "now"))
                 .verifyComplete();
         assertFalse(bus.isOnline("ana@x.com"));
     }
@@ -59,11 +59,11 @@ class RealtimeTest {
     @Test
     void eventFactories() {
         ChatMessage m = new ChatMessage("m", "c", "hi", "a", LocalDateTime.now(), true);
-        UserEvent e = UserEvent.message(m, 2);
-        assertEquals(UserEvent.MESSAGE, e.kind());
+        UserEvent e = UserEvent.ofMessage(m, 2);
+        assertEquals(UserEvent.KIND_MESSAGE, e.kind());
         assertEquals("c", e.conversationId());
         assertEquals(2, e.unreadMessages());
-        assertEquals(UserEvent.TYPING, UserEvent.typing("c").kind());
+        assertEquals(UserEvent.KIND_TYPING, UserEvent.ofTyping("c").kind());
     }
 
     @Test

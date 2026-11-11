@@ -36,30 +36,11 @@ public class ChatService implements IChatService {
 
     @Override
     public ChatMessage send(String senderEmail, String conversationId, String toEmail, String text) {
-        if (text == null || text.isBlank()) {
-            throw new IllegalArgumentException("Message cannot be empty");
-        }
-        String body = text.strip();
-        if (body.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("Message is too long");
-        }
+        String body = checkedText(text);
         LocalDateTime now = LocalDateTime.now();
-
-        String chatId;
-        if (conversationId != null && !conversationId.isBlank()) {
-            if (!repository.isMember(conversationId, senderEmail)) {
-                throw new IllegalArgumentException(NOT_FOUND);
-            }
-            chatId = conversationId;
-        } else {
-            if (toEmail == null || toEmail.isBlank() || toEmail.equalsIgnoreCase(senderEmail)) {
-                throw new IllegalArgumentException("You cannot message yourself");
-            }
-            chatId = repository.findOrCreateConversation(senderEmail, toEmail, now);
-            if (chatId == null) {
-                throw new IllegalArgumentException("User not found");
-            }
-        }
+        String chatId = conversationId != null && !conversationId.isBlank()
+                ? existingChat(conversationId, senderEmail)
+                : chatWith(senderEmail, toEmail, now);
 
         ChatMessage saved = repository.saveMessage(chatId, senderEmail, body, now);
         // Sending a message means the sender has seen everything before it.
@@ -67,17 +48,50 @@ public class ChatService implements IChatService {
 
         String recipient = repository.otherMember(chatId, senderEmail);
         if (recipient != null) {
-            int unreadChats = repository.countUnreadConversations(recipient);
-            bus.publish(recipient, UserEvent.message(saved.forReader(recipient), unreadChats));
-            Conversation view = repository.findConversationView(chatId, recipient);
-            UserSummary sender = view == null ? new UserSummary(senderEmail, null, null) : view.other();
-            notificationService.messageReceived(recipient, senderEmail, displayName(sender), chatId, body,
-                    view == null ? 1 : view.unread(), unreadChats);
+            deliver(saved, recipient, senderEmail, body);
         }
         // The sender's other devices show it too.
-        bus.publish(senderEmail, UserEvent.message(saved.forReader(senderEmail),
+        bus.publish(senderEmail, UserEvent.ofMessage(saved.forReader(senderEmail),
                 repository.countUnreadConversations(senderEmail)));
         return saved.forReader(senderEmail);
+    }
+
+    static String checkedText(String text) {
+        if (text == null || text.isBlank()) {
+            throw new IllegalArgumentException("Message cannot be empty");
+        }
+        String body = text.strip();
+        if (body.length() > MAX_LENGTH) {
+            throw new IllegalArgumentException("Message is too long");
+        }
+        return body;
+    }
+
+    private String existingChat(String conversationId, String senderEmail) {
+        requireMember(conversationId, senderEmail);
+        return conversationId;
+    }
+
+    /** The chat with that user, started now if they never talked. */
+    private String chatWith(String senderEmail, String toEmail, LocalDateTime now) {
+        if (toEmail == null || toEmail.isBlank() || toEmail.equalsIgnoreCase(senderEmail)) {
+            throw new IllegalArgumentException("You cannot message yourself");
+        }
+        String chatId = repository.findOrCreateConversation(senderEmail, toEmail, now);
+        if (chatId == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        return chatId;
+    }
+
+    /** Live to the recipient's open apps, and as a push. */
+    private void deliver(ChatMessage saved, String recipient, String senderEmail, String body) {
+        int unreadChats = repository.countUnreadConversations(recipient);
+        bus.publish(recipient, UserEvent.ofMessage(saved.forReader(recipient), unreadChats));
+        Conversation view = repository.findConversationView(saved.conversationId(), recipient);
+        UserSummary sender = view == null ? new UserSummary(senderEmail, null, null) : view.other();
+        notificationService.messageReceived(recipient, senderEmail, displayName(sender), saved.conversationId(),
+                body, view == null ? 1 : view.unread(), unreadChats);
     }
 
     @Override
@@ -113,13 +127,13 @@ public class ChatService implements IChatService {
         LocalDateTime now = LocalDateTime.now();
         repository.markRead(conversationId, email, now);
         String other = repository.otherMember(conversationId, email);
-        bus.publish(other, UserEvent.read(conversationId, now.toString()));
+        bus.publish(other, UserEvent.ofRead(conversationId, now.toString()));
     }
 
     @Override
     public void typing(String email, String conversationId) {
         requireMember(conversationId, email);
-        bus.publish(repository.otherMember(conversationId, email), UserEvent.typing(conversationId));
+        bus.publish(repository.otherMember(conversationId, email), UserEvent.ofTyping(conversationId));
     }
 
     @Override
