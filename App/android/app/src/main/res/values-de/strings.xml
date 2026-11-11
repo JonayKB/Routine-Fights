@@ -1,0 +1,4 @@
+<resources>
+    <string name="notification_channel_name">Aktivität</string>
+    <string name="notification_channel_description">Gefällt mir, Kommentare, neue Follower, Nachrichten und Serien-Erinnerungen</string>
+</resources>

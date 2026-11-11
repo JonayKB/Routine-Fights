@@ -4,7 +4,6 @@ import {
   Image,
   LayoutChangeEvent,
   Modal,
-  Platform,
   Pressable,
   StatusBar,
   Text,
@@ -19,7 +18,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 import Icon from "react-native-vector-icons/Ionicons";
 import { translations } from "../../translations/translation";
@@ -58,9 +57,6 @@ const PADDING = 20;
 const PhotoCropper = ({ source, aspect, circle, onCancel, onDone }: Props) => {
   const { language } = useSettingsContext();
   const t = translations[language || "en-EN"].screens.ImageEditor;
-  const insets = useSafeAreaInsets();
-  // The modal draws under the status bar on Android whatever the app does.
-  const topInset = Platform.OS === "android" ? Math.max(insets.top, StatusBar.currentHeight ?? 0) : insets.top;
 
   const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
   const [failed, setFailed] = useState(false);
@@ -322,11 +318,11 @@ const PhotoCropper = ({ source, aspect, circle, onCancel, onDone }: Props) => {
     >
       <StatusBar barStyle="light-content" backgroundColor="#0B0A09" />
       <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#0B0A09" }}>
+        {/* A modal is its own window: the native view measures the notch and
+            the home indicator there, where the app's inset context can't. */}
+        <SafeAreaView edges={["top", "bottom", "left", "right"]} style={{ flex: 1 }}>
         {/* Top bar */}
-        <View
-          style={{ paddingTop: topInset + 8 }}
-          className="flex-row items-center justify-between px-4 pb-3"
-        >
+        <View className="flex-row items-center justify-between px-4 pt-2 pb-3">
           <Pressable
             onPress={onCancel}
             hitSlop={10}
@@ -451,7 +447,7 @@ const PhotoCropper = ({ source, aspect, circle, onCancel, onDone }: Props) => {
         </GestureDetector>
 
         {/* Tools */}
-        <View style={{ paddingBottom: insets.bottom + 16 }} className="pt-3 px-6">
+        <View className="pt-3 pb-4 px-6">
           <Text className="text-xs text-center text-[#8A847A] mb-4">{t.hint}</Text>
           <View className="flex-row justify-center">
             <Tool icon="refresh-outline" label={t.rotate} onPress={rotate} flip disabled={!ready} />
@@ -459,6 +455,7 @@ const PhotoCropper = ({ source, aspect, circle, onCancel, onDone }: Props) => {
             <Tool icon="scan-outline" label={t.reset} onPress={reset} disabled={!ready} />
           </View>
         </View>
+        </SafeAreaView>
       </GestureHandlerRootView>
     </Modal>
   );

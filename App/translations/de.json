@@ -258,6 +258,44 @@
             "uploadError": "Das Foto konnte nicht hochgeladen werden, bitte erneut versuchen",
             "edit": "Anpassen",
             "save": "Speichern"
+        },
+        "Inbox": {
+            "notificationsTitle": "Benachrichtigungen",
+            "messagesTitle": "Nachrichten",
+            "markAllRead": "Alle als gelesen markieren",
+            "emptyNotifications": "Noch nichts Neues",
+            "emptyNotificationsHint": "Hier erscheinen Gefällt mir, Kommentare, neue Follower und Serien-Erinnerungen.",
+            "emptyMessages": "Noch keine Unterhaltungen",
+            "emptyMessagesHint": "Öffne ein Profil und tippe auf Nachricht, um eine zu starten.",
+            "findPeople": "Leute finden",
+            "likeOne": "{actor} gefällt dein Beitrag.",
+            "likeMany": "{actor} und {others} weiteren gefällt dein Beitrag.",
+            "commentOne": "{actor} hat kommentiert: {preview}",
+            "commentMany": "{actor} und {others} weitere haben kommentiert: {preview}",
+            "followOne": "{actor} folgt dir jetzt.",
+            "followMany": "{actor} und {others} weitere folgen dir jetzt.",
+            "streakRisk": "Deine {activity}-Serie ({streak}) erlischt bald. Poste jetzt, um sie zu halten!",
+            "postNow": "Jetzt posten",
+            "earlier": "Früher",
+            "new": "Neu",
+            "time": {
+                "now": "jetzt",
+                "min": "Min.",
+                "hour": "Std.",
+                "day": "T."
+            },
+            "message": "Nachricht",
+            "placeholder": "Nachricht…",
+            "send": "Senden",
+            "typing": "schreibt…",
+            "seen": "Gesehen",
+            "today": "Heute",
+            "yesterday": "Gestern",
+            "notSent": "Nicht gesendet · tippen zum Wiederholen",
+            "sayHi": "Sag Hallo zu {name}",
+            "sayHiHint": "Nachrichten bleiben privat zwischen euch beiden.",
+            "you": "Du",
+            "newMessages": "Neue Nachrichten"
         }
     }
 }

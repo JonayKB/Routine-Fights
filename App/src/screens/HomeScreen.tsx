@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import Skeleton from "../components/Skeleton";
 import EmptyState from "../components/EmptyState";
 import StreakFlame from "../components/StreakFlame";
 import { Post as PostDomain } from "../utils/Post";
@@ -32,6 +31,9 @@ import { palette } from "../styles/theme";
 import { translations } from "../../translations/translation";
 import { errorMessage } from "../utils/graphql";
 import { useToast } from "../contexts/FeedbackContextProvider";
+import { useInbox } from "../contexts/InboxContextProvider";
+import IconBadge from "../components/IconBadge";
+import PostSkeleton from "../components/PostSkeleton";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Home">;
 
@@ -55,6 +57,8 @@ const HomeScreen = ({ navigation }: Props) => {
   const [initialLoading, setInitialLoading] = useState<boolean>(true);
   const focusedOnce = useRef(false);
   const t = translations[language || "en-EN"].screens.Home;
+  const inboxT = translations[language || "en-EN"].screens.Inbox;
+  const { unreadNotifications, unreadMessages } = useInbox();
 
   // Returning to the feed (e.g. after commenting) refreshes counts quietly.
   useFocusEffect(
@@ -78,7 +82,13 @@ const HomeScreen = ({ navigation }: Props) => {
     }
   }, [load, isLoadingMore]);
 
+  const firstType = useRef(true);
   useEffect(() => {
+    if (firstType.current) {
+      firstType.current = false;
+      return;
+    }
+    setPosts([]);
     setInitialLoading(true);
     reload();
   }, [type]);
@@ -169,10 +179,23 @@ const HomeScreen = ({ navigation }: Props) => {
         <TouchableOpacity
           onPress={() => navigation.navigate("Search")}
           hitSlop={8}
+          accessibilityRole="button"
           className="ml-4"
         >
           <Icon name="search" size={22} color={iconColor(darkmode)} />
         </TouchableOpacity>
+        <IconBadge
+          icon="paper-plane-outline"
+          count={unreadMessages}
+          label={inboxT.messagesTitle}
+          onPress={() => navigation.navigate("Conversations")}
+        />
+        <IconBadge
+          icon="notifications-outline"
+          count={unreadNotifications}
+          label={inboxT.notificationsTitle}
+          onPress={() => navigation.navigate("Notifications")}
+        />
       </View>
       <View className="flex-1">
         <FlatList
@@ -187,19 +210,9 @@ const HomeScreen = ({ navigation }: Props) => {
           contentContainerStyle={{ flexGrow: 1 }}
           ListEmptyComponent={
             initialLoading ? (
-              <View className="px-5">
-                {[0, 1].map((i) => (
-                  <View key={i} className="mb-5">
-                    <View className="flex-row items-center mb-3">
-                      <Skeleton width={36} height={36} radius={18} />
-                      <View className="ml-3 flex-1">
-                        <Skeleton width="40%" height={12} />
-                        <Skeleton width="25%" height={10} style={{ marginTop: 6 }} />
-                      </View>
-                    </View>
-                    <Skeleton height={360} radius={16} />
-                  </View>
-                ))}
+              <View>
+                <PostSkeleton />
+                <PostSkeleton />
               </View>
             ) : (
               <EmptyState

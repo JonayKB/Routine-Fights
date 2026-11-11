@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Routine Fights</string>
+    <string name="notification_channel_name">Activity</string>
+    <string name="notification_channel_description">Likes, comments, new followers, messages and streak reminders</string>
 </resources>

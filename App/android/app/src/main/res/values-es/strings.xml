@@ -1,0 +1,4 @@
+<resources>
+    <string name="notification_channel_name">Actividad</string>
+    <string name="notification_channel_description">Me gusta, comentarios, nuevos seguidores, mensajes y avisos de racha</string>
+</resources>

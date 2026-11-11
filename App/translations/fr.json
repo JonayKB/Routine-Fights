@@ -258,6 +258,44 @@
             "uploadError": "Impossible d'envoyer la photo, réessayez",
             "edit": "Ajuster",
             "save": "Enregistrer"
+        },
+        "Inbox": {
+            "notificationsTitle": "Notifications",
+            "messagesTitle": "Messages",
+            "markAllRead": "Tout marquer comme lu",
+            "emptyNotifications": "Rien de nouveau",
+            "emptyNotificationsHint": "Les j'aime, commentaires, nouveaux abonnés et rappels de série apparaîtront ici.",
+            "emptyMessages": "Aucune conversation",
+            "emptyMessagesHint": "Ouvre le profil de quelqu'un et touche Message pour commencer.",
+            "findPeople": "Trouver des personnes",
+            "likeOne": "{actor} aime ta publication.",
+            "likeMany": "{actor} et {others} autres aiment ta publication.",
+            "commentOne": "{actor} a commenté : {preview}",
+            "commentMany": "{actor} et {others} autres ont commenté : {preview}",
+            "followOne": "{actor} a commencé à te suivre.",
+            "followMany": "{actor} et {others} autres ont commencé à te suivre.",
+            "streakRisk": "Ta série {activity} ({streak}) va s'éteindre. Publie maintenant pour la garder !",
+            "postNow": "Publier",
+            "earlier": "Plus tôt",
+            "new": "Nouvelles",
+            "time": {
+                "now": "maintenant",
+                "min": "min",
+                "hour": "h",
+                "day": "j"
+            },
+            "message": "Message",
+            "placeholder": "Message…",
+            "send": "Envoyer",
+            "typing": "écrit…",
+            "seen": "Vu",
+            "today": "Aujourd'hui",
+            "yesterday": "Hier",
+            "notSent": "Non envoyé · touche pour réessayer",
+            "sayHi": "Dis bonjour à {name}",
+            "sayHiHint": "Les messages restent privés entre vous deux.",
+            "you": "Toi",
+            "newMessages": "Nouveaux messages"
         }
     }
 }

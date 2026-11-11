@@ -10,6 +10,7 @@ import ImageContextProvider from "../contexts/ImageContextProvider";
 import ThemedStatusBar from "../components/ThemedStatusBar";
 import FeedbackContextProvider from "../contexts/FeedbackContextProvider";
 import SessionGuard from "../components/SessionGuard";
+import SafeTop from "../components/SafeTop";
 
 type Props = {};
 
@@ -30,6 +31,7 @@ const LoginStackNavigation = (props: Props) => {
           <FeedbackContextProvider>
           <ThemedStatusBar />
           <SessionGuard />
+          <SafeTop>
           <Stack.Navigator
             id={undefined}
             initialRouteName="Splash"
@@ -47,6 +49,7 @@ const LoginStackNavigation = (props: Props) => {
               component={MainTabNavigation}
             />
           </Stack.Navigator>
+          </SafeTop>
           </FeedbackContextProvider>
         </ImageContextProvider>
       </TokenContextProvider>

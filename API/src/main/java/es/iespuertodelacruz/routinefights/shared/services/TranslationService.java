@@ -60,6 +60,14 @@ public class TranslationService {
             return null;
         }
         Map<String, String> langMap = translations.get(targetLanguage);
+        if (langMap == null && targetLanguage != null) {
+            // "es-MX" or the app's "en-EN": any file of the same language will do.
+            String prefix = targetLanguage.split("[-_]")[0].toLowerCase();
+            langMap = translations.entrySet().stream()
+                    .filter(e -> e.getKey().toLowerCase().startsWith(prefix))
+                    .map(Map.Entry::getValue)
+                    .findFirst().orElse(null);
+        }
         if (langMap == null) {
             langMap = translations.getOrDefault("en-US", translations.values().stream().findFirst().orElse(null));
         }

@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import es.iespuertodelacruz.routinefights.notification.domain.ports.primary.INotificationService;
 import es.iespuertodelacruz.routinefights.shared.services.MailService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
@@ -39,6 +40,18 @@ public class UserControllerV2 {
     private UserOutputV2Mapper userOutputMapper;
     private FollowerMapper followerMapper;
     private MailService mailService;
+    private INotificationService notificationService;
+
+    @Autowired
+    public void setNotificationService(INotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
+
+    private void notifyQuietly(Runnable action) {
+        if (notificationService != null) {
+            action.run();
+        }
+    }
 
     public MailService getMailService() {
         return this.mailService;
@@ -140,7 +153,11 @@ public class UserControllerV2 {
     public boolean followUser(@Argument String followingEmail) {
         String followerEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            return userService.followUser(followerEmail, followingEmail);
+            boolean followed = userService.followUser(followerEmail, followingEmail);
+            if (followed) {
+                notifyQuietly(() -> notificationService.userFollowed(followerEmail, followingEmail));
+            }
+            return followed;
         } catch (Exception e) {
             logger.log(Level.WARNING, "(followUser) Error following user: {0}", e.getMessage());
             throw new UserUpdateException("Error following user");
@@ -152,7 +169,9 @@ public class UserControllerV2 {
     public boolean unfollowUser(@Argument String followingEmail) {
         String followerEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            return userService.unfollowUser(followerEmail, followingEmail);
+            boolean unfollowed = userService.unfollowUser(followerEmail, followingEmail);
+            notifyQuietly(() -> notificationService.userUnfollowed(followerEmail, followingEmail));
+            return unfollowed;
         } catch (Exception e) {
             logger.log(Level.WARNING, "(unfollowUser) Error unfollowing user: {0}", e.getMessage());
             throw new UserUpdateException("Error unfollowing user");
@@ -271,7 +290,11 @@ public class UserControllerV2 {
         try {
             User user = userService
                     .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
-            return userService.likePost(user.getId(), postID);
+            Boolean liked = userService.likePost(user.getId(), postID);
+            if (Boolean.TRUE.equals(liked)) {
+                notifyQuietly(() -> notificationService.postLiked(user.getEmail(), postID));
+            }
+            return liked;
         } catch (Exception e) {
             logger.log(Level.WARNING, "(likePost) Error liking post: {0}", e.getMessage());
             throw new UserUpdateException("Error liking post");
@@ -284,7 +307,9 @@ public class UserControllerV2 {
         try {
             User user = userService
                     .findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
-            return userService.unLikePost(user.getId(), postID);
+            boolean unliked = userService.unLikePost(user.getId(), postID);
+            notifyQuietly(() -> notificationService.postUnliked(user.getEmail(), postID));
+            return unliked;
         } catch (Exception e) {
             logger.log(Level.WARNING, "(unLikePost) Error unliking post: {0}", e.getMessage());
             throw new UserUpdateException("Error unliking post");

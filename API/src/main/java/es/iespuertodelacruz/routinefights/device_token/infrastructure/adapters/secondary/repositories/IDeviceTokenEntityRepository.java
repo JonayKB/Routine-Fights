@@ -1,5 +1,7 @@
 package es.iespuertodelacruz.routinefights.device_token.infrastructure.adapters.secondary.repositories;
 
+import java.util.List;
+
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,4 +29,14 @@ public interface IDeviceTokenEntityRepository extends Neo4jRepository<DeviceToke
             """)
     String saveForUser(@Param("email") String email, @Param("token") String token,
             @Param("language") String language);
+
+    /** Only the device nodes are returned, so the owner is not mapped back. */
+    @Query("""
+            MATCH (:User {email: $email})-[:Has_Device]->(d:DeviceToken)
+            RETURN d
+            """)
+    List<DeviceTokenEntity> findTokensByEmail(@Param("email") String email);
+
+    @Query("MATCH (d:DeviceToken {token: $token}) DETACH DELETE d")
+    void deleteToken(@Param("token") String token);
 }

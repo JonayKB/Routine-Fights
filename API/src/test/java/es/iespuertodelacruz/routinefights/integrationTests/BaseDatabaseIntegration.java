@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
+// Each test class starts its own embedded Neo4j: never reuse a context bound to
+// the (already closed) database of another class.
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class BaseDatabaseIntegration {
 
     private static final String ROLE = "ROLE_USER";

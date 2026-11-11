@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseCore
 import React
 import React_RCTAppDelegate
 
@@ -6,6 +7,12 @@ import React_RCTAppDelegate
 class AppDelegate: RCTAppDelegate {
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     self.moduleName = "RoutineFights"
+
+    // Push notifications. Without GoogleService-Info.plist (it isn't in the
+    // repository) the app runs without them instead of crashing at launch.
+    if Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") != nil {
+      FirebaseApp.configure()
+    }
 
     // You can add your custom initial props in the dictionary below.
     // They will be passed down to the ViewController used by React Native.

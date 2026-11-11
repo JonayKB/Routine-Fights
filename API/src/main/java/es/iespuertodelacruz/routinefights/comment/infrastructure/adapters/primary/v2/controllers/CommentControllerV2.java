@@ -2,6 +2,7 @@ package es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.prima
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -14,6 +15,7 @@ import es.iespuertodelacruz.routinefights.comment.domain.ports.primary.ICommentS
 import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.primary.v2.dtos.CommentInputV2;
 import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.primary.v2.dtos.CommentOutputV2;
 import es.iespuertodelacruz.routinefights.comment.infrastructure.adapters.primary.v2.mapper.CommentOutputV2Mapper;
+import es.iespuertodelacruz.routinefights.notification.domain.ports.primary.INotificationService;
 import es.iespuertodelacruz.routinefights.user.domain.User;
 import es.iespuertodelacruz.routinefights.user.domain.ports.primary.IUserService;
 
@@ -24,6 +26,12 @@ public class CommentControllerV2 {
     private ICommentService commentService;
     private CommentOutputV2Mapper commentOutputV2Mapper;
     private IUserService userService;
+    private INotificationService notificationService;
+
+    @Autowired
+    public void setNotificationService(INotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
     public CommentControllerV2(ICommentService commentService,
             CommentOutputV2Mapper commentOutputV2Mapper, IUserService userService) {
@@ -36,8 +44,12 @@ public class CommentControllerV2 {
     @MutationMapping("postComment")
     public CommentOutputV2 postComment(@Argument("commentInput") CommentInputV2 commentInput) {
         User user = userService.findByEmailOnlyBase(SecurityContextHolder.getContext().getAuthentication().getName());
-        return commentOutputV2Mapper.toDTO(commentService.save(commentInput.message(), user,
+        CommentOutputV2 saved = commentOutputV2Mapper.toDTO(commentService.save(commentInput.message(), user,
                 commentInput.postID(), commentInput.replingID()));
+        if (notificationService != null) {
+            notificationService.postCommented(user.getEmail(), commentInput.postID(), commentInput.message());
+        }
+        return saved;
     }
 
     @Secured({ "ROLE_USER","ROLE_ADMIN" })

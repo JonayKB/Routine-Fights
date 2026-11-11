@@ -1,0 +1,4 @@
+<resources>
+    <string name="notification_channel_name">Activité</string>
+    <string name="notification_channel_description">J\'aime, commentaires, nouveaux abonnés, messages et rappels de série</string>
+</resources>

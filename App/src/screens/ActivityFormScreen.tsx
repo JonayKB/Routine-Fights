@@ -53,7 +53,7 @@ const ActivityFormScreen = (props: Props) => {
     setFormError(null);
     try {
       const imageName = await uploadImage(picked);
-      await createActivity(
+      const created = await createActivity(
         activity.name.trim(),
         activity.description.trim(),
         timeRate,
@@ -62,7 +62,8 @@ const ActivityFormScreen = (props: Props) => {
       );
       toast.success(t.ActivityForm.success);
       clear();
-      props.navigation.goBack();
+      // The API already signed the creator up: show the new activity as one of theirs.
+      props.navigation.replace("ActivityDetails", { activity: created, suscribed: true });
     } catch (error) {
       setFormError(errorMessage(error));
     } finally {

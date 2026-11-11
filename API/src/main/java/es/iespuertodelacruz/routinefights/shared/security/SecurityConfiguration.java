@@ -37,7 +37,7 @@ public class SecurityConfiguration {
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/h2-console/**").permitAll()
-						.requestMatchers("/graphiql/**","/graphql/schema", "/graphql").permitAll()
+						.requestMatchers("/graphiql/**","/graphql/schema", "/graphql", "/graphql-ws").permitAll()
 						.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 						.requestMatchers("/auth/**").permitAll()
 						.anyRequest().authenticated())

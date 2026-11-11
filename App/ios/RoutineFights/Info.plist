@@ -59,5 +59,9 @@
 			<string>Lexend-SemiBold.ttf</string>
 			<string>Ionicons.ttf</string>
 		</array>
-	</dict>
+		<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+</dict>
 </plist>
