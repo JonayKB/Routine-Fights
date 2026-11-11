@@ -1,10 +1,7 @@
 package es.iespuertodelacruz.routinefights.device_token.infrastructure.adapters.secondary.services;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.stereotype.Service;
 
 import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
@@ -17,13 +14,11 @@ import es.iespuertodelacruz.routinefights.device_token.infrastructure.adapters.s
 public class DeviceTokenEntityService implements IDeviceTokenRepository {
     private IDeviceTokenEntityRepository deviceTokenEntityRepository;
     private IDeviceTokenEntityMapper deviceTokenEntityMapper;
-    private Neo4jClient neo4jClient;
 
     public DeviceTokenEntityService(IDeviceTokenEntityRepository deviceTokenEntityRepository,
-            IDeviceTokenEntityMapper deviceTokenEntityMapper, Neo4jClient neo4jClient) {
+            IDeviceTokenEntityMapper deviceTokenEntityMapper) {
         this.deviceTokenEntityRepository = deviceTokenEntityRepository;
         this.deviceTokenEntityMapper = deviceTokenEntityMapper;
-        this.neo4jClient = neo4jClient;
     }
 
     @Override
@@ -49,19 +44,6 @@ public class DeviceTokenEntityService implements IDeviceTokenRepository {
     @Override
     public void delete(String deviceToken) {
         deviceTokenEntityRepository.deleteToken(deviceToken);
-    }
-
-    @Override
-    public Map<String, Long> countByLanguage() {
-        Map<String, Long> counts = new LinkedHashMap<>();
-        neo4jClient.query("""
-                MATCH (d:DeviceToken)
-                RETURN coalesce(d.language, 'unknown') AS language, count(d) AS total
-                ORDER BY total DESC
-                """)
-                .fetch().all()
-                .forEach(row -> counts.put(String.valueOf(row.get("language")), ((Number) row.get("total")).longValue()));
-        return counts;
     }
 
 }
