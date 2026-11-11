@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.routinefights.device_token.domain.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -46,5 +47,10 @@ public class DeviceTokenService implements IDeviceTokenService {
         if (deviceToken != null && !deviceToken.isBlank()) {
             deviceTokenRepository.delete(deviceToken);
         }
+    }
+
+    @Override
+    public Map<String, Long> countByLanguage() {
+        return deviceTokenRepository.countByLanguage();
     }
 }

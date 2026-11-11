@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.routinefights.device_token.domain.ports.primary;
 
 import java.util.List;
+import java.util.Map;
 
 import es.iespuertodelacruz.routinefights.device_token.domain.DeviceToken;
 
@@ -12,4 +13,7 @@ public interface IDeviceTokenService {
 
     /** Forgets a device (logout, or a token FCM no longer accepts). */
     void delete(String deviceToken);
+
+    /** Registered devices per language ("es-ES" → 12). */
+    Map<String, Long> countByLanguage();
 }
