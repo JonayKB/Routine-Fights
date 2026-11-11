@@ -328,4 +328,34 @@ class NotificationsServiceTest {
         assertEquals("en", NotificationsService.languagePrefix(null));
         assertEquals("fr", NotificationsService.languagePrefix("FR_fr"));
     }
+
+    @Test
+    void broadcastsHandWrittenTextsPerLanguage() throws Exception {
+        when(translationService.getSupportedLanguages()).thenReturn(List.of("es-ES", "en-US", "fr-FR"));
+        FirebaseMessagingException failed = mock(FirebaseMessagingException.class);
+        when(fcm.send(any(Message.class))).thenReturn("id-1", "id-2").thenThrow(failed);
+
+        String result = notificationsService.broadcast(
+                Map.of("es", new NotificationsService.PushText("Hola", "")),
+                new NotificationsService.PushText("Hello", ""));
+
+        assertEquals("en=id-1; es=id-2", result);
+        assertEquals(List.of("en", "es", "fr"), notificationsService.supportedPrefixes());
+        assertNull(notificationsService.broadcast(Map.of(), null));
+    }
+
+    @Test
+    void pushesHandWrittenTextToDevices() throws Exception {
+        BatchResponse batch = mock(BatchResponse.class);
+        when(batch.getSuccessCount()).thenReturn(2);
+        when(fcm.sendEachForMulticast(any(MulticastMessage.class))).thenReturn(batch);
+        List<DeviceToken> tokens = Arrays.asList(new DeviceToken(TOKEN1, null, EN), new DeviceToken(TOKEN2, null, ES));
+
+        assertEquals(2, notificationsService.pushText(tokens, "Hi", "there"));
+        assertEquals(0, notificationsService.pushText(List.of(), "Hi", "there"));
+
+        FirebaseMessagingException failed = mock(FirebaseMessagingException.class);
+        when(fcm.sendEachForMulticast(any(MulticastMessage.class))).thenThrow(failed);
+        assertEquals(0, notificationsService.pushText(tokens, "Hi", "there"));
+    }
 }
