@@ -41,13 +41,15 @@ class AdminPushResolverTest {
 
     @Test
     void broadcastNeedsTextAndAWorkingFirebase() {
-        assertThrows(IllegalArgumentException.class, () -> resolver.broadcastNotification(List.of()));
+        List<PushTextInput> none = List.of();
+        List<PushTextInput> tooLong = List.of(new PushTextInput("es", "x".repeat(121), ""));
+        List<PushTextInput> valid = List.of(new PushTextInput(null, "Hi", ""));
+
+        assertThrows(IllegalArgumentException.class, () -> resolver.broadcastNotification(none));
         assertThrows(IllegalArgumentException.class, () -> resolver.broadcastNotification(null));
-        assertThrows(IllegalArgumentException.class,
-                () -> resolver.broadcastNotification(List.of(new PushTextInput("es", "x".repeat(121), ""))));
+        assertThrows(IllegalArgumentException.class, () -> resolver.broadcastNotification(tooLong));
         when(push.broadcast(anyMap(), any())).thenReturn(null);
-        assertThrows(IllegalArgumentException.class,
-                () -> resolver.broadcastNotification(List.of(new PushTextInput(null, "Hi", ""))));
+        assertThrows(IllegalArgumentException.class, () -> resolver.broadcastNotification(valid));
     }
 
     @Test
