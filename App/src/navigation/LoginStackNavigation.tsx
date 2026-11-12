@@ -5,7 +5,6 @@ import SplashScreen from "../screens/SplashScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import MainTabNavigation from "./MainTabNavigation";
 import TokenContextProvider from "../contexts/TokenContextProvider";
-import SettingsContextProvider from "../contexts/SettingsContextProvider";
 import ImageContextProvider from "../contexts/ImageContextProvider";
 import ThemedStatusBar from "../components/ThemedStatusBar";
 import FeedbackContextProvider from "../contexts/FeedbackContextProvider";
@@ -25,7 +24,6 @@ const LoginStackNavigation = (props: Props) => {
   const Stack = createNativeStackNavigator<LoginStackProps>();
 
   return (
-    <SettingsContextProvider>
       <TokenContextProvider>
         <ImageContextProvider>
           <FeedbackContextProvider>
@@ -53,7 +51,6 @@ const LoginStackNavigation = (props: Props) => {
           </FeedbackContextProvider>
         </ImageContextProvider>
       </TokenContextProvider>
-    </SettingsContextProvider>
   );
 };
 

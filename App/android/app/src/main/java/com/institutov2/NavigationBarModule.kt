@@ -1,6 +1,7 @@
 package com.routinefights
 
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
@@ -25,6 +26,19 @@ class NavigationBarModule(context: ReactApplicationContext) : ReactContextBaseJa
       }
       WindowInsetsControllerCompat(window, window.decorView)
           .isAppearanceLightNavigationBars = lightIcons
+    }
+  }
+
+  /**
+   * Colours the window behind every screen. Android picks it from the system
+   * theme, so with the app in dark mode and the phone in light mode screen
+   * transitions flashed white.
+   */
+  @ReactMethod
+  fun setWindowBackground(color: String) {
+    val activity = currentActivity ?: return
+    UiThreadUtil.runOnUiThread {
+      activity.window.setBackgroundDrawable(ColorDrawable(Color.parseColor(color)))
     }
   }
 }
