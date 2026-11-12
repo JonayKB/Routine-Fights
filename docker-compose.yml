@@ -31,7 +31,10 @@ services:
       - app_uploads:/$HOME/uploads
       - ${FIREBASE_CREDENTIALS_FILE:-./secrets/firebase-adminsdk.json}:/app/secrets/firebase-adminsdk.json:ro
   db:
-    image: neo4j:latest
+    # Pinned: `docker compose pull` on every deploy used to upgrade Neo4j on its
+    # own. A new version may migrate the data files, so upgrading must be a
+    # deliberate change here (and older versions may not open them again).
+    image: neo4j:2026.10.2
     volumes:
         - /$HOME/neo4j/logs:/logs
         - /$HOME/neo4j/config:/config
