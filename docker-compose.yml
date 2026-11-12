@@ -28,18 +28,21 @@ services:
     networks:
       - apiNetwork
     volumes:
-      - app_uploads:/$HOME/uploads
+      # The API stores photos in "uploads" under its working directory (/).
+      - app_uploads:/uploads
       - ${FIREBASE_CREDENTIALS_FILE:-./secrets/firebase-adminsdk.json}:/app/secrets/firebase-adminsdk.json:ro
   db:
     # Pinned: `docker compose pull` on every deploy used to upgrade Neo4j on its
     # own. A new version may migrate the data files, so upgrading must be a
     # deliberate change here (and older versions may not open them again).
     image: neo4j:2026.10.2
+    # Next to this file, not under $HOME: with sudo, $HOME is /root and Neo4j
+    # would open a different (empty or stale) database.
     volumes:
-        - /$HOME/neo4j/logs:/logs
-        - /$HOME/neo4j/config:/config
-        - /$HOME/neo4j/data:/data
-        - /$HOME/neo4j/plugins:/plugins
+        - ./neo4j/logs:/logs
+        - ./neo4j/config:/config
+        - ./neo4j/data:/data
+        - ./neo4j/plugins:/plugins
     environment:
         - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASSWORD}
     restart: always
