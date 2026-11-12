@@ -57,6 +57,8 @@ const ChatScreen = ({ navigation, route }: Props) => {
   const [loading, setLoading] = useState(true);
   const [loadingOlder, setLoadingOlder] = useState(false);
   const [text, setText] = useState("");
+  // Read on send: state would still hold the text on a quick second tap.
+  const textRef = useRef("");
   const [otherTyping, setOtherTyping] = useState(false);
   const allLoaded = useRef(false);
   const lastTypingSent = useRef(0);
@@ -190,8 +192,9 @@ const ChatScreen = ({ navigation, route }: Props) => {
   };
 
   const send = () => {
-    const body = text.trim();
+    const body = textRef.current.trim();
     if (!body) return;
+    textRef.current = "";
     const draft: ChatMessage = {
       id: `local-${Date.now()}`,
       conversationId: idRef.current ?? "",
@@ -214,6 +217,7 @@ const ChatScreen = ({ navigation, route }: Props) => {
   };
 
   const onChangeText = (value: string) => {
+    textRef.current = value;
     setText(value);
     const id = idRef.current;
     const now = Date.now();
