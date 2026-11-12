@@ -26,6 +26,7 @@ import {
 } from "../utils/Utils";
 import { errorMessage } from "../utils/graphql";
 import { useToast } from "../contexts/FeedbackContextProvider";
+import { haptics } from "../utils/haptics";
 
 type Props = NativeStackScreenProps<HomeStackProps, "Comments">;
 
@@ -68,10 +69,12 @@ const CommentsScreen = (props: Props) => {
     try {
       const response = await postComment(body, props.route.params.postID);
       if (response) {
+        haptics.success();
         setText("");
         setLoad(true);
       }
     } catch (error) {
+      haptics.error();
       toast.error(errorMessage(error));
     } finally {
       sendingRef.current = false;

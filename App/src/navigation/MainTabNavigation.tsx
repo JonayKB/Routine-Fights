@@ -18,6 +18,11 @@ import { iconColor } from "../utils/Utils";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import InboxContextProvider from "../contexts/InboxContextProvider";
 import { useAccounts } from "../contexts/AccountsContextProvider";
+import { PlatformPressable } from "@react-navigation/elements";
+import { haptics } from "../utils/haptics";
+
+/** The default 500 ms feels slow for opening the account switcher. */
+const SWITCHER_HOLD_MS = 250;
 
 type Props = {};
 
@@ -133,7 +138,10 @@ const MainTabNavigation = (props: Props) => {
         component={ProfileStackNavigation}
         listeners={({ navigation }) => ({
           // Long press on your picture switches account, like Instagram.
-          tabLongPress: () => openSwitcher(),
+          tabLongPress: () => {
+            haptics.press();
+            openSwitcher();
+          },
           tabPress: (e: any) => {
             // Coming from someone else's profile, the tab should open yours.
             e.preventDefault();
@@ -144,6 +152,9 @@ const MainTabNavigation = (props: Props) => {
           },
         })}
         options={{
+          tabBarButton: (buttonProps) => (
+            <PlatformPressable {...buttonProps} delayLongPress={SWITCHER_HOLD_MS} />
+          ),
           tabBarIcon: ({ focused }) => (
             <Avatar
               image={image}

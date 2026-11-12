@@ -1,5 +1,6 @@
 import { View, TouchableOpacity, Text } from "react-native";
 import { useToast } from "../contexts/FeedbackContextProvider";
+import { haptics } from "../utils/haptics";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -60,11 +61,13 @@ const ActivityFormScreen = (props: Props) => {
         String(times),
         imageName
       );
+      haptics.success();
       toast.success(t.ActivityForm.success);
       clear();
       // The API already signed the creator up: show the new activity as one of theirs.
       props.navigation.replace("ActivityDetails", { activity: created, suscribed: true });
     } catch (error) {
+      haptics.error();
       setFormError(errorMessage(error));
     } finally {
       setSending(false);
