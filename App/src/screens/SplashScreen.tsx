@@ -10,6 +10,7 @@ import { fonts, palette } from "../styles/theme";
 import { bgColor, resetNavigation, textColor } from "../utils/Utils";
 import { getOwnUserImageAndEmail } from "../repositories/UserRepository";
 import { SESSION_EXPIRED } from "../utils/graphql";
+import { useAccounts } from "../contexts/AccountsContextProvider";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Splash">;
 
@@ -17,6 +18,7 @@ type Props = NativeStackScreenProps<LoginStackProps, "Splash">;
 const SplashScreen = ({ navigation }: Props) => {
   const { darkmode, ready } = useSettingsContext();
   const { setToken } = useTokenContext();
+  const { remember } = useAccounts();
 
   useEffect(() => {
     if (!ready) return;
@@ -31,7 +33,8 @@ const SplashScreen = ({ navigation }: Props) => {
         // Check the saved session is still accepted before opening the feed.
         // Without a connection, open it anyway and let the feed show the error.
         try {
-          await getOwnUserImageAndEmail();
+          // Sessions from before multi-account are added to the list here.
+          await remember(await getOwnUserImageAndEmail());
         } catch (error: any) {
           // SessionGuard has already sent the user to the login screen.
           if (error?.message === SESSION_EXPIRED) return;

@@ -31,6 +31,7 @@ import {
   textColor,
 } from "../utils/Utils";
 import { openChat } from "../contexts/InboxContextProvider";
+import { useAccounts } from "../contexts/AccountsContextProvider";
 import Avatar from "../components/Avatar";
 import { fonts } from "../styles/theme";
 import ProfilePost from "../components/ProfilePost";
@@ -63,6 +64,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   const [selectedBadge, setSelectedBadge] = useState<Badge>(null);
   const { language, darkmode } = useSettingsContext();
   const { email } = useTokenContext();
+  const { openSwitcher } = useAccounts();
   const [posts, setPosts] = useState<PostDomain[]>([]);
   const lastDate = useRef<string>(new Date().toISOString().slice(0, 19));
   const { uri } = useImageContext();
@@ -242,13 +244,29 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           </TouchableOpacity>
           <View className="flex-1 ml-5">
             <View className="flex-row items-center pr-8">
-              <Text
-                numberOfLines={1}
-                style={{ fontFamily: fonts.display, flexShrink: 1 }}
-                className={`text-2xl ${textColor(darkmode)}`}
+              <TouchableOpacity
+                // On your own profile the name opens the account switcher.
+                disabled={!!route.params?.email}
+                onPress={openSwitcher}
+                activeOpacity={0.6}
+                accessibilityRole={route.params?.email ? undefined : "button"}
+                accessibilityLabel={
+                  route.params?.email ? undefined : translations[language || "en-EN"].screens.Accounts.switch
+                }
+                style={{ flexShrink: 1 }}
+                className="flex-row items-center"
               >
-                {user?.username}
-              </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{ fontFamily: fonts.display, flexShrink: 1 }}
+                  className={`text-2xl ${textColor(darkmode)}`}
+                >
+                  {user?.username}
+                </Text>
+                {!route.params?.email && (
+                  <Icon name="chevron-down" size={18} color={iconColor(darkmode)} style={{ marginLeft: 4 }} />
+                )}
+              </TouchableOpacity>
               {bestStreak > 0 && (
                 <View className="flex-row items-center ml-2">
                   <StreakFlame streak={bestStreak} size={16} glow={false} />
@@ -282,16 +300,25 @@ const ProfileScreen = ({ navigation, route }: Props) => {
                   : "bg-[#C2410C]"
               }`}
               onPress={handleFollow}
+              accessibilityRole="button"
+              accessibilityState={{ selected: !!user.isFollowing }}
             >
-              <Text
-                className={`text-sm font-semibold ${
-                  user.isFollowing ? textColor(darkmode) : "text-white"
-                }`}
-              >
-                {user.isFollowing
-                  ? translations[language || "en-EN"].screens.Profile.unfollow
-                  : translations[language || "en-EN"].screens.Profile.follow}
-              </Text>
+              <View className="flex-row items-center">
+                <Icon
+                  name={user.isFollowing ? "checkmark" : "person-add"}
+                  size={16}
+                  color={user.isFollowing ? iconColor(darkmode) : "#FFFFFF"}
+                />
+                <Text
+                  className={`ml-1.5 text-sm font-semibold ${
+                    user.isFollowing ? textColor(darkmode) : "text-white"
+                  }`}
+                >
+                  {user.isFollowing
+                    ? translations[language || "en-EN"].screens.Profile.followingButton
+                    : translations[language || "en-EN"].screens.Profile.followButton}
+                </Text>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.85}

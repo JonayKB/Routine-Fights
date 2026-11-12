@@ -75,7 +75,9 @@
             "follow": "suivre",
             "unfollow": "ne plus suivre",
             "noPosts": "Pas encore de publications",
-            "noPostsHint": "Les publications partagées apparaîtront ici"
+            "noPostsHint": "Les publications partagées apparaîtront ici",
+            "followButton": "Suivre",
+            "followingButton": "Abonné"
         },
         "ProfileForm": {
             "email": "Email",
@@ -296,6 +298,12 @@
             "sayHiHint": "Les messages restent privés entre vous deux.",
             "you": "Toi",
             "newMessages": "Nouveaux messages"
+        },
+        "Accounts": {
+            "title": "Comptes",
+            "switch": "Changer de compte",
+            "add": "Ajouter un compte",
+            "switchedTo": "Tu utilises maintenant {name}"
         }
     }
 }
