@@ -19,17 +19,21 @@ import { useTokenContext } from "../contexts/TokenContextProvider";
 import FormInput from "../components/FormInput";
 import { errorMessage } from "../utils/graphql";
 import { sessionStarted } from "../utils/session";
+import { useAccounts } from "../contexts/AccountsContextProvider";
+import { getOwnUserImageAndEmail } from "../repositories/UserRepository";
 
 type Props = NativeStackScreenProps<LoginStackProps, "Login">;
 
-const LoginScreen = ({ navigation }: Props) => {
+const LoginScreen = ({ navigation, route }: Props) => {
+  const adding = !!route.params?.adding;
+  const { remember } = useAccounts();
   const toast = useToast();
   const [errors, setErrors] = useState<{ email?: string | null; password?: string | null }>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [sending, setSending] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { setToken } = useTokenContext();
+  const { setToken, setEmail: setSessionEmail } = useTokenContext();
   const { language, darkmode } = useSettingsContext();
 
   const log = async () => {
@@ -46,6 +50,9 @@ const LoginScreen = ({ navigation }: Props) => {
       const token = await login(email.trim(), password);
       sessionStarted();
       setToken(token);
+      const me = await getOwnUserImageAndEmail().catch(() => null);
+      await remember(me ?? { email: email.trim() });
+      setSessionEmail(me?.email ?? email.trim());
       resetNavigation(navigation, "MainTabNavigation");
     } catch (error) {
       setFormError(errorMessage(error));
@@ -56,6 +63,17 @@ const LoginScreen = ({ navigation }: Props) => {
 
   return (
     <View className={`flex-1 justify-center px-6 ${bgColor(darkmode)}`}>
+      {adding && navigation.canGoBack() && (
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel={translations[language || "en-EN"].screens.Common.back}
+          className="absolute top-4 left-4 w-10 h-10 items-center justify-center"
+        >
+          <Icon name="arrow-back" size={22} color={darkmode ? "#EFE9DE" : "#1F1B16"} />
+        </TouchableOpacity>
+      )}
       <View className="items-center mb-10">
         <StreakFlame streak={3} size={56} animated />
         <Text
@@ -107,7 +125,7 @@ const LoginScreen = ({ navigation }: Props) => {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => resetNavigation(navigation, "Register")}
+        onPress={() => (adding ? navigation.navigate("Register") : resetNavigation(navigation, "Register"))}
         activeOpacity={0.6}
         className="h-12 mt-2 items-center justify-center"
       >

@@ -9,13 +9,15 @@ import ImageContextProvider from "../contexts/ImageContextProvider";
 import ThemedStatusBar from "../components/ThemedStatusBar";
 import FeedbackContextProvider from "../contexts/FeedbackContextProvider";
 import SessionGuard from "../components/SessionGuard";
+import AccountsContextProvider from "../contexts/AccountsContextProvider";
 import SafeTop from "../components/SafeTop";
 
 type Props = {};
 
 export type LoginStackProps = {
   Splash: undefined;
-  Login: undefined;
+  /** `adding`: signing in one more account while another stays active. */
+  Login: { adding?: boolean } | undefined;
   Register: undefined;
   MainTabNavigation: undefined;
 };
@@ -27,6 +29,7 @@ const LoginStackNavigation = (props: Props) => {
       <TokenContextProvider>
         <ImageContextProvider>
           <FeedbackContextProvider>
+          <AccountsContextProvider>
           <ThemedStatusBar />
           <SessionGuard />
           <SafeTop>
@@ -48,6 +51,7 @@ const LoginStackNavigation = (props: Props) => {
             />
           </Stack.Navigator>
           </SafeTop>
+          </AccountsContextProvider>
           </FeedbackContextProvider>
         </ImageContextProvider>
       </TokenContextProvider>

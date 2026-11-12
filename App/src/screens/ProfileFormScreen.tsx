@@ -19,14 +19,13 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { translations } from "../../translations/translation";
 import { UserIn, UserOut } from "../utils/User";
 import { getOwnUser, updateUser } from "../repositories/UserRepository";
-import { logout } from "../repositories/SettingsRepository";
+import { useAccounts } from "../contexts/AccountsContextProvider";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ProfileStackProps } from "../navigation/ProfileStackNavigation";
 import {
   bgColor,
   borderColor,
   mutedTextColor,
-  resetNavigation,
   secondaryTextColor,
 } from "../utils/Utils";
 import { colors, palette } from "../styles/theme";
@@ -54,6 +53,7 @@ type Field = "username" | "email" | "nationality" | "phone" | "password" | "conf
 
 const ProfileFormScreen = ({ navigation }: Props) => {
   const toast = useToast();
+  const { signOut } = useAccounts();
   const { language, darkmode } = useSettingsContext();
   const t = translations[language || "en-EN"].screens;
   const c = colors(darkmode);
@@ -142,9 +142,8 @@ const ProfileFormScreen = ({ navigation }: Props) => {
       );
       if (emailChanged) {
         // The session belongs to the old address and the new one must be verified first.
-        await logout();
         toast.info(t.ProfileForm.emailChanged);
-        resetNavigation(navigation, "Login");
+        await signOut();
         return;
       }
       toast.success(t.ProfileForm.updated);

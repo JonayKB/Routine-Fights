@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import React, { useState } from "react";
-import { logout } from "../repositories/SettingsRepository";
+import { useAccounts } from "../contexts/AccountsContextProvider";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import {
   bgColor,
@@ -10,7 +10,6 @@ import {
   iconColor,
   LANGUAGES,
   nativeLanguageName,
-  resetNavigation,
   textColor,
 } from "../utils/Utils";
 import { colors, palette } from "../styles/theme";
@@ -34,6 +33,7 @@ const THEME_OPTIONS: { mode: ThemeMode; icon: string }[] = [
 
 const SettingsScreen = ({ navigation }: Props) => {
   const toast = useToast();
+  const { signOut, openSwitcher } = useAccounts();
   const {
     language,
     languageMode,
@@ -74,8 +74,7 @@ const SettingsScreen = ({ navigation }: Props) => {
 
   const closeSession = async () => {
     try {
-      await logout();
-      resetNavigation(navigation, "Login");
+      await signOut();
     } catch (error) {
       toast.error(errorMessage(error));
     }
@@ -214,6 +213,12 @@ const SettingsScreen = ({ navigation }: Props) => {
           darkmode
         )} ${borderColor(darkmode)}`}
       >
+        <Row
+          icon="people-outline"
+          label={translations[language || "en-EN"].screens.Accounts.switch}
+          onPress={openSwitcher}
+          right={<Icon name="chevron-forward" size={18} color={c.textMuted} />}
+        />
         <Row icon="log-out-outline" label={t.logout} onPress={closeSession} danger last />
       </View>
 

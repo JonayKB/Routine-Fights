@@ -17,6 +17,7 @@ import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { iconColor } from "../utils/Utils";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import InboxContextProvider from "../contexts/InboxContextProvider";
+import { useAccounts } from "../contexts/AccountsContextProvider";
 
 type Props = {};
 
@@ -32,6 +33,7 @@ const MainTabNavigation = (props: Props) => {
   const Tab = createBottomTabNavigator<MainTabProps>();
   const [image, setImage] = useState<string>(null);
   const { setEmail } = useTokenContext();
+  const { openSwitcher, remember } = useAccounts();
   const { uri } = useImageContext();
   const { darkmode } = useSettingsContext();
   const baseBg = darkmode ? "#1C1A18" : "#FFFFFF";
@@ -52,6 +54,8 @@ const MainTabNavigation = (props: Props) => {
       setImage(user.image);
       setUsername(user.username ?? user.email);
       setEmail(user.email);
+      // Keeps the account switcher's name and picture up to date.
+      remember(user);
     };
     fetchImageAndEmail();
   }, [uri]);
@@ -128,6 +132,8 @@ const MainTabNavigation = (props: Props) => {
         name="ProfileStackNavigation"
         component={ProfileStackNavigation}
         listeners={({ navigation }) => ({
+          // Long press on your picture switches account, like Instagram.
+          tabLongPress: () => openSwitcher(),
           tabPress: (e: any) => {
             // Coming from someone else's profile, the tab should open yours.
             e.preventDefault();

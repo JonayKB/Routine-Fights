@@ -75,7 +75,9 @@
             "follow": "follow",
             "unfollow": "unfollow",
             "noPosts": "No posts yet",
-            "noPostsHint": "Shared posts will appear here"
+            "noPostsHint": "Shared posts will appear here",
+            "followButton": "Follow",
+            "followingButton": "Following"
         },
         "ProfileForm": {
             "email": "Email",
@@ -296,6 +298,12 @@
             "sayHiHint": "Messages are private between the two of you.",
             "you": "You",
             "newMessages": "New messages"
+        },
+        "Accounts": {
+            "title": "Accounts",
+            "switch": "Switch account",
+            "add": "Add account",
+            "switchedTo": "You're now using {name}"
         }
     }
 }

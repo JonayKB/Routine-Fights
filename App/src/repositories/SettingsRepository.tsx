@@ -1,10 +1,14 @@
-import RNSecureKeyStore from 'react-native-secure-key-store';
 import { tearDownPush } from '../utils/push';
 import { realtime } from '../utils/realtime';
+import { Account, forgetCurrent } from '../utils/accounts';
 
-export const logout = async () => {
+/**
+ * Signs the active account out of this phone.
+ * @returns the other accounts still signed in, to switch to one of them
+ */
+export const logout = async (): Promise<Account[]> => {
     realtime.stop();
     // Before forgetting the session, so this phone stops getting its pushes.
     await tearDownPush();
-    await RNSecureKeyStore.remove("token");
+    return forgetCurrent();
 }

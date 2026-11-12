@@ -7,12 +7,18 @@ export const uri: string =
 export const neo4jUri: string = uri + "/graphql";
 export const limit: number = 10;
 
+/**
+ * Leaves `path` as the only screen of the navigator that has it (the root
+ * stack for Login or MainTabNavigation). It used to navigate first, which
+ * showed the screen twice, and to reset the current screen's own navigator,
+ * which left the previous session mounted underneath.
+ */
 export const resetNavigation = (navigation: any, path: string) => {
-  navigation.navigate(path);
-  navigation.reset({
-    index: 0,
-    routes: [{ name: path }],
-  });
+  let target = navigation;
+  while (target && !target.getState?.()?.routeNames?.includes(path)) {
+    target = target.getParent?.();
+  }
+  (target ?? navigation).reset({ index: 0, routes: [{ name: path }] });
 };
 
 export const convertQuantityToString = (quantity: number): string => {

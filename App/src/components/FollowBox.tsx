@@ -1,9 +1,11 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
+import Icon from "react-native-vector-icons/Ionicons";
 import Avatar from "./Avatar";
 import { translations } from "../../translations/translation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import {
+  iconColor,
   borderColor,
   convertQuantityToString,
   mutedTextColor,
@@ -70,19 +72,26 @@ const FollowBox = (props: Props) => {
       {follower.email !== email && (
         <TouchableOpacity
           activeOpacity={0.8}
-          className={`h-9 px-4 ml-3 rounded-lg items-center justify-center ${
+          accessibilityRole="button"
+          accessibilityState={{ selected: !!follower.isFollowing }}
+          className={`flex-row h-9 px-3 ml-3 rounded-lg items-center justify-center ${
             follower.isFollowing
               ? `border ${borderColor(darkmode)} ${raisedBgColor(darkmode)}`
               : "bg-[#C2410C]"
           }`}
           onPress={handleFollow}
         >
+          <Icon
+            name={follower.isFollowing ? "checkmark" : "person-add"}
+            size={15}
+            color={follower.isFollowing ? iconColor(darkmode) : "#FFFFFF"}
+          />
           <Text
-            className={`text-sm font-medium ${
+            className={`ml-1.5 text-sm font-medium ${
               follower.isFollowing ? textColor(darkmode) : "text-white"
             }`}
           >
-            {follower.isFollowing ? t.unfollow : t.follow}
+            {follower.isFollowing ? t.followingButton : t.followButton}
           </Text>
         </TouchableOpacity>
       )}
