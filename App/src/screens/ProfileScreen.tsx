@@ -50,6 +50,7 @@ import { getBadgesByEmail } from "../repositories/BadgeRepository";
 import BadgeInfo from "../components/BadgeInfo";
 import { errorMessage } from "../utils/graphql";
 import { useToast } from "../contexts/FeedbackContextProvider";
+import { haptics } from "../utils/haptics";
 
 type Props = NativeStackScreenProps<ProfileStackProps, "Profile">;
 
@@ -175,6 +176,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
   };
 
   const handleFollow = async () => {
+    haptics.tap();
     try {
       if (user.isFollowing) {
         await unfollowUser(user.email);
@@ -192,6 +194,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
         : user.followers + 1;
       setFollowers(convertQuantityToString(updatedFollowers));
     } catch (error) {
+      haptics.error();
       toast.error(errorMessage(error));
     }
   };

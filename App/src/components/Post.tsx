@@ -6,7 +6,6 @@ import {
   Pressable,
   Animated,
   Easing,
-  Vibration,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Post as PostDomain } from "../utils/Post";
@@ -25,6 +24,9 @@ import {
   textColor,
 } from "../utils/Utils";
 import { fonts, palette } from "../styles/theme";
+import { haptics } from "../utils/haptics";
+import { useToast } from "../contexts/FeedbackContextProvider";
+import { errorMessage } from "../utils/graphql";
 
 type Props = {
   post: PostDomain;
@@ -42,8 +44,17 @@ const Post = (props: Props) => {
     setPost({ ...props.post });
   }, [props.post]);
 
+  const toast = useToast();
   const lastTap = useRef(0);
   const burst = useRef(new Animated.Value(0)).current;
+  const heartScale = useRef(new Animated.Value(1)).current;
+  // Blocks a second like request while the first one is still on its way.
+  const liking = useRef(false);
+
+  const popHeart = () => {
+    heartScale.setValue(0.7);
+    Animated.spring(heartScale, { toValue: 1, friction: 3, tension: 180, useNativeDriver: true }).start();
+  };
 
   const showBurst = () => {
     burst.setValue(0);
@@ -61,27 +72,36 @@ const Post = (props: Props) => {
     if (now - lastTap.current < 280) {
       lastTap.current = 0;
       showBurst();
-      Vibration.vibrate(10);
-      if (!post.isLiked) handleLike();
+      if (post.isLiked) haptics.tap();
+      else handleLike();
     } else {
       lastTap.current = now;
     }
   };
 
+  // Optimistic: the heart changes at once and goes back if the request fails.
   const handleLike = async () => {
+    if (liking.current || !post.id) return;
+    liking.current = true;
+    const wasLiked = !!post.isLiked;
+    const toggle = (liked: boolean) => (p: PostDomain) => ({
+      ...p,
+      isLiked: liked,
+      likes: Math.max(0, (p.likes ?? 0) + (liked ? 1 : -1)),
+    });
+
+    haptics.tap();
+    if (!wasLiked) popHeart();
+    setPost(toggle(!wasLiked));
     try {
-      if (post.isLiked) {
-        await unLikePost(post.id);
-      } else {
-        await likePost(post.id);
-      }
-      setPost({
-        ...post,
-        likes: post.isLiked ? post.likes - 1 : post.likes + 1,
-        isLiked: !post.isLiked,
-      });
+      if (wasLiked) await unLikePost(post.id);
+      else await likePost(post.id);
     } catch (error) {
-      console.error("Error liking post:", error);
+      setPost(toggle(wasLiked));
+      haptics.error();
+      toast.error(errorMessage(error));
+    } finally {
+      liking.current = false;
     }
   };
 
@@ -177,11 +197,13 @@ const Post = (props: Props) => {
           activeOpacity={0.6}
           className="flex-row items-center px-2 py-2"
         >
-          <Icon
-            name={post.isLiked ? "heart" : "heart-outline"}
-            size={22}
-            color={post.isLiked ? palette.like : iconColor(darkmode)}
-          />
+          <Animated.View style={{ transform: [{ scale: heartScale }] }}>
+            <Icon
+              name={post.isLiked ? "heart" : "heart-outline"}
+              size={22}
+              color={post.isLiked ? palette.like : iconColor(darkmode)}
+            />
+          </Animated.View>
           <Text className={`ml-1.5 text-sm ${secondaryTextColor(darkmode)}`}>
             {post.likes ?? 0}
           </Text>

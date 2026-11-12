@@ -14,6 +14,7 @@ import {
 } from "../utils/Utils";
 import { Followers } from "../utils/User";
 import { followUser, unfollowUser } from "../repositories/UserRepository";
+import { haptics } from "../utils/haptics";
 import { useTokenContext } from "../contexts/TokenContextProvider";
 
 type Props = {
@@ -31,6 +32,7 @@ const FollowBox = (props: Props) => {
   }, [props.item]);
 
   const handleFollow = async () => {
+    haptics.tap();
     try {
       if (follower.isFollowing) {
         await unfollowUser(follower.email);
@@ -47,6 +49,7 @@ const FollowBox = (props: Props) => {
         followers: updatedFollowers,
       });
     } catch (error) {
+      haptics.error();
       console.error("Error following/unfollowing user:", error);
     }
   };

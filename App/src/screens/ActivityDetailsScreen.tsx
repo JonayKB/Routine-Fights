@@ -19,6 +19,7 @@ import ProfileNavigation from "../components/ProfileNavigation";
 import StreakCalendar from "../components/StreakCalendar";
 import { errorMessage } from "../utils/graphql";
 import { useToast } from "../contexts/FeedbackContextProvider";
+import { haptics } from "../utils/haptics";
 
 type Props = NativeStackScreenProps<ActivitiesStackProps, "ActivityDetails">;
 
@@ -34,8 +35,10 @@ const ActivityDetailsScreen = ({ navigation, route }: Props) => {
   const suscribe = async () => {
     try {
       await subscribeActivity(activity.id);
+      haptics.success();
       resetNavigation(navigation, "Streaks");
     } catch (error) {
+      haptics.error();
       toast.error(errorMessage(error));
     }
   }

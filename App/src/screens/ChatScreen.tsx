@@ -18,6 +18,7 @@ import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
 import { useInbox } from "../contexts/InboxContextProvider";
 import { useToast } from "../contexts/FeedbackContextProvider";
+import { haptics } from "../utils/haptics";
 import {
   getConversation,
   getConversationWith,
@@ -187,6 +188,7 @@ const ChatScreen = ({ navigation, route }: Props) => {
       });
     } catch (error) {
       setMessages((prev) => prev.map((m) => (m.id === draft.id ? { ...m, pending: false, failed: true } : m)));
+      haptics.error();
       toast.error(errorMessage(error));
     }
   };
@@ -194,6 +196,7 @@ const ChatScreen = ({ navigation, route }: Props) => {
   const send = () => {
     const body = textRef.current.trim();
     if (!body) return;
+    haptics.tap();
     textRef.current = "";
     const draft: ChatMessage = {
       id: `local-${Date.now()}`,

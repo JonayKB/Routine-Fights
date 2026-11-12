@@ -1,5 +1,6 @@
 import { View, TouchableOpacity, Text } from "react-native";
 import { useToast } from "../contexts/FeedbackContextProvider";
+import { haptics } from "../utils/haptics";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -92,9 +93,12 @@ const UploadFormScreen = (props: Props) => {
       if (climbed) {
         setLevelUp({ streak: after, timeRate: selected.timeRate });
       } else {
+        // The level-up modal has its own vibration.
+        haptics.success();
         toast.success(t.UploadForm.posted);
       }
     } catch (error) {
+      haptics.error();
       setFormError(errorMessage(error));
     } finally {
       setSending(false);
