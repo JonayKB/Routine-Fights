@@ -41,3 +41,23 @@ export const fonts = {
   displayMedium: "Lexend-Medium",
   displayRegular: "Lexend-Regular",
 };
+
+/**
+ * React Navigation theme in the app's colours. Its background is what shows
+ * between screens while they animate.
+ */
+export const navigationTheme = <T extends { dark: boolean; colors: Record<string, string> }>(
+  base: T,
+  darkmode: boolean
+): T => ({
+  ...base,
+  dark: darkmode,
+  colors: {
+    ...base.colors,
+    primary: darkmode ? palette.accentOnDark : palette.accent,
+    background: colors(darkmode).page,
+    card: colors(darkmode).card,
+    text: colors(darkmode).text,
+    border: colors(darkmode).hairline,
+  },
+});

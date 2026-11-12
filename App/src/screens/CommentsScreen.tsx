@@ -1,11 +1,12 @@
 import {
+  ActivityIndicator,
   View,
   FlatList,
   RefreshControl,
   TextInput,
   TouchableOpacity,
   } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackProps } from "../navigation/HomeStackNavigation";
 import { useSettingsContext } from "../contexts/SettingsContextProvider";
@@ -34,6 +35,9 @@ const CommentsScreen = (props: Props) => {
   const toast = useToast();
   const [load, setLoad] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
+  const [sending, setSending] = useState<boolean>(false);
+  // State updates too late to stop a quick second tap; a ref doesn't.
+  const sendingRef = useRef(false);
 
   useEffect(() => {
     fetchComments();
@@ -57,16 +61,25 @@ const CommentsScreen = (props: Props) => {
   };
 
   const sendMessage = async () => {
+    const body = text.trim();
+    if (!body || sendingRef.current) return;
+    sendingRef.current = true;
+    setSending(true);
     try {
-      const response = await postComment(text, props.route.params.postID);
+      const response = await postComment(body, props.route.params.postID);
       if (response) {
         setText("");
         setLoad(true);
       }
     } catch (error) {
       toast.error(errorMessage(error));
+    } finally {
+      sendingRef.current = false;
+      setSending(false);
     }
   };
+
+  const canSend = !!text?.trim() && !sending;
 
   return (
     <View className={`flex-1 ${bgColor(darkmode)}`}>
@@ -109,20 +122,29 @@ const CommentsScreen = (props: Props) => {
             darkmode
           )} ${borderColor(darkmode)} ${textColor(darkmode)}`}
           onChangeText={(text) => setText(text)}
+          editable={!sending}
+          onSubmitEditing={sendMessage}
+          returnKeyType="send"
         />
         <TouchableOpacity
           activeOpacity={0.8}
-          disabled={!text?.trim()}
+          disabled={!canSend}
+          accessibilityRole="button"
+          accessibilityState={{ disabled: !canSend, busy: sending }}
           className={`ml-2 w-11 h-11 items-center justify-center rounded-xl ${
             text?.trim() ? "bg-[#C2410C]" : raisedBgColor(darkmode)
           }`}
           onPress={sendMessage}
         >
-          <Icon
-            name="arrow-up"
-            size={20}
-            color={text?.trim() ? "#FFFFFF" : iconColor(darkmode)}
-          />
+          {sending ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Icon
+              name="arrow-up"
+              size={20}
+              color={text?.trim() ? "#FFFFFF" : iconColor(darkmode)}
+            />
+          )}
         </TouchableOpacity>
       </View>
     </View>

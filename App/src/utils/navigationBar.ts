@@ -8,4 +8,6 @@ import { colors } from "../styles/theme";
 export const setNavigationBarTheme = (darkmode: boolean) => {
   if (Platform.OS !== "android") return;
   NativeModules.NavigationBar?.setColor(colors(darkmode).card, !darkmode);
+  // The window shows through during screen transitions.
+  NativeModules.NavigationBar?.setWindowBackground?.(colors(darkmode).page);
 };
